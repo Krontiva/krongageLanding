@@ -1,0 +1,12 @@
+# Video files (serve separately or via CDN)
+*.mp4
+*.mov
+*.webm
+*.avi
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
