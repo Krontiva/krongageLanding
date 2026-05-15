@@ -16,16 +16,16 @@
     .nav-logo svg { width: 28px; height: 28px; }
     .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; font-size: 14px; font-weight: 500; }
     .nav-links li a { color: #475569; transition: color .2s; }
-    .nav-links .active a { color: #2563eb; }
+    .nav-links .active a { color: #0D47A1; }
     .dropdown > a::after { content: ' ▾'; font-size: 10px; }
-    .btn-nav { background: #2563eb; color: #fff; padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+    .btn-nav { background: #0D47A1; color: #fff; padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; }
     .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
     .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
     .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
     .mobile-menu.open { display: flex; }
     .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 500; color: #475569; border-bottom: 1px solid #f1f5f9; }
     .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #2563eb; color: #fff; padding: 13px 20px; border-radius: 8px; font-weight: 600; text-align: center; border-bottom: none; }
+    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 8px; font-weight: 600; text-align: center; border-bottom: none; }
 
     /* MAIN */
     main { flex: 1; padding: 60px 20px 80px; }
@@ -46,15 +46,15 @@
       font-family: inherit; color: #0f172a; outline: none; transition: border-color .2s;
       background: #fff;
     }
-    .form-group input:focus, .form-group textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+    .form-group input:focus, .form-group textarea:focus { border-color: #0D47A1; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
     .form-group input::placeholder, .form-group textarea::placeholder { color: #94a3b8; }
     .form-group .hint { font-size: 11px; color: #94a3b8; }
     .form-group textarea { resize: vertical; min-height: 120px; }
     .form-divider { margin: 24px 0 20px; }
     .form-divider h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
     .form-divider p { font-size: 12px; color: #94a3b8; }
-    .btn-submit { background: #2563eb; color: #fff; padding: 13px 32px; border-radius: 50px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: background .2s; }
-    .btn-submit:hover { background: #1d4ed8; }
+    .btn-submit { background: #0D47A1; color: #fff; padding: 13px 32px; border-radius: 50px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: background .2s; }
+    .btn-submit:hover { background: #0a3a84; }
 
     /* FOOTER */
     footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
@@ -63,7 +63,7 @@
     .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
     .footer-brand .dev-credit { font-size: 12px; color: #475569; margin-bottom: 20px; }
     .badge-meta { display: inline-flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: 600; color: #94a3b8; }
-    .badge-meta .meta-icon { width: 28px; height: 28px; background: #1877f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
+    .badge-meta .meta-icon { width: 28px; height: 28px; background: #0D47A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
     .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
     .footer-col ul { list-style: none; }
     .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
@@ -100,10 +100,7 @@
 <body>
 
 <nav>
-  <div class="nav-logo">
-    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#2563eb"/><path d="M8 10h16M8 16h10M8 22h13" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
-    KronGage
-  </div>
+  <div class="nav-logo"><img src="../Krongage-Logo.png" alt="KronGage" style="height:38px;width:auto;"></div>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
     <li><a href="/about/">About</a></li>
