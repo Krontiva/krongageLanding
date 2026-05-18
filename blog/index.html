@@ -30,7 +30,9 @@
     .blog-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
     .blog-featured { background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; transition: box-shadow .2s; }
     .blog-featured:hover { box-shadow: 0 12px 40px rgba(13,71,161,.1); }
-    .blog-featured-img { width: 100%; height: 280px; object-fit: cover; background: linear-gradient(135deg, #0D47A1, #1565C0); display: flex; align-items: center; justify-content: center; font-size: 60px; }
+    .blog-featured-img { width: 100%; height: 280px; overflow: hidden; position: relative; background: #0f172a; }
+    .blog-featured-img iframe { width: 100%; height: 100%; border: none; display: block; pointer-events: none; }
+    .blog-featured-img .img-overlay { position: absolute; inset: 0; z-index: 1; cursor: pointer; }
     .blog-featured-body { padding: 36px; }
     .blog-tag { display: inline-block; font-size: 11px; font-weight: 700; color: #0D47A1; background: #EEF5FD; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
     .blog-featured-body h2 { font-size: 28px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 14px; }
@@ -41,8 +43,11 @@
     .read-more:hover { gap: 12px; }
     .sidebar { display: flex; flex-direction: column; gap: 24px; }
     .sidebar-label { font-size: 12px; font-weight: 700; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; }
-    .sidebar-post { background: #fff; border-radius: 14px; padding: 20px; border: 1px solid #e2e8f0; transition: box-shadow .2s; }
+    .sidebar-post { background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid #e2e8f0; transition: box-shadow .2s; }
     .sidebar-post:hover { box-shadow: 0 6px 24px rgba(13,71,161,.08); }
+    .sidebar-thumb { width: 100%; height: 130px; overflow: hidden; position: relative; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
+    .sidebar-thumb iframe { width: 100%; height: 100%; border: none; display: block; pointer-events: none; }
+    .sidebar-post-body { padding: 16px 20px 20px; }
     .sidebar-post .blog-tag { margin-bottom: 10px; font-size: 10px; }
     .sidebar-post h3 { font-size: 15px; font-weight: 700; color: #0f172a; line-height: 1.35; margin-bottom: 8px; }
     .sidebar-post p { font-size: 13px; color: #64748b; line-height: 1.6; }
@@ -111,7 +116,10 @@
   <div class="blog-grid">
     <!-- Featured article -->
     <a href="/blog/retention-gap/" class="blog-featured">
-      <div class="blog-featured-img">📊</div>
+      <div class="blog-featured-img">
+        <iframe src="../assets/blog-retention-gap.html" loading="lazy" title="The Retention Gap"></iframe>
+        <div class="img-overlay"></div>
+      </div>
       <div class="blog-featured-body">
         <span class="blog-tag">Customer Success</span>
         <h2>The Retention Gap: Why Success Teams Struggle</h2>
@@ -132,38 +140,53 @@
     <div class="sidebar">
       <div class="sidebar-label">More from the Blog</div>
 
-      <div class="sidebar-post">
-        <span class="blog-tag">AI &amp; Automation</span>
-        <h3>How AI Agents Are Replacing Tier-1 Support — Without Losing the Human Touch</h3>
-        <p>Explore how intelligent automation is reshaping front-line support while keeping empathy at the core.</p>
-        <div class="blog-meta">
-          <span>May 2025</span>
-          <div class="blog-meta-dot"></div>
-          <span>6 min read</span>
+      <a href="/blog/ai-support-tier-1/" class="sidebar-post">
+        <div class="sidebar-thumb">
+          <iframe src="../assets/blog-ai-support.html" loading="lazy" title="AI Support"></iframe>
         </div>
-      </div>
+        <div class="sidebar-post-body">
+          <span class="blog-tag">AI &amp; Automation</span>
+          <h3>How AI Agents Are Replacing Tier-1 Support — Without Losing the Human Touch</h3>
+          <p>Most companies automate the wrong things first. Here's what the best operators figured out — and why the handoff is everything.</p>
+          <div class="blog-meta">
+            <span>June 2025</span>
+            <div class="blog-meta-dot"></div>
+            <span>7 min read</span>
+          </div>
+        </div>
+      </a>
 
-      <div class="sidebar-post">
-        <span class="blog-tag">Omnichannel</span>
-        <h3>Beyond WhatsApp: Building a True Omnichannel Experience in 2025</h3>
-        <p>WhatsApp is just the start. Here's how leading brands are unifying every customer touchpoint under one intelligent inbox.</p>
-        <div class="blog-meta">
-          <span>April 2025</span>
-          <div class="blog-meta-dot"></div>
-          <span>5 min read</span>
+      <a href="/blog/beyond-whatsapp/" class="sidebar-post">
+        <div class="sidebar-thumb">
+          <iframe src="../assets/blog-omnichannel.html" loading="lazy" title="Beyond WhatsApp"></iframe>
         </div>
-      </div>
+        <div class="sidebar-post-body">
+          <span class="blog-tag">Omnichannel</span>
+          <h3>Beyond WhatsApp: Building a True Omnichannel Experience in 2025</h3>
+          <p>WhatsApp is just the start. Here's how leading brands are unifying every customer touchpoint under one intelligent inbox.</p>
+          <div class="blog-meta">
+            <span>May 2025</span>
+            <div class="blog-meta-dot"></div>
+            <span>6 min read</span>
+          </div>
+        </div>
+      </a>
 
-      <div class="sidebar-post">
-        <span class="blog-tag">Analytics</span>
-        <h3>From Vanity Metrics to Value: What Your Customer Data Is Really Telling You</h3>
-        <p>Most dashboards show what happened. The best ones show what to do next. Here's how to close that gap.</p>
-        <div class="blog-meta">
-          <span>March 2025</span>
-          <div class="blog-meta-dot"></div>
-          <span>7 min read</span>
+      <a href="/blog/vanity-metrics-to-value/" class="sidebar-post">
+        <div class="sidebar-thumb">
+          <iframe src="../assets/blog-vanity-metrics.html" loading="lazy" title="Vanity Metrics"></iframe>
         </div>
-      </div>
+        <div class="sidebar-post-body">
+          <span class="blog-tag">Analytics</span>
+          <h3>From Vanity Metrics to Value: What Your Customer Data Is Really Telling You</h3>
+          <p>Most dashboards show what happened. The best ones show what to do next. Here's how to close that gap.</p>
+          <div class="blog-meta">
+            <span>April 2025</span>
+            <div class="blog-meta-dot"></div>
+            <span>7 min read</span>
+          </div>
+        </div>
+      </a>
     </div>
   </div>
 </main>

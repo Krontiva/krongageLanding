@@ -14,7 +14,7 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    .scene { position: relative; width: 420px; height: 420px; flex-shrink: 0; }
+    .scene { position: relative; width: 420px; height: 300px; flex-shrink: 0; }
 
     .orbit-svg {
       position: absolute; inset: 0;
@@ -90,52 +90,6 @@
       transition: background 0.25s;
     }
 
-    /* Feed panel */
-    .feed {
-      position: absolute; left: 12px; right: 12px; bottom: 8px;
-      height: 122px;
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 10px 14px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    .feed-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 7px;
-    }
-    .feed-title {
-      font-size: 9.5px; font-weight: 800; color: #94a3b8;
-      text-transform: uppercase; letter-spacing: 0.9px;
-      transition: color 0.3s;
-    }
-    .feed-badge {
-      font-size: 9px; font-weight: 700;
-      padding: 2px 8px; border-radius: 10px; border: 1px solid;
-      transition: background 0.5s, color 0.5s, border-color 0.5s;
-    }
-    .feed-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 5px 0;
-      border-bottom: 1px solid #f1f5f9;
-      opacity: 0; transform: translateY(5px);
-      transition: opacity 0.28s ease, transform 0.28s ease;
-    }
-    .feed-item.show { opacity: 1; transform: translateY(0); }
-    .feed-item:last-child { border-bottom: none; }
-    .feed-icon {
-      width: 26px; height: 26px; border-radius: 7px;
-      background: #EEF5FD;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; flex-shrink: 0;
-    }
-    .feed-label { font-size: 11px; font-weight: 700; color: #0f172a; }
-    .feed-sub { font-size: 9.5px; color: #94a3b8; margin-top: 1px; }
-    .feed-val {
-      font-size: 11px; font-weight: 800; flex-shrink: 0; margin-left: auto;
-      transition: color 0.5s;
-    }
   </style>
 </head>
 <body>
@@ -210,14 +164,6 @@
     <div class="node-icon">📊</div>Behavioral
   </div>
 
-  <!-- Feed panel -->
-  <div class="feed">
-    <div class="feed-header">
-      <span class="feed-title" id="feedTitle">Claims</span>
-      <span class="feed-badge" id="feedBadge">3 records</span>
-    </div>
-    <div id="feedItems"></div>
-  </div>
 
 </div>
 <script>
@@ -243,38 +189,6 @@
     },
   ];
 
-  const NODES = [
-    { label:'Claims',         icon:'🩺',
-      items:[
-        { icon:'🚗', label:'Fender Bender Claim',    sub:'Resolved · Jun 2024',      val:'$1,200'  },
-        { icon:'✅', label:'Glass Repair Approved',   sub:'Resolved · Nov 2023',      val:'$340'    },
-        { icon:'⏱️', label:'Medical Claim Open',      sub:'Pending · 4 days',         val:'$8,500'  },
-      ]},
-    { label:'Telematics',     icon:'📡',
-      items:[
-        { icon:'⚡', label:'Safe Driver Score',       sub:'Last 30 days',             val:'94/100'  },
-        { icon:'🛣️', label:'Avg Monthly Mileage',     sub:'Below avg ↓',              val:'612 mi'  },
-        { icon:'🌙', label:'Night Driving',           sub:'Low frequency',            val:'3%'      },
-      ]},
-    { label:'Support',        icon:'💬',
-      items:[
-        { icon:'💬', label:'WhatsApp Query',          sub:'Billing question · 2d ago',val:'Resolved'},
-        { icon:'📞', label:'Call — Renewal Info',     sub:'14d ago · 4m 32s',         val:'Resolved'},
-        { icon:'⭐', label:'CSAT Score',              sub:'Last interaction',          val:'4.8 / 5' },
-      ]},
-    { label:'Billing',        icon:'💳',
-      items:[
-        { icon:'✅', label:'Premium Paid On-Time',    sub:'Last 24 months',           val:'100%'    },
-        { icon:'💳', label:'Next Payment Due',        sub:'Auto-debit active',         val:'15 Jun'  },
-        { icon:'💰', label:'Lifetime Value',          sub:'Since 2018',               val:'$14,280' },
-      ]},
-    { label:'Behavioral',     icon:'📊',
-      items:[
-        { icon:'📱', label:'App Sessions / Week',     sub:'Highly engaged ↑',         val:'6.4'     },
-        { icon:'📧', label:'Email Open Rate',         sub:'Last 6 campaigns',         val:'78%'     },
-        { icon:'🔔', label:'Push Opt-in',             sub:'All channels active',       val:'Yes'     },
-      ]},
-  ];
 
   const CENTER = { x:210, y:152 };
   const NODE_POS = [
@@ -324,7 +238,6 @@
     document.getElementById('aura').setAttribute('stroke', p.color);
 
     styleNode(activeNode, true);
-    renderFeed(activeNode);
   }
 
   /* ── Node highlight ── */
@@ -353,34 +266,6 @@
     styleNode(activeNode, false);
     activeNode = i;
     styleNode(activeNode, true);
-    renderFeed(i);
-  }
-
-  /* ── Feed render ── */
-  function renderFeed(nodeIdx) {
-    const p = PROFILES[activePrf];
-    const n = NODES[nodeIdx];
-    document.getElementById('feedTitle').textContent = n.label;
-    const badge = document.getElementById('feedBadge');
-    badge.textContent   = n.items.length + ' records';
-    badge.style.background  = p.color + '10';
-    badge.style.color       = p.color;
-    badge.style.borderColor = p.color + '40';
-
-    const cont = document.getElementById('feedItems');
-    cont.innerHTML = n.items.map((item, idx) => `
-      <div class="feed-item" style="transition-delay:${idx*75}ms">
-        <div class="feed-icon">${item.icon}</div>
-        <div style="flex:1">
-          <div class="feed-label">${item.label}</div>
-          <div class="feed-sub">${item.sub}</div>
-        </div>
-        <div class="feed-val" style="color:${p.color}">${item.val}</div>
-      </div>`).join('');
-
-    requestAnimationFrame(() =>
-      cont.querySelectorAll('.feed-item').forEach(el => el.classList.add('show'))
-    );
   }
 
   /* ── Traveling dot animation ── */

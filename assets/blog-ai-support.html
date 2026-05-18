@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Support Thumbnail</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #0d2240 60%, #0D47A1 100%);
+      width: 100vw; height: 100vh; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .scene {
+      width: 100%; height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      align-items: center;
+      padding: 24px 36px;
+      gap: 0;
+      position: relative;
+    }
+
+    /* Grid lines */
+    .scene::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* ── AI Panel ── */
+    .ai-panel {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .panel-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+    }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900;
+    }
+    .avatar.ai { background: linear-gradient(135deg, #0D47A1, #1e88e5); color: #fff; font-size: 17px; }
+    .avatar.human { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; font-size: 17px; }
+    .panel-label {
+      font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .panel-label.ai-lbl { color: #60a5fa; }
+    .panel-label.human-lbl { color: #fbbf24; }
+    .panel-sublabel { font-size: 9px; color: rgba(255,255,255,.35); font-weight: 600; }
+
+    .bubble {
+      padding: 9px 13px;
+      border-radius: 12px;
+      font-size: 11px; font-weight: 600;
+      line-height: 1.45;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    .bubble.ai-msg {
+      background: rgba(29,78,216,.35);
+      border: 1px solid rgba(96,165,250,.2);
+      color: rgba(255,255,255,.85);
+      align-self: flex-start;
+    }
+    .bubble.system-msg {
+      background: rgba(20,184,166,.15);
+      border: 1px solid rgba(20,184,166,.3);
+      color: #5eead4;
+      font-size: 10px;
+      text-align: center;
+    }
+    .bubble.show { opacity: 1; transform: translateY(0); }
+
+    .typing {
+      display: flex; align-items: center; gap: 4px; padding: 8px 12px;
+      background: rgba(29,78,216,.2); border-radius: 10px;
+      align-self: flex-start; opacity: 0;
+      transition: opacity .3s;
+    }
+    .typing.show { opacity: 1; }
+    .typing span {
+      width: 5px; height: 5px; border-radius: 50%; background: #60a5fa;
+      animation: dot 1.2s ease-in-out infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes dot { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+    /* ── Center handoff ── */
+    .handoff {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      position: relative; z-index: 1;
+    }
+    .handoff-line {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, rgba(96,165,250,.3), rgba(251,191,36,.3));
+      position: relative;
+    }
+    .handoff-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #fff; position: absolute; top: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 0 10px #fff;
+      animation: travel 2.2s ease-in-out infinite;
+    }
+    @keyframes travel {
+      0%   { left: 0%;   background: #60a5fa; box-shadow: 0 0 10px #60a5fa; }
+      100% { left: 100%; background: #fbbf24; box-shadow: 0 0 10px #fbbf24; }
+    }
+    .handoff-badge {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 8px; font-weight: 800;
+      color: rgba(255,255,255,.5);
+      text-transform: uppercase; letter-spacing: .6px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .handoff-arrow {
+      font-size: 18px; color: rgba(255,255,255,.4);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+    /* ── Human Panel ── */
+    .human-panel {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity .8s ease;
+    }
+    .human-panel.show { opacity: 1; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.25);
+      border-radius: 20px; padding: 3px 9px;
+      font-size: 9px; font-weight: 700; color: #4ade80;
+    }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: #22c55e; animation: blink 1s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .human-msg {
+      background: rgba(245,158,11,.12);
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 12px;
+      padding: 9px 13px;
+      font-size: 11px; font-weight: 600; color: rgba(255,255,255,.85);
+      line-height: 1.45;
+    }
+    .csat-row {
+      display: flex; align-items: center; gap: 6px; margin-top: 2px;
+    }
+    .star { font-size: 12px; color: #fbbf24; }
+    .csat-label { font-size: 9px; color: rgba(255,255,255,.4); font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="scene">
+
+  <!-- AI Panel -->
+  <div class="ai-panel">
+    <div class="panel-header">
+      <div class="avatar ai">🤖</div>
+      <div>
+        <div class="panel-label ai-lbl">KronGage AI</div>
+        <div class="panel-sublabel">Autonomous Support Agent</div>
+      </div>
+    </div>
+    <div class="bubble ai-msg" id="b1">Hi Kwame, I can see your renewal is due in 14 days. Let me pull up your policy.</div>
+    <div class="typing" id="t1"><span></span><span></span><span></span></div>
+    <div class="bubble ai-msg" id="b2">Your Premium Gold policy expires Jun 30. Would you like to renew with the same coverage?</div>
+    <div class="bubble system-msg" id="b3">⬆ Escalating — billing dispute detected</div>
+  </div>
+
+  <!-- Center handoff -->
+  <div class="handoff">
+    <div class="handoff-arrow">→</div>
+    <div class="handoff-line">
+      <div class="handoff-dot"></div>
+    </div>
+    <div class="handoff-badge">Seamless handoff</div>
+  </div>
+
+  <!-- Human Panel -->
+  <div class="human-panel" id="humanPanel">
+    <div class="panel-header">
+      <div class="avatar human">👤</div>
+      <div>
+        <div class="panel-label human-lbl">Abena Asante</div>
+        <div class="panel-sublabel">Senior Account Manager</div>
+      </div>
+    </div>
+    <div class="status-badge"><div class="status-dot"></div>Live — took over from AI</div>
+    <div class="human-msg">Hi Kwame! I've reviewed your account. I'd like to offer you our loyalty discount — 15% off for renewing today.</div>
+    <div class="csat-row">
+      <span class="star">★★★★★</span>
+      <span class="csat-label">4.9 · 2,847 interactions this month</span>
+    </div>
+  </div>
+
+</div>
+<script>
+  const seq = [
+    () => document.getElementById('b1').classList.add('show'),
+    () => document.getElementById('t1').classList.add('show'),
+    () => { document.getElementById('t1').classList.remove('show'); document.getElementById('b2').classList.add('show'); },
+    () => document.getElementById('b3').classList.add('show'),
+    () => document.getElementById('humanPanel').classList.add('show'),
+  ];
+  let i = 0;
+  function next() {
+    if (i < seq.length) { seq[i](); i++; setTimeout(next, i === 1 ? 900 : 1100); }
+    else { setTimeout(() => { i = 0; document.querySelectorAll('.bubble,.typing,.human-panel').forEach(el => el.classList.remove('show')); setTimeout(next, 600); }, 3000); }
+  }
+  setTimeout(next, 400);
+</script>
+</body>
+</html>
