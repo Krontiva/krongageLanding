@@ -4,28 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Platform – KronGage</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; color: #1e293b; background: #fff; }
+    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #fff; }
     a { text-decoration: none; color: inherit; }
 
     /* NAV */
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 64px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
     .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px; color: #1e293b; }
     .nav-logo svg { width: 28px; height: 28px; }
-    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; font-size: 14px; font-weight: 500; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; font-size: 14px; font-weight: 600; }
     .nav-links li a { color: #475569; transition: color .2s; }
     .nav-links li a:hover { color: #0D47A1; }
     .nav-links .active a { color: #0D47A1; }
-    .btn-nav { background: #0D47A1; color: #fff; padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
     .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
     .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
     .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 500; color: #475569; border-bottom: 1px solid #f1f5f9; }
+    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
     .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 8px; font-weight: 600; text-align: center; border-bottom: none; }
+    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
 
     /* Mega menu */
     .nav-links li { position: relative; }
@@ -44,7 +44,7 @@
     .nav-links li.has-mega.is-open .mega-menu { display: block; }
     .mega-inner { display: grid; max-width: 1100px; margin: 0 auto; gap: 48px; }
     .mega-inner.cols-3 { grid-template-columns: 1.6fr 1fr 1fr; }
-    .mega-inner.cols-3b { grid-template-columns: 1fr 1fr 1.4fr; }
+    .mega-inner.cols-2b { grid-template-columns: 1fr 1.4fr; }
     .mega-col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 18px; }
     .mega-brand-head { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
     .mega-brand-sub { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
@@ -221,7 +221,7 @@
     <li class="has-mega">
       <a href="/solutions/">Solutions</a>
       <div class="mega-menu">
-        <div class="mega-inner cols-3b">
+        <div class="mega-inner cols-2b">
           <div>
             <p class="mega-col-title">Industries</p>
             <ul class="mega-industry-list">
@@ -233,11 +233,7 @@
               <li><a href="/solutions/government/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🏛️</div>Government &amp; Public Sector</a></li>
             </ul>
           </div>
-          <div>
-            <p class="mega-col-title">Use Cases</p>
-            <div class="mega-use-row"><div class="mega-channel-icon">✏️</div>Boost Productivity</div>
-            <div class="mega-use-row"><div class="mega-channel-icon">👤</div>Increase Engagement</div>
-          </div>
+
           <div>
             <a href="/blog/retention-gap/" style="text-decoration:none;color:inherit;display:block;"><p class="mega-article-title">The Retention Gap: Why Success Teams Struggle</p>
             <p class="mega-article-sub">In an era of endless options, customer success has become more than just a department — it's a survival strategy.</p></a>
@@ -453,6 +449,7 @@
       <ul>
         <li><a href="/platform/">About Krondiva</a></li>
         <li><a href="/contact/">Contact Us</a></li>
+        <li><a href="/blog/">Blog</a></li>
       </ul>
     </div>
   </div>
