@@ -121,7 +121,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 0;
     }
     .prof-score-item {}
     .ps-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgba(255,255,255,.35); margin-bottom: 5px; }
@@ -129,87 +129,6 @@
     .ps-bar-fill { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
     .ps-val { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.7); margin-top: 4px; }
 
-    /* Two-column content */
-    .card-body { display: grid; grid-template-columns: 1fr 1.1fr; gap: 14px; }
-
-    /* Communication card */
-    .comm-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 16px 18px;
-      color: #0f172a;
-    }
-    .comm-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .comm-title { font-size: 15px; font-weight: 800; color: #0f172a; }
-    .comm-edit {
-      width: 28px; height: 28px; border-radius: 7px;
-      background: #EEF5FD; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 14px; transition: background .2s;
-    }
-    .comm-edit:hover { background: #dbeafe; }
-    .comm-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 9px 0;
-      border-bottom: 1px solid #f8fafc;
-    }
-    .comm-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .comm-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: #f1f5f9;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px; flex-shrink: 0;
-    }
-    .comm-info { flex: 1; }
-    .comm-label { font-size: 13px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 7px; }
-    .comm-value { font-size: 12px; color: #64748b; margin-top: 1px; }
-    .pref-badge {
-      font-size: 10px; font-weight: 700;
-      background: #0D47A1; color: #fff;
-      padding: 2px 8px; border-radius: 10px;
-    }
-
-    /* Activity panel */
-    .act-panel { display: flex; flex-direction: column; gap: 0; }
-    .act-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-    .act-row {
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-    }
-    .act-row:last-child { border-bottom: none; }
-    .act-label { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
-    .act-text { font-size: 12px; color: rgba(255,255,255,.55); line-height: 1.55; }
-
-    /* Purchase journey card */
-    .journey-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-top: 10px;
-      cursor: pointer;
-      transition: box-shadow .2s;
-    }
-    .journey-card:hover { box-shadow: 0 4px 20px rgba(13,71,161,.15); }
-    .journey-icon {
-      width: 44px; height: 44px;
-      background: #EEF5FD;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-    .journey-info {}
-    .journey-title { font-size: 13px; font-weight: 800; color: #0f172a; }
-    .journey-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
 
     /* Navigation dots */
     .nav-dots {
@@ -266,27 +185,6 @@
     <!-- Score bars -->
     <div class="prof-scores" id="scoreRow"></div>
 
-    <!-- Two-column content -->
-    <div class="card-body">
-      <div class="comm-card">
-        <div class="comm-head">
-          <span class="comm-title">Channels</span>
-          <div class="comm-edit">✎</div>
-        </div>
-        <div id="commRows"></div>
-      </div>
-      <div class="act-panel">
-        <div class="act-title">Recent Activity</div>
-        <div id="actRows"></div>
-        <div class="journey-card">
-          <div class="journey-icon">🗺️</div>
-          <div class="journey-info">
-            <div class="journey-title" id="journeyTitle"></div>
-            <div class="journey-sub" id="journeySub"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
   </div>
 
@@ -437,26 +335,6 @@
         });
       }, 60);
 
-      // Comms
-      document.getElementById('commRows').innerHTML = c.comms.map(r => `
-        <div class="comm-row">
-          <div class="comm-icon">${r.icon}</div>
-          <div class="comm-info">
-            <div class="comm-label">${r.label}${r.pref ? '<span class="pref-badge">Preferred</span>' : ''}</div>
-            <div class="comm-value">${r.value}</div>
-          </div>
-        </div>`).join('');
-
-      // Activity
-      document.getElementById('actRows').innerHTML = c.activity.map(a => `
-        <div class="act-row">
-          <div class="act-label">${a.label}</div>
-          <div class="act-text">${a.text}</div>
-        </div>`).join('');
-
-      // Journey
-      document.getElementById('journeyTitle').textContent = c.journey.title;
-      document.getElementById('journeySub').textContent = c.journey.sub;
     }
 
     if (animate) {
