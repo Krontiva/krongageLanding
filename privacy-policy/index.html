@@ -33,21 +33,39 @@
     .content ul { padding-left: 24px; margin-bottom: 16px; }
     .content ul li { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 6px; }
 
-    footer { background: #0f172a; color: #94a3b8; padding: 40px 60px 24px; }
-    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand .logo { font-size: 22px; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
+    .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
+    .footer-brand .dev-credit { font-size: 12px; color: #475569; margin-bottom: 20px; }
+    .badge-meta { display: inline-flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: 600; color: #94a3b8; }
+    .badge-meta .meta-icon { width: 28px; height: 28px; background: #0D47A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
+    .footer-col ul li a { color: #64748b; transition: color .2s; }
+    .footer-col ul li a:hover { color: #38bdf8; }
+    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
     .footer-bottom p { font-size: 12px; color: #475569; }
     .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
     .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
     .footer-legal a:hover { color: #38bdf8; }
 
+    @media (max-width: 1024px) {
+      footer { padding: 48px 32px 24px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
     @media (max-width: 640px) {
       nav { padding: 0 20px; height: 56px; }
       .nav-links { display: none; }
       .btn-nav { display: none; }
       .nav-toggle { display: flex; }
       .page-header h1 { font-size: 30px; }
-      footer { padding: 32px 20px 20px; }
-      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      footer { padding: 40px 20px 20px; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-brand { grid-column: auto; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
     }
   </style>
 </head>
@@ -113,6 +131,53 @@
 </main>
 
 <footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">KronGage</div>
+      <p>Enterprise AI Customer Engagement — World-Class Platform</p>
+      <p class="dev-credit">Developed by Krondiva.<br/>Delivering world-class enterprise solutions globally.<br/>Certified Meta WhatsApp Technology Provider.</p>
+      <div class="badge-meta">
+        <div class="meta-icon">f</div>
+        <div>
+          <div style="color:#e2e8f0;font-size:11px;font-weight:700;">Certified Meta</div>
+          <div style="font-size:10px;">WhatsApp Business Partner</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="/platform/">Omnichannel Inbox</a></li>
+        <li><a href="/platform/social-media/">Social Media Management</a></li>
+        <li><a href="/platform/ai-automation/">AI &amp; Automation</a></li>
+        <li><a href="/platform/customer-data/">Customer Data Platform</a></li>
+        <li><a href="/platform/campaign-management/">Campaign Management</a></li>
+        <li><a href="/platform/analytics/">Analytics &amp; BI</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Solutions</h4>
+      <ul>
+        <li><a href="/solutions/banking/">Banking &amp; Finance</a></li>
+        <li><a href="/solutions/telecom/">Telecommunications</a></li>
+        <li><a href="/solutions/fmcg/">FMCG &amp; Retail</a></li>
+        <li><a href="/solutions/healthcare/">Healthcare</a></li>
+        <li><a href="/solutions/insurance/">Insurance</a></li>
+        <li><a href="/solutions/government/">Government</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about/">About Krondiva</a></li>
+        <li><a href="/contact/">Contact Us</a></li>
+        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+        <li><a href="/terms-of-service/">Terms of Service</a></li>
+        <li><a href="/data-protection/">Data Protection</a></li>
+        <li><a href="/sitemap/">Sitemap</a></li>
+      </ul>
+    </div>
+  </div>
   <div class="footer-bottom">
     <p>© 2025 Krondiva. KronGage is a product of Krondiva Ltd. All Rights Reserved.</p>
     <div class="footer-legal">
