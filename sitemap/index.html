@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sitemap – KronGage</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; color: inherit; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
+    .nav-links li a { color: #475569; transition: color .2s; }
+    .nav-links li a:hover { color: #0D47A1; }
+    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
+    main { flex: 1; max-width: 900px; margin: 0 auto; padding: 60px 24px 80px; width: 100%; }
+    .page-header { margin-bottom: 48px; }
+    .page-header h1 { font-size: 42px; font-weight: 800; color: #0D47A1; margin-bottom: 10px; }
+    .page-header p { font-size: 15px; color: #64748b; }
+    .sitemap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .sitemap-group h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #0D47A1; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #EEF5FD; }
+    .sitemap-group ul { list-style: none; }
+    .sitemap-group ul li { margin-bottom: 10px; }
+    .sitemap-group ul li a { font-size: 14px; font-weight: 600; color: #374151; display: flex; align-items: center; gap: 8px; transition: color .2s; }
+    .sitemap-group ul li a:hover { color: #0D47A1; }
+    .sitemap-group ul li a::before { content: '→'; font-size: 12px; color: #0D47A1; }
+    footer { background: #0f172a; color: #94a3b8; padding: 40px 60px 24px; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 12px; color: #475569; }
+    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
+    .footer-legal a:hover { color: #38bdf8; }
+    @media (max-width: 768px) { .sitemap-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; height: 56px; }
+      .nav-links { display: none; } .btn-nav { display: none; } .nav-toggle { display: flex; }
+      .page-header h1 { font-size: 30px; }
+      .sitemap-grid { grid-template-columns: 1fr; }
+      footer { padding: 32px 20px 20px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo"><img src="../Krongage-Logo.png" alt="KronGage" /></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li><li><a href="/about/">About</a></li>
+    <li><a href="/platform/">Platform</a></li><li><a href="/solutions/">Solutions</a></li>
+    <li><a href="/contact/">Contact</a></li>
+  </ul>
+  <a href="/contact/" class="btn-nav">Get Started</a>
+  <button class="nav-toggle" onclick="document.querySelector('.mobile-menu').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu">
+  <a href="/">Home</a><a href="/about/">About</a><a href="/platform/">Platform</a><a href="/solutions/">Solutions</a><a href="/contact/">Contact</a>
+  <a href="/contact/" class="btn-nav-mobile">Get Started</a>
+</div>
+
+<main>
+  <div class="page-header">
+    <h1>Sitemap</h1>
+    <p>A complete overview of all pages on the KronGage website.</p>
+  </div>
+
+  <div class="sitemap-grid">
+    <div class="sitemap-group">
+      <h2>Main Pages</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/platform/">Platform</a></li>
+        <li><a href="/solutions/">Solutions</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-group">
+      <h2>Platform</h2>
+      <ul>
+        <li><a href="/platform/">Omnichannel Inbox</a></li>
+        <li><a href="/platform/">Social Media Management</a></li>
+        <li><a href="/platform/">AI &amp; Automation</a></li>
+        <li><a href="/platform/">Customer Data Platform</a></li>
+        <li><a href="/platform/">Campaign Management</a></li>
+        <li><a href="/platform/">Analytics &amp; BI</a></li>
+        <li><a href="/platform/">Social Intelligence</a></li>
+        <li><a href="/platform/">Security &amp; Compliance</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-group">
+      <h2>Solutions</h2>
+      <ul>
+        <li><a href="/solutions/">Banking &amp; Finance</a></li>
+        <li><a href="/solutions/">Telecommunications</a></li>
+        <li><a href="/solutions/">FMCG &amp; Retail</a></li>
+        <li><a href="/solutions/">Healthcare</a></li>
+        <li><a href="/solutions/">Insurance</a></li>
+        <li><a href="/solutions/">Government &amp; Public Sector</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-group">
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/about/">About Krondiva</a></li>
+        <li><a href="/contact/">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-group">
+      <h2>Legal</h2>
+      <ul>
+        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+        <li><a href="/terms-of-service/">Terms of Service</a></li>
+        <li><a href="/data-protection/">Data Protection</a></li>
+        <li><a href="/sitemap/">Sitemap</a></li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-bottom">
+    <p>© 2025 Krondiva. KronGage is a product of Krondiva Ltd. All Rights Reserved.</p>
+    <div class="footer-legal">
+      <a href="/privacy-policy/">Privacy Policy</a>
+      <a href="/terms-of-service/">Terms of Service</a>
+      <a href="/data-protection/">Data Protection</a>
+      <a href="/sitemap/">Sitemap</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service – KronGage</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; color: inherit; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
+    .nav-links li a { color: #475569; transition: color .2s; }
+    .nav-links li a:hover { color: #0D47A1; }
+    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
+    main { flex: 1; max-width: 800px; margin: 0 auto; padding: 60px 24px 80px; width: 100%; }
+    .page-header { margin-bottom: 48px; }
+    .page-header h1 { font-size: 42px; font-weight: 800; color: #0D47A1; margin-bottom: 10px; }
+    .page-header p { font-size: 14px; color: #94a3b8; }
+    .content h2 { font-size: 22px; font-weight: 800; color: #0f172a; margin: 36px 0 12px; }
+    .content p { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 16px; }
+    .content ul { padding-left: 24px; margin-bottom: 16px; }
+    .content ul li { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 6px; }
+    footer { background: #0f172a; color: #94a3b8; padding: 40px 60px 24px; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 12px; color: #475569; }
+    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
+    .footer-legal a:hover { color: #38bdf8; }
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; height: 56px; }
+      .nav-links { display: none; } .btn-nav { display: none; } .nav-toggle { display: flex; }
+      .page-header h1 { font-size: 30px; }
+      footer { padding: 32px 20px 20px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo"><img src="../Krongage-Logo.png" alt="KronGage" /></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li><li><a href="/about/">About</a></li>
+    <li><a href="/platform/">Platform</a></li><li><a href="/solutions/">Solutions</a></li>
+    <li><a href="/contact/">Contact</a></li>
+  </ul>
+  <a href="/contact/" class="btn-nav">Get Started</a>
+  <button class="nav-toggle" onclick="document.querySelector('.mobile-menu').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu">
+  <a href="/">Home</a><a href="/about/">About</a><a href="/platform/">Platform</a><a href="/solutions/">Solutions</a><a href="/contact/">Contact</a>
+  <a href="/contact/" class="btn-nav-mobile">Get Started</a>
+</div>
+
+<main>
+  <div class="page-header">
+    <h1>Terms of Service</h1>
+    <p>Last updated: May 2025</p>
+  </div>
+  <div class="content">
+    <p>These Terms of Service ("Terms") govern your access to and use of the KronGage platform provided by Krondiva Ltd ("Krondiva", "we", "our", or "us"). By using KronGage, you agree to be bound by these Terms.</p>
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>By creating an account or accessing any part of the KronGage platform, you confirm that you are at least 18 years of age, have the authority to enter into these Terms on behalf of your organisation, and agree to comply with all applicable laws and regulations.</p>
+
+    <h2>2. License and Permitted Use</h2>
+    <p>Subject to these Terms, Krondiva grants you a limited, non-exclusive, non-transferable licence to access and use the KronGage platform for your internal business purposes. You may not:</p>
+    <ul>
+      <li>Sub-licence, sell, resell, or commercially exploit the platform without written consent</li>
+      <li>Reverse engineer, decompile, or attempt to extract source code</li>
+      <li>Use the platform to send unsolicited communications or spam</li>
+      <li>Violate any applicable laws or third-party rights</li>
+    </ul>
+
+    <h2>3. Account Responsibilities</h2>
+    <p>You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You must notify us immediately of any unauthorised access.</p>
+
+    <h2>4. Service Availability</h2>
+    <p>We strive to provide 99.9% uptime. We reserve the right to perform scheduled maintenance, which we will communicate in advance wherever possible. We are not liable for any downtime beyond our reasonable control.</p>
+
+    <h2>5. Payment and Billing</h2>
+    <p>Subscription fees are billed in advance. All fees are non-refundable unless otherwise stated. Krondiva reserves the right to update pricing with 30 days' notice.</p>
+
+    <h2>6. Intellectual Property</h2>
+    <p>All intellectual property rights in the KronGage platform remain the exclusive property of Krondiva Ltd. Your data remains your property; you grant us a limited licence to process it solely to deliver the service.</p>
+
+    <h2>7. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, Krondiva's aggregate liability shall not exceed the fees paid by you in the 12 months preceding the claim. We are not liable for indirect, incidental, or consequential damages.</p>
+
+    <h2>8. Termination</h2>
+    <p>Either party may terminate the agreement with 30 days' written notice. Krondiva may suspend or terminate your access immediately if you breach these Terms.</p>
+
+    <h2>9. Governing Law</h2>
+    <p>These Terms are governed by the laws of England and Wales. Any disputes shall be resolved in the courts of England and Wales.</p>
+
+    <h2>10. Contact</h2>
+    <p>Questions about these Terms? Contact us at <strong>legal@krondiva.com</strong> or via our <a href="/contact/" style="color:#0D47A1;font-weight:700;">Contact page</a>.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-bottom">
+    <p>© 2025 Krondiva. KronGage is a product of Krondiva Ltd. All Rights Reserved.</p>
+    <div class="footer-legal">
+      <a href="/privacy-policy/">Privacy Policy</a>
+      <a href="/terms-of-service/">Terms of Service</a>
+      <a href="/data-protection/">Data Protection</a>
+      <a href="/sitemap/">Sitemap</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

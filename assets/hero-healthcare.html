@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Healthcare</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+    .hc { display: flex; align-items: center; justify-content: center; gap: 28px; width: 100%; height: 100vh; padding: 24px; }
+
+    /* ── Left: Person in rounded frame ── */
+    .hc-frame-wrap { position: relative; flex-shrink: 0; }
+
+    .hc-frame {
+      width: 280px; height: 320px;
+      border-radius: 36px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(160deg, #e0eaf5 0%, #c8ddf0 100%);
+      box-shadow: 0 16px 48px rgba(0,0,0,.12);
+    }
+
+    .hc-person { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+    .hc-head { width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7a4f2d, #8d5a35); position: relative; overflow: visible; }
+    .hc-neck { width: 22px; height: 14px; background: #8d5a35; margin: 0 auto; }
+    .hc-body { width: 150px; height: 180px; background: linear-gradient(160deg, #b0bec5, #90a4ae); border-radius: 50% 50% 0 0; }
+    .hc-phone { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); width: 40px; height: 68px; background: #0f172a; border-radius: 8px; border: 2px solid #334155; }
+    .hc-phone-screen { width: 30px; height: 54px; border-radius: 5px; background: linear-gradient(160deg,#dbeafe,#0D47A1); margin: 5px auto; }
+    .hc-hair { position: absolute; top: -2px; left: -4px; right: -4px; height: 36px; background: #1a0a00; border-radius: 50% 50% 0 0; }
+
+    /* Glasses */
+    .hc-glasses { position: absolute; top: 28px; left: 8px; right: 8px; height: 13px; display: flex; gap: 3px; }
+    .hc-glass { flex: 1; border: 2px solid #374151; border-radius: 4px; background: rgba(200,220,255,.3); }
+
+    /* Medical cross badge */
+    .hc-cross-badge {
+      position: absolute; bottom: -14px; left: -14px;
+      width: 64px; height: 64px; border-radius: 14px;
+      background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.12);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hc-cross { width: 32px; height: 32px; position: relative; }
+    .hc-cross::before, .hc-cross::after {
+      content: ''; position: absolute; background: #0D47A1; border-radius: 3px;
+    }
+    .hc-cross::before { width: 10px; height: 32px; left: 11px; top: 0; }
+    .hc-cross::after  { width: 32px; height: 10px; top: 11px; left: 0; }
+
+    /* ── Right: Chat bubbles ── */
+    .hc-bubbles { display: flex; flex-direction: column; gap: 14px; max-width: 280px; }
+
+    .hc-bubble {
+      background: #0f1f3d;
+      border-radius: 18px 18px 18px 4px;
+      padding: 14px 18px;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .5s, transform .5s;
+    }
+    .hc-bubble.in { opacity: 1; transform: translateY(0); }
+    .hc-bubble-text { font-size: 14px; color: #fff; line-height: 1.6; font-weight: 500; }
+
+    .hc-cta {
+      background: #0f1f3d;
+      border-radius: 18px 18px 18px 4px;
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .5s, transform .5s;
+      cursor: pointer;
+    }
+    .hc-cta.in { opacity: 1; transform: translateY(0); }
+    .hc-cta:hover { background: #0D47A1; }
+    .hc-cta-text { font-size: 15px; font-weight: 800; color: #fff; }
+    .hc-cta-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; }
+    .hc-cta-check svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Appointment card -->*/
+    .hc-appt-card { background: #fff; border-radius: 12px; padding: 14px 16px; box-shadow: 0 2px 12px rgba(0,0,0,.08); opacity: 0; transform: translateY(10px); transition: opacity .5s, transform .5s; }
+    .hc-appt-card.in { opacity: 1; transform: translateY(0); }
+    .hc-appt-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .hc-appt-title { font-size: 12px; font-weight: 800; color: #0f172a; }
+    .hc-appt-badge { font-size: 10px; font-weight: 700; background: #dbeafe; color: #0D47A1; padding: 2px 8px; border-radius: 6px; }
+    .hc-appt-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: #374151; }
+    .hc-appt-icon { width: 20px; height: 20px; border-radius: 5px; background: #EEF5FD; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+    .hc-appt-btns { display: flex; gap: 8px; margin-top: 10px; }
+    .hc-appt-btn { flex: 1; text-align: center; padding: 7px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all .2s; border: none; }
+    .hc-appt-btn.confirm { background: #0D47A1; color: #fff; }
+    .hc-appt-btn.reschedule { background: #f1f5f9; color: #374151; }
+    .hc-appt-btn:hover { opacity: .85; }
+  </style>
+</head>
+<body>
+<div class="hc">
+
+  <!-- Person frame -->
+  <div class="hc-frame-wrap">
+    <div class="hc-frame">
+      <div class="hc-person">
+        <div class="hc-head">
+          <div class="hc-hair"></div>
+          <div class="hc-glasses"><div class="hc-glass"></div><div class="hc-glass"></div></div>
+        </div>
+        <div class="hc-neck"></div>
+        <div class="hc-body">
+          <div class="hc-phone"><div class="hc-phone-screen"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hc-cross-badge">
+      <div class="hc-cross"></div>
+    </div>
+  </div>
+
+  <!-- Chat bubbles -->
+  <div class="hc-bubbles">
+    <div class="hc-bubble" id="hb1">
+      <div class="hc-bubble-text">Hi, Emmanuel! Your appointment is Friday at 3 p.m. Please reply to confirm or reschedule.</div>
+    </div>
+
+    <div class="hc-cta" id="hb2" onclick="confirmAppt()">
+      <span class="hc-cta-text">Confirm appointment</span>
+      <div class="hc-cta-check">
+        <svg viewBox="0 0 16 16"><polyline points="3 8 7 12 13 5"/></svg>
+      </div>
+    </div>
+
+    <div class="hc-appt-card" id="hb3">
+      <div class="hc-appt-head">
+        <span class="hc-appt-title">Dr. Amara Okonkwo — GP</span>
+        <span class="hc-appt-badge">Confirmed</span>
+      </div>
+      <div class="hc-appt-row"><div class="hc-appt-icon">📅</div>Friday, 3:00 PM · City Clinic</div>
+      <div class="hc-appt-row"><div class="hc-appt-icon">📍</div>12 Health Ave, Suite 4B</div>
+      <div class="hc-appt-row"><div class="hc-appt-icon">🔔</div>Reminder sent 24h & 1h before</div>
+      <div class="hc-appt-btns">
+        <button class="hc-appt-btn confirm" onclick="confirmAppt()">✓ Confirm</button>
+        <button class="hc-appt-btn reschedule">↻ Reschedule</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  function animateBubbles() {
+    const els = ['hb1','hb2','hb3'].map(id => document.getElementById(id));
+    els.forEach(e => e.classList.remove('in'));
+    els.forEach((e,i) => setTimeout(() => e.classList.add('in'), 400 + i * 700));
+  }
+  animateBubbles();
+  setInterval(animateBubbles, 9000);
+
+  function confirmAppt() {
+    const btn = document.getElementById('hb2');
+    btn.style.background = '#0D47A1';
+    setTimeout(() => btn.style.background = '', 2000);
+  }
+</script>
+</body>
+</html>

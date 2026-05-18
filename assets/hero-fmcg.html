@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – FMCG & Retail</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+    .fg { display: flex; align-items: center; justify-content: center; gap: 28px; width: 100%; height: 100vh; padding: 24px; position: relative; }
+
+    /* ── Left: Person in rounded frame ── */
+    .fg-frame-wrap { position: relative; flex-shrink: 0; }
+
+    .fg-frame {
+      width: 280px; height: 320px;
+      border-radius: 36px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(160deg, #d4e5f5 0%, #b8d0ea 100%);
+      box-shadow: 0 16px 48px rgba(0,0,0,.12);
+    }
+
+    /* Person illustration */
+    .fg-person { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+    .fg-head { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #8B5E3C, #a06535); position: relative; }
+    .fg-neck { width: 20px; height: 14px; background: #a06535; margin: 0 auto; }
+    .fg-body { width: 150px; height: 180px; background: linear-gradient(160deg, #607d8b, #455a64); border-radius: 50% 50% 0 0; }
+    /* Phone in hands */
+    .fg-phone { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); width: 40px; height: 68px; background: #0f172a; border-radius: 8px; border: 2px solid #334155; }
+    .fg-phone-screen { width: 30px; height: 54px; border-radius: 5px; background: linear-gradient(160deg,#dcfce7,#16a34a); margin: 5px auto; }
+    /* Hair -->*/
+    .fg-hair { position: absolute; top: -8px; left: -8px; right: -8px; height: 44px; border-radius: 50%; background: #1a0a00; }
+
+    /* Glasses effect */
+    .fg-glasses { position: absolute; top: 26px; left: 6px; right: 6px; height: 14px; display: flex; gap: 4px; }
+    .fg-glass { flex: 1; border: 2px solid #374151; border-radius: 4px; background: rgba(200,230,255,.3); }
+
+    /* Cart icon bottom-left */
+    .fg-cart-badge {
+      position: absolute; bottom: -14px; left: -14px;
+      width: 64px; height: 64px; border-radius: 14px;
+      background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.12);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fg-cart-badge svg { width: 32px; height: 32px; }
+
+    /* ── Right: Chat bubbles ── */
+    .fg-bubbles { display: flex; flex-direction: column; gap: 14px; max-width: 280px; }
+
+    .fg-bubble {
+      background: #0f1f3d;
+      border-radius: 18px 18px 18px 4px;
+      padding: 14px 18px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .fg-bubble.in { opacity: 1; transform: translateY(0); }
+    .fg-bubble-text { font-size: 14px; color: #fff; line-height: 1.6; font-weight: 500; }
+
+    /* CTA button bubble */
+    .fg-cta {
+      background: #0f1f3d;
+      border-radius: 18px 18px 18px 4px;
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .5s ease, transform .5s ease;
+      cursor: pointer;
+    }
+    .fg-cta.in { opacity: 1; transform: translateY(0); }
+    .fg-cta:hover { background: #0D47A1; }
+    .fg-cta-text { font-size: 15px; font-weight: 800; color: #fff; }
+    .fg-cta-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; }
+    .fg-cta-check svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Order status card -->*/
+    .fg-order-card { background: #fff; border-radius: 12px; padding: 12px 16px; box-shadow: 0 2px 12px rgba(0,0,0,.08); opacity: 0; transform: translateY(10px); transition: opacity .5s, transform .5s; }
+    .fg-order-card.in { opacity: 1; transform: translateY(0); }
+    .fg-order-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .fg-order-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; }
+    .fg-order-status { font-size: 11px; font-weight: 700; background: #dcfce7; color: #16a34a; padding: 2px 8px; border-radius: 6px; }
+    .fg-order-items { font-size: 12px; color: #374151; font-weight: 600; margin-bottom: 4px; }
+    .fg-order-time { font-size: 11px; color: #94a3b8; }
+    .fg-options { display: flex; gap: 8px; margin-top: 10px; }
+    .fg-opt { flex: 1; text-align: center; padding: 7px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all .2s; }
+    .fg-opt.pickup { background: #0D47A1; color: #fff; }
+    .fg-opt.delivery { background: #EEF5FD; color: #0D47A1; border: 1px solid #dbeafe; }
+    .fg-opt:hover { opacity: .85; }
+  </style>
+</head>
+<body>
+<div class="fg">
+
+  <!-- Person frame -->
+  <div class="fg-frame-wrap">
+    <div class="fg-frame">
+      <div class="fg-person">
+        <div class="fg-head">
+          <div class="fg-hair"></div>
+          <div class="fg-glasses"><div class="fg-glass"></div><div class="fg-glass"></div></div>
+        </div>
+        <div class="fg-neck"></div>
+        <div class="fg-body">
+          <div class="fg-phone"><div class="fg-phone-screen"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fg-cart-badge">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M4 4h3l3 14h14l3-8H9" stroke="#0D47A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="13" cy="26" r="2" fill="#0D47A1"/>
+        <circle cx="22" cy="26" r="2" fill="#0D47A1"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Chat bubbles -->
+  <div class="fg-bubbles">
+    <div class="fg-bubble" id="fb1">
+      <div class="fg-bubble-text">Hi, Aisha! Your order for grocery items is ready for pickup or delivery. Please select an option.</div>
+    </div>
+
+    <div class="fg-cta" id="fb2" onclick="confirmPickup()">
+      <span class="fg-cta-text">Confirm pick-up time</span>
+      <div class="fg-cta-check">
+        <svg viewBox="0 0 16 16"><polyline points="3 8 7 12 13 5"/></svg>
+      </div>
+    </div>
+
+    <div class="fg-order-card" id="fb3">
+      <div class="fg-order-row">
+        <span class="fg-order-label">Order #4821</span>
+        <span class="fg-order-status">Ready</span>
+      </div>
+      <div class="fg-order-items">🥑 Avocado · 🥛 Milk · 🍞 Bread · +6 items</div>
+      <div class="fg-order-time">Prepared 12 min ago · Store: Westlands</div>
+      <div class="fg-options">
+        <div class="fg-opt pickup">📍 Pickup</div>
+        <div class="fg-opt delivery">🚚 Delivery</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  function animateBubbles() {
+    const els = [
+      document.getElementById('fb1'),
+      document.getElementById('fb2'),
+      document.getElementById('fb3'),
+    ];
+    els.forEach(e => e.classList.remove('in'));
+    els.forEach((e,i) => setTimeout(() => e.classList.add('in'), 400 + i * 700));
+  }
+  animateBubbles();
+  setInterval(animateBubbles, 9000);
+
+  function confirmPickup() {
+    const btn = document.getElementById('fb2');
+    btn.style.background = '#0D47A1';
+    const check = btn.querySelector('.fg-cta-check');
+    check.style.background = 'rgba(255,255,255,.2)';
+    check.style.borderColor = '#fff';
+    setTimeout(() => {
+      btn.style.background = '';
+      check.style.background = '';
+      check.style.borderColor = '';
+    }, 2000);
+  }
+</script>
+</body>
+</html>

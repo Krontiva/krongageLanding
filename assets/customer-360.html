@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Customer 360</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #e8edf5;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Blue decorative blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      background: #0D47A1;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 { width: 260px; height: 260px; top: -60px; right: -60px; opacity: .9; border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+    .blob-2 { width: 180px; height: 180px; bottom: -40px; right: 80px; opacity: .8; border-radius: 50%; }
+
+    /* Browser chrome wrapper */
+    .chrome {
+      position: relative;
+      z-index: 10;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.18), 0 4px 16px rgba(0,0,0,.1);
+      width: 680px;
+      overflow: hidden;
+    }
+    .chrome-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 12px;
+      background: #fff;
+    }
+    .chrome-brand { font-size: 15px; font-weight: 800; color: #0f172a; }
+    .chrome-dots { display: flex; gap: 8px; }
+    .chrome-dot { height: 8px; border-radius: 4px; }
+    .cd-1 { width: 40px; background: #e2e8f0; }
+    .cd-2 { width: 40px; background: #e2e8f0; }
+    .cd-3 { width: 50px; background: #0D47A1; }
+    .cd-4 { width: 32px; background: #e2e8f0; }
+
+    /* Dark card */
+    .card {
+      background: #0f172a;
+      margin: 0 12px 12px;
+      border-radius: 14px;
+      padding: 24px 24px 20px;
+      color: #fff;
+    }
+
+    /* Profile header */
+    .prof-head {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .prof-av-wrap { position: relative; flex-shrink: 0; }
+    .prof-av {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.15);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      transition: background .5s;
+    }
+    .prof-av-status {
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #4ade80;
+      border: 2px solid #0f172a;
+    }
+    .prof-info { flex: 1; }
+    .prof-name {
+      font-size: 30px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      letter-spacing: -.5px;
+      transition: opacity .3s;
+    }
+    .prof-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .prof-tier {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: #0D47A1;
+      color: #fff;
+      transition: background .4s;
+    }
+    .prof-since { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 500; }
+
+    /* Score bar row */
+    .prof-scores {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .prof-score-item { flex: 1; }
+    .ps-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgba(255,255,255,.35); margin-bottom: 5px; }
+    .ps-bar-track { height: 5px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
+    .ps-bar-fill { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+    .ps-val { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.7); margin-top: 4px; }
+
+    /* Two-column content */
+    .card-body { display: grid; grid-template-columns: 1fr 1.1fr; gap: 14px; }
+
+    /* Communication card */
+    .comm-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      color: #0f172a;
+    }
+    .comm-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .comm-title { font-size: 15px; font-weight: 800; color: #0f172a; }
+    .comm-edit {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: #EEF5FD; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 14px; transition: background .2s;
+    }
+    .comm-edit:hover { background: #dbeafe; }
+    .comm-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid #f8fafc;
+    }
+    .comm-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .comm-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: #f1f5f9;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+    .comm-info { flex: 1; }
+    .comm-label { font-size: 13px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 7px; }
+    .comm-value { font-size: 12px; color: #64748b; margin-top: 1px; }
+    .pref-badge {
+      font-size: 10px; font-weight: 700;
+      background: #0D47A1; color: #fff;
+      padding: 2px 8px; border-radius: 10px;
+    }
+
+    /* Activity panel */
+    .act-panel { display: flex; flex-direction: column; gap: 0; }
+    .act-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .act-row {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .act-row:last-child { border-bottom: none; }
+    .act-label { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+    .act-text { font-size: 12px; color: rgba(255,255,255,.55); line-height: 1.55; }
+
+    /* Purchase journey card */
+    .journey-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: box-shadow .2s;
+    }
+    .journey-card:hover { box-shadow: 0 4px 20px rgba(13,71,161,.15); }
+    .journey-icon {
+      width: 44px; height: 44px;
+      background: #EEF5FD;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .journey-info {}
+    .journey-title { font-size: 13px; font-weight: 800; color: #0f172a; }
+    .journey-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+    /* Navigation dots */
+    .nav-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 0 2px;
+    }
+    .nav-dot {
+      height: 6px; border-radius: 10px; background: #cbd5e1; cursor: pointer;
+      transition: background .3s, width .3s cubic-bezier(.4,0,.2,1);
+      width: 6px;
+    }
+    .nav-dot.on { background: #0D47A1; width: 20px; }
+
+    /* Transition overlay */
+    .card { transition: opacity .25s; }
+    .card.fading { opacity: 0; }
+  </style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="chrome">
+  <div class="chrome-bar">
+    <span class="chrome-brand">KronGage</span>
+    <div class="chrome-dots">
+      <div class="chrome-dot cd-1"></div>
+      <div class="chrome-dot cd-2"></div>
+      <div class="chrome-dot cd-3"></div>
+      <div class="chrome-dot cd-4"></div>
+    </div>
+  </div>
+
+  <div class="card" id="mainCard">
+
+    <!-- Profile header -->
+    <div class="prof-head">
+      <div class="prof-av-wrap">
+        <div class="prof-av" id="profAv">HD</div>
+        <div class="prof-av-status"></div>
+      </div>
+      <div class="prof-info">
+        <div class="prof-name" id="profName">Helen Drew</div>
+        <div class="prof-meta">
+          <span class="prof-tier" id="profTier">Highly Valued Customer</span>
+          <span class="prof-since" id="profSince">Member Since 2017</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score bars -->
+    <div class="prof-scores" id="scoreRow"></div>
+
+    <!-- Body grid -->
+    <div class="card-body">
+
+      <!-- Communication -->
+      <div class="comm-card">
+        <div class="comm-head">
+          <span class="comm-title">Communication</span>
+          <div class="comm-edit">✏️</div>
+        </div>
+        <div id="commRows"></div>
+      </div>
+
+      <!-- Activity -->
+      <div class="act-panel">
+        <div class="act-title">Activity</div>
+        <div id="actRows"></div>
+        <div class="journey-card" id="journeyCard">
+          <div class="journey-icon">🛒</div>
+          <div class="journey-info">
+            <div class="journey-title" id="journeyTitle">Purchase Journey:</div>
+            <div class="journey-sub" id="journeySub">Active &amp; Highly Engaged</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Pagination dots -->
+  <div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+  const CUSTOMERS = [
+    {
+      name: 'Helen Drew',
+      initials: 'HD',
+      color: '#1565C0',
+      tier: 'Highly Valued Customer',
+      tierColor: '#0D47A1',
+      since: 'Member Since 2017',
+      scores: [
+        { label: 'Engagement', val: 92, color: '#4ade80' },
+        { label: 'Loyalty',    val: 87, color: '#60a5fa' },
+        { label: 'NPS Score',  val: 78, color: '#a78bfa' },
+        { label: 'Spend Index',val: 94, color: '#fb923c' },
+      ],
+      comms: [
+        { icon: '💬', label: 'SMS',   value: '707 432 1234', pref: true },
+        { icon: '📱', label: 'Call',  value: '510 234 7234', pref: false },
+        { icon: '✉️', label: 'Email', value: 'jdrew@example.com', pref: false },
+      ],
+      activity: [
+        { label: 'Last Interaction:', text: "Purchased 'Cozy Blanket' through Instagram Ad" },
+        { label: 'Next Best Offer:',  text: "Recommend 'Matching Pillows' via personalized email" },
+      ],
+      journey: { title: 'Purchase Journey:', sub: 'Active & Highly Engaged' },
+    },
+    {
+      name: 'Marcus Osei',
+      initials: 'MO',
+      color: '#7c3aed',
+      tier: 'VIP Member',
+      tierColor: '#6d28d9',
+      since: 'Member Since 2015',
+      scores: [
+        { label: 'Engagement', val: 98, color: '#4ade80' },
+        { label: 'Loyalty',    val: 96, color: '#60a5fa' },
+        { label: 'NPS Score',  val: 95, color: '#a78bfa' },
+        { label: 'Spend Index',val: 99, color: '#fb923c' },
+      ],
+      comms: [
+        { icon: '✉️', label: 'Email',    value: 'marcus@osei.co', pref: true },
+        { icon: '💬', label: 'WhatsApp', value: '+44 7700 900123', pref: false },
+        { icon: '📱', label: 'Call',     value: '020 7946 0321',  pref: false },
+      ],
+      activity: [
+        { label: 'Last Interaction:', text: "Booked Premium Plan upgrade via live chat" },
+        { label: 'Next Best Offer:',  text: "Invite to exclusive VIP early-access webinar" },
+      ],
+      journey: { title: 'Customer Journey:', sub: 'Loyal Advocate · 9 Years' },
+    },
+    {
+      name: 'Priya Nair',
+      initials: 'PN',
+      color: '#059669',
+      tier: 'Premium Customer',
+      tierColor: '#047857',
+      since: 'Member Since 2020',
+      scores: [
+        { label: 'Engagement', val: 74, color: '#4ade80' },
+        { label: 'Loyalty',    val: 68, color: '#60a5fa' },
+        { label: 'NPS Score',  val: 82, color: '#a78bfa' },
+        { label: 'Spend Index',val: 71, color: '#fb923c' },
+      ],
+      comms: [
+        { icon: '📱', label: 'Call',  value: '+91 98765 43210', pref: false },
+        { icon: '✉️', label: 'Email', value: 'priya.nair@co.in', pref: true },
+        { icon: '💬', label: 'SMS',   value: '+91 70001 23456',  pref: false },
+      ],
+      activity: [
+        { label: 'Last Interaction:', text: "Opened onboarding email — clicked product demo link" },
+        { label: 'Next Best Offer:',  text: "Send personalised SMS with first-renewal discount" },
+      ],
+      journey: { title: 'Lifecycle Stage:', sub: 'Growing · Re-engagement Ready' },
+    },
+    {
+      name: 'James Thornton',
+      initials: 'JT',
+      color: '#b45309',
+      tier: 'Standard Member',
+      tierColor: '#92400e',
+      since: 'Member Since 2022',
+      scores: [
+        { label: 'Engagement', val: 45, color: '#4ade80' },
+        { label: 'Loyalty',    val: 52, color: '#60a5fa' },
+        { label: 'NPS Score',  val: 60, color: '#a78bfa' },
+        { label: 'Spend Index',val: 38, color: '#fb923c' },
+      ],
+      comms: [
+        { icon: '✉️', label: 'Email', value: 'j.thornton@mail.com', pref: true },
+        { icon: '📱', label: 'Call',  value: '312 555 0199',        pref: false },
+        { icon: '💬', label: 'SMS',   value: '312 555 0200',        pref: false },
+      ],
+      activity: [
+        { label: 'Last Interaction:', text: "Visited pricing page 3 times without converting" },
+        { label: 'Next Best Offer:',  text: "Trigger win-back WhatsApp with 20% limited offer" },
+      ],
+      journey: { title: 'Conversion Stage:', sub: 'At Risk · Win-back Needed' },
+    },
+  ];
+
+  let current = 0;
+  let autoTimer;
+
+  function renderDots() {
+    document.getElementById('navDots').innerHTML = CUSTOMERS.map((_, i) =>
+      `<div class="nav-dot${i === current ? ' on' : ''}" onclick="goTo(${i})"></div>`
+    ).join('');
+  }
+
+  function renderCustomer(idx, animate) {
+    const c = CUSTOMERS[idx];
+    const card = document.getElementById('mainCard');
+
+    function apply() {
+      // Avatar
+      const av = document.getElementById('profAv');
+      av.textContent = c.initials;
+      av.style.background = `linear-gradient(135deg, ${c.color}cc, ${c.color})`;
+
+      // Header
+      document.getElementById('profName').textContent = c.name;
+      const tier = document.getElementById('profTier');
+      tier.textContent = c.tier;
+      tier.style.background = c.tierColor;
+      document.getElementById('profSince').textContent = c.since;
+
+      // Scores
+      document.getElementById('scoreRow').innerHTML = c.scores.map(s => `
+        <div class="prof-score-item">
+          <div class="ps-label">${s.label}</div>
+          <div class="ps-bar-track">
+            <div class="ps-bar-fill" style="width:0%;background:${s.color}" data-w="${s.val}"></div>
+          </div>
+          <div class="ps-val">${s.val}</div>
+        </div>`).join('');
+
+      // Animate bars after brief delay
+      setTimeout(() => {
+        document.querySelectorAll('.ps-bar-fill').forEach(b => {
+          b.style.width = b.dataset.w + '%';
+        });
+      }, 60);
+
+      // Comms
+      document.getElementById('commRows').innerHTML = c.comms.map(r => `
+        <div class="comm-row">
+          <div class="comm-icon">${r.icon}</div>
+          <div class="comm-info">
+            <div class="comm-label">${r.label}${r.pref ? '<span class="pref-badge">Preferred</span>' : ''}</div>
+            <div class="comm-value">${r.value}</div>
+          </div>
+        </div>`).join('');
+
+      // Activity
+      document.getElementById('actRows').innerHTML = c.activity.map(a => `
+        <div class="act-row">
+          <div class="act-label">${a.label}</div>
+          <div class="act-text">${a.text}</div>
+        </div>`).join('');
+
+      // Journey
+      document.getElementById('journeyTitle').textContent = c.journey.title;
+      document.getElementById('journeySub').textContent = c.journey.sub;
+    }
+
+    if (animate) {
+      card.classList.add('fading');
+      setTimeout(() => {
+        apply();
+        card.classList.remove('fading');
+      }, 260);
+    } else {
+      apply();
+    }
+
+    renderDots();
+  }
+
+  function goTo(idx) {
+    if (idx === current) return;
+    current = idx;
+    renderCustomer(current, true);
+    restartAuto();
+  }
+
+  function restartAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => {
+      current = (current + 1) % CUSTOMERS.length;
+      renderCustomer(current, true);
+    }, 5000);
+  }
+
+  // Init
+  renderCustomer(0, false);
+  restartAuto();
+</script>
+</body>
+</html>

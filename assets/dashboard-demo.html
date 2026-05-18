@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage Dashboard Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; background: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+
+    /* ── SHELL ── */
+    .kd {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      background: #f8fafc;
+      border-radius: 0;
+      overflow: hidden;
+      font-size: 12px;
+      color: #0f172a;
+      user-select: none;
+      position: relative;
+    }
+
+    /* ── SIDEBAR ── */
+    .kd-sb {
+      width: 54px;
+      background: #fff;
+      border-right: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 0;
+      flex-shrink: 0;
+    }
+    .kd-logo {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: #0D47A1;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .kd-logo svg { width: 20px; height: 20px; }
+    .kd-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; align-items: center; width: 100%; padding: 0 7px; }
+    .kd-nb {
+      width: 40px; height: 36px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #94a3b8;
+      transition: all .18s; border: none; background: none;
+      width: 100%;
+    }
+    .kd-nb:hover { background: #f1f5f9; color: #475569; }
+    .kd-nb.active { background: #EEF5FD; color: #0D47A1; }
+    .kd-nb svg { width: 17px; height: 17px; flex-shrink: 0; }
+    .kd-sb-bot { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 7px; width: 100%; }
+    .kd-sb-icon { width: 40px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #94a3b8; background: none; }
+    .kd-sb-icon:hover { background: #f1f5f9; color: #475569; }
+    .kd-sb-icon svg { width: 17px; height: 17px; }
+    .kd-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg,#7C3AED,#0D47A1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; color: #fff;
+      position: relative; cursor: pointer; margin-top: 4px;
+    }
+    .kd-avatar::after {
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 8px; height: 8px;
+      border-radius: 50%; background: #22c55e;
+      border: 1.5px solid #fff;
+    }
+
+    /* ── MAIN ── */
+    .kd-main { flex: 1; overflow: hidden; position: relative; }
+    .kd-view {
+      position: absolute; inset: 0;
+      overflow-y: auto; overflow-x: hidden;
+      padding: 18px 18px 14px;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity .28s, transform .28s;
+      pointer-events: none;
+    }
+    .kd-view.active { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .kd-view::-webkit-scrollbar { width: 4px; }
+    .kd-view::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+    /* ── DASHBOARD VIEW ── */
+    .dash-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+    .dash-head h1 { font-size: 17px; font-weight: 800; }
+    .dash-head-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+    .dash-badges { display: flex; gap: 6px; align-items: center; margin-top: 3px; }
+    .badge-pro { display: flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; background: #eef2ff; color: #4f46e5; }
+    .badge-warn { display: flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; background: #fff7ed; color: #ea580c; }
+
+    /* Stat cards */
+    .stat-row { display: grid; grid-template-columns: repeat(6,1fr); gap: 7px; margin-bottom: 10px; }
+    .stat-card {
+      background: #fff; border: 1px solid #f1f5f9; border-radius: 10px;
+      padding: 11px 9px; transition: box-shadow .2s, border-color .3s, background .3s;
+    }
+    .stat-card { transition: box-shadow .22s, border-color .22s, background .22s, transform .22s; }
+    .stat-card:hover { box-shadow: 0 10px 32px rgba(13,71,161,.14); border-color: #93c5fd; transform: translateY(-3px); background: #fafcff; }
+    .stat-card.flash { border-color: #93c5fd; background: #eff6ff; }
+    .stat-icon { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-bottom: 7px; font-size: 13px; }
+    .stat-num { font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 3px; }
+    .stat-label { font-size: 9.5px; color: #64748b; font-weight: 600; line-height: 1.3; }
+    .stat-sub { font-size: 9px; color: #22c55e; font-weight: 700; margin-top: 3px; }
+
+    /* Platform box */
+    .section-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 7px; display: flex; align-items: center; justify-content: space-between; }
+    .section-label-link { color: #0D47A1; font-size: 9px; font-weight: 700; text-transform: none; letter-spacing: 0; cursor: pointer; }
+    .platform-box { background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+    .platform-row { display: grid; grid-template-columns: repeat(4,1fr); }
+    .platform-item { text-align: center; padding: 6px 0; border-right: 1px solid #f1f5f9; border-radius: 8px; transition: background .2s, transform .2s; cursor: default; }
+    .platform-item:hover { background: #f0f7ff; transform: scale(1.04); }
+    .platform-item:last-child { border-right: none; }
+    .platform-num { font-size: 22px; font-weight: 800; }
+    .platform-lbl { font-size: 10px; color: #64748b; margin-top: 2px; }
+
+    /* Bottom 3-col */
+    .dash-bot { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 8px; }
+    .db-box { background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; padding: 12px; transition: box-shadow .22s, border-color .22s, transform .22s; }
+    .db-box:hover { box-shadow: 0 6px 22px rgba(13,71,161,.10); border-color: #bfdbfe; transform: translateY(-2px); }
+    .db-title { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+    .db-link { color: #0D47A1; font-size: 9px; font-weight: 700; text-transform: none; letter-spacing: 0; cursor: pointer; }
+    .usage-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f8fafc; font-size: 11px; color: #374151; }
+    .usage-row:last-child { border-bottom: none; }
+    .usage-val { font-size: 10px; color: #94a3b8; }
+    .activity-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 84px; gap: 5px; }
+    .activity-empty p { font-size: 10.5px; color: #94a3b8; }
+    .activity-link { font-size: 10.5px; color: #0D47A1; font-weight: 700; cursor: pointer; }
+    .ins-section { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin: 6px 0 5px; }
+    .ins-nums { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+    .ins-num-box { background: #f8fafc; border-radius: 7px; padding: 7px; text-align: center; }
+    .ins-num-box .n { font-size: 17px; font-weight: 800; }
+    .ins-num-box .l { font-size: 9px; color: #94a3b8; margin-top: 1px; }
+    .ins-kb { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-top: 6px; }
+    .ins-kb-item { background: #f8fafc; border-radius: 7px; padding: 5px; text-align: center; }
+    .ins-kb-item .n { font-size: 13px; font-weight: 800; }
+    .ins-kb-item .l { font-size: 9px; color: #94a3b8; }
+
+    /* ── SOCIAL INTELLIGENCE VIEW ── */
+    .si-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+    .si-head h2 { font-size: 15px; font-weight: 800; }
+    .si-head p { font-size: 10.5px; color: #64748b; margin-top: 2px; }
+    .si-controls { display: flex; align-items: center; gap: 8px; }
+    .si-tabs { display: flex; gap: 3px; }
+    .si-tab { padding: 3px 9px; border-radius: 6px; font-size: 10px; font-weight: 700; border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all .15s; }
+    .si-tab.active { background: #0D47A1; color: #fff; border-color: #0D47A1; }
+    .si-healthy { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; color: #22c55e; }
+    .si-healthy-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+    /* Top metrics */
+    .si-metrics { display: grid; grid-template-columns: 90px 1fr 100px 1fr 140px; gap: 7px; margin-bottom: 10px; }
+    .si-m { background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; padding: 10px 12px; }
+    .si-m-top { font-size: 8.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 5px; }
+    .si-m-val { font-size: 20px; font-weight: 800; }
+    .si-live-num-wrap { display: flex; align-items: center; gap: 5px; }
+    .si-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-top: -2px; animation: pulse-dot 1.5s ease-in-out infinite; }
+
+    /* Gauge */
+    .si-m-gauge { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .gauge-wrap { position: relative; width: 72px; height: 40px; }
+    .gauge-label { font-size: 8.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-top: 3px; }
+
+    /* Platform metric */
+    .si-top-plat-icons { display: flex; gap: 3px; margin-top: 5px; }
+    .si-plat-badge { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+
+    /* Sentiment split */
+    .si-sent-row { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; font-size: 10px; font-weight: 600; }
+    .si-sent-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .si-sent-pct { margin-left: auto; color: #64748b; font-size: 10px; font-weight: 700; }
+
+    /* Chart */
+    .si-mid { display: grid; grid-template-columns: 1fr 175px; gap: 8px; margin-bottom: 8px; }
+    .si-chart-box { background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; padding: 12px; overflow: hidden; }
+    .si-chart-title { font-size: 11px; font-weight: 800; margin-bottom: 5px; }
+    .si-legend { display: flex; gap: 10px; margin-bottom: 8px; }
+    .si-leg { display: flex; align-items: center; gap: 4px; font-size: 9px; color: #64748b; }
+    .si-leg-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .si-chart-wrap { overflow: hidden; border-radius: 6px; }
+
+    .si-plat-box { background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; padding: 12px; }
+    .si-plat-title { font-size: 11px; font-weight: 800; margin-bottom: 10px; }
+    .si-plat-row { display: flex; align-items: center; gap: 6px; margin-bottom: 9px; }
+    .si-plat-row:last-child { margin-bottom: 0; }
+    .si-plat-icon { width: 20px; height: 20px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .si-plat-name { font-size: 10.5px; font-weight: 700; width: 52px; flex-shrink: 0; }
+    .si-plat-bar-bg { flex: 1; height: 4px; background: #f1f5f9; border-radius: 2px; overflow: hidden; }
+    .si-plat-bar-fill { height: 100%; border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+    .si-plat-count { font-size: 10px; font-weight: 700; width: 32px; text-align: right; }
+    .si-plat-delta { font-size: 9px; font-weight: 700; color: #22c55e; width: 28px; text-align: right; }
+
+    /* Bottom */
+    .si-bot { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .si-bot-box { background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; padding: 11px; }
+    .si-bot-title { font-size: 11px; font-weight: 800; margin-bottom: 8px; }
+    .si-topic-row { display: flex; gap: 5px; padding: 4px 0; border-bottom: 1px solid #f8fafc; align-items: flex-start; }
+    .si-topic-row:last-child { border-bottom: none; }
+    .si-topic-n { font-size: 10px; color: #94a3b8; font-weight: 700; width: 12px; flex-shrink: 0; padding-top: 1px; }
+    .si-topic-text { font-size: 9.5px; color: #374151; flex: 1; line-height: 1.4; }
+    .si-topic-cnt { font-size: 10px; font-weight: 700; color: #64748b; flex-shrink: 0; margin-left: 4px; }
+    .si-voice-row { display: flex; align-items: center; gap: 7px; padding: 5px 0; border-bottom: 1px solid #f8fafc; }
+    .si-voice-row:last-child { border-bottom: none; }
+    .si-voice-av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .si-voice-name { font-size: 10.5px; font-weight: 700; }
+    .si-voice-mentions { font-size: 9px; color: #0D47A1; font-weight: 700; }
+    .si-voice-plat { width: 16px; height: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-left: auto; flex-shrink: 0; }
+
+    /* ── SI card hovers ── */
+    .si-m { transition: box-shadow .22s, border-color .22s, transform .22s; }
+    .si-m:hover { box-shadow: 0 6px 22px rgba(13,71,161,.12); border-color: #93c5fd; transform: translateY(-2px); }
+    .si-plat-row { transition: background .2s; border-radius: 6px; padding-left: 4px; padding-right: 4px; }
+    .si-plat-row:hover { background: #f0f7ff; }
+    .si-voice-row { transition: background .2s; border-radius: 6px; padding-left: 4px; }
+    .si-voice-row:hover { background: #f0f7ff; }
+    .si-topic-row { transition: background .2s; border-radius: 6px; padding-left: 4px; }
+    .si-topic-row:hover { background: #f0f7ff; }
+    .si-chart-box, .si-plat-box, .si-bot-box { transition: box-shadow .22s, border-color .22s; }
+    .si-chart-box:hover, .si-plat-box:hover, .si-bot-box:hover { box-shadow: 0 6px 22px rgba(13,71,161,.10); border-color: #bfdbfe; }
+
+    /* ── INBOX VIEW ── */
+    .iv-layout { display: flex; height: 100%; overflow: hidden; }
+    .iv-panel { width: 230px; flex-shrink: 0; border-right: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; }
+    .iv-head { padding: 10px 12px 0; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .iv-head-badge { font-size: 10px; font-weight: 500; color: #94a3b8; }
+    .iv-tabs { display: flex; gap: 0; padding: 6px 8px 0; border-bottom: 1px solid #f1f5f9; overflow-x: auto; }
+    .iv-tab { font-size: 10px; font-weight: 600; color: #64748b; padding: 4px 8px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; flex-shrink: 0; }
+    .iv-tab.active { color: #0D47A1; border-bottom-color: #0D47A1; }
+    .iv-list { flex: 1; overflow-y: auto; }
+    .iv-list::-webkit-scrollbar { width: 3px; }
+    .iv-list::-webkit-scrollbar-thumb { background: #e2e8f0; }
+    .iv-conv { display: flex; gap: 8px; padding: 9px 10px; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background .15s; }
+    .iv-conv:hover { background: #f8fafc; }
+    .iv-av { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0; margin-top: 1px; }
+    .iv-body { flex: 1; min-width: 0; }
+    .iv-ch { font-size: 9px; color: #64748b; margin-bottom: 1px; display: flex; align-items: center; gap: 3px; }
+    .iv-top { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; }
+    .iv-name { font-size: 11px; font-weight: 700; color: #0f172a; }
+    .iv-time { font-size: 9px; color: #94a3b8; flex-shrink: 0; }
+    .iv-preview { font-size: 10px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+    .iv-tag { display: inline-block; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: #fee2e2; color: #dc2626; margin-top: 2px; }
+    .iv-sla { font-size: 9px; font-weight: 700; color: #ef4444; margin-top: 2px; }
+    .iv-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px; }
+    .iv-empty-title { font-size: 13px; font-weight: 600; color: #374151; text-align: center; }
+    .iv-empty-hint { font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
+    .iv-kbd { background: #f1f5f9; border-radius: 4px; padding: 1px 5px; font-size: 10px; color: #374151; font-family: monospace; border: 1px solid #e2e8f0; }
+
+    /* ── SOCIAL PUBLISHING VIEW ── */
+    .sp-layout { display: flex; height: 100%; overflow: hidden; }
+    .sp-sidebar { width: 130px; flex-shrink: 0; border-right: 1px solid #f1f5f9; padding: 8px 0; overflow-y: auto; }
+    .sp-sb-item { display: flex; align-items: center; gap: 7px; padding: 7px 12px; font-size: 10.5px; font-weight: 600; color: #475569; cursor: pointer; }
+    .sp-sb-item:hover { background: #f8fafc; }
+    .sp-sb-item.active { color: #0D47A1; }
+    .sp-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .sp-header { padding: 8px 14px; font-size: 15px; font-weight: 800; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+    .sp-create-btn { background: #0D47A1; color: #fff; border: none; border-radius: 6px; padding: 5px 10px; font-size: 10px; font-weight: 700; cursor: pointer; }
+    .sp-alert { background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 6px 10px; font-size: 10px; color: #dc2626; display: flex; align-items: center; gap: 6px; margin: 8px 12px 0; flex-shrink: 0; }
+    .sp-alert-name { color: #374151; font-size: 10px; margin-top: 3px; padding: 0 10px 0 16px; }
+    .sp-alert-action { margin-left: auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 2px 8px; font-size: 9px; font-weight: 700; color: #374151; cursor: pointer; }
+    .sp-cal-toolbar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0; }
+    .sp-cal-btn { width: 22px; height: 22px; border: 1px solid #e2e8f0; border-radius: 5px; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; color: #374151; }
+    .sp-cal-range { font-size: 11px; font-weight: 600; color: #0f172a; }
+    .sp-cal-today { font-size: 10px; font-weight: 600; border: 1px solid #e2e8f0; border-radius: 5px; padding: 2px 8px; background: #fff; cursor: pointer; color: #374151; }
+    .sp-view-tabs { display: flex; gap: 2px; margin-left: auto; }
+    .sp-view-tab { padding: 3px 8px; font-size: 10px; font-weight: 600; color: #64748b; border: 1px solid #e2e8f0; background: #fff; border-radius: 4px; cursor: pointer; }
+    .sp-view-tab.active { background: #0D47A1; color: #fff; border-color: #0D47A1; }
+    .sp-body { display: flex; flex: 1; overflow: hidden; }
+    .sp-ch-panel { width: 150px; flex-shrink: 0; border-right: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; }
+    .sp-ch-head-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
+    .sp-ch-title { font-size: 11px; font-weight: 800; }
+    .sp-ch-toggle { font-size: 13px; color: #94a3b8; cursor: pointer; }
+    .sp-add-btn { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 5px 10px; font-size: 10px; font-weight: 700; cursor: pointer; color: #374151; margin: 8px 8px 6px; text-align: center; }
+    .sp-ch-list { flex: 1; overflow-y: auto; }
+    .sp-ch-list::-webkit-scrollbar { width: 3px; }
+    .sp-ch-list::-webkit-scrollbar-thumb { background: #e2e8f0; }
+    .sp-ch-item { display: flex; align-items: center; gap: 7px; padding: 6px 10px; cursor: pointer; }
+    .sp-ch-item:hover { background: #f8fafc; }
+    .sp-ch-av { width: 22px; height: 22px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff; }
+    .sp-ch-name { font-size: 10px; font-weight: 600; color: #374151; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sp-ch-more { font-size: 12px; color: #94a3b8; }
+    .sp-cal { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .sp-cal-head { display: grid; grid-template-columns: 36px repeat(7, 1fr); border-bottom: 1px solid #f1f5f9; flex-shrink: 0; }
+    .sp-cal-dh { text-align: center; padding: 5px 2px; border-left: 1px solid #f1f5f9; }
+    .sp-cal-dh-name { font-size: 9px; color: #94a3b8; font-weight: 600; }
+    .sp-cal-dh-num { font-size: 12px; font-weight: 700; color: #0f172a; }
+    .sp-cal-dh-num.today { color: #0D47A1; }
+    .sp-cal-body { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 36px repeat(7, 1fr); }
+    .sp-cal-body::-webkit-scrollbar { width: 3px; }
+    .sp-time-col { display: flex; flex-direction: column; }
+    .sp-time-slot { height: 30px; font-size: 8px; color: #94a3b8; padding: 2px 4px; border-bottom: 1px solid #f8fafc; text-align: right; line-height: 1; display: flex; align-items: flex-start; justify-content: flex-end; }
+    .sp-day-col { border-left: 1px solid #f1f5f9; }
+    .sp-day-col.today-col { background: #fafcff; }
+    .sp-day-cell { height: 30px; border-bottom: 1px solid #f8fafc; }
+
+    /* ── CAMPAIGNS VIEW ── */
+    .cm-layout { display: flex; height: 100%; overflow: hidden; }
+    .cm-sidebar { width: 155px; flex-shrink: 0; border-right: 1px solid #f1f5f9; padding: 8px 0; overflow-y: auto; }
+    .cm-sb-label { font-size: 10px; font-weight: 700; color: #374151; padding: 7px 12px 4px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+    .cm-sb-label svg { color: #94a3b8; }
+    .cm-sb-item { display: flex; align-items: center; gap: 7px; padding: 6px 12px 6px 20px; font-size: 10.5px; font-weight: 600; color: #475569; cursor: pointer; }
+    .cm-sb-item:hover { background: #f8fafc; color: #0D47A1; }
+    .cm-sb-item.active { color: #0D47A1; font-weight: 700; }
+    .cm-sb-top { display: flex; align-items: center; gap: 7px; padding: 6px 12px; font-size: 10.5px; font-weight: 600; color: #475569; cursor: pointer; }
+    .cm-sb-top:hover { background: #f8fafc; }
+    .cm-main { flex: 1; padding: 14px 18px; overflow-y: auto; }
+    .cm-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .cm-title { font-size: 16px; font-weight: 800; color: #0f172a; }
+    .cm-btn { background: #0D47A1; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .cm-table { width: 100%; border-collapse: collapse; }
+    .cm-thead { border-bottom: 1px solid #f1f5f9; }
+    .cm-th { font-size: 10px; font-weight: 700; color: #64748b; text-align: left; padding: 8px 12px; display: flex; align-items: center; gap: 4px; }
+    .cm-tr { display: grid; grid-template-columns: 1fr 180px 220px 36px; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background .15s; }
+    .cm-tr:hover .cm-td { background: #f8fafc; }
+    .cm-thead-row { display: grid; grid-template-columns: 1fr 180px 220px 36px; border-bottom: 1px solid #f1f5f9; }
+    .cm-td { padding: 12px 12px; font-size: 11px; color: #374151; display: flex; align-items: center; }
+    .cm-td-name { font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 5px; }
+    .cm-td-name svg { color: #94a3b8; }
+    .cm-status { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+    .cm-status.running { background: #dcfce7; color: #16a34a; }
+    .cm-status.not-started { background: #f1f5f9; color: #64748b; }
+    .cm-menu { font-size: 16px; color: #94a3b8; cursor: pointer; }
+
+    /* ── CUSTOMER 360 VIEW ── */
+    .c3-layout { display: flex; height: 100%; overflow: hidden; }
+    .c3-list { width: 195px; flex-shrink: 0; border-right: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; }
+    .c3-list-head { padding: 8px 10px 6px; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
+    .c3-list-head-right { display: flex; align-items: center; gap: 6px; }
+    .c3-live { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: #16a34a; }
+    .c3-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #16a34a; animation: pulse-dot 2s ease-in-out infinite; }
+    .c3-sync-btn { font-size: 10px; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 3px; border: 1px solid #e2e8f0; border-radius: 4px; padding: 2px 6px; }
+    .c3-list-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid #f1f5f9; }
+    .c3-lstat { text-align: center; padding: 6px 2px; border-right: 1px solid #f1f5f9; }
+    .c3-lstat:last-child { border-right: none; }
+    .c3-lstat-lbl { font-size: 8px; color: #64748b; font-weight: 600; }
+    .c3-lstat-val { font-size: 14px; font-weight: 800; color: #0D47A1; }
+    .c3-search-wrap { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
+    .c3-search { width: 100%; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 6px; padding: 4px 8px; font-size: 10px; color: #374151; outline: none; }
+    .c3-profiles { flex: 1; overflow-y: auto; }
+    .c3-profiles::-webkit-scrollbar { width: 3px; }
+    .c3-profiles::-webkit-scrollbar-thumb { background: #e2e8f0; }
+    .c3-profile { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background .15s; }
+    .c3-profile:hover { background: #f8fafc; }
+    .c3-profile.active { background: #f0f7ff; border-left: 2px solid #0D47A1; }
+    .c3-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .c3-pinfo { flex: 1; min-width: 0; }
+    .c3-prow { display: flex; align-items: center; gap: 4px; }
+    .c3-pname { font-size: 11px; font-weight: 700; color: #0f172a; }
+    .c3-ptag { display: inline-block; font-size: 8px; font-weight: 600; padding: 1px 5px; border-radius: 3px; }
+    .c3-ptag.opp { background: #ede9fe; color: #7c3aed; }
+    .c3-ptag.cust { background: #dcfce7; color: #16a34a; }
+    .c3-ptag.lead { background: #fef3c7; color: #d97706; }
+    .c3-pright { text-align: right; flex-shrink: 0; }
+    .c3-pscore { font-size: 10px; font-weight: 800; }
+    .c3-pscore.high { color: #0D47A1; }
+    .c3-pscore.low { color: #ef4444; }
+    .c3-ptime { font-size: 8px; color: #94a3b8; }
+    .c3-detail { flex: 1; overflow-y: auto; padding: 14px 16px; }
+    .c3-detail::-webkit-scrollbar { width: 3px; }
+    .c3-detail-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+    .c3-detail-left { display: flex; align-items: center; gap: 10px; }
+    .c3-detail-av { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; background: #0D47A1; flex-shrink: 0; }
+    .c3-detail-name { font-size: 18px; font-weight: 800; color: #0f172a; }
+    .c3-detail-sub { font-size: 10px; color: #94a3b8; }
+    .c3-detail-tags { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+    .c3-dtag { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff; color: #374151; cursor: pointer; }
+    .c3-dtag.active-tab { background: #0D47A1; color: #fff; border-color: #0D47A1; }
+    .c3-detail-actions { display: flex; gap: 4px; }
+    .c3-action-btn { font-size: 10px; font-weight: 600; border: 1px solid #e2e8f0; background: #fff; border-radius: 6px; padding: 4px 9px; cursor: pointer; color: #374151; }
+    .c3-section-lbl { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin: 12px 0 6px; }
+    .c3-scores-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+    .c3-score-card { background: #fff; border: 1px solid #f1f5f9; border-radius: 8px; padding: 8px; }
+    .c3-score-lbl { font-size: 9px; color: #64748b; margin-bottom: 4px; display: flex; align-items: center; gap: 3px; }
+    .c3-score-val { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+    .c3-score-bar { height: 4px; border-radius: 2px; overflow: hidden; background: #f1f5f9; }
+    .c3-score-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+    .c3-ch-row { display: flex; gap: 6px; margin-bottom: 12px; }
+    .c3-ch-tag { font-size: 10px; font-weight: 600; padding: 4px 11px; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff; color: #374151; display: flex; align-items: center; gap: 5px; }
+    .c3-meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+    .c3-meta-card { background: #fff; border: 1px solid #f1f5f9; border-radius: 8px; padding: 8px 10px; }
+    .c3-meta-lbl { font-size: 8px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
+    .c3-meta-val { font-size: 12px; font-weight: 700; color: #0f172a; }
+    .c3-cases-row { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #f1f5f9; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; font-size: 11px; color: #374151; }
+    .c3-cases-badge { font-size: 9px; font-weight: 700; color: #ef4444; background: #fee2e2; padding: 2px 7px; border-radius: 10px; }
+    .c3-cases-link { font-size: 10px; font-weight: 700; color: #0D47A1; cursor: pointer; }
+    .c3-act-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f8fafc; }
+    .c3-act-cb { width: 14px; height: 14px; border: 1px solid #e2e8f0; border-radius: 3px; flex-shrink: 0; margin-top: 1px; }
+    .c3-act-body { flex: 1; }
+    .c3-act-title { font-size: 11px; font-weight: 600; color: #374151; }
+    .c3-act-sub { font-size: 10px; color: #94a3b8; margin-top: 1px; }
+    .c3-act-time { font-size: 9px; color: #94a3b8; flex-shrink: 0; }
+
+    /* ── KNOWLEDGE VIEW ── */
+    .kn-layout { display: flex; height: 100%; overflow: hidden; }
+    .kn-sb { width: 130px; flex-shrink: 0; border-right: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; }
+    .kn-sb-head { padding: 8px 12px 10px; border-bottom: 1px solid #f1f5f9; }
+    .kn-sb-title { font-size: 12px; font-weight: 800; color: #0f172a; }
+    .kn-sb-sub { font-size: 9px; color: #94a3b8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kn-sb-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 10.5px; font-weight: 600; color: #475569; cursor: pointer; }
+    .kn-sb-item:hover { background: #f8fafc; }
+    .kn-sb-item.active { background: #EEF5FD; color: #0D47A1; border-right: 2px solid #0D47A1; }
+    .kn-docs { width: 190px; flex-shrink: 0; border-right: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; }
+    .kn-docs-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid #f1f5f9; }
+    .kn-docs-title { font-size: 12px; font-weight: 800; }
+    .kn-upload-btn { background: #0D47A1; color: #fff; border: none; border-radius: 6px; padding: 4px 10px; font-size: 9px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 3px; }
+    .kn-selector-wrap { padding: 6px 10px; border-bottom: 1px solid #f1f5f9; }
+    .kn-selector { width: 100%; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 6px; font-size: 10px; background: #fff; color: #374151; }
+    .kn-doc-list { flex: 1; overflow-y: auto; }
+    .kn-doc-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background .15s; }
+    .kn-doc-item:hover { background: #f8fafc; }
+    .kn-doc-item.active { background: #f0f7ff; }
+    .kn-doc-icon { font-size: 20px; flex-shrink: 0; }
+    .kn-doc-info { flex: 1; min-width: 0; }
+    .kn-doc-name { font-size: 11px; font-weight: 700; color: #0f172a; }
+    .kn-doc-meta { font-size: 9px; color: #94a3b8; margin-top: 2px; }
+    .kn-doc-badge { display: inline-block; font-size: 8px; font-weight: 700; padding: 1px 6px; border-radius: 3px; background: #dcfce7; color: #16a34a; margin-top: 3px; }
+    .kn-content { flex: 1; overflow-y: auto; padding: 12px 14px; }
+    .kn-content::-webkit-scrollbar { width: 3px; }
+    .kn-content::-webkit-scrollbar-thumb { background: #e2e8f0; }
+    .kn-file-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+    .kn-file-info { display: flex; align-items: center; gap: 8px; }
+    .kn-file-icon { font-size: 28px; }
+    .kn-file-name { font-size: 14px; font-weight: 800; color: #0f172a; }
+    .kn-file-meta { font-size: 10px; color: #64748b; margin-top: 2px; }
+    .kn-file-actions { display: flex; gap: 5px; }
+    .kn-file-btn { font-size: 9px; font-weight: 600; border: 1px solid #e2e8f0; background: #fff; border-radius: 5px; padding: 4px 8px; cursor: pointer; color: #374151; display: flex; align-items: center; gap: 3px; }
+    .kn-file-btn.danger { color: #dc2626; border-color: #fecaca; }
+    .kn-chunks-meta { display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: #94a3b8; margin: 10px 0 8px; padding: 6px 0; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
+    .kn-chunk { background: #fff; border: 1px solid #f1f5f9; border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+    .kn-chunk-head { display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
+    .kn-chunk-label { font-size: 9px; font-weight: 700; color: #64748b; }
+    .kn-chunk-tokens { font-size: 9px; color: #94a3b8; }
+    .kn-chunk-body { padding: 8px 10px; font-size: 9.5px; color: #374151; line-height: 1.65; font-family: 'Menlo', 'Courier New', monospace; white-space: pre-wrap; max-height: 110px; overflow: hidden; }
+
+    /* ── VIEW INDICATOR ── */
+    .kd-view-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 50;
+      align-items: center;
+    }
+    .kd-view-dot {
+      height: 6px;
+      border-radius: 10px;
+      background: #cbd5e1;
+      transition: background .35s, width .35s cubic-bezier(.4,0,.2,1);
+      cursor: pointer;
+      width: 6px;
+    }
+    .kd-view-dot.active {
+      background: #0D47A1;
+      width: 22px;
+    }
+
+    /* ── TOAST NOTIFICATIONS ── */
+    .kd-toast {
+      position: absolute;
+      bottom: 18px; right: 18px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #0D47A1;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 32px rgba(13,71,161,.15), 0 2px 8px rgba(0,0,0,.06);
+      z-index: 999;
+      transform: translateX(calc(100% + 24px));
+      opacity: 0;
+      transition: transform .36s cubic-bezier(.34,1.56,.64,1), opacity .28s;
+      min-width: 210px;
+      max-width: 270px;
+      cursor: pointer;
+    }
+    .kd-toast.show { transform: translateX(0); opacity: 1; }
+    .kd-toast-icon { font-size: 18px; flex-shrink: 0; }
+    .kd-toast-title { font-size: 11px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+    .kd-toast-sub { font-size: 10px; color: #64748b; line-height: 1.4; }
+    .kd-toast-close { margin-left: auto; font-size: 14px; color: #94a3b8; flex-shrink: 0; padding-left: 6px; }
+  </style>
+</head>
+<body>
+
+<div class="kd">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="kd-sb">
+    <!-- Logo -->
+    <div class="kd-logo">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zm0 4a8 8 0 110 16A8 8 0 0116 8zm0 2a6 6 0 100 12A6 6 0 0016 10zm0 2a4 4 0 110 8 4 4 0 010-8z" fill="white"/></svg>
+    </div>
+
+    <div class="kd-nav">
+      <!-- Dashboard -->
+      <button class="kd-nb active" data-view="dash" title="Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </button>
+      <!-- Chat -->
+      <button class="kd-nb" data-view="inbox" title="Inbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </button>
+      <!-- Channels / Social Publishing -->
+      <button class="kd-nb" data-view="social-pub" title="Social Publishing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+      <!-- Campaigns -->
+      <button class="kd-nb" data-view="campaigns" title="Campaigns">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+      </button>
+      <!-- Listening / Social Intel -->
+      <button class="kd-nb" data-view="social" title="Social Intelligence">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+      </button>
+      <!-- Customers -->
+      <button class="kd-nb" data-view="customers" title="Customer 360">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </button>
+      <!-- Knowledge -->
+      <button class="kd-nb" data-view="knowledge" title="Knowledge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      </button>
+      <!-- AI Gateway -->
+      <button class="kd-nb" data-view="usage" title="Usage & Limits">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 017 4.5v0A2.5 2.5 0 014.5 7H4a2 2 0 00-2 2v0a2 2 0 002 2h.5A2.5 2.5 0 017 13.5v0A2.5 2.5 0 019.5 16H10v2a2 2 0 002 2v0a2 2 0 002-2v-2h.5a2.5 2.5 0 002.5-2.5v0a2.5 2.5 0 012.5-2.5H20a2 2 0 002-2v0a2 2 0 00-2-2h-.5A2.5 2.5 0 0117 4.5v0A2.5 2.5 0 0114.5 2H14a2 2 0 00-2 2v0a2 2 0 00-2-2h-.5z"/><circle cx="12" cy="10" r="2"/></svg>
+      </button>
+      <!-- Settings -->
+      <button class="kd-nb" data-view="settings" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </button>
+    </div>
+
+    <div class="kd-sb-bot">
+      <div class="kd-sb-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div class="kd-sb-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="kd-avatar">PA</div>
+    </div>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="kd-main">
+
+    <!-- ══ VIEW: DASHBOARD ══ -->
+    <div class="kd-view active" id="view-dash">
+
+      <!-- Header -->
+      <div class="dash-head">
+        <div>
+          <h1>Good afternoon, Platform 👋</h1>
+          <div class="dash-head-sub">Here's your <span style="color:#0D47A1;font-weight:700;">KronGage</span> overview for Krontiva Internal</div>
+        </div>
+        <div class="dash-badges">
+          <div class="badge-pro">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>
+            Professional
+          </div>
+          <div class="badge-warn">⚠ 5/6 services up</div>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-row">
+        <div class="stat-card" data-stat="profiles">
+          <div class="stat-icon" style="background:#fce7f3;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="stat-num" data-target="14">0</div>
+          <div class="stat-label">Customer Profiles</div>
+          <div class="stat-sub">13 active 7d</div>
+        </div>
+        <div class="stat-card" data-stat="ai">
+          <div class="stat-icon" style="background:#ede9fe;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="stat-num" data-target="3">0</div>
+          <div class="stat-label">AI Requests</div>
+        </div>
+        <div class="stat-card" data-stat="workflows">
+          <div class="stat-icon" style="background:#fef3c7;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="stat-num" data-target="0">0</div>
+          <div class="stat-label">Active Workflows</div>
+        </div>
+        <div class="stat-card" data-stat="docs">
+          <div class="stat-icon" style="background:#dbeafe;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+          <div class="stat-num" data-target="2">0</div>
+          <div class="stat-label">Knowledge Docs</div>
+          <div class="stat-sub">2 collections</div>
+        </div>
+        <div class="stat-card" data-stat="team">
+          <div class="stat-icon" style="background:#d1fae5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="stat-num" data-target="3">0</div>
+          <div class="stat-label">Team Members</div>
+        </div>
+        <div class="stat-card" data-stat="tokens">
+          <div class="stat-icon" style="background:#e0f2fe;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div class="stat-num" data-target="0">0</div>
+          <div class="stat-label">AI Token Budget</div>
+          <div class="stat-sub" style="color:#94a3b8;">0% of 50.0M</div>
+        </div>
+      </div>
+
+      <!-- KronChat Platform -->
+      <div class="section-label">KronChat Platform <span class="section-label-link">Live metrics</span></div>
+      <div class="platform-box">
+        <div class="platform-row">
+          <div class="platform-item">
+            <div class="platform-num" data-target="2">0</div>
+            <div class="platform-lbl">Accounts</div>
+          </div>
+          <div class="platform-item">
+            <div class="platform-num" data-target="6">0</div>
+            <div class="platform-lbl">Agents</div>
+          </div>
+          <div class="platform-item">
+            <div class="platform-num" data-target="6">0</div>
+            <div class="platform-lbl">Inboxes</div>
+          </div>
+          <div class="platform-item">
+            <div class="platform-num" data-target="18">0</div>
+            <div class="platform-lbl">Conversations</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom 3-col -->
+      <div class="dash-bot">
+        <!-- AI Usage -->
+        <div class="db-box">
+          <div class="db-title">AI USAGE <span class="db-link">View all ↗</span></div>
+          <div class="usage-row"><span>AI Requests</span><span class="usage-val">3/100.0K</span></div>
+          <div class="usage-row"><span>AI Token Budget</span><span class="usage-val">0/50.0M</span></div>
+          <div class="usage-row"><span>KronChat Messages</span><span class="usage-val">0/50.0K</span></div>
+          <div class="usage-row"><span>Socials AI</span><span class="usage-val">0/20.0K</span></div>
+          <div class="usage-row"><span>Embeddings</span><span class="usage-val">0/1.0M</span></div>
+          <div class="usage-row"><span>Storage (MB)</span><span class="usage-val">0/10.0K</span></div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="db-box">
+          <div class="db-title">RECENT ACTIVITY <span class="db-link">AI Studio ↗</span></div>
+          <div class="activity-empty">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <p>No recent activity</p>
+            <span class="activity-link">Create a workflow →</span>
+          </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="db-box">
+          <div class="db-title">INSIGHTS <span class="db-link">Customer 360 ↗</span></div>
+          <div class="ins-section">CUSTOMERS</div>
+          <div class="ins-nums">
+            <div class="ins-num-box"><div class="n">13</div><div class="l">Active (7d)</div></div>
+            <div class="ins-num-box"><div class="n">14</div><div class="l">Active (30d)</div></div>
+          </div>
+          <div class="ins-section">KNOWLEDGE BASE</div>
+          <div class="ins-kb">
+            <div class="ins-kb-item"><div class="n">2</div><div class="l">Documents</div></div>
+            <div class="ins-kb-item"><div class="n">229</div><div class="l">Chunks</div></div>
+            <div class="ins-kb-item"><div class="n">79</div><div class="l">Entities</div></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-dash -->
+
+
+    <!-- ══ VIEW: SOCIAL INTELLIGENCE ══ -->
+    <div class="kd-view" id="view-social">
+
+      <!-- Header -->
+      <div class="si-head">
+        <div>
+          <h2>Social Intelligence</h2>
+          <p>Real-time brand monitoring across 9 platforms</p>
+        </div>
+        <div class="si-controls">
+          <div class="si-tabs">
+            <button class="si-tab active">24h</button>
+            <button class="si-tab">7d</button>
+            <button class="si-tab">30d</button>
+          </div>
+          <div class="si-healthy"><div class="si-healthy-dot"></div> All layers healthy</div>
+        </div>
+      </div>
+
+      <!-- Top metrics -->
+      <div class="si-metrics">
+        <!-- Live count -->
+        <div class="si-m" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div class="si-live-num-wrap">
+            <div class="si-m-val" id="liveCount">301</div>
+            <div class="si-live-dot"></div>
+          </div>
+          <div class="si-m-top" style="margin-top:5px;margin-bottom:0;">LIVE THIS HOUR</div>
+        </div>
+
+        <!-- 24h mentions -->
+        <div class="si-m">
+          <div class="si-m-top">24H MENTIONS</div>
+          <div class="si-m-val">5.3K</div>
+          <svg width="100%" height="30" style="margin-top:4px;">
+            <g id="mentionBars"></g>
+          </svg>
+        </div>
+
+        <!-- Gauge -->
+        <div class="si-m si-m-gauge">
+          <div class="gauge-wrap">
+            <svg viewBox="0 0 100 56" width="100%" height="100%">
+              <path d="M 12 50 A 38 38 0 0 1 88 50" fill="none" stroke="#e2e8f0" stroke-width="7" stroke-linecap="round"/>
+              <path id="gaugeFill" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" stroke="#22c55e" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="119.4" stroke-dashoffset="119.4"/>
+              <text x="50" y="48" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a" font-family="Manrope,sans-serif">79%</text>
+            </svg>
+          </div>
+          <div class="gauge-label">Brand Health</div>
+        </div>
+
+        <!-- Top platform -->
+        <div class="si-m">
+          <div class="si-m-top">TOP PLATFORM</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
+            <svg width="16" height="16" viewBox="0 0 32 32" fill="#000"><path d="M17.75 14.77L25.3 6h-1.8l-6.57 7.63L11.62 6H6l7.93 11.55L6 26h1.8l6.93-8.05L20.38 26H26l-8.25-11.23zm-2.45 2.85l-.8-1.15-6.38-9.12h2.75l5.16 7.38.8 1.14 6.69 9.57h-2.75l-5.47-7.82z"/></svg>
+            <span style="font-size:18px;font-weight:800;">2.5K</span>
+          </div>
+          <div style="font-size:9.5px;color:#64748b;margin-top:2px;">Twitter · +0.42</div>
+          <div class="si-top-plat-icons" style="margin-top:6px;">
+            <div class="si-plat-badge" style="background:#ff0000;"><svg width="10" height="10" viewBox="0 0 32 32" fill="white"><path d="M26.7 8.8s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C19.2 4.5 16 4.5 16 4.5s-3.2 0-6.5.2c-.6.1-1.9.1-3 1.3-.9.8-1.2 2.8-1.2 2.8S5 11.1 5 13.4v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.2 1.2C11.9 24.2 16 24.3 16 24.3s3.2 0 6.5-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.4zM13.5 19.1V12l8.1 3.6-8.1 3.5z"/></svg></div>
+            <div class="si-plat-badge" style="background:#1877F2;"><svg width="10" height="10" viewBox="0 0 32 32" fill="white"><path d="M29 16C29 8.82 23.18 3 16 3S3 8.82 3 16c0 6.63 4.86 12.13 11.21 13.08V19.84h-3.37V16h3.37v-2.93c0-3.33 1.98-5.16 5.01-5.16 1.45 0 2.97.26 2.97.26v3.27h-1.67c-1.65 0-2.16 1.02-2.16 2.07V16h3.68l-.59 3.84h-3.09v9.24C24.14 28.13 29 22.63 29 16z"/></svg></div>
+            <div class="si-plat-badge" style="background:#000;"><svg width="10" height="10" viewBox="0 0 32 32" fill="white"><path d="M17.75 14.77L25.3 6h-1.8l-6.57 7.63L11.62 6H6l7.93 11.55L6 26h1.8l6.93-8.05L20.38 26H26l-8.25-11.23zm-2.45 2.85l-.8-1.15-6.38-9.12h2.75l5.16 7.38.8 1.14 6.69 9.57h-2.75l-5.47-7.82z"/></svg></div>
+          </div>
+        </div>
+
+        <!-- Sentiment split -->
+        <div class="si-m">
+          <div class="si-m-top" style="margin-bottom:7px;">SENTIMENT SPLIT</div>
+          <div class="si-sent-row"><div class="si-sent-dot" style="background:#22c55e;"></div>Positive<span class="si-sent-pct">61%</span></div>
+          <div class="si-sent-row"><div class="si-sent-dot" style="background:#94a3b8;"></div>Neutral<span class="si-sent-pct">27%</span></div>
+          <div class="si-sent-row"><div class="si-sent-dot" style="background:#ef4444;"></div>Negative<span class="si-sent-pct">7%</span></div>
+          <div class="si-sent-row"><div class="si-sent-dot" style="background:#f59e0b;"></div>Mixed<span class="si-sent-pct">6%</span></div>
+        </div>
+      </div>
+
+      <!-- Chart + Platform -->
+      <div class="si-mid">
+        <!-- Sentiment River -->
+        <div class="si-chart-box">
+          <div class="si-chart-title">Sentiment River</div>
+          <div class="si-legend">
+            <div class="si-leg"><div class="si-leg-dot" style="background:#22c55e;"></div>Positive</div>
+            <div class="si-leg"><div class="si-leg-dot" style="background:#94a3b8;"></div>Neutral</div>
+            <div class="si-leg"><div class="si-leg-dot" style="background:#f59e0b;"></div>Mixed</div>
+            <div class="si-leg"><div class="si-leg-dot" style="background:#ef4444;"></div>Negative</div>
+          </div>
+          <div class="si-chart-wrap">
+            <canvas id="riverCanvas" height="90" style="width:100%;display:block;"></canvas>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span style="font-size:8.5px;color:#94a3b8;">06:00</span>
+            <span style="font-size:8.5px;color:#94a3b8;">09:00</span>
+            <span style="font-size:8.5px;color:#94a3b8;">12:00</span>
+            <span style="font-size:8.5px;color:#94a3b8;">15:00</span>
+            <span style="font-size:8.5px;color:#94a3b8;">18:00</span>
+          </div>
+        </div>
+
+        <!-- Platform Activity -->
+        <div class="si-plat-box">
+          <div class="si-plat-title">Platform Activity</div>
+          <div class="si-plat-row">
+            <div class="si-plat-icon" style="background:#000;">
+              <svg width="11" height="11" viewBox="0 0 32 32" fill="white"><path d="M17.75 14.77L25.3 6h-1.8l-6.57 7.63L11.62 6H6l7.93 11.55L6 26h1.8l6.93-8.05L20.38 26H26l-8.25-11.23zm-2.45 2.85l-.8-1.15-6.38-9.12h2.75l5.16 7.38.8 1.14 6.69 9.57h-2.75l-5.47-7.82z"/></svg>
+            </div>
+            <div class="si-plat-name">Twitter</div>
+            <div class="si-plat-bar-bg"><div class="si-plat-bar-fill" style="background:#0D47A1;" data-width="96"></div></div>
+            <div class="si-plat-count">2473</div>
+            <div class="si-plat-delta">+0.42</div>
+          </div>
+          <div class="si-plat-row">
+            <div class="si-plat-icon" style="background:#1877F2;">
+              <svg width="11" height="11" viewBox="0 0 32 32" fill="white"><path d="M29 16C29 8.82 23.18 3 16 3S3 8.82 3 16c0 6.63 4.86 12.13 11.21 13.08V19.84h-3.37V16h3.37v-2.93c0-3.33 1.98-5.16 5.01-5.16 1.45 0 2.97.26 2.97.26v3.27h-1.67c-1.65 0-2.16 1.02-2.16 2.07V16h3.68l-.59 3.84h-3.09v9.24C24.14 28.13 29 22.63 29 16z"/></svg>
+            </div>
+            <div class="si-plat-name">Facebook</div>
+            <div class="si-plat-bar-bg"><div class="si-plat-bar-fill" style="background:#1877F2;" data-width="15"></div></div>
+            <div class="si-plat-count">392</div>
+            <div class="si-plat-delta">+0.73</div>
+          </div>
+          <div class="si-plat-row">
+            <div class="si-plat-icon" style="background:#ff0000;">
+              <svg width="11" height="11" viewBox="0 0 32 32" fill="white"><path d="M26.7 8.8s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C19.2 4.5 16 4.5 16 4.5s-3.2 0-6.5.2c-.6.1-1.9.1-3 1.3-.9.8-1.2 2.8-1.2 2.8S5 11.1 5 13.4v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.2 1.2C11.9 24.2 16 24.3 16 24.3s3.2 0 6.5-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.4zM13.5 19.1V12l8.1 3.6-8.1 3.5z"/></svg>
+            </div>
+            <div class="si-plat-name">Youtube</div>
+            <div class="si-plat-bar-bg"><div class="si-plat-bar-fill" style="background:#ff0000;" data-width="2"></div></div>
+            <div class="si-plat-count">52</div>
+            <div class="si-plat-delta">+0.23</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="si-bot">
+        <!-- Trending Topics -->
+        <div class="si-bot-box">
+          <div class="si-bot-title">Trending Topics</div>
+          <div class="si-topic-row">
+            <div class="si-topic-n">1</div>
+            <div class="si-topic-text">krongage_beta OR server00m1234 OR #GhanaTech OR #krognage121 OR #kronGee</div>
+            <div class="si-topic-cnt">1371</div>
+          </div>
+          <div class="si-topic-row">
+            <div class="si-topic-n">2</div>
+            <div class="si-topic-text">krongage_beta OR #GhanaTech OR #OpenSource OR #krognage121</div>
+            <div class="si-topic-cnt">795</div>
+          </div>
+          <div class="si-topic-row">
+            <div class="si-topic-n">3</div>
+            <div class="si-topic-text">krontiva_test OR krongage_beta OR server00m1234 OR #opensource</div>
+            <div class="si-topic-cnt">296</div>
+          </div>
+          <div class="si-topic-row">
+            <div class="si-topic-n">4</div>
+            <div class="si-topic-text">server room</div>
+            <div class="si-topic-cnt">74</div>
+          </div>
+        </div>
+
+        <!-- Top Voices -->
+        <div class="si-bot-box">
+          <div class="si-bot-title">Top Voices</div>
+          <div class="si-voice-row">
+            <div class="si-voice-av" style="background:#1877F2;">D</div>
+            <div><div class="si-voice-name">@Delika</div><div class="si-voice-mentions">148 mentions</div></div>
+            <div class="si-voice-plat" style="background:#1877F2;margin-left:auto;"><svg width="9" height="9" viewBox="0 0 32 32" fill="white"><path d="M29 16C29 8.82 23.18 3 16 3S3 8.82 3 16c0 6.63 4.86 12.13 11.21 13.08V19.84h-3.37V16h3.37v-2.93c0-3.33 1.98-5.16 5.01-5.16 1.45 0 2.97.26 2.97.26v3.27h-1.67c-1.65 0-2.16 1.02-2.16 2.07V16h3.68l-.59 3.84h-3.09v9.24C24.14 28.13 29 22.63 29 16z"/></svg></div>
+          </div>
+          <div class="si-voice-row">
+            <div class="si-voice-av" style="background:#ff0000;">T</div>
+            <div><div class="si-voice-name">@Terminal Archives</div><div class="si-voice-mentions">4 mentions</div></div>
+            <div class="si-voice-plat" style="background:#ff0000;margin-left:auto;"><svg width="9" height="9" viewBox="0 0 32 32" fill="white"><path d="M26.7 8.8s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C19.2 4.5 16 4.5 16 4.5s-3.2 0-6.5.2c-.6.1-1.9.1-3 1.3-.9.8-1.2 2.8-1.2 2.8S5 11.1 5 13.4v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.2 1.2C11.9 24.2 16 24.3 16 24.3s3.2 0 6.5-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.4zM13.5 19.1V12l8.1 3.6-8.1 3.5z"/></svg></div>
+          </div>
+          <div class="si-voice-row">
+            <div class="si-voice-av" style="background:#ff0000;">W</div>
+            <div><div class="si-voice-name">@Wolf Software Systems</div><div class="si-voice-mentions">4 mentions</div></div>
+            <div class="si-voice-plat" style="background:#ff0000;margin-left:auto;"><svg width="9" height="9" viewBox="0 0 32 32" fill="white"><path d="M26.7 8.8s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C19.2 4.5 16 4.5 16 4.5s-3.2 0-6.5.2c-.6.1-1.9.1-3 1.3-.9.8-1.2 2.8-1.2 2.8S5 11.1 5 13.4v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.2 1.2C11.9 24.2 16 24.3 16 24.3s3.2 0 6.5-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.4zM13.5 19.1V12l8.1 3.6-8.1 3.5z"/></svg></div>
+          </div>
+          <div class="si-voice-row">
+            <div class="si-voice-av" style="background:#7c3aed;">C</div>
+            <div><div class="si-voice-name">@Cinematic Rebuild</div><div class="si-voice-mentions">4 mentions</div></div>
+            <div class="si-voice-plat" style="background:#ff0000;margin-left:auto;"><svg width="9" height="9" viewBox="0 0 32 32" fill="white"><path d="M26.7 8.8s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C19.2 4.5 16 4.5 16 4.5s-3.2 0-6.5.2c-.6.1-1.9.1-3 1.3-.9.8-1.2 2.8-1.2 2.8S5 11.1 5 13.4v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.2 1.2C11.9 24.2 16 24.3 16 24.3s3.2 0 6.5-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.4zM13.5 19.1V12l8.1 3.6-8.1 3.5z"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-social -->
+
+
+    <!-- ══ VIEW: INBOX ══ -->
+    <div class="kd-view" id="view-inbox">
+      <div class="iv-layout">
+        <!-- Conversation list -->
+        <div class="iv-panel">
+          <div class="iv-head">Conversations <span class="iv-head-badge">Open</span></div>
+          <div class="iv-tabs">
+            <div class="iv-tab active">Mine</div>
+            <div class="iv-tab">Unassigned</div>
+            <div class="iv-tab">Resolved</div>
+            <div class="iv-tab">Pending</div>
+            <div class="iv-tab">All</div>
+          </div>
+          <div class="iv-list">
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#059669;">DL</div>
+              <div class="iv-body">
+                <div class="iv-ch">🟢 Krongage whatsapp</div>
+                <div class="iv-top"><span class="iv-name">Dibe Laba</span><span class="iv-time">11d · 9d</span></div>
+                <div class="iv-preview">↩ oh sorry i didnt see this early</div>
+                <div class="iv-sla">🔴 11d 3h</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#f59e0b;">D</div>
+              <div class="iv-body">
+                <div class="iv-ch">🌐 krongage web</div>
+                <div class="iv-top"><span class="iv-name">Dry-Paper-223</span><span class="iv-time">11d · 11d</span></div>
+                <div class="iv-preview">↩ Got it — I've handed your request over to our hu…</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#7c3aed;">RR</div>
+              <div class="iv-body">
+                <div class="iv-ch">📘 Delika Facebook</div>
+                <div class="iv-top"><span class="iv-name">Ronald Reigns</span><span class="iv-time">2mo · 20d</span></div>
+                <div class="iv-preview">I'm good</div>
+                <div class="iv-tag">support-case</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#0D47A1;">D</div>
+              <div class="iv-body">
+                <div class="iv-ch">🌐 krongage web</div>
+                <div class="iv-top"><span class="iv-name">Divine-Bird-176</span><span class="iv-time">2mo · 2mo</span></div>
+                <div class="iv-preview">↩ Test message from KronGage</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#64748b;">N</div>
+              <div class="iv-body">
+                <div class="iv-ch">🟢 Krongage whatsapp</div>
+                <div class="iv-top"><span class="iv-name">NY</span><span class="iv-time">2mo · 2mo</span></div>
+                <div class="iv-preview">↩ hi</div>
+                <div class="iv-sla">🔴 4d 2h</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#10b981;">C</div>
+              <div class="iv-body">
+                <div class="iv-ch">🌐 krongage web</div>
+                <div class="iv-top"><span class="iv-name">Cold-Forest-180</span><span class="iv-time">2mo · 2mo</span></div>
+                <div class="iv-preview">yes sit</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#e11d48;">F</div>
+              <div class="iv-body">
+                <div class="iv-ch">🌐 krongage web</div>
+                <div class="iv-top"><span class="iv-name">Floral-Cloud-18</span><span class="iv-time">2mo · 2mo</span></div>
+                <div class="iv-preview">Get notified by email</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#6366f1;">D</div>
+              <div class="iv-body">
+                <div class="iv-ch">🌐 krongage web</div>
+                <div class="iv-top"><span class="iv-name">Divine-Violet-566</span><span class="iv-time">2mo · 2mo</span></div>
+                <div class="iv-preview">Get notified by email</div>
+              </div>
+            </div>
+            <div class="iv-conv">
+              <div class="iv-av" style="background:#0891b2;">W</div>
+              <div class="iv-body">
+                <div class="iv-ch">🌐 krongage web</div>
+                <div class="iv-top"><span class="iv-name">White-Darkness-922</span><span class="iv-time">2mo · 2mo</span></div>
+                <div class="iv-preview">Get notified by email</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Empty state -->
+        <div class="iv-empty">
+          <svg width="72" height="60" viewBox="0 0 72 60" fill="none"><ellipse cx="36" cy="30" rx="30" ry="24" fill="#EEF5FD"/><circle cx="36" cy="28" r="10" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/><circle cx="36" cy="28" r="4" fill="#3b82f6" opacity=".5"/><circle cx="44" cy="36" r="2" fill="#93c5fd"/><circle cx="50" cy="30" r="1.5" fill="#bfdbfe"/></svg>
+          <p class="iv-empty-title">Please select a conversation<br/>from left pane</p>
+          <div class="iv-empty-hint"><span class="iv-kbd">⌘</span><span class="iv-kbd">K</span><span style="font-size:11px;color:#94a3b8;">to open command menu</span></div>
+          <div class="iv-empty-hint"><span class="iv-kbd">⌘</span><span class="iv-kbd">/</span><span style="font-size:11px;color:#94a3b8;">to view keyboard shortcuts</span></div>
+        </div>
+      </div>
+    </div><!-- /view-inbox -->
+
+
+    <!-- ══ VIEW: SOCIAL PUBLISHING ══ -->
+    <div class="kd-view" id="view-social-pub">
+      <div class="sp-layout">
+        <!-- Left sidebar -->
+        <div class="sp-sidebar">
+          <div class="sp-sb-item active">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Analytics
+          </div>
+          <div class="sp-sb-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendar
+          </div>
+          <div class="sp-sb-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Channels
+          </div>
+          <div class="sp-sb-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Media
+          </div>
+          <div class="sp-sb-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings
+          </div>
+        </div>
+        <!-- Main area -->
+        <div class="sp-main">
+          <div class="sp-header">
+            <span>Launches</span>
+            <button class="sp-create-btn">+ Create Post</button>
+          </div>
+          <div class="sp-alert">⚠ 1 channel needs attention</div>
+          <div class="sp-alert-name">kjudas012 <span style="margin-left:auto;font-size:9px;color:#94a3b8;float:right;">Token expired <span style="background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:1px 6px;color:#374151;font-weight:700;margin-left:4px;">Reconnect</span></span></div>
+          <div class="sp-cal-toolbar">
+            <span class="sp-cal-btn">‹</span>
+            <span class="sp-cal-range">05/11/2026 – 05/17/2026</span>
+            <span class="sp-cal-btn">›</span>
+            <span class="sp-cal-today">Today</span>
+            <div class="sp-view-tabs" style="margin-left:auto;">
+              <span class="sp-view-tab">Day</span>
+              <span class="sp-view-tab active">Week</span>
+              <span class="sp-view-tab">Month</span>
+            </div>
+          </div>
+          <div class="sp-body">
+            <!-- Channels list -->
+            <div class="sp-ch-panel">
+              <div class="sp-ch-head-row">
+                <span class="sp-ch-title">Channels</span>
+                <span class="sp-ch-toggle">‹</span>
+              </div>
+              <div class="sp-add-btn">Add Channel</div>
+              <div class="sp-ch-list">
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#e1306c;">D</div><span class="sp-ch-name">Delika</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#e2e8f0;color:#374151;">S</div><span class="sp-ch-name">Server Room</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#0077b5;">S</div><span class="sp-ch-name">Server Room</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#0077b5;">K</div><span class="sp-ch-name">Kofi Judas</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#0077b5;">N</div><span class="sp-ch-name">Nana Yaw Israel</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#0077b5;">E</div><span class="sp-ch-name">Emmanuel Akonnor</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#0077b5;">S</div><span class="sp-ch-name">Samuel Kofi A. Quart…</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#0077b5;">M</div><span class="sp-ch-name">Micky Symons</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#e2e8f0;color:#374151;">Z</div><span class="sp-ch-name">Zabeth Enyonam Viv…</span><span class="sp-ch-more">⋮</span></div>
+                <div class="sp-ch-item"><div class="sp-ch-av" style="background:#e60023;">k</div><span class="sp-ch-name">kjudas012</span><span class="sp-ch-more">⋮</span></div>
+              </div>
+            </div>
+            <!-- Calendar grid -->
+            <div class="sp-cal">
+              <div class="sp-cal-head">
+                <div></div>
+                <div class="sp-cal-dh"><div class="sp-cal-dh-name">Monday</div><div class="sp-cal-dh-num">05/11/2026</div></div>
+                <div class="sp-cal-dh"><div class="sp-cal-dh-name">Tuesday</div><div class="sp-cal-dh-num">05/12/2026</div></div>
+                <div class="sp-cal-dh"><div class="sp-cal-dh-name">Wednesday</div><div class="sp-cal-dh-num">05/13/2026</div></div>
+                <div class="sp-cal-dh"><div class="sp-cal-dh-name">Thursday</div><div class="sp-cal-dh-num">05/14/2026</div></div>
+                <div class="sp-cal-dh"><div class="sp-cal-dh-name">Friday</div><div class="sp-cal-dh-num today" style="color:#0D47A1;">• 05/15/2026</div></div>
+                <div class="sp-cal-dh"><div class="sp-cal-dh-name">Saturday</div><div class="sp-cal-dh-num">05/16/2026</div></div>
+                <div class="sp-cal-dh"><div class="sp-cal-dh-name">Sunday</div><div class="sp-cal-dh-num">05/17/2026</div></div>
+              </div>
+              <div class="sp-cal-body" id="spCalBody">
+                <div class="sp-time-col" id="spTimCol"></div>
+                <div class="sp-day-col"></div>
+                <div class="sp-day-col"></div>
+                <div class="sp-day-col"></div>
+                <div class="sp-day-col"></div>
+                <div class="sp-day-col today-col"></div>
+                <div class="sp-day-col"></div>
+                <div class="sp-day-col"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-social-pub -->
+
+
+    <!-- ══ VIEW: CAMPAIGNS ══ -->
+    <div class="kd-view" id="view-campaigns">
+      <div class="cm-layout">
+        <!-- Sidebar -->
+        <div class="cm-sidebar">
+          <div class="cm-sb-top">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Reporting
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="cm-sb-label">
+            <span style="display:flex;align-items:center;gap:6px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91"/></svg>Messaging
+            </span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="cm-sb-item active">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Journeys
+          </div>
+          <div class="cm-sb-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Message Templates
+          </div>
+          <div class="cm-sb-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 000 6h20a3 3 0 000-6z"/><path d="M5 17V5a2 2 0 012-2h10a2 2 0 012 2v12"/></svg>Broadcasts
+          </div>
+          <div class="cm-sb-top" style="margin-top:4px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Audience
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="cm-sb-top">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings
+          </div>
+        </div>
+        <!-- Main -->
+        <div class="cm-main">
+          <div class="cm-head">
+            <span class="cm-title">Journeys</span>
+            <button class="cm-btn">+ New Journey</button>
+          </div>
+          <div class="cm-thead-row">
+            <div class="cm-th">Name <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+            <div class="cm-th">Status <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+            <div class="cm-th">Created At <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+            <div class="cm-th"></div>
+          </div>
+          <div class="cm-tr">
+            <div class="cm-td"><span class="cm-td-name">Test <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></div>
+            <div class="cm-td"><span class="cm-status not-started">Not Started</span></div>
+            <div class="cm-td" style="color:#64748b;">about 1 month ago</div>
+            <div class="cm-td"><span class="cm-menu">⋮</span></div>
+          </div>
+          <div class="cm-tr">
+            <div class="cm-td"><span class="cm-td-name">sms test <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></div>
+            <div class="cm-td"><span class="cm-status running">● Running</span></div>
+            <div class="cm-td" style="color:#64748b;">22 days ago</div>
+            <div class="cm-td"><span class="cm-menu">⋮</span></div>
+          </div>
+          <div class="cm-tr">
+            <div class="cm-td"><span class="cm-td-name">Friday Journey Test <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></div>
+            <div class="cm-td"><span class="cm-status running">● Running</span></div>
+            <div class="cm-td" style="color:#64748b;">21 days ago</div>
+            <div class="cm-td"><span class="cm-menu">⋮</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:14px;">
+            <button style="font-size:10px;border:1px solid #e2e8f0;border-radius:5px;padding:4px 8px;background:#fff;color:#94a3b8;cursor:pointer;">«« First</button>
+            <button style="font-size:10px;border:1px solid #e2e8f0;border-radius:5px;padding:4px 8px;background:#fff;color:#94a3b8;cursor:pointer;">‹ Previous</button>
+            <button style="font-size:10px;border:1px solid #e2e8f0;border-radius:5px;padding:4px 8px;background:#fff;color:#94a3b8;cursor:pointer;">Next ›</button>
+            <button style="font-size:10px;border:1px solid #e2e8f0;border-radius:5px;padding:4px 8px;background:#fff;color:#94a3b8;cursor:pointer;">Last »»</button>
+            <span style="margin-left:auto;font-size:10px;color:#94a3b8;">Page 1 of 1</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-campaigns -->
+
+
+    <!-- ══ VIEW: CUSTOMER 360 ══ -->
+    <div class="kd-view" id="view-customers">
+      <div class="c3-layout">
+        <!-- Profile list -->
+        <div class="c3-list">
+          <div class="c3-list-head">
+            <span style="display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Customer 360</span>
+            <div class="c3-list-head-right">
+              <span style="font-size:12px;font-weight:700;">16</span>
+              <span class="c3-live"><span class="c3-live-dot"></span>Live</span>
+              <span class="c3-sync-btn">↻ Sync</span>
+            </div>
+          </div>
+          <div class="c3-list-stats">
+            <div class="c3-lstat"><div class="c3-lstat-lbl">Active 7d</div><div class="c3-lstat-val">0</div></div>
+            <div class="c3-lstat"><div class="c3-lstat-lbl">Avg Score</div><div class="c3-lstat-val">0</div></div>
+            <div class="c3-lstat"><div class="c3-lstat-lbl">Active 30d</div><div class="c3-lstat-val">6</div></div>
+          </div>
+          <div class="c3-search-wrap"><input class="c3-search" placeholder="Search profiles…" /></div>
+          <div class="c3-profiles">
+            <div class="c3-profile active">
+              <div class="c3-av" style="background:#0D47A1;">KU</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname">Kuffour</span> <span class="c3-ptag opp">Opportunity</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore high">73</div><div class="c3-ptime">22 days ago</div></div>
+            </div>
+            <div class="c3-profile">
+              <div class="c3-av" style="background:#e11d48;">RO</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname">Ronald</span> <span class="c3-ptag cust">Customer</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore high">73</div><div class="c3-ptime">22 days ago</div></div>
+            </div>
+            <div class="c3-profile">
+              <div class="c3-av" style="background:#7c3aed;">JA</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname">jane</span> <span class="c3-ptag opp">Opportunity</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore high">73</div><div class="c3-ptime">24 days ago</div></div>
+            </div>
+            <div class="c3-profile">
+              <div class="c3-av" style="background:#059669;">LY</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname">lyncrisella</span> <span class="c3-ptag lead">Lead</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore low">21</div><div class="c3-ptime">25 days ago</div></div>
+            </div>
+            <div class="c3-profile">
+              <div class="c3-av" style="background:#1e293b;">TR</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname">Tech Ronald</span> <span class="c3-ptag lead">Lead</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore low">21</div><div class="c3-ptime">29 days ago</div></div>
+            </div>
+            <div class="c3-profile">
+              <div class="c3-av" style="background:#0891b2;">NG</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname" style="font-size:9.5px;">Narhnarh Aqosuah…</span> <span class="c3-ptag lead">Lead</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore low">13</div><div class="c3-ptime">1 month ago</div></div>
+            </div>
+            <div class="c3-profile">
+              <div class="c3-av" style="background:#d97706;">NY</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname">NY</span> <span class="c3-ptag lead">Lead</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore low">13</div><div class="c3-ptime">1 month ago</div></div>
+            </div>
+            <div class="c3-profile">
+              <div class="c3-av" style="background:#6366f1;">SH</div>
+              <div class="c3-pinfo"><div class="c3-prow"><span class="c3-pname">She_is_faceless</span> <span class="c3-ptag lead">Lead</span></div></div>
+              <div class="c3-pright"><div class="c3-pscore low">13</div><div class="c3-ptime">1 month ago</div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Detail panel -->
+        <div class="c3-detail">
+          <div class="c3-detail-head">
+            <div class="c3-detail-left">
+              <div class="c3-detail-av">KU</div>
+              <div>
+                <div class="c3-detail-name">Kuffour</div>
+                <div class="c3-detail-sub">— —</div>
+              </div>
+            </div>
+            <div class="c3-detail-actions">
+              <button class="c3-action-btn">✏ Edit</button>
+              <button class="c3-action-btn">⊕ Merge</button>
+              <button class="c3-action-btn">↓ Export ∨</button>
+            </div>
+          </div>
+          <div class="c3-detail-tags">
+            <span class="c3-dtag">Opportunity</span>
+            <span class="c3-dtag">Individual</span>
+            <span class="c3-dtag active-tab">Score: 73</span>
+          </div>
+
+          <div class="c3-section-lbl">INTELLIGENCE SCORES</div>
+          <div class="c3-scores-grid">
+            <div class="c3-score-card">
+              <div class="c3-score-lbl">↗ Engagement</div>
+              <div class="c3-score-val">73</div>
+              <div class="c3-score-bar"><div class="c3-score-fill" style="width:73%;background:#0D47A1;"></div></div>
+            </div>
+            <div class="c3-score-card">
+              <div class="c3-score-lbl">◎ Lead Score</div>
+              <div class="c3-score-val">85</div>
+              <div class="c3-score-bar"><div class="c3-score-fill" style="width:85%;background:#16a34a;"></div></div>
+            </div>
+            <div class="c3-score-card">
+              <div class="c3-score-lbl">○ Health</div>
+              <div class="c3-score-val">73</div>
+              <div class="c3-score-bar"><div class="c3-score-fill" style="width:73%;background:#0D47A1;"></div></div>
+            </div>
+            <div class="c3-score-card">
+              <div class="c3-score-lbl">⚠ Churn Risk</div>
+              <div class="c3-score-val">27</div>
+              <div class="c3-score-bar"><div class="c3-score-fill" style="width:27%;background:#f59e0b;"></div></div>
+            </div>
+          </div>
+
+          <div class="c3-section-lbl">CHANNEL PRESENCE</div>
+          <div class="c3-ch-row">
+            <span class="c3-ch-tag">🟢 Whatsapp</span>
+            <span class="c3-ch-tag">🌐 Web</span>
+            <span class="c3-ch-tag">⚙ Api</span>
+          </div>
+
+          <div class="c3-meta-grid">
+            <div class="c3-meta-card"><div class="c3-meta-lbl">Lifecycle Stage</div><div class="c3-meta-val">Opportunity</div></div>
+            <div class="c3-meta-card"><div class="c3-meta-lbl">Interactions</div><div class="c3-meta-val">9</div></div>
+            <div class="c3-meta-card"><div class="c3-meta-lbl">Last Seen</div><div class="c3-meta-val">22 days ago</div></div>
+          </div>
+
+          <div class="c3-cases-row">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+            <span style="flex:1;margin-left:6px;font-size:11px;font-weight:600;">Support Cases <span style="color:#94a3b8;font-weight:400;">6 total</span></span>
+            <span class="c3-cases-badge">● 4 open</span>
+            <span class="c3-cases-link" style="margin-left:8px;">View Cases</span>
+          </div>
+
+          <div class="c3-section-lbl">RECENT ACTIVITY</div>
+          <div class="c3-act-item">
+            <div class="c3-act-cb"></div>
+            <div class="c3-act-body">
+              <div class="c3-act-title">Conversation #132</div>
+              <div class="c3-act-sub">Krongage whatsapp — resolved</div>
+            </div>
+            <div class="c3-act-time">4d ago ↗</div>
+          </div>
+          <div class="c3-act-item">
+            <div class="c3-act-cb"></div>
+            <div class="c3-act-body">
+              <div class="c3-act-title">Conversation #1</div>
+              <div class="c3-act-sub">krongage web — resolved</div>
+            </div>
+            <div class="c3-act-time">15d ago ↗</div>
+          </div>
+          <div class="c3-act-item">
+            <div class="c3-act-cb"></div>
+            <div class="c3-act-body">
+              <div class="c3-act-title">Conversation #2</div>
+              <div class="c3-act-sub">Support Cases — resolved</div>
+            </div>
+            <div class="c3-act-time">15d ago ↗</div>
+          </div>
+          <div class="c3-act-item">
+            <div class="c3-act-cb"></div>
+            <div class="c3-act-body">
+              <div class="c3-act-title">Conversation #131</div>
+              <div class="c3-act-sub">Krongage whatsapp — resolved</div>
+            </div>
+            <div class="c3-act-time">16d ago ↗</div>
+          </div>
+          <div class="c3-act-item">
+            <div class="c3-act-cb"></div>
+            <div class="c3-act-body">
+              <div class="c3-act-title">Conversation #127 — resolved</div>
+              <div class="c3-act-sub">via whatsapp</div>
+            </div>
+            <div class="c3-act-time">22d ago ↗</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-customers -->
+
+
+    <!-- ══ VIEW: KNOWLEDGE ══ -->
+    <div class="kd-view" id="view-knowledge">
+      <div class="kn-layout">
+        <!-- Left sidebar -->
+        <div class="kn-sb">
+          <div class="kn-sb-head">
+            <div class="kn-sb-title">Knowledge</div>
+            <div class="kn-sb-sub">Knowledge base &amp; RAG — pgvect…</div>
+          </div>
+          <div class="kn-sb-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Chat
+          </div>
+          <div class="kn-sb-item active">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Documents
+          </div>
+          <div class="kn-sb-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Entities
+          </div>
+          <div class="kn-sb-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Guidelines
+          </div>
+        </div>
+        <!-- Document list -->
+        <div class="kn-docs">
+          <div class="kn-docs-head">
+            <span class="kn-docs-title">Documents</span>
+            <button class="kn-upload-btn">↑ Upload</button>
+          </div>
+          <div class="kn-selector-wrap">
+            <select class="kn-selector"><option>📄 Fidelity Bank (2)</option></select>
+          </div>
+          <div class="kn-doc-list">
+            <div class="kn-doc-item active">
+              <div class="kn-doc-icon">📄</div>
+              <div class="kn-doc-info">
+                <div class="kn-doc-name">FAQ.pdf</div>
+                <div class="kn-doc-meta">34.2 MB · 36d ago</div>
+                <div class="kn-doc-badge">ready</div>
+              </div>
+            </div>
+            <div class="kn-doc-item">
+              <div class="kn-doc-icon">📄</div>
+              <div class="kn-doc-info">
+                <div class="kn-doc-name">prb-report.pdf</div>
+                <div class="kn-doc-meta">620.9 KB · 36d ago</div>
+                <div class="kn-doc-badge">ready</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Content viewer -->
+        <div class="kn-content">
+          <div class="kn-file-head">
+            <div class="kn-file-info">
+              <div class="kn-file-icon">📄</div>
+              <div>
+                <div class="kn-file-name">FAQ.pdf</div>
+                <div class="kn-file-meta">34.2 MB · application/pdf · Apr 9, 2026, 11:57 AM</div>
+              </div>
+            </div>
+            <div class="kn-file-actions">
+              <button class="kn-file-btn">↓ Download</button>
+              <button class="kn-file-btn">↻ Re-extract entities</button>
+              <button class="kn-file-btn danger">🗑 Delete</button>
+            </div>
+          </div>
+          <div class="kn-chunks-meta">
+            <span><strong>DOCUMENT CONTENT (4 CHUNKS)</strong></span>
+            <span>1122 total tokens</span>
+          </div>
+          <div class="kn-chunk">
+            <div class="kn-chunk-head"><span class="kn-chunk-label">Chunk 1</span><span class="kn-chunk-tokens">547 tokens</span></div>
+            <div class="kn-chunk-body">Believe with us.
+FAQs
+1. What is the Fidelity Green Leding Fund?
+This is a dedicated concessionary green financing product developed by Fidelity Bank Ghana LTD (FBGL) to meet the unique financing needs of businesses in the green economy including climate friendly businesses.
+2. What are green economy or climate businesses?
+These are businesses whose operational models and methods contribute to reduce environmental harm, promote sustainability, and support inclusive economic growth.</div>
+          </div>
+          <div class="kn-chunk">
+            <div class="kn-chunk-head"><span class="kn-chunk-label">Chunk 2</span><span class="kn-chunk-tokens">515 tokens</span></div>
+            <div class="kn-chunk-body">[GLF?]
+All businesses that are aligned to the Ghana Green Finance Taxonomy (2024) Phase 1 as well as SDG 7, SDG 9 and SDG 13. They include:
+9. How does a customer apply for Green Lending Fund?
+Customer submit their green business funding proposal for the GLF through the Relationship Managers or Officers in the usual procedure for Corporate Banking (CIB) or Business Banking or SME loan.</div>
+          </div>
+          <div class="kn-chunk">
+            <div class="kn-chunk-head"><span class="kn-chunk-label">Chunk 3</span><span class="kn-chunk-tokens">95 tokens</span></div>
+            <div class="kn-chunk-body">[GLF? > GLF.]
+11. Which Department in the Bank provides back-end support, drives and coordinates GLF?</div>
+          </div>
+          <div class="kn-chunk">
+            <div class="kn-chunk-head"><span class="kn-chunk-label">Chunk 4</span><span class="kn-chunk-tokens">65 tokens</span></div>
+            <div class="kn-chunk-body">The Partnerships, Sustainability and CSR department drives and coordinates the Green Lending Fund across all business segments and provides back-end support.</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-knowledge -->
+
+
+    <!-- ══ VIEW: SETTINGS ══ -->
+    <div class="kd-view" id="view-settings">
+      <div style="display:flex;height:100%;overflow:hidden;">
+        <!-- Sidebar -->
+        <div style="width:160px;flex-shrink:0;border-right:1px solid #f1f5f9;padding:8px 0;overflow-y:auto;">
+          <div style="display:flex;align-items:center;gap:7px;padding:8px 12px 10px;font-size:12px;font-weight:800;color:#0f172a;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>General</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Team</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Billing</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Security</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;flex-wrap:wrap;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Social Publishing API Keys</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:700;color:#0D47A1;background:#EEF5FD;cursor:pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Social Channel Access</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;flex-wrap:wrap;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3z"/></svg>Social Listening API Keys</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>KronChat Social Apps</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>KronCard <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</div>
+        </div>
+        <!-- Main content -->
+        <div style="flex:1;padding:20px 28px;overflow-y:auto;">
+          <div style="font-size:17px;font-weight:800;color:#0f172a;margin-bottom:6px;">Social Channel Access</div>
+          <div style="font-size:11px;color:#64748b;line-height:1.6;margin-bottom:20px;max-width:600px;">Control which team members can post from each connected social account. By default every Social Manager can access every channel. Restricting a channel limits it to only the users you assign — admins always have full access.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <!-- Channel cards -->
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;">S</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Server Room</div><div style="font-size:10px;color:#94a3b8;">X</div></div>
+              <div style="font-size:10px;font-weight:700;color:#d97706;background:#fef3c7;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>5 users</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;">S</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Server Room</div><div style="font-size:10px;color:#94a3b8;">Linkedin</div></div>
+              <div style="font-size:10px;font-weight:700;color:#d97706;background:#fef3c7;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>2 users</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#e1306c;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;">D</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Delika</div><div style="font-size:10px;color:#94a3b8;">Facebook</div></div>
+              <div style="font-size:10px;font-weight:700;color:#d97706;background:#fef3c7;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>2 users</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#374151;flex-shrink:0;">s00</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">server00m1234</div><div style="font-size:10px;color:#94a3b8;">Threads</div></div>
+              <div style="font-size:10px;font-weight:700;color:#d97706;background:#fef3c7;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>1 user</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#374151;flex-shrink:0;">Serv</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Server Room</div><div style="font-size:10px;color:#94a3b8;">Instagram-Standalone</div></div>
+              <div style="font-size:10px;font-weight:600;color:#64748b;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Open to all</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#059669;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;">r</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">rather not say</div><div style="font-size:10px;color:#94a3b8;">Youtube</div></div>
+              <div style="font-size:10px;font-weight:600;color:#64748b;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Open to all</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#374151;flex-shrink:0;">kjud</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">kjudas012</div><div style="font-size:10px;color:#94a3b8;">Pinterest</div></div>
+              <div style="font-size:10px;font-weight:600;color:#64748b;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Open to all</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">Kofi</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Kofi Judas</div><div style="font-size:10px;color:#94a3b8;">Linkedin</div></div>
+              <div style="font-size:10px;font-weight:700;color:#d97706;background:#fef3c7;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>2 users</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">Nan</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Nana Yaw Israel</div><div style="font-size:10px;color:#94a3b8;">Linkedin</div></div>
+              <div style="font-size:10px;font-weight:700;color:#d97706;background:#fef3c7;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>2 users</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">Emm</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Emmanuel Akonnor</div><div style="font-size:10px;color:#94a3b8;">Linkedin</div></div>
+              <div style="font-size:10px;font-weight:600;color:#64748b;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Open to all</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">Sam</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Samuel Kofi A. Quartey</div><div style="font-size:10px;color:#94a3b8;">Linkedin</div></div>
+              <div style="font-size:10px;font-weight:700;color:#d97706;background:#fef3c7;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>4 users</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">Mick</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Micky Symons</div><div style="font-size:10px;color:#94a3b8;">Linkedin</div></div>
+              <div style="font-size:10px;font-weight:600;color:#64748b;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Open to all</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">Zabe</div>
+              <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:#0f172a;">Zabeth Enyonam Vivor MCIPS MSc</div><div style="font-size:10px;color:#94a3b8;">Linkedin</div></div>
+              <div style="font-size:10px;font-weight:600;color:#64748b;display:flex;align-items:center;gap:4px;white-space:nowrap;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Open to all</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-settings -->
+
+
+    <!-- ══ VIEW: USAGE & LIMITS ══ -->
+    <div class="kd-view" id="view-usage">
+      <div style="display:flex;height:100%;overflow:hidden;">
+        <!-- Sidebar -->
+        <div style="width:145px;flex-shrink:0;border-right:1px solid #f1f5f9;padding:8px 0;overflow-y:auto;">
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:700;color:#0D47A1;background:#EEF5FD;cursor:pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Overview</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Usage</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Plans</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Alerts</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Notifications</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:10.5px;font-weight:600;color:#475569;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>AI Settings</div>
+        </div>
+        <!-- Main -->
+        <div style="flex:1;padding:16px 20px;overflow-y:auto;">
+          <!-- Header -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#0D47A1);display:flex;align-items:center;justify-content:center;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 2A2.5 2.5 0 017 4.5v0A2.5 2.5 0 014.5 7H4a2 2 0 00-2 2"/></svg>
+            </div>
+            <span style="font-size:16px;font-weight:800;color:#0f172a;">Usage &amp; Limits</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 8px;border-radius:20px;"><span style="width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block;"></span>Live</span>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:16px;">Service usage metering, plan limits &amp; access controls across your workspace</div>
+
+          <!-- Top 4 stat cards -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;">
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:12px 14px;">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:6px;">Current Plan</div>
+              <div style="font-size:18px;font-weight:800;color:#0f172a;">Professional</div>
+            </div>
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:12px 14px;">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:6px;">AI Requests (Month)</div>
+              <div style="font-size:18px;font-weight:800;color:#0f172a;">194</div>
+            </div>
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:12px 14px;">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:6px;">Services Active</div>
+              <div style="font-size:18px;font-weight:800;color:#0f172a;">4 <span style="font-size:12px;font-weight:500;color:#94a3b8;">of 5</span></div>
+            </div>
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:12px 14px;">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:6px;">Usage Health</div>
+              <div style="font-size:18px;font-weight:800;color:#16a34a;">Healthy</div>
+            </div>
+          </div>
+
+          <!-- Service cards 2-col grid -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <!-- KronChat -->
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:14px 16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:18px;">💬</span>
+                <div><div style="font-size:12px;font-weight:800;color:#0f172a;">KronChat</div><div style="font-size:10px;color:#64748b;">AI-powered customer conversations</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:4px;"><span>Month</span><span style="font-weight:600;color:#0f172a;">13 / 50.0K</span></div>
+              <div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-bottom:3px;"><div style="height:100%;width:0.03%;background:#0D47A1;border-radius:2px;"></div></div>
+              <div style="font-size:9px;color:#94a3b8;text-align:right;">0.0%</div>
+            </div>
+            <!-- Socials -->
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:14px 16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:18px;">📱</span>
+                <div><div style="font-size:12px;font-weight:800;color:#0f172a;">Socials</div><div style="font-size:10px;color:#64748b;">AI content generation &amp; copilot</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:4px;"><span>Month</span><span style="font-weight:600;color:#0f172a;">62 / 20.0K</span></div>
+              <div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-bottom:3px;"><div style="height:100%;width:0.3%;background:#0D47A1;border-radius:2px;"></div></div>
+              <div style="font-size:9px;color:#94a3b8;text-align:right;">0.3%</div>
+            </div>
+            <!-- Listening -->
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:14px 16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:18px;">💡</span>
+                <div><div style="font-size:12px;font-weight:800;color:#0f172a;">Listening</div><div style="font-size:10px;color:#64748b;">Brand monitoring &amp; sentiment AI</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:4px;"><span>Month</span><span style="font-weight:600;color:#0f172a;">13 / 50.0K</span></div>
+              <div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-bottom:3px;"><div style="height:100%;width:0.03%;background:#0D47A1;border-radius:2px;"></div></div>
+              <div style="font-size:9px;color:#94a3b8;text-align:right;">0.0%</div>
+            </div>
+            <!-- Knowledge -->
+            <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:14px 16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="font-size:18px;">🧠</span>
+                <div><div style="font-size:12px;font-weight:800;color:#0f172a;">Knowledge</div><div style="font-size:10px;color:#64748b;">RAG chat &amp; knowledge queries</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:4px;"><span>Day</span><span style="font-weight:600;color:#0f172a;">4 / 5.0K</span></div>
+              <div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-bottom:3px;"><div style="height:100%;width:0.1%;background:#0D47A1;border-radius:2px;"></div></div>
+              <div style="font-size:9px;color:#94a3b8;text-align:right;">0.1%</div>
+            </div>
+          </div>
+
+          <!-- Campaigns full width -->
+          <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:14px 16px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <span style="font-size:18px;">📣</span>
+              <div><div style="font-size:12px;font-weight:800;color:#0f172a;">Campaigns</div><div style="font-size:10px;color:#64748b;">AI campaign content &amp; scheduling</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:4px;"><span>Month</span><span style="font-weight:600;color:#0f172a;">0 / 10.0K</span></div>
+            <div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-bottom:3px;"><div style="height:100%;width:0%;background:#0D47A1;border-radius:2px;"></div></div>
+            <div style="font-size:9px;color:#94a3b8;text-align:right;">0.0%</div>
+          </div>
+
+          <!-- Platform AI Totals -->
+          <div style="background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:14px 16px;">
+            <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:12px;">Platform AI Totals</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="border:1px solid #f1f5f9;border-radius:8px;padding:10px 12px;">
+                <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;"><span style="font-size:11px;">⚡</span><span style="font-size:10px;font-weight:700;color:#374151;">AI Requests (Daily Rate)</span><span style="font-size:9px;color:#94a3b8;margin-left:auto;">Day</span></div>
+                <div style="font-size:18px;font-weight:800;color:#0f172a;">53</div>
+                <div style="font-size:9px;color:#64748b;margin-bottom:4px;">of 10.0K</div>
+                <div style="height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden;"><div style="height:100%;width:0.5%;background:#0D47A1;border-radius:2px;"></div></div>
+              </div>
+              <div style="border:1px solid #f1f5f9;border-radius:8px;padding:10px 12px;">
+                <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;"><span style="font-size:11px;">⚡</span><span style="font-size:10px;font-weight:700;color:#374151;">AI Requests</span><span style="font-size:9px;color:#94a3b8;margin-left:auto;">Month</span></div>
+                <div style="font-size:18px;font-weight:800;color:#0f172a;">194</div>
+                <div style="font-size:9px;color:#64748b;margin-bottom:4px;">of 100.0K</div>
+                <div style="height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden;"><div style="height:100%;width:0.2%;background:#0D47A1;border-radius:2px;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-usage -->
+
+  </div><!-- /kd-main -->
+
+  <!-- View indicator dots -->
+  <div class="kd-view-dots">
+    <div class="kd-view-dot active" data-dot="dash"></div>
+    <div class="kd-view-dot" data-dot="inbox"></div>
+    <div class="kd-view-dot" data-dot="social-pub"></div>
+    <div class="kd-view-dot" data-dot="campaigns"></div>
+    <div class="kd-view-dot" data-dot="social"></div>
+    <div class="kd-view-dot" data-dot="customers"></div>
+    <div class="kd-view-dot" data-dot="knowledge"></div>
+    <div class="kd-view-dot" data-dot="settings"></div>
+    <div class="kd-view-dot" data-dot="usage"></div>
+  </div>
+
+</div><!-- /kd -->
+
+<script>
+(function () {
+  'use strict';
+
+  // ── TAB SWITCHING ──
+  function switchToView(view) {
+    if (!view) return;
+    document.querySelectorAll('.kd-nb').forEach(function (b) { b.classList.remove('active'); });
+    var navBtn = document.querySelector('.kd-nb[data-view="' + view + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    document.querySelectorAll('.kd-view').forEach(function (v) { v.classList.remove('active'); });
+    var target = document.getElementById('view-' + view);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.kd-view-dot').forEach(function (d) {
+      d.classList.toggle('active', d.getAttribute('data-dot') === view);
+    });
+    if (view === 'social') initSocialView();
+  }
+
+  document.querySelectorAll('.kd-nb[data-view]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      clearAutoSwitch();
+      switchToView(this.getAttribute('data-view'));
+      restartAutoSwitch();
+    });
+  });
+
+  // SI time tab buttons
+  document.querySelectorAll('.si-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.si-tab').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+
+  // ── COUNTER ROLL-UP ──
+  function animateCounter(el, target, duration) {
+    duration = duration || 900;
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function runCounters() {
+    document.querySelectorAll('[data-target]').forEach(function (el) {
+      const t = parseInt(el.getAttribute('data-target'), 10);
+      animateCounter(el, t, 1000 + Math.random() * 400);
+    });
+  }
+  setTimeout(runCounters, 200);
+
+  // ── GAUGE ANIMATION ──
+  const gaugeEl = document.getElementById('gaugeFill');
+  // Full semicircle arc (r=38): π * 38 ≈ 119.4
+  // 79% of 119.4 = 94.3, dashoffset = 119.4 - 94.3 = 25.1
+  setTimeout(function () {
+    gaugeEl.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)';
+    gaugeEl.setAttribute('stroke-dashoffset', '25.1');
+  }, 400);
+
+  // ── MENTION SPARKBARS ──
+  const barData = [40,55,38,62,70,48,80,90,75,85,95,88];
+  const svgBars = document.getElementById('mentionBars');
+  if (svgBars) {
+    const bw = 8, gap = 5, max = Math.max.apply(null, barData);
+    barData.forEach(function (v, i) {
+      const h = (v / max) * 24;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', i * (bw + gap));
+      rect.setAttribute('y', 28 - h);
+      rect.setAttribute('width', bw);
+      rect.setAttribute('height', h);
+      rect.setAttribute('rx', '2');
+      rect.setAttribute('fill', '#0D47A1');
+      rect.setAttribute('opacity', i === barData.length - 1 ? '1' : '0.35');
+      svgBars.appendChild(rect);
+    });
+  }
+
+  // ── LIVE COUNTER TICK ──
+  let liveVal = 301;
+  setInterval(function () {
+    liveVal += Math.floor(Math.random() * 7) - 2;
+    if (liveVal < 280) liveVal = 295;
+    const el = document.getElementById('liveCount');
+    if (el) el.textContent = liveVal;
+  }, 2800);
+
+  // ── RANDOM STAT FLASH ──
+  const flashCards = document.querySelectorAll('.stat-card[data-stat]');
+  setInterval(function () {
+    const idx = Math.floor(Math.random() * flashCards.length);
+    const card = flashCards[idx];
+    const numEl = card.querySelector('[data-target]');
+    if (!numEl) return;
+    const cur = parseInt(numEl.textContent, 10);
+    const target = parseInt(numEl.getAttribute('data-target'), 10);
+    if (target === 0) return;
+    const newVal = cur + (Math.random() > 0.5 ? 1 : -1);
+    if (newVal < 0) return;
+    card.classList.add('flash');
+    numEl.textContent = newVal;
+    setTimeout(function () { card.classList.remove('flash'); }, 600);
+  }, 4500);
+
+  // ── SENTIMENT RIVER (Canvas) ──
+  function initSocialView() {
+    const canvas = document.getElementById('riverCanvas');
+    if (!canvas || canvas._inited) return;
+    canvas._inited = true;
+
+    const W = canvas.parentElement.offsetWidth || 500;
+    canvas.width = W;
+    canvas.height = 90;
+    const ctx = canvas.getContext('2d');
+
+    // Layers: positive (bottom, biggest), neutral, mixed, negative (top)
+    const layers = [
+      { color: 'rgba(34,197,94,0.72)', base: 0.55, amp: 0.15 },
+      { color: 'rgba(148,163,184,0.65)', base: 0.22, amp: 0.08 },
+      { color: 'rgba(245,158,11,0.70)', base: 0.13, amp: 0.06 },
+      { color: 'rgba(239,68,68,0.65)', base: 0.07, amp: 0.04 },
+    ];
+
+    const pts = 60;
+    let offset = 0;
+
+    function noise(x, freq, phase) {
+      return Math.sin(x * freq + phase) * 0.5 +
+             Math.sin(x * freq * 1.7 + phase * 1.3) * 0.3 +
+             Math.sin(x * freq * 0.5 + phase * 0.7) * 0.2;
+    }
+
+    function drawRiver(t) {
+      ctx.clearRect(0, 0, W, 90);
+      const H = 90;
+
+      // Stacked from bottom
+      let bottom = new Float32Array(pts + 1);
+      // fill bottom with baseline 0
+
+      layers.forEach(function (layer, li) {
+        const top = new Float32Array(pts + 1);
+        for (let i = 0; i <= pts; i++) {
+          const x = i / pts;
+          const wave = noise(x, 3.5, t * 0.4 + li * 1.2);
+          top[i] = bottom[i] + (layer.base + wave * layer.amp) * H;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(0, H - bottom[0]);
+        for (let i = 1; i <= pts; i++) {
+          const px = (i / pts) * W;
+          ctx.lineTo(px, H - top[i]);
+        }
+        for (let i = pts; i >= 0; i--) {
+          const px = (i / pts) * W;
+          ctx.lineTo(px, H - bottom[i]);
+        }
+        ctx.closePath();
+        ctx.fillStyle = layer.color;
+        ctx.fill();
+
+        // copy top → bottom for next layer
+        for (let i = 0; i <= pts; i++) bottom[i] = top[i];
+      });
+    }
+
+    let frame = 0;
+    function animate() {
+      frame++;
+      drawRiver(frame * 0.018);
+      canvas._raf = requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Animate platform bars
+    setTimeout(function () {
+      document.querySelectorAll('.si-plat-bar-fill').forEach(function (bar) {
+        bar.style.width = bar.getAttribute('data-width') + '%';
+      });
+    }, 100);
+  }
+
+  // ── View dots click ──
+  document.querySelectorAll('.kd-view-dot').forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var view = this.getAttribute('data-dot');
+      clearAutoSwitch();
+      switchToView(view);
+      restartAutoSwitch();
+    });
+  });
+
+  // ── CALENDAR TIME SLOTS ──
+  (function buildCalendar() {
+    var tc = document.getElementById('spTimCol');
+    if (!tc) return;
+    var hours = ['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+    hours.forEach(function(h) {
+      var d = document.createElement('div');
+      d.className = 'sp-time-slot';
+      d.textContent = h;
+      tc.appendChild(d);
+    });
+    var dayCols = document.querySelectorAll('#view-social-pub .sp-day-col');
+    dayCols.forEach(function(col) {
+      for (var i = 0; i < 24; i++) {
+        var cell = document.createElement('div');
+        cell.className = 'sp-day-cell';
+        col.appendChild(cell);
+      }
+    });
+  })();
+
+  // ── AUTO VIEW SWITCH ──
+  var autoViews = ['dash', 'inbox', 'social-pub', 'campaigns', 'social', 'customers', 'knowledge', 'settings', 'usage'];
+  var autoIdx = 0;
+  var autoTimer = null;
+
+  function doAutoSwitch() {
+    autoIdx = (autoIdx + 1) % autoViews.length;
+    switchToView(autoViews[autoIdx]);
+  }
+
+  function clearAutoSwitch() { clearInterval(autoTimer); }
+
+  function restartAutoSwitch() {
+    clearAutoSwitch();
+    autoTimer = setInterval(doAutoSwitch, 9000);
+  }
+
+  restartAutoSwitch();
+
+  // ── TOAST NOTIFICATIONS ──
+  var TOASTS = [
+    { icon: '💬', title: 'New conversation', sub: '@customer_42 started a chat on WhatsApp' },
+    { icon: '📊', title: 'Sentiment updated', sub: 'Brand health rose to 81% (+2%)' },
+    { icon: '🔔', title: '3 new mentions', sub: 'Twitter · just now' },
+    { icon: '✅', title: 'Workflow complete', sub: 'Email welcome sequence finished' },
+    { icon: '🌍', title: 'Follower spike', sub: '+48 new followers this hour' },
+    { icon: '⚡', title: 'AI response sent', sub: 'Agent handled query automatically' },
+  ];
+  var toastIdx = 0;
+
+  function showToast() {
+    var t = TOASTS[toastIdx % TOASTS.length];
+    toastIdx++;
+    var el = document.createElement('div');
+    el.className = 'kd-toast';
+    el.innerHTML =
+      '<span class="kd-toast-icon">' + t.icon + '</span>' +
+      '<div style="flex:1"><div class="kd-toast-title">' + t.title + '</div>' +
+      '<div class="kd-toast-sub">' + t.sub + '</div></div>' +
+      '<span class="kd-toast-close">×</span>';
+    document.querySelector('.kd').appendChild(el);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { el.classList.add('show'); });
+    });
+    var dismiss = function () {
+      el.classList.remove('show');
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+    };
+    el.querySelector('.kd-toast-close').addEventListener('click', dismiss);
+    setTimeout(dismiss, 4000);
+  }
+
+  setTimeout(showToast, 1800);
+  setInterval(showToast, 7000);
+
+})();
+</script>
+</body>
+</html>

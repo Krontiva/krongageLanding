@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Analytics & BI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; height: 100vh; overflow: hidden; }
+
+    .ab { display: flex; width: 100%; height: 100vh; overflow: hidden; }
+
+    /* ── Left visual panel ── */
+    .ab-visual {
+      width: 340px; flex-shrink: 0;
+      background: #e8edf5;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Hex shape */
+    .ab-hex {
+      width: 260px; height: 296px;
+      background: #c8d8ed;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .ab-hex-inner {
+      width: 100%; height: 100%;
+      background: linear-gradient(160deg, #b8cce0 0%, #9fb8d8 60%, #8aafd4 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    /* Stylised person silhouette */
+    .ab-person {
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; z-index: 2; margin-top: 20px;
+    }
+    .ab-person-head {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, #d4a876, #c49060);
+      box-shadow: 0 4px 16px rgba(0,0,0,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .ab-person-body {
+      width: 110px; height: 120px; border-radius: 50% 50% 0 0;
+      background: linear-gradient(160deg, #2c4a6e, #1a3454);
+      margin-top: 6px;
+    }
+
+    /* "All historic data" badge */
+    .ab-badge {
+      position: absolute; top: 22px; left: 18px;
+      background: #1a2d4a; color: #fff;
+      padding: 8px 14px; border-radius: 24px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0,0,0,.2);
+      z-index: 20;
+    }
+    .ab-badge-icon { font-size: 15px; }
+
+    /* ── Right: Analytics panel ── */
+    .ab-panel {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fff;
+    }
+
+    /* Top KPI bar */
+    .ab-kpi-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; border-bottom: 1px solid #f1f5f9; flex-shrink: 0;
+    }
+    .ab-kpi { padding: 14px 18px; border-right: 1px solid #f1f5f9; }
+    .ab-kpi:last-child { border-right: none; }
+    .ab-kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-bottom: 4px; }
+    .ab-kpi-val { font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -.5px; }
+    .ab-kpi-delta { font-size: 11px; font-weight: 700; margin-top: 3px; }
+    .up { color: #16a34a; }
+    .dn { color: #dc2626; }
+
+    /* Main body */
+    .ab-body { flex: 1; display: grid; grid-template-columns: 1fr 240px; gap: 0; overflow: hidden; }
+
+    /* Chart area */
+    .ab-chart-area { padding: 16px 16px 12px 18px; display: flex; flex-direction: column; border-right: 1px solid #f1f5f9; }
+    .ab-chart-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .ab-chart-title { font-size: 13px; font-weight: 800; color: #0f172a; }
+    .ab-chart-tabs { display: flex; gap: 4px; }
+    .ab-tab {
+      padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;
+      border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all .2s;
+    }
+    .ab-tab.on { background: #0D47A1; color: #fff; border-color: #0D47A1; }
+    .ab-canvas-wrap { flex: 1; position: relative; min-height: 0; }
+    canvas { display: block; }
+
+    /* Segment table */
+    .ab-seg-table { margin-top: 12px; flex-shrink: 0; }
+    .ab-seg-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f8fafc; }
+    .ab-seg-row:last-child { border-bottom: none; }
+    .ab-seg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .ab-seg-name { font-size: 11px; font-weight: 700; color: #374151; flex: 1; }
+    .ab-seg-bar-track { flex: 2; height: 5px; background: #f1f5f9; border-radius: 3px; overflow: hidden; }
+    .ab-seg-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+    .ab-seg-pct { font-size: 11px; font-weight: 700; color: #64748b; width: 32px; text-align: right; }
+
+    /* Prediction card */
+    .ab-pred {
+      background: #0f172a; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+    }
+    .ab-pred-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .ab-pred-items { display: flex; flex-direction: column; gap: 8px; }
+    .ab-pred-item { display: flex; align-items: center; gap: 9px; }
+    .ab-pred-circle { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .ab-pred-text { font-size: 13px; font-weight: 600; color: #fff; }
+    .ab-pred-users { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 4px; }
+    .ab-pred-div { height: 1px; background: rgba(255,255,255,.08); margin: 2px 0; }
+    .ab-perf-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 5px; }
+    .ab-perf-dot { width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; flex-shrink: 0; }
+    .ab-perf-list { list-style: none; margin-top: 6px; display: flex; flex-direction: column; gap: 5px; }
+    .ab-perf-list li { font-size: 11px; color: rgba(255,255,255,.55); padding-left: 10px; position: relative; }
+    .ab-perf-list li::before { content: '–'; position: absolute; left: 0; color: rgba(255,255,255,.25); }
+    .ab-wave { flex-shrink: 0; margin-top: auto; }
+
+    /* Selector tabs (segment) */
+    .ab-seg-sel { display: flex; gap: 6px; margin-bottom: 10px; flex-shrink: 0; flex-wrap: wrap; }
+    .ab-ssel { padding: 3px 9px; border-radius: 5px; font-size: 10px; font-weight: 700; border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all .2s; }
+    .ab-ssel.on { background: #0D47A1; color: #fff; border-color: #0D47A1; }
+  </style>
+</head>
+<body>
+<div class="ab">
+
+  <!-- Visual left -->
+  <div class="ab-visual">
+    <div class="ab-badge">
+      <span class="ab-badge-icon">📊</span>All historic data
+    </div>
+    <div class="ab-hex">
+      <div class="ab-hex-inner">
+        <div class="ab-person">
+          <div class="ab-person-head">👤</div>
+          <div class="ab-person-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics panel -->
+  <div class="ab-panel">
+
+    <!-- KPI bar -->
+    <div class="ab-kpi-bar">
+      <div class="ab-kpi">
+        <div class="ab-kpi-label">Total Users</div>
+        <div class="ab-kpi-val" id="kv1">12,480</div>
+        <div class="ab-kpi-delta up" id="kd1">↑ 8.4%</div>
+      </div>
+      <div class="ab-kpi">
+        <div class="ab-kpi-label">Avg Session</div>
+        <div class="ab-kpi-val" id="kv2">23 min</div>
+        <div class="ab-kpi-delta up" id="kd2">↑ 12%</div>
+      </div>
+      <div class="ab-kpi">
+        <div class="ab-kpi-label">Conversion</div>
+        <div class="ab-kpi-val" id="kv3">68%</div>
+        <div class="ab-kpi-delta up" id="kd3">↑ 5.2%</div>
+      </div>
+      <div class="ab-kpi">
+        <div class="ab-kpi-label">Predicted Growth</div>
+        <div class="ab-kpi-val" id="kv4">15% YOY</div>
+        <div class="ab-kpi-delta up" id="kd4">↑ Top 20%</div>
+      </div>
+    </div>
+
+    <div class="ab-body">
+
+      <!-- Chart area -->
+      <div class="ab-chart-area">
+        <div class="ab-chart-head">
+          <span class="ab-chart-title">Engagement Trend</span>
+          <div class="ab-chart-tabs">
+            <button class="ab-tab on" onclick="setRange(this,'7d')">7D</button>
+            <button class="ab-tab" onclick="setRange(this,'30d')">30D</button>
+            <button class="ab-tab" onclick="setRange(this,'90d')">90D</button>
+          </div>
+        </div>
+
+        <div class="ab-canvas-wrap">
+          <canvas id="chartCanvas"></canvas>
+        </div>
+
+        <div class="ab-seg-sel" id="segSel"></div>
+
+        <div class="ab-seg-table" id="segTable"></div>
+      </div>
+
+      <!-- Prediction card -->
+      <div class="ab-pred">
+        <div class="ab-pred-title">Prediction</div>
+        <div class="ab-pred-items">
+          <div class="ab-pred-item">
+            <div class="ab-pred-circle" style="background:linear-gradient(135deg,#90caf9,#42a5f5)"></div>
+            <span class="ab-pred-text">83% – 100%</span>
+          </div>
+          <div class="ab-pred-item">
+            <div class="ab-pred-circle" style="background:linear-gradient(135deg,#5c9fd4,#1565C0)"></div>
+            <span class="ab-pred-text">Top 20%</span>
+          </div>
+          <div class="ab-pred-item">
+            <div class="ab-pred-circle" style="background:linear-gradient(135deg,#3b6ea8,#0D47A1)"></div>
+            <span class="ab-pred-text">Predicted Growth: 15% YOY</span>
+          </div>
+        </div>
+        <div class="ab-pred-users" id="predUsers">1,236 users</div>
+
+        <div class="ab-pred-div"></div>
+
+        <div class="ab-perf-title"><div class="ab-perf-dot"></div>Performance Factors:</div>
+        <ul class="ab-perf-list">
+          <li>Avg. Session Duration: 23 mins</li>
+          <li>Content Engagement Rate: 68%</li>
+          <li>Conversion Propensity: High</li>
+          <li>Segment: Outdoor Enthusiasts</li>
+        </ul>
+
+        <div class="ab-pred-div"></div>
+
+        <svg class="ab-wave" viewBox="0 0 210 56" preserveAspectRatio="none" height="56">
+          <defs>
+            <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0D47A1" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#0D47A1" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path id="wavePath" fill="url(#wg)"/>
+          <path id="waveLine" fill="none" stroke="#42a5f5" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Segment data ──
+  const SEGMENTS = {
+    all: {
+      label: 'All Segments',
+      users: '12,480',
+      predUsers: '1,236 users',
+      segs: [
+        { name:'Outdoor Enthusiasts', pct:35, color:'#0D47A1' },
+        { name:'Home & Lifestyle',    pct:28, color:'#1976D2' },
+        { name:'Tech & Gaming',       pct:22, color:'#42a5f5' },
+        { name:'Travel',              pct:15, color:'#90caf9' },
+      ],
+      trend7:  [42,55,48,62,71,68,80],
+      trend30: [30,38,44,51,49,58,62,55,70,66,74,80,78,85,82,90,88,76,83,92,87,95,90,86,94,98,92,88,96,100],
+      trend90: null,
+    },
+    outdoor: {
+      label: 'Outdoor Enthusiasts',
+      users: '4,368',
+      predUsers: '874 users',
+      segs: [
+        { name:'Hiking',    pct:42, color:'#0D47A1' },
+        { name:'Cycling',   pct:31, color:'#1976D2' },
+        { name:'Camping',   pct:27, color:'#42a5f5' },
+      ],
+      trend7:  [60,72,65,78,84,80,91],
+      trend30: [48,56,60,68,72,76,80,74,82,86,88,82,90,94,92,96,90,86,94,98,92,96,100,94,98,96,92,98,96,100],
+    },
+    home: {
+      label: 'Home & Lifestyle',
+      users: '3,494',
+      predUsers: '621 users',
+      segs: [
+        { name:'Furniture',  pct:38, color:'#0D47A1' },
+        { name:'Decor',      pct:34, color:'#1976D2' },
+        { name:'Kitchen',    pct:28, color:'#42a5f5' },
+      ],
+      trend7:  [38,44,40,52,60,56,68],
+      trend30: [28,34,40,46,44,52,56,50,62,58,66,72,70,76,74,80,78,68,75,84,80,86,82,78,86,90,84,80,88,92],
+    },
+  };
+
+  let currentRange = '7d';
+  let currentSeg = 'all';
+
+  function getTrend(seg, range) {
+    const d = SEGMENTS[seg];
+    if (range === '7d') return d.trend7;
+    return d.trend30;
+  }
+
+  // ── Chart ──
+  const canvas = document.getElementById('chartCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const wrap = canvas.parentElement;
+    canvas.width = wrap.clientWidth;
+    canvas.height = wrap.clientHeight;
+    drawChart();
+  }
+
+  function drawChart() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    const data = getTrend(currentSeg, currentRange);
+    const N = data.length;
+    const pad = { t: 10, r: 10, b: 24, l: 30 };
+    const cW = W - pad.l - pad.r;
+    const cH = H - pad.t - pad.b;
+    const max = Math.max(...data) * 1.1;
+
+    const px = i => pad.l + (i / (N - 1)) * cW;
+    const py = v => pad.t + cH - (v / max) * cH;
+
+    // Grid lines
+    ctx.strokeStyle = '#f1f5f9';
+    ctx.lineWidth = 1;
+    [0.25, 0.5, 0.75, 1].forEach(f => {
+      const y = pad.t + cH * (1 - f);
+      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '9px Segoe UI';
+      ctx.fillText(Math.round(max * f), 0, y + 3);
+    });
+
+    // Gradient fill
+    const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + cH);
+    grad.addColorStop(0, 'rgba(13,71,161,.18)');
+    grad.addColorStop(1, 'rgba(13,71,161,0)');
+    ctx.beginPath();
+    ctx.moveTo(px(0), py(data[0]));
+    for (let i = 1; i < N; i++) {
+      const x0 = px(i-1), y0 = py(data[i-1]);
+      const x1 = px(i),   y1 = py(data[i]);
+      const cpx = (x0 + x1) / 2;
+      ctx.bezierCurveTo(cpx, y0, cpx, y1, x1, y1);
+    }
+    ctx.lineTo(px(N-1), pad.t + cH);
+    ctx.lineTo(px(0), pad.t + cH);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Line
+    ctx.beginPath();
+    ctx.moveTo(px(0), py(data[0]));
+    for (let i = 1; i < N; i++) {
+      const x0 = px(i-1), y0 = py(data[i-1]);
+      const x1 = px(i),   y1 = py(data[i]);
+      const cpx = (x0 + x1) / 2;
+      ctx.bezierCurveTo(cpx, y0, cpx, y1, x1, y1);
+    }
+    ctx.strokeStyle = '#0D47A1';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Dots + labels
+    const labels7  = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const labels30 = Array.from({length:30},(_,i)=>`${i+1}`);
+    const labels = currentRange === '7d' ? labels7 : labels30;
+    data.forEach((v, i) => {
+      ctx.beginPath();
+      ctx.arc(px(i), py(v), 3.5, 0, Math.PI*2);
+      ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.strokeStyle = '#0D47A1'; ctx.lineWidth = 2; ctx.stroke();
+      if (currentRange === '7d' || i % 5 === 0) {
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '9px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText(labels[i], px(i), pad.t + cH + 14);
+      }
+    });
+  }
+
+  function setRange(btn, range) {
+    document.querySelectorAll('.ab-tab').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    currentRange = range;
+    drawChart();
+  }
+
+  // ── Segments ──
+  function renderSegs() {
+    const segs = SEGMENTS[currentSeg].segs;
+    document.getElementById('segSel').innerHTML =
+      Object.entries(SEGMENTS).map(([k, v]) =>
+        `<div class="ab-ssel${k===currentSeg?' on':''}" onclick="setSeg('${k}')">${v.label}</div>`
+      ).join('');
+
+    const table = document.getElementById('segTable');
+    table.innerHTML = segs.map(s => `
+      <div class="ab-seg-row">
+        <div class="ab-seg-dot" style="background:${s.color}"></div>
+        <span class="ab-seg-name">${s.name}</span>
+        <div class="ab-seg-bar-track">
+          <div class="ab-seg-bar-fill" style="width:${s.pct}%;background:${s.color}"></div>
+        </div>
+        <span class="ab-seg-pct">${s.pct}%</span>
+      </div>`).join('');
+
+    document.getElementById('predUsers').textContent = SEGMENTS[currentSeg].predUsers;
+  }
+
+  function setSeg(key) {
+    currentSeg = key;
+    renderSegs();
+    drawChart();
+  }
+
+  // ── Wave animation in prediction card ──
+  let wt = 0;
+  function animWave() {
+    const path = document.getElementById('wavePath');
+    const line = document.getElementById('waveLine');
+    const W = 210, H = 56;
+    const pts = [];
+    for (let x = 0; x <= W; x += 5) {
+      const y = H * 0.55 + Math.sin((x / W) * 4 * Math.PI + wt) * 10 + Math.sin((x / W) * 7 * Math.PI + wt * 1.3) * 5;
+      pts.push([x, y]);
+    }
+    const lineD = pts.map((p, i) => `${i===0?'M':'L'}${p[0]},${p[1]}`).join(' ');
+    const fillD = lineD + ` L${W},${H} L0,${H} Z`;
+    path.setAttribute('d', fillD);
+    line.setAttribute('d', lineD);
+    wt += 0.04;
+    requestAnimationFrame(animWave);
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  setTimeout(resizeCanvas, 50);
+  renderSegs();
+  animWave();
+</script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Social Media Management</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; height: 100vh; overflow: hidden; }
+
+    .smm { display: flex; width: 100%; height: 100vh; overflow: hidden; background: #fff; }
+
+    /* ── Left: Visual blob + platform pill ── */
+    .smm-visual {
+      width: 300px; flex-shrink: 0;
+      background: #f0f4f8;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Big organic blob */
+    .smm-blob {
+      position: absolute;
+      width: 260px; height: 280px;
+      background: #0D47A1;
+      border-radius: 62% 38% 46% 54% / 55% 45% 55% 45%;
+      top: 50%; left: 50%;
+      transform: translate(-40%, -50%);
+      animation: blobMorph 8s ease-in-out infinite;
+    }
+    @keyframes blobMorph {
+      0%,100% { border-radius: 62% 38% 46% 54% / 55% 45% 55% 45%; }
+      33%      { border-radius: 42% 58% 56% 44% / 48% 52% 48% 52%; }
+      66%      { border-radius: 55% 45% 38% 62% / 42% 58% 42% 58%; }
+    }
+
+    /* Right decorative ring */
+    .smm-blob-ring {
+      position: absolute;
+      width: 100px; height: 120px;
+      border: 2.5px solid #0D47A1;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      right: 8px; top: 55%;
+      transform: translateY(-50%);
+    }
+
+    /* Phone + person illustration */
+    .smm-person-wrap {
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .smm-person-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, #d4a876, #c49060);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin-bottom: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    }
+    .smm-person-body {
+      width: 120px; height: 130px;
+      background: linear-gradient(160deg, #1a3a6e, #0d2654);
+      border-radius: 50% 50% 0 0;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding-top: 16px;
+    }
+    .smm-phone {
+      width: 50px; height: 86px;
+      background: #0f172a;
+      border-radius: 10px;
+      border: 2px solid #334155;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    }
+    .smm-phone-screen {
+      width: 40px; height: 70px;
+      border-radius: 6px;
+      background: linear-gradient(160deg, #1e40af, #0D47A1);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px;
+      overflow: hidden;
+    }
+    .smm-phone-bar { width: 28px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.4); }
+    .smm-phone-bar.w2 { width: 20px; }
+    .smm-phone-bar.blue { background: #60a5fa; }
+    .smm-phone-notif { position: absolute; top: -6px; right: -6px; width: 14px; height: 14px; background: #ef4444; border-radius: 50%; border: 2px solid #f0f4f8; font-size: 8px; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; }
+
+    /* Platform pill sidebar */
+    .smm-platform-pill {
+      position: absolute;
+      left: 14px;
+      top: 50%; transform: translateY(-50%);
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 12px 10px;
+      display: flex; flex-direction: column; gap: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.25);
+      z-index: 20;
+    }
+    .smm-plat-icon {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .smm-plat-icon:hover { transform: scale(1.15); }
+    .smm-plat-icon.active { box-shadow: 0 0 0 2px #fff; }
+    .smm-plat-icon svg { width: 18px; height: 18px; fill: #fff; }
+
+    /* ── Right: Dashboard ── */
+    .smm-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+    /* Top bar */
+    .smm-topbar {
+      padding: 12px 20px; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .smm-page-title { font-size: 16px; font-weight: 800; color: #0f172a; }
+    .smm-page-sub { font-size: 12px; color: #94a3b8; }
+    .smm-topbar-right { display: flex; align-items: center; gap: 10px; }
+    .smm-btn { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; border: 1px solid #e2e8f0; background: #fff; color: #475569; cursor: pointer; transition: all .15s; }
+    .smm-btn:hover { border-color: #93c5fd; color: #0D47A1; }
+    .smm-btn.pri { background: #0D47A1; color: #fff; border-color: #0D47A1; }
+    .smm-btn.pri:hover { background: #0a3a84; }
+
+    /* Platform tabs */
+    .smm-tabs { display: flex; gap: 0; border-bottom: 1px solid #f1f5f9; flex-shrink: 0; padding: 0 20px; }
+    .smm-tab { padding: 10px 16px; font-size: 12px; font-weight: 700; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; display: flex; align-items: center; gap: 6px; }
+    .smm-tab:hover { color: #0D47A1; }
+    .smm-tab.on { color: #0D47A1; border-bottom-color: #0D47A1; }
+    .smm-tab-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* Body */
+    .smm-body { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* KPI row */
+    .smm-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .smm-kpi { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 10px; padding: 12px 14px; transition: all .2s; cursor: pointer; }
+    .smm-kpi:hover { border-color: #93c5fd; box-shadow: 0 2px 12px rgba(13,71,161,.08); }
+    .smm-kpi-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-bottom: 5px; }
+    .smm-kpi-val { font-size: 18px; font-weight: 800; color: #0f172a; letter-spacing: -.5px; }
+    .smm-kpi-delta { font-size: 11px; font-weight: 700; margin-top: 3px; }
+
+    /* Two-col grid */
+    .smm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* Mentions feed */
+    .smm-card { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px; padding: 14px; }
+    .smm-card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #64748b; margin-bottom: 12px; }
+    .smm-mention { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f1f5f9; }
+    .smm-mention:last-child { border-bottom: none; }
+    .smm-men-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .smm-men-body { flex: 1; min-width: 0; }
+    .smm-men-top { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .smm-men-name { font-size: 12px; font-weight: 700; color: #0f172a; }
+    .smm-men-plat { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+    .smm-men-time { font-size: 10px; color: #94a3b8; margin-left: auto; }
+    .smm-men-text { font-size: 11px; color: #64748b; line-height: 1.5; }
+    .smm-men-sentiment { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-top: 5px; display: inline-block; }
+    .sent-pos { background: #dcfce7; color: #16a34a; }
+    .sent-neu { background: #f1f5f9; color: #64748b; }
+    .sent-neg { background: #fee2e2; color: #dc2626; }
+
+    /* Posting schedule */
+    .smm-sched { display: flex; flex-direction: column; gap: 8px; }
+    .smm-sched-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: #fff; border: 1px solid #f1f5f9; border-radius: 8px; cursor: pointer; transition: all .15s; }
+    .smm-sched-item:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(13,71,161,.08); }
+    .smm-sched-plat { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+    .smm-sched-info { flex: 1; }
+    .smm-sched-title { font-size: 12px; font-weight: 700; color: #0f172a; }
+    .smm-sched-time { font-size: 11px; color: #64748b; }
+    .smm-sched-status { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+    .ss-live { background: #dcfce7; color: #16a34a; }
+    .ss-sched { background: #dbeafe; color: #1d4ed8; }
+    .ss-draft { background: #f1f5f9; color: #64748b; }
+  </style>
+</head>
+<body>
+<div class="smm">
+
+  <!-- Left visual -->
+  <div class="smm-visual">
+    <div class="smm-blob"></div>
+    <div class="smm-blob-ring"></div>
+
+    <!-- Platform pill -->
+    <div class="smm-platform-pill">
+      <!-- WhatsApp -->
+      <div class="smm-plat-icon" style="background:#25D366" onclick="setTab(this,'whatsapp')" title="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.09-1.34A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.18 14.1c-.22.6-.64 1.1-1.15 1.26-.44.15-1 .22-3.03-.65-2.54-1.07-4.19-3.64-4.32-3.81-.13-.17-.99-1.34-.99-2.55 0-1.22.63-1.81.85-2.06.22-.24.49-.3.65-.3h.46c.15 0 .35-.06.55.43l.74 1.93c.06.15.02.33-.07.46l-.39.5c-.08.1-.16.21-.07.41.27.55.72 1.16 1.35 1.74.6.56 1.27.9 1.6 1.02.18.07.32.06.44-.06l.51-.58c.1-.12.28-.18.44-.11l1.87.88c.24.11.3.2.3.37 0 .16-.08.52-.3 1.12z"/></svg>
+      </div>
+      <!-- Facebook -->
+      <div class="smm-plat-icon active" style="background:#1877F2" onclick="setTab(this,'facebook')" title="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97H15.8c-1.49 0-1.95.93-1.95 1.88v2.27h3.32l-.53 3.49h-2.79V24C19.62 23.1 24 18.1 24 12.07z"/></svg>
+      </div>
+      <!-- Instagram -->
+      <div class="smm-plat-icon" style="background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)" onclick="setTab(this,'instagram')" title="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </div>
+      <!-- X / Twitter -->
+      <div class="smm-plat-icon" style="background:#000" onclick="setTab(this,'twitter')" title="X / Twitter">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </div>
+    </div>
+
+    <!-- Person + phone -->
+    <div class="smm-person-wrap">
+      <div class="smm-person-avatar">👤</div>
+      <div class="smm-person-body">
+        <div class="smm-phone">
+          <div class="smm-phone-screen">
+            <div class="smm-phone-bar blue"></div>
+            <div class="smm-phone-bar"></div>
+            <div class="smm-phone-bar w2"></div>
+            <div class="smm-phone-bar blue w2"></div>
+            <div class="smm-phone-bar"></div>
+          </div>
+          <div class="smm-phone-notif" id="phoneNotif">3</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard panel -->
+  <div class="smm-panel">
+    <div class="smm-topbar">
+      <div>
+        <div class="smm-page-title" id="panelTitle">Social Media Management</div>
+        <div class="smm-page-sub" id="panelSub">Facebook · All Pages</div>
+      </div>
+      <div class="smm-topbar-right">
+        <button class="smm-btn">⬇ Export</button>
+        <button class="smm-btn pri">+ Create Post</button>
+      </div>
+    </div>
+
+    <!-- Platform tabs -->
+    <div class="smm-tabs" id="platformTabs">
+      <div class="smm-tab" onclick="setTabByName(this,'whatsapp')">
+        <div class="smm-tab-dot" style="background:#25D366"></div>WhatsApp
+      </div>
+      <div class="smm-tab on" onclick="setTabByName(this,'facebook')">
+        <div class="smm-tab-dot" style="background:#1877F2"></div>Facebook
+      </div>
+      <div class="smm-tab" onclick="setTabByName(this,'instagram')">
+        <div class="smm-tab-dot" style="background:#e1306c"></div>Instagram
+      </div>
+      <div class="smm-tab" onclick="setTabByName(this,'twitter')">
+        <div class="smm-tab-dot" style="background:#000"></div>X / Twitter
+      </div>
+    </div>
+
+    <div class="smm-body" id="smmBody"></div>
+  </div>
+
+</div>
+<script>
+  const PLATFORM_DATA = {
+    facebook: {
+      sub: 'Facebook · All Pages',
+      kpis: [
+        { lbl:'Followers',    val:'142.3K', delta:'↑ 2.1%', up:true },
+        { lbl:'Reach',        val:'89.4K',  delta:'↑ 14%',  up:true },
+        { lbl:'Engagement',   val:'4.8%',   delta:'↑ 0.6%', up:true },
+        { lbl:'Mentions',     val:'1,204',  delta:'↓ 3%',   up:false },
+      ],
+      mentions: [
+        { init:'AK', color:'#7c3aed', name:'@amina.k',   plat:'Facebook', platCls:'background:#1877F2;color:#fff', time:'2m ago', text:'Just saw KronGage on my feed — this platform looks incredible! 🔥', sent:'pos' },
+        { init:'TR', color:'#059669', name:'@t.rahman',  plat:'Facebook', platCls:'background:#1877F2;color:#fff', time:'15m',    text:'When will the mobile app be available? Asking for a friend 😅',  sent:'neu' },
+        { init:'JD', color:'#b45309', name:'@j.duarte',  plat:'Facebook', platCls:'background:#1877F2;color:#fff', time:'1h',     text:'Support took too long to respond today — frustrating experience.',  sent:'neg' },
+      ],
+      schedule: [
+        { icon:'📘', bg:'#EEF5FD', title:'Holiday campaign post', time:'Today · 3:00 PM', status:'ss-live', sl:'Live' },
+        { icon:'📘', bg:'#EEF5FD', title:'Product spotlight — Winter Collection', time:'Tomorrow · 10:00 AM', status:'ss-sched', sl:'Scheduled' },
+        { icon:'📘', bg:'#EEF5FD', title:'Customer story carousel', time:'Dec 3 · 9:00 AM', status:'ss-draft', sl:'Draft' },
+      ],
+    },
+    instagram: {
+      sub: 'Instagram · @krongage',
+      kpis: [
+        { lbl:'Followers',  val:'98.7K',  delta:'↑ 5.3%', up:true },
+        { lbl:'Impressions',val:'210K',   delta:'↑ 22%',  up:true },
+        { lbl:'Save Rate',  val:'7.2%',   delta:'↑ 1.4%', up:true },
+        { lbl:'Stories CTR',val:'9.1%',   delta:'↑ 2.2%', up:true },
+      ],
+      mentions: [
+        { init:'LM', color:'#e1306c', name:'@lina.m',    plat:'Instagram', platCls:'background:#e1306c;color:#fff', time:'5m',  text:'The new collection reels are everything ✨ Already shared with my followers', sent:'pos' },
+        { init:'PK', color:'#7c3aed', name:'@p.khan',    plat:'Instagram', platCls:'background:#e1306c;color:#fff', time:'22m', text:'Love the aesthetic but story links are broken on iOS 17?', sent:'neu' },
+        { init:'SO', color:'#0D47A1', name:'@sara.ou',   plat:'Instagram', platCls:'background:#e1306c;color:#fff', time:'2h',  text:'Another banger post from @krongage 🙌 Tag someone who needs this!', sent:'pos' },
+      ],
+      schedule: [
+        { icon:'📸', bg:'#fce7f3', title:'Lifestyle reel — morning routine', time:'Today · 6:00 PM', status:'ss-live', sl:'Live' },
+        { icon:'📸', bg:'#fce7f3', title:'Product close-up grid post',       time:'Tomorrow · 12:00 PM', status:'ss-sched', sl:'Scheduled' },
+        { icon:'📸', bg:'#fce7f3', title:'Holiday gift guide carousel',       time:'Dec 2 · 11:00 AM', status:'ss-draft', sl:'Draft' },
+      ],
+    },
+    twitter: {
+      sub: 'X (Twitter) · @krongage',
+      kpis: [
+        { lbl:'Followers',  val:'34.1K', delta:'↑ 1.8%', up:true },
+        { lbl:'Impressions',val:'520K',  delta:'↑ 9%',   up:true },
+        { lbl:'Retweets',   val:'2,840', delta:'↑ 6.5%', up:true },
+        { lbl:'Link Clicks',val:'8,920', delta:'↓ 2%',   up:false },
+      ],
+      mentions: [
+        { init:'MW', color:'#374151', name:'@m.wade',    plat:'X', platCls:'background:#000;color:#fff', time:'1m',  text:'KronGage just dropped a 🔥 update — real-time social listening is a game changer', sent:'pos' },
+        { init:'EL', color:'#7c3aed', name:'@elon.labs', plat:'X', platCls:'background:#000;color:#fff', time:'34m', text:'Solid platform but the API pricing is steep for SMEs',              sent:'neu' },
+        { init:'AB', color:'#059669', name:'@a.boateng', plat:'X', platCls:'background:#000;color:#fff', time:'3h',  text:'Impressed with the omnichannel capabilities. Switching from Zendesk.', sent:'pos' },
+      ],
+      schedule: [
+        { icon:'𝕏', bg:'#f1f5f9', title:'Thought leadership thread — AI in CX', time:'Today · 2:00 PM', status:'ss-live', sl:'Live' },
+        { icon:'𝕏', bg:'#f1f5f9', title:'Product feature highlight tweet',       time:'Tomorrow · 8:00 AM', status:'ss-sched', sl:'Scheduled' },
+        { icon:'𝕏', bg:'#f1f5f9', title:'Holiday campaign announcement',          time:'Dec 1 · 9:00 AM', status:'ss-draft', sl:'Draft' },
+      ],
+    },
+    whatsapp: {
+      sub: 'WhatsApp Business · All Numbers',
+      kpis: [
+        { lbl:'Messages Sent',  val:'48.2K', delta:'↑ 18%', up:true },
+        { lbl:'Open Rate',      val:'96%',   delta:'↑ 1%',  up:true },
+        { lbl:'Response Rate',  val:'88%',   delta:'↑ 4%',  up:true },
+        { lbl:'Opt-Outs',       val:'34',    delta:'↓ 40%', up:true },
+      ],
+      mentions: [
+        { init:'FN', color:'#25D366', name:'+44 7700 900111', plat:'WhatsApp', platCls:'background:#25D366;color:#fff', time:'3m',  text:'Hi, I received my order but one item is missing from the package', sent:'neg' },
+        { init:'GH', color:'#059669', name:'+233 24 000 1234', plat:'WhatsApp', platCls:'background:#25D366;color:#fff', time:'18m', text:'Thank you for the quick delivery! Loved the packaging 😍',         sent:'pos' },
+        { init:'KO', color:'#0D47A1', name:'+1 415 555 0180', plat:'WhatsApp', platCls:'background:#25D366;color:#fff', time:'1h',  text:'Can you confirm if the promo code SAVE20 is still active?',      sent:'neu' },
+      ],
+      schedule: [
+        { icon:'💬', bg:'#dcfce7', title:'Flash sale broadcast — 500 recipients',    time:'Today · 5:00 PM', status:'ss-sched', sl:'Scheduled' },
+        { icon:'💬', bg:'#dcfce7', title:'Order confirmation template — auto-trigger', time:'Continuous',    status:'ss-live',  sl:'Live' },
+        { icon:'💬', bg:'#dcfce7', title:'Holiday greeting blast — 2,400 contacts',   time:'Dec 24 · 9 AM', status:'ss-draft', sl:'Draft' },
+      ],
+    },
+  };
+
+  let activePlatform = 'facebook';
+
+  function renderPanel(plat) {
+    const d = PLATFORM_DATA[plat];
+    document.getElementById('panelSub').textContent = d.sub;
+
+    document.getElementById('smmBody').innerHTML = `
+      <div class="smm-kpi-row">
+        ${d.kpis.map(k=>`
+          <div class="smm-kpi">
+            <div class="smm-kpi-lbl">${k.lbl}</div>
+            <div class="smm-kpi-val">${k.val}</div>
+            <div class="smm-kpi-delta ${k.up?'up':'dn'}">${k.delta}</div>
+          </div>`).join('')}
+      </div>
+      <div class="smm-grid">
+        <div class="smm-card">
+          <div class="smm-card-title">Recent Mentions</div>
+          ${d.mentions.map(m=>`
+            <div class="smm-mention">
+              <div class="smm-men-av" style="background:${m.color}">${m.init}</div>
+              <div class="smm-men-body">
+                <div class="smm-men-top">
+                  <span class="smm-men-name">${m.name}</span>
+                  <span class="smm-men-plat" style="${m.platCls};padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;">${m.plat}</span>
+                  <span class="smm-men-time">${m.time}</span>
+                </div>
+                <div class="smm-men-text">${m.text}</div>
+                <span class="smm-men-sentiment sent-${m.sent}">${m.sent==='pos'?'Positive':m.sent==='neg'?'Negative':'Neutral'}</span>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div class="smm-card">
+          <div class="smm-card-title">Scheduled Posts</div>
+          <div class="smm-sched">
+            ${d.schedule.map(s=>`
+              <div class="smm-sched-item">
+                <div class="smm-sched-plat" style="background:${s.bg}">${s.icon}</div>
+                <div class="smm-sched-info">
+                  <div class="smm-sched-title">${s.title}</div>
+                  <div class="smm-sched-time">${s.time}</div>
+                </div>
+                <span class="smm-sched-status ${s.status}">${s.sl}</span>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+
+    // Update tabs
+    document.querySelectorAll('.smm-tab').forEach(t => t.classList.remove('on'));
+    const tabMap = {facebook:1,instagram:2,twitter:3,whatsapp:0};
+    document.querySelectorAll('.smm-tab')[tabMap[plat]].classList.add('on');
+
+    // Update pill icons
+    document.querySelectorAll('.smm-plat-icon').forEach(i=>i.classList.remove('active'));
+    const platOrder = ['whatsapp','facebook','instagram','twitter'];
+    const idx = platOrder.indexOf(plat);
+    if (idx>=0) document.querySelectorAll('.smm-plat-icon')[idx].classList.add('active');
+  }
+
+  function setTab(icon, plat) {
+    activePlatform = plat;
+    renderPanel(plat);
+  }
+
+  function setTabByName(tab, plat) {
+    activePlatform = plat;
+    renderPanel(plat);
+  }
+
+  // Animate notification badge
+  let notifCount = 3;
+  setInterval(() => {
+    const rand = Math.floor(Math.random()*3);
+    if (rand === 0 && notifCount < 9) notifCount++;
+    document.getElementById('phoneNotif').textContent = notifCount;
+  }, 4000);
+
+  renderPanel('facebook');
+</script>
+</body>
+</html>

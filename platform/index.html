@@ -16,16 +16,60 @@
     .nav-logo svg { width: 28px; height: 28px; }
     .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; font-size: 14px; font-weight: 500; }
     .nav-links li a { color: #475569; transition: color .2s; }
+    .nav-links li a:hover { color: #0D47A1; }
     .nav-links .active a { color: #0D47A1; }
-    .dropdown > a::after { content: ' ▾'; font-size: 10px; }
-    .btn-nav { background: #0f172a; color: #fff; padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+    .btn-nav { background: #0D47A1; color: #fff; padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; }
     .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
     .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
     .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
     .mobile-menu.open { display: flex; }
     .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 500; color: #475569; border-bottom: 1px solid #f1f5f9; }
     .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0f172a; color: #fff; padding: 13px 20px; border-radius: 8px; font-weight: 600; text-align: center; border-bottom: none; }
+    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 8px; font-weight: 600; text-align: center; border-bottom: none; }
+
+    /* Mega menu */
+    .nav-links li { position: relative; }
+    .nav-links li > a { display: flex; align-items: center; gap: 4px; padding: 8px 0; }
+    .nav-links li.has-mega > a::after {
+      content: ''; display: inline-block; width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid currentColor; margin-left: 2px; transition: transform .2s;
+    }
+    .nav-links li.has-mega.is-open > a::after { transform: rotate(180deg); }
+    .mega-menu {
+      display: none; position: fixed; top: 68px; left: 0; width: 100vw;
+      background: #fff; border-top: 2px solid #0D47A1;
+      box-shadow: 0 20px 60px rgba(0,0,0,.12); z-index: 199; padding: 36px 60px 40px;
+    }
+    .nav-links li.has-mega.is-open .mega-menu { display: block; }
+    .mega-inner { display: grid; max-width: 1100px; margin: 0 auto; gap: 48px; }
+    .mega-inner.cols-3 { grid-template-columns: 1.6fr 1fr 1fr; }
+    .mega-inner.cols-3b { grid-template-columns: 1fr 1fr 1.4fr; }
+    .mega-col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 18px; }
+    .mega-brand-head { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+    .mega-brand-sub { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
+    .mega-brand-link { font-size: 13px; font-weight: 700; color: #0D47A1; }
+    .mega-feature-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .mega-feature-row:last-child { border-bottom: none; }
+    .mega-feat-icon { width: 34px; height: 34px; background: #EEF5FD; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+    .mega-feat-text strong { display: block; font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+    .mega-feat-text span { font-size: 12px; color: #64748b; }
+    .mega-channel-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
+    .mega-channel-row:last-child { border-bottom: none; }
+    .mega-channel-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #0D47A1; }
+    .mega-view-all { font-size: 13px; font-weight: 700; color: #0D47A1; margin-top: 4px; display: inline-block; }
+    .mega-how-card { background: #EEF5FD; border-radius: 10px; padding: 14px; margin-top: 16px; display: flex; gap: 12px; align-items: flex-start; }
+    .mega-how-icon { width: 38px; height: 38px; background: #0D47A1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .mega-how-text strong { font-size: 13px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 4px; }
+    .mega-how-text span { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .mega-industry-list { list-style: none; }
+    .mega-industry-list li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
+    .mega-industry-list li:last-child { border-bottom: none; }
+    .mega-ind-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #0D47A1; }
+    .mega-use-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
+    .mega-use-row:last-child { border-bottom: none; }
+    .mega-article-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
+    .mega-article-sub { font-size: 12px; color: #64748b; line-height: 1.6; }
 
     /* HERO */
     .hero { background: #eff6ff; padding: 80px 60px; text-align: center; }
@@ -71,17 +115,8 @@
     .btn-dark { display: inline-block; background: #0f172a; color: #fff; padding: 11px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; transition: background .2s; }
     .btn-dark:hover { background: #1e293b; }
     .feature-visual { flex: 1; flex-shrink: 0; }
-    .feature-card-mock { background: #fff; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,.1); overflow: hidden; }
-    .fc-bar { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 10px 14px; display: flex; gap: 5px; }
-    .fc-body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .fc-item { background: #f8fafc; border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; }
-    .fc-item .l { font-size: 9px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; }
-    .fc-item .v { font-size: 18px; font-weight: 700; color: #0f172a; }
-    .fc-msgs { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 8px; }
-    .msg { display: flex; gap: 8px; align-items: flex-start; }
-    .msg-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
-    .msg-bubble { background: #f1f5f9; border-radius: 10px; padding: 8px 12px; font-size: 11px; color: #334155; flex: 1; }
-    .msg-bubble.blue { background: #0D47A1; color: #fff; }
+    .feature-iframe-wrap { border-radius: 20px; overflow: hidden; height: 420px; box-shadow: 0 16px 56px rgba(13,71,161,.15); }
+    .feature-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
     .feature-divider { background: #f8fafc; height: 1px; margin: 0 60px; }
 
     /* DARK CTA */
@@ -147,12 +182,69 @@
 <body>
 
 <nav>
-  <div class="nav-logo"><img src="../Krongage-Logo.png" alt="KronGage" style="height:38px;width:auto;"></div>
+  <a href="/" class="nav-logo"><img src="../Krongage-Logo.png" alt="KronGage" style="height:38px;width:auto;" /></a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
     <li><a href="/about/">About</a></li>
-    <li class="dropdown active"><a href="/platform/">Platform</a></li>
-    <li class="dropdown"><a href="/solutions/">Solutions</a></li>
+    <li class="has-mega active">
+      <a href="/platform/">Platform</a>
+      <div class="mega-menu">
+        <div class="mega-inner cols-3">
+          <div>
+            <p class="mega-brand-head">The KronGage Platform</p>
+            <p class="mega-brand-sub">All your customer data, channels and engagement orchestration in one place.</p>
+            <a href="/platform/" class="mega-brand-link">View the platform →</a>
+            <div style="margin-top:20px;">
+              <div class="mega-feature-row"><div class="mega-feat-icon">👥</div><div class="mega-feat-text"><strong>Customer 360</strong><span>Know who your customer is regardless of the touch point or channel.</span></div></div>
+              <div class="mega-feature-row"><div class="mega-feat-icon">📥</div><div class="mega-feat-text"><strong>Omnichannel Inbox</strong><span>Send all messages from one place.</span></div></div>
+            </div>
+          </div>
+          <div>
+            <p class="mega-col-title">Featured Capabilities</p>
+            <div class="mega-feature-row"><div class="mega-feat-icon">📣</div><div class="mega-feat-text"><strong>Campaign Management</strong><span>Manage the customer journey for SMS, WhatsApp and email</span></div></div>
+            <div class="mega-feature-row"><div class="mega-feat-icon">🤖</div><div class="mega-feat-text"><strong>AI Automation</strong><span>Automate the mundane communication flows</span></div></div>
+            <div class="mega-feature-row"><div class="mega-feat-icon">📲</div><div class="mega-feat-text"><strong>Social Media Management</strong><span>All your social media channels in one place.</span></div></div>
+            <div class="mega-feature-row"><div class="mega-feat-icon">🎧</div><div class="mega-feat-text"><strong>Social Listening</strong><span>Understand your brand sentiment in real-time.</span></div></div>
+          </div>
+          <div>
+            <p class="mega-col-title">Featured Channels</p>
+            <div class="mega-channel-row"><div class="mega-channel-icon">✉️</div>Email</div>
+            <div class="mega-channel-row"><div class="mega-channel-icon">💬</div>Web Messaging &amp; SMS/RCS</div>
+            <div class="mega-channel-row"><div class="mega-channel-icon">📱</div>SMS/RCS</div>
+            <div class="mega-channel-row"><div class="mega-channel-icon">🟢</div>WhatsApp</div>
+            <a href="/platform/" class="mega-view-all">✳ View All Channels</a>
+            <div class="mega-how-card"><div class="mega-how-icon">💡</div><div class="mega-how-text"><strong>How it works?</strong><span>Understand how our omni channel inbox works to keep message clutter at bay.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="has-mega">
+      <a href="/solutions/">Solutions</a>
+      <div class="mega-menu">
+        <div class="mega-inner cols-3b">
+          <div>
+            <p class="mega-col-title">Industries</p>
+            <ul class="mega-industry-list">
+              <li><div class="mega-ind-icon">🏦</div>Banking &amp; Finance</li>
+              <li><div class="mega-ind-icon">📡</div>Telecommunications</li>
+              <li><div class="mega-ind-icon">🛒</div>FMCG &amp; Retail</li>
+              <li><div class="mega-ind-icon">🏥</div>Healthcare</li>
+              <li><div class="mega-ind-icon">🛡️</div>Insurance</li>
+              <li><div class="mega-ind-icon">🏛️</div>Government &amp; Public Sector</li>
+            </ul>
+          </div>
+          <div>
+            <p class="mega-col-title">Use Cases</p>
+            <div class="mega-use-row"><div class="mega-channel-icon">✏️</div>Boost Productivity</div>
+            <div class="mega-use-row"><div class="mega-channel-icon">👤</div>Increase Engagement</div>
+          </div>
+          <div>
+            <p class="mega-article-title">The Retention Gap: Why Success Teams Struggle</p>
+            <p class="mega-article-sub">In an era of endless options, customer success has become more than just a department — it's a survival strategy.</p>
+          </div>
+        </div>
+      </div>
+    </li>
     <li><a href="/contact/">Contact</a></li>
   </ul>
   <a href="/contact/" class="btn-nav">Get Started</a>
@@ -216,22 +308,11 @@
     <div class="tag">Omnichannel Inbox</div>
     <h2>Every Conversation. Every Channel – One Workspace</h2>
     <p>The command centre of KronGage. Manage all customer conversations across 15+ channels in a single, intelligent interface. Your agents never need to switch between tools – every interaction is visible, searchable, and contextually enriched.</p>
-    <a href="/contact/" class="btn-blue">Learn More</a>
+    <a href="/platform/omnichannel-inbox/" class="btn-blue">Learn More</a>
   </div>
   <div class="feature-visual">
-    <div class="feature-card-mock">
-      <div class="fc-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-      <div class="fc-body">
-        <div class="fc-item"><div class="l">Open</div><div class="v">286</div></div>
-        <div class="fc-item"><div class="l">Resolved</div><div class="v">143</div></div>
-        <div class="fc-item"><div class="l">Channels</div><div class="v">15+</div></div>
-        <div class="fc-item"><div class="l">Agents</div><div class="v">12</div></div>
-      </div>
-      <div class="fc-msgs">
-        <div class="msg"><div class="msg-avatar" style="background:#25d366;"></div><div class="msg-bubble">Hi, I need help with my order #4821</div></div>
-        <div class="msg" style="justify-content:flex-end;"><div class="msg-bubble blue">Of course! Let me pull up your order right away.</div></div>
-        <div class="msg"><div class="msg-avatar" style="background:#0D47A1;"></div><div class="msg-bubble">When will my refund be processed?</div></div>
-      </div>
+    <div class="feature-iframe-wrap">
+      <iframe src="/assets/inbox-demo.html" loading="lazy" title="Omnichannel Inbox demo"></iframe>
     </div>
   </div>
 </section>
@@ -246,18 +327,8 @@
     <a href="/contact/" class="btn-blue">Learn More</a>
   </div>
   <div class="feature-visual">
-    <div class="feature-card-mock">
-      <div class="fc-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-      <div class="fc-body">
-        <div class="fc-item"><div class="l">Scheduled</div><div class="v">48</div></div>
-        <div class="fc-item"><div class="l">Published</div><div class="v">312</div></div>
-        <div class="fc-item"><div class="l">Platforms</div><div class="v">9+</div></div>
-        <div class="fc-item"><div class="l">Engagement</div><div class="v">↑24%</div></div>
-      </div>
-      <div class="fc-msgs">
-        <div class="msg"><div class="msg-avatar" style="background:#e1306c;"></div><div class="msg-bubble">Instagram post scheduled for 9:00 AM</div></div>
-        <div class="msg"><div class="msg-avatar" style="background:#0D47A1;"></div><div class="msg-bubble">Facebook campaign goes live in 2 hours</div></div>
-      </div>
+    <div class="feature-iframe-wrap">
+      <iframe src="/assets/social-publishing.html" loading="lazy" title="Social Media Publishing demo"></iframe>
     </div>
   </div>
 </section>
@@ -272,14 +343,8 @@
     <a href="/contact/" class="btn-dark">Contact Us</a>
   </div>
   <div class="feature-visual">
-    <div class="feature-card-mock">
-      <div class="fc-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-      <div class="fc-body">
-        <div class="fc-item"><div class="l">Mentions</div><div class="v">1.2k</div></div>
-        <div class="fc-item"><div class="l">Sentiment</div><div class="v" style="color:#10b981;">78% +</div></div>
-        <div class="fc-item"><div class="l">Platforms</div><div class="v">1k+</div></div>
-        <div class="fc-item"><div class="l">Alerts</div><div class="v">3</div></div>
-      </div>
+    <div class="feature-iframe-wrap">
+      <iframe src="/assets/social-media-mgmt.html" loading="lazy" title="Social Listening & Monitoring demo"></iframe>
     </div>
   </div>
 </section>
@@ -294,14 +359,8 @@
     <a href="/contact/" class="btn-dark">Contact Us</a>
   </div>
   <div class="feature-visual">
-    <div class="feature-card-mock">
-      <div class="fc-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-      <div class="fc-body">
-        <div class="fc-item"><div class="l">Articles</div><div class="v">2.4k</div></div>
-        <div class="fc-item"><div class="l">Accuracy</div><div class="v">97%</div></div>
-        <div class="fc-item"><div class="l">Self-Service</div><div class="v">↑65%</div></div>
-        <div class="fc-item"><div class="l">Avg Response</div><div class="v">&lt;2s</div></div>
-      </div>
+    <div class="feature-iframe-wrap">
+      <iframe src="/assets/knowledge-base.html" loading="lazy" title="Knowledge Management & RAG demo"></iframe>
     </div>
   </div>
 </section>
@@ -324,14 +383,8 @@
     <a href="/contact/" class="btn-dark">Contact Us</a>
   </div>
   <div class="feature-visual">
-    <div class="feature-card-mock">
-      <div class="fc-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-      <div class="fc-body">
-        <div class="fc-item"><div class="l">Compliance</div><div class="v">SOC1</div></div>
-        <div class="fc-item"><div class="l">Encryption</div><div class="v">AES-256</div></div>
-        <div class="fc-item"><div class="l">Uptime</div><div class="v">99.9%</div></div>
-        <div class="fc-item"><div class="l">MFA</div><div class="v" style="color:#10b981;">Active</div></div>
-      </div>
+    <div class="feature-iframe-wrap">
+      <iframe src="/assets/security-demo.html" loading="lazy" title="Security & Compliance demo"></iframe>
     </div>
   </div>
 </section>
@@ -361,23 +414,23 @@
     <div class="footer-col">
       <h4>Platform</h4>
       <ul>
-        <li><a href="/platform/">Omnichannel Inbox</a></li>
-        <li><a href="/platform/">Social Media Management</a></li>
-        <li><a href="/platform/">AI &amp; Automation</a></li>
-        <li><a href="/platform/">Customer Data Platform</a></li>
-        <li><a href="/platform/">Campaign Management</a></li>
-        <li><a href="/platform/">Analytics &amp; BI</a></li>
+        <li><a href="/platform/omnichannel-inbox/">Omnichannel Inbox</a></li>
+        <li><a href="/platform/social-media/">Social Media Management</a></li>
+        <li><a href="/platform/ai-automation/">AI &amp; Automation</a></li>
+        <li><a href="/platform/customer-data/">Customer Data Platform</a></li>
+        <li><a href="/platform/campaign-management/">Campaign Management</a></li>
+        <li><a href="/platform/analytics/">Analytics &amp; BI</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Solutions</h4>
       <ul>
-        <li><a href="/solutions/">Banking &amp; Finance</a></li>
-        <li><a href="/solutions/">Telecommunications</a></li>
-        <li><a href="/solutions/">FMCG &amp; Retail</a></li>
-        <li><a href="/solutions/">Healthcare</a></li>
-        <li><a href="/solutions/">Insurance</a></li>
-        <li><a href="/solutions/">Government</a></li>
+        <li><a href="/solutions/banking/">Banking &amp; Finance</a></li>
+        <li><a href="/solutions/telecom/">Telecommunications</a></li>
+        <li><a href="/solutions/fmcg/">FMCG &amp; Retail</a></li>
+        <li><a href="/solutions/healthcare/">Healthcare</a></li>
+        <li><a href="/solutions/insurance/">Insurance</a></li>
+        <li><a href="/solutions/government/">Government</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -396,5 +449,31 @@
   </div>
 </footer>
 
+<script>
+  (function() {
+    var DELAY = 200;
+    document.querySelectorAll('.nav-links li.has-mega').forEach(function(li) {
+      var timer = null;
+      function open() {
+        clearTimeout(timer);
+        document.querySelectorAll('.nav-links li.has-mega').forEach(function(o) { if (o !== li) o.classList.remove('is-open'); });
+        li.classList.add('is-open');
+      }
+      function scheduleClose() { timer = setTimeout(function() { li.classList.remove('is-open'); }, DELAY); }
+      li.addEventListener('mouseenter', open);
+      li.addEventListener('mouseleave', scheduleClose);
+      var menu = li.querySelector('.mega-menu');
+      if (menu) {
+        menu.addEventListener('mouseenter', function() { clearTimeout(timer); });
+        menu.addEventListener('mouseleave', scheduleClose);
+      }
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.has-mega')) {
+        document.querySelectorAll('.nav-links li.has-mega').forEach(function(li) { li.classList.remove('is-open'); });
+      }
+    });
+  })();
+</script>
 </body>
 </html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Banking & Finance</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f6f8; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+    .bk { display: flex; align-items: center; justify-content: center; gap: 0; width: 100%; height: 100vh; padding: 24px; position: relative; }
+
+    /* ── Left: notification stack ── */
+    .bk-cards { display: flex; flex-direction: column; gap: 14px; flex-shrink: 0; width: 360px; }
+
+    .bk-card {
+      background: #0f1f3d;
+      border-radius: 16px;
+      padding: 16px 18px 18px;
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .bk-card.visible { opacity: 1; transform: translateX(0); }
+
+    .bk-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .bk-card-left { display: flex; align-items: center; gap: 10px; }
+    .bk-card-icon { width: 30px; height: 30px; border-radius: 8px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; }
+    .bk-card-icon svg { width: 17px; height: 17px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .bk-card-title { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: .3px; }
+    .bk-card-time { font-size: 11px; color: rgba(255,255,255,.4); white-space: nowrap; }
+    .bk-card-body { font-size: 13px; color: rgba(255,255,255,.72); line-height: 1.6; }
+
+    .bk-card.fraud { border-left: 3px solid #ef4444; }
+    .bk-card.action { border-left: 3px solid #f59e0b; }
+    .bk-card.blocked { border-left: 3px solid #4ade80; }
+
+    .bk-card.fraud .bk-card-title { color: #fca5a5; }
+    .bk-card.action .bk-card-title { color: #fcd34d; }
+    .bk-card.blocked .bk-card-title { color: #86efac; }
+
+    /* Reply buttons on action card */
+    .bk-reply-row { display: flex; gap: 8px; margin-top: 12px; }
+    .bk-reply-btn {
+      padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700;
+      border: none; cursor: pointer; transition: all .2s;
+    }
+    .bk-reply-yes { background: #0D47A1; color: #fff; }
+    .bk-reply-yes:hover { background: #1565C0; }
+    .bk-reply-no { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); }
+    .bk-reply-no:hover { background: rgba(255,255,255,.18); }
+
+    /* ── Right: Person illustration ── */
+    .bk-person { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+
+    .bk-fig { position: relative; display: flex; flex-direction: column; align-items: center; }
+
+    .bk-head {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, #d4956a, #c07840);
+      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      position: relative; z-index: 2;
+    }
+    .bk-neck { width: 22px; height: 18px; background: #c07840; margin: 0 auto; }
+    .bk-body {
+      width: 130px; height: 160px;
+      background: linear-gradient(160deg, #1a3d6e, #0f2850);
+      border-radius: 50% 50% 0 0;
+      position: relative;
+    }
+    /* Phone in hand */
+    .bk-phone {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      width: 42px; height: 72px;
+      background: #0f172a; border-radius: 8px; border: 2px solid #334155;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .bk-phone-screen { width: 32px; height: 58px; background: linear-gradient(160deg,#1e3a6e,#0D47A1); border-radius: 4px; }
+
+    /* Ambient glow */
+    .bk-glow {
+      position: absolute; width: 240px; height: 240px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(13,71,161,.12), transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
+    }
+
+    /* Stats below */
+    .bk-stats { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; }
+    .bk-stat { background: #fff; border-radius: 10px; padding: 8px 16px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .bk-stat-val { font-size: 16px; font-weight: 800; color: #0D47A1; }
+    .bk-stat-lbl { font-size: 10px; color: #64748b; font-weight: 600; margin-top: 1px; }
+  </style>
+</head>
+<body>
+<div class="bk">
+
+  <!-- Notification cards -->
+  <div class="bk-cards">
+    <!-- Fraud detection -->
+    <div class="bk-card fraud" id="c1">
+      <div class="bk-card-head">
+        <div class="bk-card-left">
+          <div class="bk-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <span class="bk-card-title">FRAUD ATTEMPT DETECTED</span>
+        </div>
+        <span class="bk-card-time">4 min ago</span>
+      </div>
+      <div class="bk-card-body">A potential fraudulent transaction has been detected on your account.</div>
+    </div>
+
+    <!-- Action required -->
+    <div class="bk-card action" id="c2">
+      <div class="bk-card-head">
+        <div class="bk-card-left">
+          <div class="bk-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <span class="bk-card-title">ACTION REQUIRED</span>
+        </div>
+        <span class="bk-card-time">3 min ago</span>
+      </div>
+      <div class="bk-card-body">Was this transaction of $2,100.00 at 'Tech-Store-AZ' authorized by you? Reply YES or NO.</div>
+      <div class="bk-reply-row">
+        <button class="bk-reply-btn bk-reply-yes" onclick="handleReply('yes')">YES</button>
+        <button class="bk-reply-btn bk-reply-no" onclick="handleReply('no')">NO</button>
+      </div>
+    </div>
+
+    <!-- Transaction blocked -->
+    <div class="bk-card blocked" id="c3">
+      <div class="bk-card-head">
+        <div class="bk-card-left">
+          <div class="bk-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <span class="bk-card-title">TRANSACTION BLOCKED</span>
+        </div>
+        <span class="bk-card-time">1 min ago</span>
+      </div>
+      <div class="bk-card-body">Thank you for your cooperation. The $2,100.00 transaction has been blocked to secure your account.</div>
+    </div>
+  </div>
+
+  <!-- Person -->
+  <div class="bk-person">
+    <div class="bk-glow"></div>
+    <div class="bk-fig">
+      <div class="bk-head"></div>
+      <div class="bk-neck"></div>
+      <div class="bk-body">
+        <div class="bk-phone"><div class="bk-phone-screen"></div></div>
+      </div>
+    </div>
+    <div class="bk-stats">
+      <div class="bk-stat"><div class="bk-stat-val">99.2%</div><div class="bk-stat-lbl">Fraud Detection</div></div>
+      <div class="bk-stat"><div class="bk-stat-val">&lt;30s</div><div class="bk-stat-lbl">Alert Delivery</div></div>
+      <div class="bk-stat"><div class="bk-stat-val">$4.8M</div><div class="bk-stat-lbl">Fraud Prevented</div></div>
+    </div>
+  </div>
+
+</div>
+<script>
+  // Stagger animation on load
+  function animateCards() {
+    const cards = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
+    cards.forEach(c => { c.classList.remove('visible'); c.style.transform = 'translateX(-40px)'; c.style.opacity = '0'; });
+    cards.forEach((c, i) => setTimeout(() => c.classList.add('visible'), 300 + i * 600));
+  }
+
+  animateCards();
+  setInterval(animateCards, 8000);
+
+  function handleReply(choice) {
+    const btn = event.target;
+    btn.style.background = choice === 'yes' ? '#ef4444' : '#4ade80';
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2000);
+  }
+</script>
+</body>
+</html>

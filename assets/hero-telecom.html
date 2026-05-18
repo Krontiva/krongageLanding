@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Telecommunications</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #e8f0fb; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+    .tc { display: flex; align-items: center; justify-content: center; gap: 40px; width: 100%; height: 100vh; padding: 20px; }
+
+    /* ── iPhone mockup ── */
+    .tc-phone-wrap { position: relative; flex-shrink: 0; }
+
+    .tc-phone {
+      width: 230px;
+      background: #1565C0;
+      border-radius: 36px;
+      padding: 5px;
+      box-shadow: 0 20px 60px rgba(21,101,192,.4), 0 4px 16px rgba(0,0,0,.2), inset 0 0 0 1px rgba(255,255,255,.15);
+      position: relative;
+    }
+
+    .tc-phone-inner {
+      background: #000;
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Status bar */
+    .tc-status {
+      background: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 18px 6px;
+      font-size: 11px; font-weight: 700; color: #0f172a;
+    }
+    .tc-status-right { display: flex; align-items: center; gap: 4px; font-size: 10px; }
+    .tc-signal { display: flex; gap: 2px; align-items: flex-end; }
+    .tc-signal span { background: #0f172a; width: 3px; border-radius: 1px; }
+
+    /* Notch */
+    .tc-notch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 90px; height: 22px;
+      background: #000; border-radius: 0 0 14px 14px;
+      z-index: 10;
+    }
+
+    /* App header */
+    .tc-app-head {
+      background: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 18px 10px;
+      font-size: 13px; font-weight: 600; color: #64748b;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .tc-app-title { font-weight: 800; color: #0f172a; }
+
+    /* Scrollable content */
+    .tc-app-body { background: #f5f8ff; padding: 16px 14px; min-height: 360px; position: relative; overflow: hidden; }
+
+    /* Feature card */
+    .tc-feature-card { background: #fff; border-radius: 14px; padding: 16px 14px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(13,71,161,.08); }
+    .tc-fc-title { font-size: 13px; font-weight: 800; color: #0D47A1; text-align: center; margin-bottom: 6px; }
+    .tc-fc-desc { font-size: 11px; color: #64748b; text-align: center; line-height: 1.55; margin-bottom: 14px; }
+
+    .tc-feat-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px; border-radius: 10px;
+      border: 1.5px solid #dbeafe; background: #fff;
+      margin-bottom: 7px; cursor: pointer;
+      transition: all .2s;
+    }
+    .tc-feat-row:last-child { margin-bottom: 0; }
+    .tc-feat-row:hover { border-color: #0D47A1; background: #EEF5FD; }
+    .tc-feat-row.active { border-color: #0D47A1; background: #EEF5FD; }
+    .tc-feat-icon { width: 30px; height: 30px; border-radius: 8px; background: #EEF5FD; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tc-feat-icon svg { width: 17px; height: 17px; fill: none; stroke: #0D47A1; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .tc-feat-text {}
+    .tc-feat-name { font-size: 11px; font-weight: 800; color: #0f172a; }
+    .tc-feat-sub { font-size: 10px; color: #64748b; margin-top: 1px; }
+
+    /* Globe network at bottom */
+    .tc-globe { width: 100%; height: 80px; position: relative; overflow: hidden; }
+    .tc-globe svg { width: 100%; height: 100%; }
+
+    /* Home bar */
+    .tc-home-bar { background: #fff; height: 20px; display: flex; align-items: center; justify-content: center; }
+    .tc-home-bar-line { width: 80px; height: 4px; background: #0f172a; border-radius: 2px; }
+
+    /* ── Right: Stats & info ── */
+    .tc-info { display: flex; flex-direction: column; gap: 14px; max-width: 220px; }
+    .tc-info-title { font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.2; }
+    .tc-info-sub { font-size: 13px; color: #64748b; line-height: 1.6; }
+    .tc-stats-col { display: flex; flex-direction: column; gap: 10px; }
+    .tc-stat-card { background: #fff; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+    .tc-stat-icon { width: 36px; height: 36px; border-radius: 9px; background: #EEF5FD; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .tc-stat-val { font-size: 16px; font-weight: 800; color: #0D47A1; }
+    .tc-stat-lbl { font-size: 11px; color: #64748b; margin-top: 1px; }
+  </style>
+</head>
+<body>
+<div class="tc">
+
+  <!-- Phone mockup -->
+  <div class="tc-phone-wrap">
+    <div class="tc-phone">
+      <div class="tc-phone-inner">
+        <div class="tc-notch"></div>
+
+        <!-- Status bar -->
+        <div class="tc-status">
+          <span>2:30</span>
+          <div class="tc-status-right">
+            <div class="tc-signal">
+              <span style="height:4px;"></span>
+              <span style="height:7px;"></span>
+              <span style="height:10px;"></span>
+              <span style="height:13px;"></span>
+            </div>
+            <span>LTE</span>
+            <span>🔋</span>
+          </div>
+        </div>
+
+        <!-- App header -->
+        <div class="tc-app-head">
+          <span>Back</span>
+          <span class="tc-app-title">Support</span>
+          <span>Exit</span>
+        </div>
+
+        <!-- App body -->
+        <div class="tc-app-body">
+          <div class="tc-feature-card">
+            <div class="tc-fc-title">KronGage Customer Engagement for Telecom</div>
+            <div class="tc-fc-desc">Discover how KronGage helps telecom providers improve customer interaction and satisfaction. Select a solution to learn more:</div>
+
+            <div class="tc-feat-row" onclick="selectFeat(this)">
+              <div class="tc-feat-icon">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <div class="tc-feat-text">
+                <div class="tc-feat-name">PERSONALIZED OFFERINGS</div>
+                <div class="tc-feat-sub">Customized data plans and services</div>
+              </div>
+            </div>
+
+            <div class="tc-feat-row" onclick="selectFeat(this)">
+              <div class="tc-feat-icon">
+                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div class="tc-feat-text">
+                <div class="tc-feat-name">PREDICTIVE ANALYTICS</div>
+                <div class="tc-feat-sub">Anticipate customer needs for retention</div>
+              </div>
+            </div>
+
+            <div class="tc-feat-row" onclick="selectFeat(this)">
+              <div class="tc-feat-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div class="tc-feat-text">
+                <div class="tc-feat-name">OMNICHANNEL ENGAGEMENT</div>
+                <div class="tc-feat-sub">Seamless support across all channels</div>
+              </div>
+            </div>
+
+            <div class="tc-feat-row" onclick="selectFeat(this)">
+              <div class="tc-feat-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83"/></svg>
+              </div>
+              <div class="tc-feat-text">
+                <div class="tc-feat-name">IMPROVED EFFICIENCY</div>
+                <div class="tc-feat-sub">Streamlined operations for better service</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Globe network -->
+          <div class="tc-globe">
+            <svg viewBox="0 0 220 80" preserveAspectRatio="xMidYMid meet" id="globeSvg"></svg>
+          </div>
+        </div>
+
+        <!-- Home bar -->
+        <div class="tc-home-bar"><div class="tc-home-bar-line"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info panel -->
+  <div class="tc-info">
+    <div class="tc-info-title">Telecom<br/>Customer<br/>Engagement</div>
+    <div class="tc-info-sub">KronGage powers telecom operators with AI-driven engagement across every channel — reducing churn and increasing ARPU.</div>
+    <div class="tc-stats-col">
+      <div class="tc-stat-card">
+        <div class="tc-stat-icon">📉</div>
+        <div>
+          <div class="tc-stat-val">32% ↓</div>
+          <div class="tc-stat-lbl">Churn Reduction</div>
+        </div>
+      </div>
+      <div class="tc-stat-card">
+        <div class="tc-stat-icon">📈</div>
+        <div>
+          <div class="tc-stat-val">4.2x</div>
+          <div class="tc-stat-lbl">Campaign ROI</div>
+        </div>
+      </div>
+      <div class="tc-stat-card">
+        <div class="tc-stat-icon">⚡</div>
+        <div>
+          <div class="tc-stat-val">94%</div>
+          <div class="tc-stat-lbl">First Contact Resolution</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  // Globe network SVG
+  const svg = document.getElementById('globeSvg');
+  const W = 220, H = 80;
+  const nodes = [
+    [20,60],[50,30],[80,55],[110,20],[140,50],[170,30],[200,60],
+    [35,70],[65,45],[95,35],[125,60],[155,40],[185,65],
+  ];
+  // edges
+  const edges = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[0,7],[1,7],[1,8],[2,8],[3,9],[3,10],[4,10],[4,11],[5,11],[5,12],[6,12],[7,8],[8,9],[9,10],[10,11],[11,12]];
+  edges.forEach(([a,b]) => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',nodes[a][0]); line.setAttribute('y1',nodes[a][1]);
+    line.setAttribute('x2',nodes[b][0]); line.setAttribute('y2',nodes[b][1]);
+    line.setAttribute('stroke','rgba(13,71,161,.2)'); line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+  });
+  nodes.forEach(([x,y],i) => {
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',i%3===0?4:2.5);
+    c.setAttribute('fill',i%3===0?'#0D47A1':'#90caf9');
+    svg.appendChild(c);
+  });
+
+  // Animate pulse on nodes
+  let ni = 0;
+  setInterval(() => {
+    const [x,y] = nodes[ni % nodes.length];
+    const p = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    p.setAttribute('cx',x); p.setAttribute('cy',y); p.setAttribute('r','3');
+    p.setAttribute('fill','none'); p.setAttribute('stroke','#0D47A1'); p.setAttribute('stroke-width','1.5');
+    svg.appendChild(p);
+    let r = 3, op = 1;
+    const anim = setInterval(() => {
+      r += 1.5; op -= 0.06;
+      p.setAttribute('r', r); p.setAttribute('opacity', op);
+      if (op <= 0) { clearInterval(anim); svg.removeChild(p); }
+    }, 30);
+    ni++;
+  }, 600);
+
+  function selectFeat(el) {
+    document.querySelectorAll('.tc-feat-row').forEach(r => r.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
