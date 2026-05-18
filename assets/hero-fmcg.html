@@ -6,170 +6,135 @@
   <title>KronGage – FMCG & Retail</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #EEF5FD; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 
-    .fg { display: flex; align-items: center; justify-content: center; gap: 28px; width: 100%; height: 100vh; padding: 24px; position: relative; }
+    .fg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; height: 100vh; padding: 32px; }
 
-    /* ── Left: Person in rounded frame ── */
-    .fg-frame-wrap { position: relative; flex-shrink: 0; }
-
-    .fg-frame {
-      width: 280px; height: 320px;
-      border-radius: 36px;
-      overflow: hidden;
-      position: relative;
-      background: linear-gradient(160deg, #d4e5f5 0%, #b8d0ea 100%);
-      box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    }
-
-    /* Person illustration */
-    .fg-person { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
-    .fg-head { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #8B5E3C, #a06535); position: relative; }
-    .fg-neck { width: 20px; height: 14px; background: #a06535; margin: 0 auto; }
-    .fg-body { width: 150px; height: 180px; background: linear-gradient(160deg, #607d8b, #455a64); border-radius: 50% 50% 0 0; }
-    /* Phone in hands */
-    .fg-phone { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); width: 40px; height: 68px; background: #0f172a; border-radius: 8px; border: 2px solid #334155; }
-    .fg-phone-screen { width: 30px; height: 54px; border-radius: 5px; background: linear-gradient(160deg,#dcfce7,#16a34a); margin: 5px auto; }
-    /* Hair -->*/
-    .fg-hair { position: absolute; top: -8px; left: -8px; right: -8px; height: 44px; border-radius: 50%; background: #1a0a00; }
-
-    /* Glasses effect */
-    .fg-glasses { position: absolute; top: 26px; left: 6px; right: 6px; height: 14px; display: flex; gap: 4px; }
-    .fg-glass { flex: 1; border: 2px solid #374151; border-radius: 4px; background: rgba(200,230,255,.3); }
-
-    /* Cart icon bottom-left */
-    .fg-cart-badge {
-      position: absolute; bottom: -14px; left: -14px;
-      width: 64px; height: 64px; border-radius: 14px;
-      background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.12);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .fg-cart-badge svg { width: 32px; height: 32px; }
-
-    /* ── Right: Chat bubbles ── */
-    .fg-bubbles { display: flex; flex-direction: column; gap: 14px; max-width: 280px; }
-
-    .fg-bubble {
-      background: #0f1f3d;
-      border-radius: 18px 18px 18px 4px;
-      padding: 14px 18px;
+    /* ── Shared card base ── */
+    .fg-card {
+      width: 100%; max-width: 340px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(13,71,161,.1), 0 2px 8px rgba(0,0,0,.05);
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(20px);
       transition: opacity .5s ease, transform .5s ease;
     }
-    .fg-bubble.in { opacity: 1; transform: translateY(0); }
-    .fg-bubble-text { font-size: 14px; color: #fff; line-height: 1.6; font-weight: 500; }
+    .fg-card.show { opacity: 1; transform: translateY(0); }
 
-    /* CTA button bubble */
-    .fg-cta {
-      background: #0f1f3d;
-      border-radius: 18px 18px 18px 4px;
-      padding: 14px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-      opacity: 0; transform: translateY(10px);
-      transition: opacity .5s ease, transform .5s ease;
-      cursor: pointer;
+    /* ── Card 1: Customer insight ── */
+    .fg-profile { padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+    .fg-av {
+      width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #0D47A1, #1976D2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: #fff;
     }
-    .fg-cta.in { opacity: 1; transform: translateY(0); }
-    .fg-cta:hover { background: #0D47A1; }
-    .fg-cta-text { font-size: 15px; font-weight: 800; color: #fff; }
-    .fg-cta-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; }
-    .fg-cta-check svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .fg-profile-info { flex: 1; }
+    .fg-profile-name { font-size: 14px; font-weight: 800; color: #0f172a; }
+    .fg-profile-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+    .fg-tags { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+    .fg-tag { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: #EEF5FD; color: #0D47A1; border: 1px solid #dbeafe; }
 
-    /* Order status card -->*/
-    .fg-order-card { background: #fff; border-radius: 12px; padding: 12px 16px; box-shadow: 0 2px 12px rgba(0,0,0,.08); opacity: 0; transform: translateY(10px); transition: opacity .5s, transform .5s; }
-    .fg-order-card.in { opacity: 1; transform: translateY(0); }
-    .fg-order-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .fg-order-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; }
-    .fg-order-status { font-size: 11px; font-weight: 700; background: #dcfce7; color: #16a34a; padding: 2px 8px; border-radius: 6px; }
-    .fg-order-items { font-size: 12px; color: #374151; font-weight: 600; margin-bottom: 4px; }
-    .fg-order-time { font-size: 11px; color: #94a3b8; }
-    .fg-options { display: flex; gap: 8px; margin-top: 10px; }
-    .fg-opt { flex: 1; text-align: center; padding: 7px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all .2s; }
-    .fg-opt.pickup { background: #0D47A1; color: #fff; }
-    .fg-opt.delivery { background: #EEF5FD; color: #0D47A1; border: 1px solid #dbeafe; }
-    .fg-opt:hover { opacity: .85; }
+    /* ── Card 2: Product recommendations ── */
+    .fg-rec-head { padding: 12px 16px 8px; border-bottom: 1px solid #f1f5f9; }
+    .fg-rec-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: #94a3b8; }
+    .fg-rec-title { font-size: 13px; font-weight: 800; color: #0f172a; margin-top: 2px; }
+    .fg-products { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px 12px; }
+    .fg-product {
+      background: #f8fafc; border-radius: 10px; padding: 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      border: 1px solid #f1f5f9; cursor: pointer; transition: border-color .2s, background .2s;
+    }
+    .fg-product:hover { border-color: #0D47A1; background: #EEF5FD; }
+    .fg-product-img { font-size: 28px; }
+    .fg-product-name { font-size: 11px; font-weight: 700; color: #0f172a; text-align: center; }
+    .fg-product-price { font-size: 12px; font-weight: 800; color: #0D47A1; }
+    .fg-add-btn {
+      display: block; width: calc(100% - 24px); margin: 0 12px 12px;
+      background: #0D47A1; color: #fff; border: none; border-radius: 8px;
+      padding: 9px; font-size: 12px; font-weight: 700; cursor: pointer;
+      transition: background .2s; text-align: center;
+    }
+    .fg-add-btn:hover { background: #0a3680; }
+
+    /* ── Card 3: WhatsApp delivery chip ── */
+    .fg-delivery { padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .fg-wa-icon {
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+      background: #25D366; display: flex; align-items: center; justify-content: center;
+    }
+    .fg-wa-icon svg { width: 20px; height: 20px; fill: #fff; }
+    .fg-delivery-info { flex: 1; }
+    .fg-delivery-title { font-size: 12px; font-weight: 800; color: #0f172a; }
+    .fg-delivery-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+    .fg-delivery-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
   </style>
 </head>
 <body>
 <div class="fg">
 
-  <!-- Person frame -->
-  <div class="fg-frame-wrap">
-    <div class="fg-frame">
-      <div class="fg-person">
-        <div class="fg-head">
-          <div class="fg-hair"></div>
-          <div class="fg-glasses"><div class="fg-glass"></div><div class="fg-glass"></div></div>
-        </div>
-        <div class="fg-neck"></div>
-        <div class="fg-body">
-          <div class="fg-phone"><div class="fg-phone-screen"></div></div>
+  <!-- Card 1: Customer insight -->
+  <div class="fg-card" id="c1">
+    <div class="fg-profile">
+      <div class="fg-av">AK</div>
+      <div class="fg-profile-info">
+        <div class="fg-profile-name">Akosua Koomson</div>
+        <div class="fg-profile-sub">Loyal customer · 3 years</div>
+        <div class="fg-tags">
+          <span class="fg-tag">🛒 Groceries</span>
+          <span class="fg-tag">🥑 Fresh Produce</span>
+          <span class="fg-tag">Weekly Shopper</span>
         </div>
       </div>
-    </div>
-    <div class="fg-cart-badge">
-      <svg viewBox="0 0 32 32" fill="none">
-        <path d="M4 4h3l3 14h14l3-8H9" stroke="#0D47A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="13" cy="26" r="2" fill="#0D47A1"/>
-        <circle cx="22" cy="26" r="2" fill="#0D47A1"/>
-      </svg>
     </div>
   </div>
 
-  <!-- Chat bubbles -->
-  <div class="fg-bubbles">
-    <div class="fg-bubble" id="fb1">
-      <div class="fg-bubble-text">Hi, Aisha! Your order for grocery items is ready for pickup or delivery. Please select an option.</div>
+  <!-- Card 2: Product recommendations -->
+  <div class="fg-card" id="c2">
+    <div class="fg-rec-head">
+      <div class="fg-rec-label">Recommended for you</div>
+      <div class="fg-rec-title">Complete your weekly list, Akosua 🛍️</div>
     </div>
-
-    <div class="fg-cta" id="fb2" onclick="confirmPickup()">
-      <span class="fg-cta-text">Confirm pick-up time</span>
-      <div class="fg-cta-check">
-        <svg viewBox="0 0 16 16"><polyline points="3 8 7 12 13 5"/></svg>
+    <div class="fg-products">
+      <div class="fg-product">
+        <div class="fg-product-img">🥑</div>
+        <div class="fg-product-name">Hass Avocado</div>
+        <div class="fg-product-price">GH₵ 12.00</div>
+      </div>
+      <div class="fg-product">
+        <div class="fg-product-img">🥛</div>
+        <div class="fg-product-name">Cowbell Milk</div>
+        <div class="fg-product-price">GH₵ 8.50</div>
       </div>
     </div>
+    <div class="fg-add-btn">Add to Cart →</div>
+  </div>
 
-    <div class="fg-order-card" id="fb3">
-      <div class="fg-order-row">
-        <span class="fg-order-label">Order #4821</span>
-        <span class="fg-order-status">Ready</span>
+  <!-- Card 3: WhatsApp delivery -->
+  <div class="fg-card" id="c3">
+    <div class="fg-delivery">
+      <div class="fg-wa-icon">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       </div>
-      <div class="fg-order-items">🥑 Avocado · 🥛 Milk · 🍞 Bread · +6 items</div>
-      <div class="fg-order-time">Prepared 12 min ago · Store: Westlands</div>
-      <div class="fg-options">
-        <div class="fg-opt pickup">📍 Pickup</div>
-        <div class="fg-opt delivery">🚚 Delivery</div>
+      <div class="fg-delivery-info">
+        <div class="fg-delivery-title">Message delivered via WhatsApp</div>
+        <div class="fg-delivery-sub">Akosua Koomson · Just now · ✓✓ Read</div>
       </div>
+      <div class="fg-delivery-dot"></div>
     </div>
   </div>
 
 </div>
 <script>
-  function animateBubbles() {
-    const els = [
-      document.getElementById('fb1'),
-      document.getElementById('fb2'),
-      document.getElementById('fb3'),
-    ];
-    els.forEach(e => e.classList.remove('in'));
-    els.forEach((e,i) => setTimeout(() => e.classList.add('in'), 400 + i * 700));
+  function runSequence() {
+    ['c1','c2','c3'].forEach(id => document.getElementById(id).classList.remove('show'));
+    const delays = [300, 900, 1600];
+    ['c1','c2','c3'].forEach((id, i) => setTimeout(() => document.getElementById(id).classList.add('show'), delays[i]));
   }
-  animateBubbles();
-  setInterval(animateBubbles, 9000);
-
-  function confirmPickup() {
-    const btn = document.getElementById('fb2');
-    btn.style.background = '#0D47A1';
-    const check = btn.querySelector('.fg-cta-check');
-    check.style.background = 'rgba(255,255,255,.2)';
-    check.style.borderColor = '#fff';
-    setTimeout(() => {
-      btn.style.background = '';
-      check.style.background = '';
-      check.style.borderColor = '';
-    }, 2000);
-  }
+  runSequence();
+  setInterval(runSequence, 7000);
 </script>
 </body>
 </html>

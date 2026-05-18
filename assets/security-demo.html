@@ -9,10 +9,10 @@
     body { font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; height: 100vh;
       background: linear-gradient(135deg, #0a1628 0%, #0d2150 50%, #0a1628 100%); }
 
-    .sec { display: flex; width: 100%; height: 100vh; align-items: center; justify-content: center; gap: 0; overflow: hidden; }
+    .sec { display: flex; width: 100%; height: 100vh; align-items: center; justify-content: center; overflow: hidden; }
 
-    /* ── Left: Hexagonal visual ── */
-    .sec-visual { flex-shrink: 0; display: flex; align-items: center; justify-content: center; position: relative; width: 380px; height: 100vh; }
+    /* ── Hexagonal visual ── */
+    .sec-visual { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100vh; }
 
     /* Hex frame */
     .sec-hex-wrap { position: relative; width: 280px; height: 320px; display: flex; align-items: center; justify-content: center; }
@@ -101,60 +101,6 @@
     .sec-particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: rgba(66,165,245,.6); animation: float 4s ease-in-out infinite; pointer-events: none; }
     @keyframes float { 0%,100%{transform:translateY(0) scale(1);opacity:.6} 50%{transform:translateY(-20px) scale(1.3);opacity:1} }
 
-    /* ── Right: Dashboard panel ── */
-    .sec-panel { flex: 1; height: 100%; overflow-y: auto; padding: 24px 28px 24px 16px; display: flex; flex-direction: column; gap: 14px; max-width: 500px; }
-
-    .sec-panel-title { font-size: 22px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 2px; }
-    .sec-panel-sub { font-size: 13px; color: rgba(255,255,255,.5); }
-
-    /* Score card */
-    .sec-score-card { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 16px; display: flex; align-items: center; gap: 16px; }
-    .sec-score-gauge { position: relative; flex-shrink: 0; }
-    .sec-score-gauge svg { display: block; }
-    .sec-score-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-    .sec-score-val { font-size: 18px; font-weight: 900; color: #fff; }
-    .sec-score-lbl { font-size: 9px; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .5px; }
-    .sec-score-info { flex: 1; }
-    .sec-score-title { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 4px; }
-    .sec-score-desc { font-size: 11px; color: rgba(255,255,255,.5); line-height: 1.5; }
-
-    /* Status row */
-    .sec-status-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .sec-stat-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); border-radius: 10px; padding: 12px; }
-    .sec-stat-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .sec-stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgba(255,255,255,.4); }
-    .sec-stat-dot { width: 7px; height: 7px; border-radius: 50%; }
-    .dot-green { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,.6); }
-    .dot-blue { background: #60a5fa; box-shadow: 0 0 6px rgba(96,165,250,.6); }
-    .dot-yellow { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,.6); }
-    .dot-red { background: #f87171; box-shadow: 0 0 6px rgba(248,113,113,.6); animation: blink 1s ease infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-    .sec-stat-val { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 2px; }
-    .sec-stat-sub { font-size: 10px; color: rgba(255,255,255,.4); }
-
-    /* Compliance badges */
-    .sec-compliance { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 13px; }
-    .sec-comp-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgba(255,255,255,.4); margin-bottom: 10px; }
-    .sec-badges { display: flex; flex-wrap: wrap; gap: 8px; }
-    .sec-cbadge { background: rgba(13,71,161,.4); border: 1px solid rgba(66,165,245,.3); border-radius: 7px; padding: 5px 10px; font-size: 11px; font-weight: 700; color: #93c5fd; display: flex; align-items: center; gap: 5px; }
-    .sec-cbadge-check { width: 14px; height: 14px; background: #4ade80; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #fff; }
-
-    /* Activity feed */
-    .sec-activity { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 13px; }
-    .sec-act-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgba(255,255,255,.4); margin-bottom: 10px; }
-    .sec-act-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
-    .sec-act-item:last-child { border-bottom: none; }
-    .sec-act-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
-    .ai-green { background: rgba(74,222,128,.15); }
-    .ai-blue  { background: rgba(96,165,250,.15); }
-    .ai-yellow{ background: rgba(251,191,36,.15); }
-    .sec-act-body { flex: 1; min-width: 0; }
-    .sec-act-text { font-size: 11px; color: rgba(255,255,255,.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sec-act-time { font-size: 10px; color: rgba(255,255,255,.3); margin-top: 1px; }
-    .sec-act-status { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
-    .st-ok  { background: rgba(74,222,128,.15); color: #4ade80; }
-    .st-info{ background: rgba(96,165,250,.15); color: #60a5fa; }
-    .st-warn{ background: rgba(251,191,36,.15);  color: #fbbf24; }
   </style>
 </head>
 <body>
@@ -199,129 +145,9 @@
     </div>
   </div>
 
-  <!-- Dashboard panel -->
-  <div class="sec-panel">
-    <div>
-      <div class="sec-panel-title">Enterprise-Grade<br/>Security</div>
-      <div class="sec-panel-sub">Real-time protection across all engagement channels</div>
-    </div>
-
-    <!-- Security score -->
-    <div class="sec-score-card">
-      <div class="sec-score-gauge">
-        <svg width="72" height="72" viewBox="0 0 72 72">
-          <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="6"/>
-          <circle cx="36" cy="36" r="28" fill="none" stroke="#4ade80" stroke-width="6"
-            stroke-linecap="round"
-            stroke-dasharray="175.9"
-            stroke-dashoffset="18"
-            transform="rotate(-90 36 36)"
-            style="transition:stroke-dashoffset 1.5s ease;"/>
-        </svg>
-        <div class="sec-score-num">
-          <span class="sec-score-val">94</span>
-          <span class="sec-score-lbl">Score</span>
-        </div>
-      </div>
-      <div class="sec-score-info">
-        <div class="sec-score-title">Security Score: Excellent</div>
-        <div class="sec-score-desc">All systems protected. Last scan: 2 minutes ago. No critical vulnerabilities detected.</div>
-      </div>
-    </div>
-
-    <!-- Status row -->
-    <div class="sec-status-row">
-      <div class="sec-stat-card">
-        <div class="sec-stat-head">
-          <span class="sec-stat-label">Encryption</span>
-          <div class="sec-stat-dot dot-green"></div>
-        </div>
-        <div class="sec-stat-val">AES-256</div>
-        <div class="sec-stat-sub">End-to-end · TLS 1.3</div>
-      </div>
-      <div class="sec-stat-card">
-        <div class="sec-stat-head">
-          <span class="sec-stat-label">MFA Status</span>
-          <div class="sec-stat-dot dot-green"></div>
-        </div>
-        <div class="sec-stat-val">Enabled</div>
-        <div class="sec-stat-sub">All agents · Active</div>
-      </div>
-      <div class="sec-stat-card">
-        <div class="sec-stat-head">
-          <span class="sec-stat-label">Active Sessions</span>
-          <div class="sec-stat-dot dot-blue"></div>
-        </div>
-        <div class="sec-stat-val" id="sessCount">247</div>
-        <div class="sec-stat-sub">Verified users</div>
-      </div>
-      <div class="sec-stat-card">
-        <div class="sec-stat-head">
-          <span class="sec-stat-label">Threats Blocked</span>
-          <div class="sec-stat-dot dot-yellow"></div>
-        </div>
-        <div class="sec-stat-val" id="threatCount">12</div>
-        <div class="sec-stat-sub">Last 24 hours</div>
-      </div>
-    </div>
-
-    <!-- Compliance -->
-    <div class="sec-compliance">
-      <div class="sec-comp-title">Compliance Certifications</div>
-      <div class="sec-badges">
-        <div class="sec-cbadge"><div class="sec-cbadge-check">✓</div>GDPR</div>
-        <div class="sec-cbadge"><div class="sec-cbadge-check">✓</div>ISO 27001</div>
-        <div class="sec-cbadge"><div class="sec-cbadge-check">✓</div>SOC 2</div>
-        <div class="sec-cbadge"><div class="sec-cbadge-check">✓</div>PCI-DSS</div>
-        <div class="sec-cbadge"><div class="sec-cbadge-check">✓</div>HIPAA</div>
-      </div>
-    </div>
-
-    <!-- Activity feed -->
-    <div class="sec-activity">
-      <div class="sec-act-title">Live Security Events</div>
-      <div id="actFeed"></div>
-    </div>
-  </div>
 
 </div>
 
-<script>
-  const EVENTS = [
-    { icon:'🛡️', cls:'ai-green',  text:'Auth token validated — Agent #1047',  time:'Just now',    st:'st-ok',   sl:'Secure' },
-    { icon:'🔐', cls:'ai-blue',   text:'MFA challenge passed — User login',    time:'1 min ago',   st:'st-info',  sl:'Passed' },
-    { icon:'⚠️', cls:'ai-yellow', text:'Rate limit triggered — API endpoint',  time:'3 mins ago',  st:'st-warn',  sl:'Warning' },
-    { icon:'🛡️', cls:'ai-green',  text:'Data encryption verified — 14 msgs',  time:'5 mins ago',  st:'st-ok',   sl:'Secure' },
-    { icon:'🔐', cls:'ai-blue',   text:'Session renewed — Dashboard access',   time:'8 mins ago',  st:'st-info',  sl:'Active' },
-  ];
-
-  function renderFeed(events) {
-    document.getElementById('actFeed').innerHTML = events.map(e => `
-      <div class="sec-act-item">
-        <div class="sec-act-icon ${e.cls}">${e.icon}</div>
-        <div class="sec-act-body">
-          <div class="sec-act-text">${e.text}</div>
-          <div class="sec-act-time">${e.time}</div>
-        </div>
-        <span class="sec-act-status ${e.st}">${e.sl}</span>
-      </div>`).join('');
-  }
-  renderFeed(EVENTS);
-
-  // Animate session count
-  let sess = 247;
-  setInterval(() => {
-    sess += Math.floor(Math.random() * 3) - 1;
-    document.getElementById('sessCount').textContent = sess;
-  }, 3500);
-
-  // Rotate activity events
-  let idx = 0;
-  setInterval(() => {
-    const rotated = [...EVENTS.slice(idx % EVENTS.length), ...EVENTS.slice(0, idx % EVENTS.length)];
-    renderFeed(rotated);
-    idx++;
-  }, 4000);
-</script>
+<script></script>
 </body>
 </html>

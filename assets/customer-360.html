@@ -118,11 +118,12 @@
 
     /* Score bar row */
     .prof-scores {
-      display: flex;
-      gap: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       margin-bottom: 18px;
     }
-    .prof-score-item { flex: 1; }
+    .prof-score-item {}
     .ps-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgba(255,255,255,.35); margin-bottom: 5px; }
     .ps-bar-track { height: 5px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
     .ps-bar-fill { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
@@ -265,32 +266,28 @@
     <!-- Score bars -->
     <div class="prof-scores" id="scoreRow"></div>
 
-    <!-- Body grid -->
+    <!-- Two-column content -->
     <div class="card-body">
-
-      <!-- Communication -->
       <div class="comm-card">
         <div class="comm-head">
-          <span class="comm-title">Communication</span>
-          <div class="comm-edit">✏️</div>
+          <span class="comm-title">Channels</span>
+          <div class="comm-edit">✎</div>
         </div>
         <div id="commRows"></div>
       </div>
-
-      <!-- Activity -->
       <div class="act-panel">
-        <div class="act-title">Activity</div>
+        <div class="act-title">Recent Activity</div>
         <div id="actRows"></div>
-        <div class="journey-card" id="journeyCard">
-          <div class="journey-icon">🛒</div>
+        <div class="journey-card">
+          <div class="journey-icon">🗺️</div>
           <div class="journey-info">
-            <div class="journey-title" id="journeyTitle">Purchase Journey:</div>
-            <div class="journey-sub" id="journeySub">Active &amp; Highly Engaged</div>
+            <div class="journey-title" id="journeyTitle"></div>
+            <div class="journey-sub" id="journeySub"></div>
           </div>
         </div>
       </div>
-
     </div>
+
   </div>
 
   <!-- Pagination dots -->

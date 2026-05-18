@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>360° Policyholder Identity</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4f9;
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .scene { position: relative; width: 420px; height: 420px; flex-shrink: 0; }
+
+    .orbit-svg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 5;
+    }
+
+    /* Center node */
+    .center-node {
+      position: absolute;
+      width: 82px; height: 82px;
+      top: 111px; left: 169px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #12275c, #0D47A1);
+      box-shadow: 0 0 0 3px #fff, 0 8px 32px rgba(13,71,161,.28);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 20;
+      cursor: pointer;
+      transition: box-shadow 0.7s ease;
+    }
+    .center-initials {
+      font-size: 22px; font-weight: 900; color: #fff;
+      line-height: 1; margin-bottom: 3px; letter-spacing: -0.5px;
+      transition: opacity 0.4s;
+    }
+    .center-name {
+      font-size: 7px; font-weight: 700; color: rgba(255,255,255,0.65);
+      text-transform: uppercase; letter-spacing: 0.8px; text-align: center;
+      max-width: 64px; line-height: 1.2;
+      transition: opacity 0.4s;
+    }
+
+    /* Predictive pill anchored to bottom of center node */
+    .pred-pill {
+      position: absolute;
+      bottom: -13px; left: 50%; transform: translateX(-50%);
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 9px; font-weight: 800; letter-spacing: 0.3px;
+      white-space: nowrap; border: 1px solid;
+      transition: background 0.7s, color 0.7s, border-color 0.7s;
+      z-index: 5;
+    }
+
+    /* Orbit nodes */
+    .node {
+      position: absolute; z-index: 15;
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 11px 6px 7px;
+      border-radius: 50px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 11px; font-weight: 700;
+      color: #475569;
+      transform: translate(-50%, -50%);
+      transition: background 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.25s;
+      animation: nodeFloat var(--dur, 4s) ease-in-out infinite var(--del, 0s);
+    }
+    .node:hover { background: #f8fafc; border-color: #cbd5e1; color: #0f172a; }
+    .node.active { color: #0f172a; }
+    @keyframes nodeFloat {
+      0%,100% { transform: translate(-50%, -50%) translateY(0px); }
+      50%      { transform: translate(-50%, -50%) translateY(-5px); }
+    }
+
+    .node-icon {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+      background: #EEF5FD;
+      transition: background 0.25s;
+    }
+
+    /* Feed panel */
+    .feed {
+      position: absolute; left: 12px; right: 12px; bottom: 8px;
+      height: 122px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 10px 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .feed-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 7px;
+    }
+    .feed-title {
+      font-size: 9.5px; font-weight: 800; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 0.9px;
+      transition: color 0.3s;
+    }
+    .feed-badge {
+      font-size: 9px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px; border: 1px solid;
+      transition: background 0.5s, color 0.5s, border-color 0.5s;
+    }
+    .feed-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid #f1f5f9;
+      opacity: 0; transform: translateY(5px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .feed-item.show { opacity: 1; transform: translateY(0); }
+    .feed-item:last-child { border-bottom: none; }
+    .feed-icon {
+      width: 26px; height: 26px; border-radius: 7px;
+      background: #EEF5FD;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .feed-label { font-size: 11px; font-weight: 700; color: #0f172a; }
+    .feed-sub { font-size: 9.5px; color: #94a3b8; margin-top: 1px; }
+    .feed-val {
+      font-size: 11px; font-weight: 800; flex-shrink: 0; margin-left: auto;
+      transition: color 0.5s;
+    }
+  </style>
+</head>
+<body>
+<div class="scene">
+
+  <!-- SVG: orbit track, rings, connectors, dots -->
+  <svg class="orbit-svg" id="orbitSvg" viewBox="0 0 420 420">
+    <defs>
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="dotGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2.5"/>
+      </filter>
+      <filter id="auraBlur" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="10"/>
+      </filter>
+    </defs>
+
+    <!-- Orbit track (dashed circle) -->
+    <circle cx="210" cy="152" r="108" fill="none"
+      stroke="rgba(13,71,161,0.1)" stroke-width="1" stroke-dasharray="3 5"/>
+
+    <!-- Connector lines -->
+    <g id="connectors"></g>
+
+    <!-- Traveling dots -->
+    <g id="travelDots"></g>
+
+    <!-- Aura (background glow behind ring, color shifts) -->
+    <circle id="aura" cx="210" cy="152" r="52"
+      fill="none" stroke-width="18" opacity="0.12"
+      filter="url(#auraBlur)"/>
+
+    <!-- Static ring background -->
+    <circle cx="210" cy="152" r="52"
+      fill="none" stroke="rgba(13,71,161,0.08)" stroke-width="1.5"/>
+
+    <!-- Spinning predictive arc -->
+    <circle id="ringArc" cx="210" cy="152" r="52"
+      fill="none" stroke-width="2.5" stroke-linecap="round"
+      stroke-dasharray="195 131"
+      transform="rotate(-90, 210, 152)"/>
+
+    <!-- Pulse ring (expands out) -->
+    <circle id="pulseRing" cx="210" cy="152" r="52"
+      fill="none" stroke-width="1.5" opacity="0"/>
+  </svg>
+
+  <!-- Center profile node -->
+  <div class="center-node" id="centerNode">
+    <div class="center-initials" id="cInitials">SC</div>
+    <div class="center-name" id="cName">Sarah Chen</div>
+    <div class="pred-pill" id="predPill">Churn Risk: Low</div>
+  </div>
+
+  <!-- Orbit nodes — 5 nodes, clock positions 2/4/6/8/10 -->
+  <div class="node" id="n0" data-i="0" style="--dur:4.4s;--del:0.0s; left:303px;top:98px">
+    <div class="node-icon">🩺</div>Claims
+  </div>
+  <div class="node" id="n1" data-i="1" style="--dur:3.9s;--del:0.6s; left:303px;top:206px">
+    <div class="node-icon">📡</div>Telematics
+  </div>
+  <div class="node" id="n2" data-i="2" style="--dur:4.2s;--del:1.2s; left:210px;top:258px">
+    <div class="node-icon">💬</div>Support
+  </div>
+  <div class="node" id="n3" data-i="3" style="--dur:4.6s;--del:1.8s; left:117px;top:206px">
+    <div class="node-icon">💳</div>Billing
+  </div>
+  <div class="node" id="n4" data-i="4" style="--dur:4.3s;--del:2.4s; left:117px;top:98px">
+    <div class="node-icon">📊</div>Behavioral
+  </div>
+
+  <!-- Feed panel -->
+  <div class="feed">
+    <div class="feed-header">
+      <span class="feed-title" id="feedTitle">Claims</span>
+      <span class="feed-badge" id="feedBadge">3 records</span>
+    </div>
+    <div id="feedItems"></div>
+  </div>
+
+</div>
+<script>
+  /* ── Data ── */
+  const PROFILES = [
+    {
+      initials:'SC', name:'Sarah Chen',
+      state:'stable', color:'#0D47A1',
+      pill:'Churn Risk: Low',
+      pillBg:'rgba(13,71,161,.1)', pillBorder:'rgba(13,71,161,.3)', pillTxt:'#0D47A1',
+    },
+    {
+      initials:'MW', name:'Marcus Webb',
+      state:'risk', color:'#ea580c',
+      pill:'Renewal Risk: High',
+      pillBg:'rgba(234,88,12,.1)', pillBorder:'rgba(234,88,12,.35)', pillTxt:'#ea580c',
+    },
+    {
+      initials:'AO', name:'Aisha Okafor',
+      state:'expand', color:'#7c3aed',
+      pill:'Expansion: Peak',
+      pillBg:'rgba(124,58,237,.1)', pillBorder:'rgba(124,58,237,.35)', pillTxt:'#7c3aed',
+    },
+  ];
+
+  const NODES = [
+    { label:'Claims',         icon:'🩺',
+      items:[
+        { icon:'🚗', label:'Fender Bender Claim',    sub:'Resolved · Jun 2024',      val:'$1,200'  },
+        { icon:'✅', label:'Glass Repair Approved',   sub:'Resolved · Nov 2023',      val:'$340'    },
+        { icon:'⏱️', label:'Medical Claim Open',      sub:'Pending · 4 days',         val:'$8,500'  },
+      ]},
+    { label:'Telematics',     icon:'📡',
+      items:[
+        { icon:'⚡', label:'Safe Driver Score',       sub:'Last 30 days',             val:'94/100'  },
+        { icon:'🛣️', label:'Avg Monthly Mileage',     sub:'Below avg ↓',              val:'612 mi'  },
+        { icon:'🌙', label:'Night Driving',           sub:'Low frequency',            val:'3%'      },
+      ]},
+    { label:'Support',        icon:'💬',
+      items:[
+        { icon:'💬', label:'WhatsApp Query',          sub:'Billing question · 2d ago',val:'Resolved'},
+        { icon:'📞', label:'Call — Renewal Info',     sub:'14d ago · 4m 32s',         val:'Resolved'},
+        { icon:'⭐', label:'CSAT Score',              sub:'Last interaction',          val:'4.8 / 5' },
+      ]},
+    { label:'Billing',        icon:'💳',
+      items:[
+        { icon:'✅', label:'Premium Paid On-Time',    sub:'Last 24 months',           val:'100%'    },
+        { icon:'💳', label:'Next Payment Due',        sub:'Auto-debit active',         val:'15 Jun'  },
+        { icon:'💰', label:'Lifetime Value',          sub:'Since 2018',               val:'$14,280' },
+      ]},
+    { label:'Behavioral',     icon:'📊',
+      items:[
+        { icon:'📱', label:'App Sessions / Week',     sub:'Highly engaged ↑',         val:'6.4'     },
+        { icon:'📧', label:'Email Open Rate',         sub:'Last 6 campaigns',         val:'78%'     },
+        { icon:'🔔', label:'Push Opt-in',             sub:'All channels active',       val:'Yes'     },
+      ]},
+  ];
+
+  const CENTER = { x:210, y:152 };
+  const NODE_POS = [
+    { x:303, y:98  },  // 0 top-right (2 o'clock)
+    { x:303, y:206 },  // 1 bottom-right (4 o'clock)
+    { x:210, y:258 },  // 2 bottom (6 o'clock)
+    { x:117, y:206 },  // 3 bottom-left (8 o'clock)
+    { x:117, y:98  },  // 4 top-left (10 o'clock)
+  ];
+
+  let activePrf = 0, activeNode = 0, arcAngle = -90;
+  let pulseR = 52, pulseDir = 1;
+
+  /* ── Draw connector lines ── */
+  function drawConnectors() {
+    const g = document.getElementById('connectors');
+    g.innerHTML = '';
+    NODE_POS.forEach(pos => {
+      const dx = pos.x - CENTER.x, dy = pos.y - CENTER.y;
+      const len = Math.sqrt(dx*dx+dy*dy);
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1', CENTER.x + (dx/len)*43);
+      line.setAttribute('y1', CENTER.y + (dy/len)*43);
+      line.setAttribute('x2', pos.x    - (dx/len)*16);
+      line.setAttribute('y2', pos.y    - (dy/len)*16);
+      line.setAttribute('stroke','rgba(13,71,161,0.1)');
+      line.setAttribute('stroke-width','1.2');
+      line.setAttribute('stroke-dasharray','3 5');
+      g.appendChild(line);
+    });
+  }
+
+  /* ── Apply profile theme ── */
+  function applyProfile(idx) {
+    const p = PROFILES[idx];
+    document.getElementById('cInitials').textContent = p.initials;
+    document.getElementById('cName').textContent     = p.name;
+
+    const pill = document.getElementById('predPill');
+    pill.textContent = p.pill;
+    pill.style.background  = p.pillBg;
+    pill.style.borderColor = p.pillBorder;
+    pill.style.color       = p.pillTxt;
+
+    document.getElementById('ringArc').setAttribute('stroke',  p.color);
+    document.getElementById('pulseRing').setAttribute('stroke', p.color);
+    document.getElementById('aura').setAttribute('stroke', p.color);
+
+    styleNode(activeNode, true);
+    renderFeed(activeNode);
+  }
+
+  /* ── Node highlight ── */
+  function styleNode(i, active) {
+    const p = PROFILES[activePrf];
+    const el = document.getElementById('n'+i);
+    if (!el) return;
+    if (active) {
+      el.classList.add('active');
+      el.style.background   = p.color + '14';
+      el.style.borderColor  = p.color + '60';
+      el.style.color        = p.color;
+      el.querySelector('.node-icon').style.background = p.color + '18';
+      el.style.boxShadow    = `0 4px 18px ${p.color}22`;
+    } else {
+      el.classList.remove('active');
+      el.style.background   = '';
+      el.style.borderColor  = '';
+      el.style.color        = '';
+      el.querySelector('.node-icon').style.background = '';
+      el.style.boxShadow    = '';
+    }
+  }
+
+  function setNode(i) {
+    styleNode(activeNode, false);
+    activeNode = i;
+    styleNode(activeNode, true);
+    renderFeed(i);
+  }
+
+  /* ── Feed render ── */
+  function renderFeed(nodeIdx) {
+    const p = PROFILES[activePrf];
+    const n = NODES[nodeIdx];
+    document.getElementById('feedTitle').textContent = n.label;
+    const badge = document.getElementById('feedBadge');
+    badge.textContent   = n.items.length + ' records';
+    badge.style.background  = p.color + '10';
+    badge.style.color       = p.color;
+    badge.style.borderColor = p.color + '40';
+
+    const cont = document.getElementById('feedItems');
+    cont.innerHTML = n.items.map((item, idx) => `
+      <div class="feed-item" style="transition-delay:${idx*75}ms">
+        <div class="feed-icon">${item.icon}</div>
+        <div style="flex:1">
+          <div class="feed-label">${item.label}</div>
+          <div class="feed-sub">${item.sub}</div>
+        </div>
+        <div class="feed-val" style="color:${p.color}">${item.val}</div>
+      </div>`).join('');
+
+    requestAnimationFrame(() =>
+      cont.querySelectorAll('.feed-item').forEach(el => el.classList.add('show'))
+    );
+  }
+
+  /* ── Traveling dot animation ── */
+  let dotIdx = 0;
+  function fireDot() {
+    const p   = PROFILES[activePrf];
+    const pos = NODE_POS[dotIdx % NODE_POS.length];
+    dotIdx++;
+    const dx = pos.x - CENTER.x, dy = pos.y - CENTER.y;
+    const len = Math.sqrt(dx*dx+dy*dy);
+    const sx = CENTER.x + (dx/len)*44, sy = CENTER.y + (dy/len)*44;
+    const ex = pos.x    - (dx/len)*18, ey = pos.y    - (dy/len)*18;
+
+    const ns = 'http://www.w3.org/2000/svg';
+    const glow = document.createElementNS(ns,'circle');
+    glow.setAttribute('r','4'); glow.setAttribute('fill',p.color);
+    glow.setAttribute('filter','url(#dotGlow)');
+    const dot = document.createElementNS(ns,'circle');
+    dot.setAttribute('r','2.5'); dot.setAttribute('fill',p.color);
+
+    const g = document.getElementById('travelDots');
+    g.appendChild(glow); g.appendChild(dot);
+
+    let t = 0;
+    const step = () => {
+      t += 0.022;
+      if (t > 1) {
+        try { g.removeChild(glow); g.removeChild(dot); } catch(e){}
+        setTimeout(fireDot, 300);
+        return;
+      }
+      const cx = sx + (ex-sx)*t, cy = sy + (ey-sy)*t;
+      const op = t < 0.5 ? t*2 : (1-t)*2;
+      [glow, dot].forEach(el => { el.setAttribute('cx',cx); el.setAttribute('cy',cy); el.setAttribute('opacity',op); });
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ── Spinning arc ── */
+  function spinArc() {
+    arcAngle += 0.35;
+    document.getElementById('ringArc').setAttribute('transform',`rotate(${arcAngle},210,152)`);
+    requestAnimationFrame(spinArc);
+  }
+
+  /* ── Pulse ring ── */
+  function pulseFn() {
+    pulseR += 0.25 * pulseDir;
+    if (pulseR > 60) pulseDir = -1;
+    if (pulseR < 52) pulseDir =  1;
+    const el = document.getElementById('pulseRing');
+    el.setAttribute('r', pulseR);
+    el.setAttribute('opacity', ((pulseR-52)/8 * 0.3).toFixed(3));
+    requestAnimationFrame(pulseFn);
+  }
+
+  /* ── Profile cycle ── */
+  function cycleProfile() {
+    activePrf = (activePrf + 1) % PROFILES.length;
+    applyProfile(activePrf);
+  }
+
+  /* ── Node click handlers ── */
+  document.querySelectorAll('.node').forEach(el => {
+    el.addEventListener('click', () => setNode(parseInt(el.dataset.i)));
+  });
+
+  /* ── Init ── */
+  drawConnectors();
+  applyProfile(0);
+  setNode(0);
+  setTimeout(fireDot, 600);
+  spinArc();
+  pulseFn();
+  setInterval(cycleProfile, 5000);
+</script>
+</body>
+</html>

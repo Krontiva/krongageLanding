@@ -104,64 +104,14 @@
   </style>
 </head>
 <body>
-<div class="sp">
-
-  <!-- Sidebar -->
-  <div class="sp-side">
-    <div class="sp-logo">
-      <div class="sp-logo-icon">K</div>
-      <span class="sp-logo-text">KronGage</span>
-    </div>
-
-    <div class="sp-nav-item">
-      <svg class="sp-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 2h14v2H1zm0 5h14v2H1zm0 5h14v2H1z"/></svg>
-      Dashboard
-    </div>
-    <div class="sp-nav-item">
-      <svg class="sp-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 2a1 1 0 011-1h12a1 1 0 011 1v12a1 1 0 01-1 1H2a1 1 0 01-1-1V2zm1 1v10h12V3H2z"/></svg>
-      Inbox
-      <span class="sp-badge">6</span>
-    </div>
-    <div class="sp-nav-item">
-      <svg class="sp-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 12l3-6 3 3 3-5 3 8H1z"/></svg>
-      Analytics
-    </div>
-    <div class="sp-nav-item on">
-      <svg class="sp-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zM7 6v4l3 1.5-.75-1.3L8 9V6H7z"/></svg>
-      Social Publishing
-    </div>
-    <div class="sp-nav-item">
-      <svg class="sp-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a3 3 0 00-3 3v1H3v10h10V5h-2V4a3 3 0 00-3-3zm0 2a1 1 0 011 1v1H7V4a1 1 0 011-1z"/></svg>
-      Settings
-    </div>
-    <div class="sp-nav-item">
-      <svg class="sp-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v2H2zm0 5h8v2H2zm0 5h10v2H2z"/></svg>
-      Content
-    </div>
-    <div class="sp-gap"></div>
-    <div class="sp-nav-item">
-      <svg class="sp-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M6 3l5 5-5 5V3z"/></svg>
-      Log out
-    </div>
-
-    <div class="sp-engagement">
-      <div class="sp-eng-label">Engagement Rate</div>
-      <div class="sp-eng-val">#2196f3</div>
-      <svg class="sp-eng-chart" viewBox="0 0 90 32" preserveAspectRatio="none">
-        <polyline points="0,28 12,20 24,24 36,12 48,18 60,8 72,14 90,4"
-          fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <polyline points="0,32 0,28 12,20 24,24 36,12 48,18 60,8 72,14 90,4 90,32"
-          fill="rgba(56,189,248,.15)" stroke="none"/>
-      </svg>
-    </div>
-  </div>
+<div class="sp" style="background:#fff;">
 
   <!-- Main -->
   <div class="sp-main">
     <div class="sp-topbar">
       <div>
         <div class="sp-page-title">Social Publishing</div>
-        <div class="sp-page-sub">State-of-the-art SaaS customer engagement platform</div>
+        <div class="sp-page-sub">Content Calendar</div>
       </div>
       <button class="sp-cta-btn">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="white"><path d="M8 1v14M1 8h14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
@@ -169,57 +119,9 @@
       </button>
     </div>
 
-    <div class="sp-body">
-      <!-- Left: Feed Preview -->
-      <div class="sp-left">
-        <div class="sp-sec-title">Social Feed Preview</div>
-
-        <div class="sp-ig-card">
-          <div class="sp-ig-head">
-            <div class="sp-ig-brand">
-              <div class="sp-ig-logo">IG</div>
-              <span class="sp-ig-name">Instagram</span>
-            </div>
-            <span class="sp-ig-dots">···</span>
-          </div>
-          <div class="sp-ig-img">
-            <div class="sp-ig-grid">
-              <div class="sp-ig-cell"></div>
-              <div class="sp-ig-cell"></div>
-              <div class="sp-ig-cell"></div>
-              <div class="sp-ig-cell"></div>
-            </div>
-          </div>
-          <div class="sp-ig-actions">
-            <span class="sp-ig-act">🤍</span>
-            <span class="sp-ig-act">💬</span>
-            <span class="sp-ig-act">↗️</span>
-            <span class="sp-ig-act sp-ig-bookmark">🔖</span>
-          </div>
-          <div class="sp-ig-stats"><strong>1.5K</strong> likes &nbsp;·&nbsp; <strong>233</strong> comments</div>
-          <div class="sp-ig-caption">
-            <strong>krongage</strong> Instagram In our post six with a curated lifestyle photo and site… <span style="color:#0D47A1;">more</span>
-          </div>
-          <div class="sp-ig-comments" id="viewComments">View all 33 comments</div>
-          <div class="sp-ig-time">12 minutes ago</div>
-          <div class="sp-ig-add-comment">
-            <div class="sp-ig-com-av">KG</div>
-            <div class="sp-ig-com-inp">Add a comment…</div>
-          </div>
-        </div>
-
-        <div class="sp-ig-reach">
-          <span class="sp-ig-reach-label">Reach</span>
-          <span class="sp-ig-reach-val">#2,070</span>
-          <svg width="70" height="28" viewBox="0 0 70 28" preserveAspectRatio="none">
-            <polyline points="0,22 12,16 24,20 36,8 48,14 60,6 70,10"
-              fill="none" stroke="#0D47A1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Right: Calendar -->
-      <div class="sp-right">
+    <div class="sp-body" style="display:block;overflow-y:auto;">
+      <!-- Calendar only -->
+      <div class="sp-right" style="padding:16px 20px;">
         <!-- Reach stat -->
         <div class="sp-reach-stat">
           <div class="sp-reach-info">
@@ -232,10 +134,6 @@
             <polyline points="0,36 0,30 15,22 30,26 45,10 60,18 75,8 90,14 90,36"
               fill="rgba(13,71,161,.08)" stroke="none"/>
           </svg>
-          <div class="sp-cal-top-right">
-            <button class="sp-cal-btn pri">✎ Create Post ∨</button>
-            <button class="sp-cal-btn">≡</button>
-          </div>
         </div>
 
         <!-- Calendar label -->

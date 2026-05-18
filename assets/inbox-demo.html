@@ -10,15 +10,6 @@
 
     .ib { display: flex; width: 100%; height: 100vh; background: #fff; overflow: hidden; }
 
-    /* ── Thin icon sidenav ── */
-    .ib-side { width: 52px; background: #0D47A1; display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 4px; flex-shrink: 0; }
-    .ib-logo { width: 34px; height: 34px; background: #fff; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; color: #0D47A1; margin-bottom: 10px; }
-    .ib-si { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.45); cursor: pointer; transition: background .2s, color .2s; }
-    .ib-si:hover { background: rgba(255,255,255,.12); color: #fff; }
-    .ib-si.on { background: rgba(255,255,255,.18); color: #fff; }
-    .ib-gap { flex: 1; }
-    .ib-si svg { width: 18px; height: 18px; fill: currentColor; }
-
     /* ── Conversation list ── */
     .ib-list { width: 208px; border-right: 1px solid #f1f5f9; display: flex; flex-direction: column; flex-shrink: 0; }
     .ib-lhead { padding: 13px 12px 10px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
@@ -78,59 +69,11 @@
     .ib-sendbtn { width: 30px; height: 30px; border-radius: 50%; background: #0D47A1; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; flex-shrink: 0; transition: background .2s; }
     .ib-sendbtn:hover { background: #0a3a84; }
 
-    /* ── Profile panel ── */
-    .ib-prof { width: 215px; overflow-y: auto; flex-shrink: 0; padding: 13px 13px; }
-    .ib-profav { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
-    .ib-profpic { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .ib-profname { font-size: 13px; font-weight: 800; color: #0f172a; }
-    .ib-profhandle { font-size: 11px; color: #64748b; }
-    .ib-psec { margin-bottom: 10px; }
-    .ib-plabel { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; }
-    .ib-plabel-tog { cursor: pointer; color: #cbd5e1; font-style: normal; }
-    .ib-pfield { font-size: 12px; color: #374151; margin-bottom: 3px; line-height: 1.5; }
-    .ib-div { height: 1px; background: #f1f5f9; margin: 10px 0; }
-    .ib-tl { list-style: none; }
-    .ib-tl li { position: relative; padding: 0 0 9px 15px; font-size: 11px; color: #64748b; }
-    .ib-tl li::before { content: ''; position: absolute; left: 0; top: 4px; width: 7px; height: 7px; border-radius: 50%; background: #0D47A1; }
-    .ib-tl li::after { content: ''; position: absolute; left: 3px; top: 11px; width: 1px; height: calc(100% - 5px); background: #e2e8f0; }
-    .ib-tl li:last-child::after { display: none; }
-    .ib-tl li strong { display: block; font-weight: 700; color: #374151; font-size: 11px; }
-    .ib-tl li em { font-style: normal; font-size: 10px; }
     .ib-tag { display: inline-flex; align-items: center; gap: 4px; background: #EEF5FD; color: #0D47A1; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; }
   </style>
 </head>
 <body>
 <div class="ib">
-
-  <!-- Icon sidenav -->
-  <div class="ib-side">
-    <div class="ib-logo">K</div>
-    <!-- Inbox -->
-    <div class="ib-si on" title="Inbox">
-      <svg viewBox="0 0 20 20"><path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm14 0H4v6h2.5l1 2h5l1-2H16V4z"/></svg>
-    </div>
-    <!-- Contacts -->
-    <div class="ib-si" title="Contacts">
-      <svg viewBox="0 0 20 20"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-6 8a6 6 0 1112 0H4z"/></svg>
-    </div>
-    <!-- Notes -->
-    <div class="ib-si" title="Notes">
-      <svg viewBox="0 0 20 20"><path d="M4 2h12a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1zm1 2v12h10V4H5zm2 3h6v1H7V7zm0 3h6v1H7v-1zm0 3h4v1H7v-1z"/></svg>
-    </div>
-    <!-- Analytics -->
-    <div class="ib-si" title="Analytics">
-      <svg viewBox="0 0 20 20"><path d="M2 16l4-8 4 4 4-6 4 10H2z"/></svg>
-    </div>
-    <div class="ib-gap"></div>
-    <!-- Settings -->
-    <div class="ib-si" title="Settings">
-      <svg viewBox="0 0 20 20"><path d="M10 13a3 3 0 100-6 3 3 0 000 6zm7-3a7 7 0 11-14 0 7 7 0 0114 0zm-2 0a5 5 0 10-10 0 5 5 0 0010 0z"/></svg>
-    </div>
-    <!-- Outbox -->
-    <div class="ib-si" title="Send">
-      <svg viewBox="0 0 20 20"><path d="M3 4l14 6-14 6V4zm0 0v4.5l7 1.5-7 1.5V16"/></svg>
-    </div>
-  </div>
 
   <!-- Conversation list -->
   <div class="ib-list">
@@ -153,8 +96,6 @@
       </div>
       <div class="ib-tbtns">
         <button class="ib-tbtn ico" title="Call">📞</button>
-        <button class="ib-tbtn">Action Inbox</button>
-        <button class="ib-tbtn pri">Action profile</button>
       </div>
     </div>
     <div class="ib-msgs" id="msgArea"></div>
@@ -164,54 +105,6 @@
     </div>
   </div>
 
-  <!-- Profile -->
-  <div class="ib-prof">
-    <div class="ib-profav">
-      <div class="ib-profpic" id="profPic" style="background:#0D47A1">SJ</div>
-      <div class="ib-profname" id="profName">Sarah J.</div>
-      <div class="ib-profhandle">@sarah.j.com</div>
-    </div>
-
-    <div class="ib-psec">
-      <div class="ib-plabel">Name</div>
-      <div class="ib-pfield" id="profFull">Sarah J.</div>
-    </div>
-    <div class="ib-psec">
-      <div class="ib-plabel">Phone / Email</div>
-      <div class="ib-pfield">(013) 355-7780</div>
-      <div class="ib-pfield">kronigee2@gmail.com</div>
-    </div>
-    <div class="ib-div"></div>
-
-    <div class="ib-psec">
-      <div class="ib-plabel">Interaction history</div>
-      <ul class="ib-tl">
-        <li><strong>First time</strong><em>January 1 · 1hrs ago · 1m</em></li>
-        <li><strong>Last called</strong><em>January 1 · 1hrs ago · 3m</em></li>
-        <li><strong>Last meeting</strong><em>January 1 · 1hrs ago · 4m</em></li>
-        <li><strong>Customer since</strong><em>January 1 · 1hrs ago</em></li>
-      </ul>
-    </div>
-    <div class="ib-div"></div>
-
-    <div class="ib-psec">
-      <div class="ib-plabel">Metadata <span class="ib-plabel-tog">∨</span></div>
-      <span class="ib-tag">KronGage ⊕</span>
-    </div>
-    <div class="ib-div"></div>
-
-    <div class="ib-psec">
-      <div class="ib-plabel">Message <span class="ib-plabel-tog">∨</span></div>
-      <div class="ib-pfield">(513) 305-6736</div>
-      <div class="ib-pfield">kron5ag@gmail.com</div>
-    </div>
-    <div class="ib-div"></div>
-
-    <div class="ib-psec">
-      <div class="ib-plabel">Comment <span class="ib-plabel-tog">∨</span></div>
-      <div class="ib-pfield">30 min</div>
-    </div>
-  </div>
 
 </div>
 <script>
@@ -293,10 +186,6 @@
     const c = CONVS.find(x=>x.id===id);
     document.getElementById('tName').textContent = c.name;
     document.getElementById('tSub').textContent = `Webchat / ${c.ch}`;
-    document.getElementById('profPic').textContent = c.init;
-    document.getElementById('profPic').style.background = c.color;
-    document.getElementById('profName').textContent = c.name;
-    document.getElementById('profFull').textContent = c.name;
     renderList();
     renderThread(id);
   }

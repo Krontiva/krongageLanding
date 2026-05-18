@@ -71,34 +71,59 @@
     .mega-article-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
     .mega-article-sub { font-size: 12px; color: #64748b; line-height: 1.6; }
 
-    /* MAIN */
-    main { flex: 1; padding: 60px 20px 80px; }
-    .contact-header { text-align: center; margin-bottom: 40px; }
-    .contact-header h1 { font-size: 42px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
-    .contact-header p { font-size: 16px; color: #475569; }
-
-    /* FORM CARD */
-    .form-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 32px rgba(0,0,0,.08); max-width: 580px; margin: 0 auto; padding: 40px; }
-    .form-section-title { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-    .form-section-sub { font-size: 13px; color: #94a3b8; margin-bottom: 28px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
-    .form-group label { font-size: 13px; font-weight: 600; color: #374151; }
-    .form-group label .req { color: #ef4444; margin-left: 2px; }
-    .form-group input, .form-group textarea {
-      padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;
-      font-family: inherit; color: #0f172a; outline: none; transition: border-color .2s;
-      background: #fff;
+    /* HERO SPLIT */
+    main { flex: 1; }
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-    .form-group input:focus, .form-group textarea:focus { border-color: #0D47A1; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
-    .form-group input::placeholder, .form-group textarea::placeholder { color: #94a3b8; }
-    .form-group .hint { font-size: 11px; color: #94a3b8; }
-    .form-group textarea { resize: vertical; min-height: 120px; }
-    .form-divider { margin: 24px 0 20px; }
-    .form-divider h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-    .form-divider p { font-size: 12px; color: #94a3b8; }
-    .btn-submit { background: #0D47A1; color: #fff; padding: 13px 32px; border-radius: 50px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: background .2s; }
-    .btn-submit:hover { background: #0a3a84; }
+    .contact-hero {
+      display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 64px);
+      background: linear-gradient(135deg, #0f172a 0%, #0D47A1 50%, #1565C0 75%, #0a2a6e 100%);
+      background-size: 300% 300%;
+      animation: gradientShift 8s ease infinite;
+    }
+    .contact-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 60px; color: #fff;
+    }
+    .contact-left h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; letter-spacing: -1px; }
+    .contact-left p { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,.8); margin-bottom: 36px; max-width: 420px; }
+    .btn-general {
+      display: inline-block; background: rgba(255,255,255,.15); color: #fff;
+      border: 1.5px solid rgba(255,255,255,.35); padding: 14px 28px; border-radius: 50px;
+      font-size: 15px; font-weight: 600; transition: background .2s; max-width: fit-content;
+    }
+    .btn-general:hover { background: rgba(255,255,255,.25); }
+
+    .contact-right {
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 60px 60px 40px;
+    }
+    .form-card {
+      background: #fff; border-radius: 20px; box-shadow: 0 24px 80px rgba(0,0,0,.18);
+      padding: 40px; width: 100%; max-width: 480px;
+    }
+    .form-card h2 { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 24px; }
+    .form-progress-wrap { margin-bottom: 6px; }
+    .form-progress-track { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+    .form-progress-fill { height: 100%; background: linear-gradient(90deg, #0D47A1, #3730a3); border-radius: 3px; }
+    .form-step-label { font-size: 12px; color: #94a3b8; font-weight: 500; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 13px; font-weight: 600; color: #374151; }
+    .form-group input {
+      padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px;
+      font-family: inherit; color: #0f172a; outline: none; transition: border-color .2s; background: #fff;
+    }
+    .form-group input:focus { border-color: #0D47A1; box-shadow: 0 0 0 3px rgba(13,71,161,.1); }
+    .btn-submit {
+      width: 100%; background: #3730a3; color: #fff; padding: 14px; border-radius: 10px;
+      font-size: 16px; font-weight: 700; border: none; cursor: pointer; margin-top: 8px;
+      transition: background .2s;
+    }
+    .btn-submit:hover { background: #0D47A1; }
 
     /* FOOTER */
     footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
@@ -126,12 +151,19 @@
       .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
       .footer-brand { grid-column: 1 / -1; }
     }
+    @media (max-width: 900px) {
+      .contact-hero { grid-template-columns: 1fr; }
+      .contact-left { padding: 60px 32px 40px; }
+      .contact-left h1 { font-size: 36px; }
+      .contact-right { padding: 40px 32px 60px; }
+    }
     @media (max-width: 640px) {
       nav { padding: 0 20px; height: 56px; }
       .nav-links, .btn-nav { display: none; }
       .nav-toggle { display: flex; }
-      main { padding: 40px 16px 60px; }
-      .contact-header h1 { font-size: 28px; }
+      .contact-left { padding: 48px 24px 32px; }
+      .contact-left h1 { font-size: 30px; }
+      .contact-right { padding: 32px 24px 48px; }
       .form-card { padding: 28px 20px; }
       .form-row { grid-template-columns: 1fr; }
       footer { padding: 40px 20px 20px; }
@@ -147,7 +179,7 @@
   <a href="/" class="nav-logo"><img src="../Krongage-Logo.png" alt="KronGage" style="height:38px;width:auto;" /></a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
-    <li><a href="/about/">About</a></li>
+    <li><a href="/platform/">Why KronGage?</a></li>
     <li class="has-mega">
       <a href="/platform/">Platform</a>
       <div class="mega-menu">
@@ -157,24 +189,24 @@
             <p class="mega-brand-sub">All your customer data, channels and engagement orchestration in one place.</p>
             <a href="/platform/" class="mega-brand-link">View the platform →</a>
             <div style="margin-top:20px;">
-              <div class="mega-feature-row"><div class="mega-feat-icon">👥</div><div class="mega-feat-text"><strong>Customer 360</strong><span>Know who your customer is regardless of the touch point or channel.</span></div></div>
-              <div class="mega-feature-row"><div class="mega-feat-icon">📥</div><div class="mega-feat-text"><strong>Omnichannel Inbox</strong><span>Send all messages from one place.</span></div></div>
+              <a href="/platform/customer-data/" class="mega-feature-row" style="text-decoration:none;color:inherit;"><div class="mega-feat-icon">👥</div><div class="mega-feat-text"><strong>Customer 360</strong><span>Know who your customer is regardless of the touch point or channel.</span></div></a>
+              <a href="/platform/omnichannel-inbox/" class="mega-feature-row" style="text-decoration:none;color:inherit;"><div class="mega-feat-icon">📥</div><div class="mega-feat-text"><strong>Omnichannel Inbox</strong><span>Send all messages from one place.</span></div></a>
             </div>
           </div>
           <div>
             <p class="mega-col-title">Featured Capabilities</p>
-            <div class="mega-feature-row"><div class="mega-feat-icon">📣</div><div class="mega-feat-text"><strong>Campaign Management</strong><span>Manage the customer journey for SMS, WhatsApp and email</span></div></div>
-            <div class="mega-feature-row"><div class="mega-feat-icon">🤖</div><div class="mega-feat-text"><strong>AI Automation</strong><span>Automate the mundane communication flows</span></div></div>
-            <div class="mega-feature-row"><div class="mega-feat-icon">📲</div><div class="mega-feat-text"><strong>Social Media Management</strong><span>All your social media channels in one place.</span></div></div>
-            <div class="mega-feature-row"><div class="mega-feat-icon">🎧</div><div class="mega-feat-text"><strong>Social Listening</strong><span>Understand your brand sentiment in real-time.</span></div></div>
+            <a href="/platform/campaign-management/" class="mega-feature-row" style="text-decoration:none;color:inherit;"><div class="mega-feat-icon">📣</div><div class="mega-feat-text"><strong>Campaign Management</strong><span>Manage the customer journey for SMS, WhatsApp and email</span></div></a>
+            <a href="/platform/ai-automation/" class="mega-feature-row" style="text-decoration:none;color:inherit;"><div class="mega-feat-icon">🤖</div><div class="mega-feat-text"><strong>AI Automation</strong><span>Automate the mundane communication flows</span></div></a>
+            <a href="/platform/social-media/" class="mega-feature-row" style="text-decoration:none;color:inherit;"><div class="mega-feat-icon">📲</div><div class="mega-feat-text"><strong>Social Media Management</strong><span>All your social media channels in one place.</span></div></a>
+            <a href="/platform/social-intelligence/" class="mega-feature-row" style="text-decoration:none;color:inherit;"><div class="mega-feat-icon">🎧</div><div class="mega-feat-text"><strong>Social Listening</strong><span>Understand your brand sentiment in real-time.</span></div></a>
           </div>
           <div>
             <p class="mega-col-title">Featured Channels</p>
-            <div class="mega-channel-row"><div class="mega-channel-icon">✉️</div>Email</div>
-            <div class="mega-channel-row"><div class="mega-channel-icon">💬</div>Web Messaging &amp; SMS/RCS</div>
-            <div class="mega-channel-row"><div class="mega-channel-icon">📱</div>SMS/RCS</div>
-            <div class="mega-channel-row"><div class="mega-channel-icon">🟢</div>WhatsApp</div>
-            <a href="/platform/" class="mega-view-all">✳ View All Channels</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row" style="text-decoration:none;color:inherit;"><div class="mega-channel-icon">✉️</div>Email</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row" style="text-decoration:none;color:inherit;"><div class="mega-channel-icon">💬</div>Web Messaging &amp; SMS/RCS</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row" style="text-decoration:none;color:inherit;"><div class="mega-channel-icon">📱</div>SMS/RCS</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row" style="text-decoration:none;color:inherit;"><div class="mega-channel-icon">🟢</div>WhatsApp</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-view-all">✳ View All Channels</a>
             <div class="mega-how-card"><div class="mega-how-icon">💡</div><div class="mega-how-text"><strong>How it works?</strong><span>Understand how our omni channel inbox works to keep message clutter at bay.</span></div></div>
           </div>
         </div>
@@ -187,12 +219,12 @@
           <div>
             <p class="mega-col-title">Industries</p>
             <ul class="mega-industry-list">
-              <li><div class="mega-ind-icon">🏦</div>Banking &amp; Finance</li>
-              <li><div class="mega-ind-icon">📡</div>Telecommunications</li>
-              <li><div class="mega-ind-icon">🛒</div>FMCG &amp; Retail</li>
-              <li><div class="mega-ind-icon">🏥</div>Healthcare</li>
-              <li><div class="mega-ind-icon">🛡️</div>Insurance</li>
-              <li><div class="mega-ind-icon">🏛️</div>Government &amp; Public Sector</li>
+              <li><a href="/solutions/banking/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🏦</div>Banking &amp; Finance</a></li>
+              <li><a href="/solutions/telecom/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">📡</div>Telecommunications</a></li>
+              <li><a href="/solutions/fmcg/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🛒</div>FMCG &amp; Retail</a></li>
+              <li><a href="/solutions/healthcare/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🏥</div>Healthcare</a></li>
+              <li><a href="/solutions/insurance/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🛡️</div>Insurance</a></li>
+              <li><a href="/solutions/government/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🏛️</div>Government &amp; Public Sector</a></li>
             </ul>
           </div>
           <div>
@@ -201,13 +233,13 @@
             <div class="mega-use-row"><div class="mega-channel-icon">👤</div>Increase Engagement</div>
           </div>
           <div>
-            <p class="mega-article-title">The Retention Gap: Why Success Teams Struggle</p>
-            <p class="mega-article-sub">In an era of endless options, customer success has become more than just a department — it's a survival strategy.</p>
+            <a href="/blog/retention-gap/" style="text-decoration:none;color:inherit;display:block;"><p class="mega-article-title">The Retention Gap: Why Success Teams Struggle</p>
+            <p class="mega-article-sub">In an era of endless options, customer success has become more than just a department — it's a survival strategy.</p></a>
           </div>
         </div>
       </div>
     </li>
-    <li class="active"><a href="/contact/">Contact</a></li>
+    
   </ul>
   <a href="/contact/" class="btn-nav">Get Started</a>
   <button class="nav-toggle" onclick="document.querySelector('.mobile-menu').classList.toggle('open')" aria-label="Menu">
@@ -215,57 +247,69 @@
   </button>
 </nav>
 <div class="mobile-menu">
-  <a href="/">Home</a><a href="/about/">About</a><a href="/platform/">Platform</a><a href="/solutions/">Solutions</a><a href="/contact/">Contact</a>
+  <a href="/">Home</a><a href="/platform/">Why KronGage?</a><a href="/platform/">Platform</a><a href="/solutions/">Solutions</a>
   <a href="/contact/" class="btn-nav-mobile">Get Started</a>
 </div>
 
 <main>
-  <div class="contact-header">
-    <h1>Contact KronGage</h1>
-    <p>Request an enterprise demo, ask about our world-class platform or speak to our team.</p>
-  </div>
-
-  <div class="form-card">
-    <p class="form-section-title">Your Details</p>
-    <p class="form-section-sub">Let us know how to get back to you.</p>
-
-    <form>
-      <div class="form-row">
-        <div class="form-group" style="margin-bottom:0;">
-          <label>First Name <span class="req">*</span></label>
-          <input type="text" placeholder="Anderson" />
-          <span class="hint">Enter your first name here</span>
+  <div class="contact-hero">
+    <div class="contact-left">
+      <h1>Ready to grow?<br>Talk to our<br>sales team.</h1>
+      <p>Join organisations of all sizes taking customer engagement to the next level. See how KronGage can increase lifetime value, simplify your tech stack, and boost brand loyalty.</p>
+      <a href="mailto:hello@krongage.com" class="btn-general">Have a more general question?</a>
+    </div>
+    <div class="contact-right">
+      <div class="form-card">
+        <div class="form-progress-wrap">
+          <div class="form-progress-track"><div class="form-progress-fill" id="progressFill" style="width:50%"></div></div>
+          <span class="form-step-label" id="stepLabel">Fill out form: Step 1 of 2</span>
         </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Last Name <span class="req">*</span></label>
-          <input type="text" placeholder="Mikoo" />
-          <span class="hint">Enter your last name here</span>
-        </div>
-      </div>
+        <h2 id="formHeading">Connect with sales</h2>
+        <form id="contactForm" onsubmit="return false;">
 
-      <div class="form-group">
-        <label>Email Address <span class="req">*</span></label>
-        <input type="email" placeholder="" />
-        <span class="hint">Example: user@website.com</span>
-      </div>
+          <!-- Step 1 -->
+          <div id="step1">
+            <div class="form-row">
+              <div class="form-group"><label>First Name:</label><input type="text" placeholder="e.g. Anderson" /></div>
+              <div class="form-group"><label>Last Name:</label><input type="text" placeholder="e.g. Mensah" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Email Address:</label><input type="email" placeholder="you@company.com" /></div>
+              <div class="form-group"><label>Company:</label><input type="text" placeholder="Your organisation" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Phone Number:</label><input type="tel" placeholder="+233 20 000 0000" /></div>
+              <div class="form-group"><label>Job Title:</label><input type="text" placeholder="e.g. Head of CX" /></div>
+            </div>
+            <button type="button" class="btn-submit" onclick="goToStep2()">Next</button>
+          </div>
 
-      <div class="form-divider">
-        <h3>How can we help?</h3>
-        <p>Feel free to ask a question or simply leave a comment</p>
-      </div>
+          <!-- Step 2 -->
+          <div id="step2" style="display:none;">
+            <div class="form-group" style="margin-bottom:16px;">
+              <label>How can we help?</label>
+              <select style="padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;color:#0f172a;outline:none;background:#fff;">
+                <option value="">Select a topic…</option>
+                <option>Request a Demo</option>
+                <option>Pricing &amp; Plans</option>
+                <option>Technical Question</option>
+                <option>Partnership</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+              <label>Message:</label>
+              <textarea placeholder="Tell us about your goals or questions…" style="padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;color:#0f172a;outline:none;resize:vertical;min-height:120px;width:100%;background:#fff;"></textarea>
+            </div>
+            <div style="display:flex;gap:12px;">
+              <button type="button" class="btn-submit" style="background:#e2e8f0;color:#0f172a;flex:0 0 auto;width:auto;padding:14px 24px;" onclick="goToStep1()">← Back</button>
+              <button type="submit" class="btn-submit" style="flex:1;" onclick="submitForm()">Submit</button>
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label>Subject <span class="req">*</span></label>
-        <input type="text" placeholder="How can we help you?" />
+        </form>
       </div>
-
-      <div class="form-group">
-        <label>Comments / Questions <span class="req">*</span></label>
-        <textarea placeholder=""></textarea>
-      </div>
-
-      <button type="submit" class="btn-submit">Send Message</button>
-    </form>
+    </div>
   </div>
 </main>
 
@@ -287,7 +331,7 @@
         <li><a href="/platform/omnichannel-inbox/">Omnichannel Inbox</a></li>
         <li><a href="/platform/social-media/">Social Media Management</a></li>
         <li><a href="/platform/ai-automation/">AI &amp; Automation</a></li>
-        <li><a href="/platform/customer-data/">Customer Data Platform</a></li>
+        <li><a href="/platform/customer-data/">Customer 360</a></li>
         <li><a href="/platform/campaign-management/">Campaign Management</a></li>
         <li><a href="/platform/analytics/">Analytics &amp; BI</a></li>
       </ul>
@@ -306,7 +350,7 @@
     <div class="footer-col">
       <h4>Company</h4>
       <ul>
-        <li><a href="/about/">About Krondiva</a></li>
+        <li><a href="/platform/">About Krondiva</a></li>
         <li><a href="/contact/">Contact Us</a></li>
         <li><a href="/privacy-policy/">Privacy Policy</a></li>
         <li><a href="/terms-of-service/">Terms of Service</a></li>
@@ -351,6 +395,54 @@
       }
     });
   })();
+
+  // Mouse-reactive gradient
+  (function() {
+    const hero = document.querySelector('.contact-hero');
+    if (!hero) return;
+    let mx = 0.5, my = 0.5, cx = 0.5, cy = 0.5;
+
+    document.addEventListener('mousemove', function(e) {
+      mx = e.clientX / window.innerWidth;
+      my = e.clientY / window.innerHeight;
+    });
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function tick() {
+      cx = lerp(cx, mx, 0.06);
+      cy = lerp(cy, my, 0.06);
+      const angle = Math.round(cx * 60 + 105); // 105°–165° range
+      const dark  = Math.round(cy * 12);        // navy lightness shift
+      hero.style.background = `linear-gradient(${angle}deg,
+        hsl(222,${47 + dark}%,${8 + dark}%) 0%,
+        hsl(214,88%,${32 + Math.round(cx * 12)}%) 55%,
+        hsl(210,80%,${40 + Math.round(cy * 8)}%) 100%)`;
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  function goToStep2() {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stepLabel').textContent = 'Fill out form: Step 2 of 2';
+    document.getElementById('formHeading').textContent = 'How can we help?';
+  }
+  function goToStep1() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('progressFill').style.width = '50%';
+    document.getElementById('stepLabel').textContent = 'Fill out form: Step 1 of 2';
+    document.getElementById('formHeading').textContent = 'Connect with sales';
+  }
+  function submitForm() {
+    document.getElementById('formHeading').textContent = 'Thanks! We\'ll be in touch.';
+    document.getElementById('step2').innerHTML = '<p style="color:#475569;font-size:15px;line-height:1.7;padding:16px 0;">Our team will reach out within 1 business day. In the meantime, feel free to explore the <a href=\"/platform/\" style=\"color:#0D47A1;font-weight:600;\">KronGage Platform</a>.</p>';
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stepLabel').textContent = 'Submitted ✓';
+  }
 </script>
 </body>
 </html>

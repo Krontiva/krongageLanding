@@ -6,189 +6,216 @@
   <title>KronGage – Omnichannel Inbox</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #EEF5FD; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a1628; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 
-    .ch-wrap { position: relative; width: 420px; height: 380px; display: flex; align-items: center; justify-content: center; }
+    .scene { position: relative; width: 420px; height: 380px; }
 
-    /* Center KronGage hub */
-    .ch-center {
-      position: absolute; width: 68px; height: 68px; border-radius: 50%;
+    /* Center hub */
+    .hub {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
       background: linear-gradient(135deg, #0D47A1, #1565C0);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 32px rgba(13,71,161,.4);
+      border-radius: 20px;
+      padding: 18px 22px;
+      text-align: center;
+      box-shadow: 0 12px 48px rgba(13,71,161,.55), 0 0 0 1px rgba(255,255,255,.12);
       z-index: 10;
+      width: 138px;
     }
-    .ch-center svg { width: 36px; height: 36px; fill: #fff; }
+    .hub-emoji { font-size: 26px; margin-bottom: 5px; }
+    .hub-label { font-size: 9px; font-weight: 800; color: rgba(255,255,255,.75); text-transform: uppercase; letter-spacing: 1px; line-height: 1.3; }
+    .hub-count { font-size: 26px; font-weight: 900; color: #fff; margin-top: 3px; line-height: 1; }
+    .hub-sub { font-size: 8.5px; color: rgba(255,255,255,.45); margin-top: 3px; }
 
-    /* Pulse rings from center */
-    .ch-ring { position: absolute; border-radius: 50%; border: 1.5px solid rgba(13,71,161,.18); animation: chRing 3s ease-out infinite; }
-    .ch-ring:nth-child(1) { width: 110px; height: 110px; animation-delay: 0s; }
-    .ch-ring:nth-child(2) { width: 180px; height: 180px; animation-delay: .6s; }
-    .ch-ring:nth-child(3) { width: 260px; height: 260px; animation-delay: 1.2s; }
-    .ch-ring:nth-child(4) { width: 340px; height: 340px; animation-delay: 1.8s; }
-    @keyframes chRing { 0%{opacity:.7;transform:scale(.85)} 100%{opacity:0;transform:scale(1)} }
+    /* Pill chips */
+    .chip {
+      position: absolute;
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 50px;
+      padding: 7px 12px 7px 7px;
+      cursor: default;
+      white-space: nowrap;
+      transition: background .2s, border-color .2s;
+      animation: chipFloat var(--dur, 4s) ease-in-out infinite;
+      animation-delay: var(--del, 0s);
+    }
+    .chip:hover {
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.28);
+    }
+    @keyframes chipFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
 
-    /* Channel icons */
-    .ch-icon {
-      position: absolute; width: 56px; height: 56px; border-radius: 50%;
+    .chip-icon {
+      width: 28px; height: 28px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; font-weight: 800;
-      box-shadow: 0 6px 20px rgba(0,0,0,.15);
-      animation: chFloat 4s ease-in-out infinite;
-      transition: transform .3s;
+      flex-shrink: 0;
     }
-    .ch-icon:hover { transform: scale(1.15) !important; }
-    @keyframes chFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .chip-name { font-size: 11px; font-weight: 700; color: #fff; }
+    .chip-stat { font-size: 9px; color: rgba(255,255,255,.4); margin-top: 1px; }
+    .chip-badge {
+      margin-left: 6px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 9px; font-weight: 800;
+      min-width: 17px; height: 17px;
+      border-radius: 50px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 4px;
+    }
 
-    /* Connector lines from center to icons — rendered as SVG overlay */
-    .ch-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    /* Connector lines */
+    .lines { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
 
-    /* Positions for 8 icons around center */
-    /* Top left cluster */
-    .ch-icon.messenger { background: linear-gradient(135deg, #00B2FF, #006AFF); top: 28px; left: 48px; animation-delay: 0s; }
-    .ch-icon.facebook  { background: #1877F2; top: 28px; left: 148px; animation-delay: .3s; }
-    .ch-icon.whatsapp  { background: #25D366; top: 64px; right: 62px; animation-delay: .6s; }
-    .ch-icon.tiktok    { background: #010101; bottom: 72px; left: 32px; animation-delay: .9s; }
-    .ch-icon.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); bottom: 32px; left: 148px; animation-delay: 1.2s; }
-    .ch-icon.gmail     { background: #fff; bottom: 32px; right: 80px; animation-delay: 1.5s; border: 2px solid #f1f5f9; }
-    .ch-icon.x         { background: #000; top: 120px; right: 24px; animation-delay: 1.8s; }
-    .ch-icon.telegram  { background: #26A5E4; bottom: 120px; right: 24px; animation-delay: 2.1s; }
-
-    /* Icon label */
-    .ch-label { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 8px; font-weight: 700; color: #64748b; white-space: nowrap; letter-spacing: .3px; }
+    /* Positions: 4 left, 4 right */
+    .chip.whatsapp  { top: 14px;  left: 4px;   --dur: 4s;   --del: 0s;   }
+    .chip.instagram { top: 14px;  right: 4px;  --dur: 4.3s; --del: .4s;  }
+    .chip.facebook  { top: 116px; left: 0;     --dur: 3.8s; --del: .8s;  }
+    .chip.x         { top: 116px; right: 0;    --dur: 4.1s; --del: 1.2s; }
+    .chip.email     { bottom: 104px; left: 0;  --dur: 4.4s; --del: 1.6s; }
+    .chip.telegram  { bottom: 104px; right: 0; --dur: 3.7s; --del: 2s;   }
+    .chip.sms       { bottom: 16px; left: 22px; --dur: 4.2s; --del: 2.4s; }
+    .chip.messenger { bottom: 16px; right: 22px; --dur: 4s;  --del: 2.8s; }
   </style>
 </head>
 <body>
-<div class="ch-wrap">
+<div class="scene">
 
-  <!-- Pulse rings -->
-  <div class="ch-ring"></div>
-  <div class="ch-ring"></div>
-  <div class="ch-ring"></div>
-  <div class="ch-ring"></div>
+  <svg class="lines" id="lines" viewBox="0 0 420 380"></svg>
 
-  <!-- Connector lines SVG -->
-  <svg class="ch-lines" id="connectors" viewBox="0 0 420 380"></svg>
-
-  <!-- Center KronGage logo -->
-  <div class="ch-center">
-    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
-      <path d="M10 10 L18 18 L10 26" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M18 18 L26 18" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <circle cx="26" cy="18" r="3" fill="#fff"/>
-      <circle cx="10" cy="10" r="2.5" fill="#fff"/>
-      <circle cx="10" cy="26" r="2.5" fill="#fff"/>
-    </svg>
+  <!-- Hub -->
+  <div class="hub" id="hub">
+    <div class="hub-emoji">📬</div>
+    <div class="hub-label">Unified<br>Inbox</div>
+    <div class="hub-count">2,847</div>
+    <div class="hub-sub">active conversations</div>
   </div>
 
-  <!-- Channel icons -->
-  <div class="ch-icon messenger">
-    💬
-    <span class="ch-label">Messenger</span>
+  <!-- WhatsApp -->
+  <div class="chip whatsapp">
+    <div class="chip-icon" style="background:#25D366">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.083.531 4.044 1.463 5.752L0 24l6.388-1.44A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.856 0-3.6-.474-5.12-1.305L2 22l1.326-4.775A9.964 9.964 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    </div>
+    <div><div class="chip-name">WhatsApp</div><div class="chip-stat">847 msgs</div></div>
+    <div class="chip-badge">12</div>
   </div>
-  <div class="ch-icon facebook">
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-    <span class="ch-label">Facebook</span>
+
+  <!-- Instagram -->
+  <div class="chip instagram">
+    <div class="chip-icon" style="background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)">
+      <svg viewBox="0 0 24 24" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="#fff"/></svg>
+    </div>
+    <div><div class="chip-name">Instagram</div><div class="chip-stat">312 DMs</div></div>
+    <div class="chip-badge">5</div>
   </div>
-  <div class="ch-icon whatsapp">
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.083.531 4.044 1.463 5.752L0 24l6.388-1.44A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.856 0-3.6-.474-5.12-1.305L2 22l1.326-4.775A9.964 9.964 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-    <span class="ch-label">WhatsApp</span>
+
+  <!-- Facebook -->
+  <div class="chip facebook">
+    <div class="chip-icon" style="background:#1877F2">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+    </div>
+    <div><div class="chip-name">Facebook</div><div class="chip-stat">429 chats</div></div>
   </div>
-  <div class="ch-icon tiktok">
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.13 8.13 0 004.76 1.52V6.79a4.85 4.85 0 01-.99-.1z"/></svg>
-    <span class="ch-label">TikTok</span>
+
+  <!-- X / Twitter -->
+  <div class="chip x">
+    <div class="chip-icon" style="background:#000">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </div>
+    <div><div class="chip-name">X / Twitter</div><div class="chip-stat">201 mentions</div></div>
+    <div class="chip-badge">3</div>
   </div>
-  <div class="ch-icon instagram">
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="#fff"/></svg>
-    <span class="ch-label">Instagram</span>
+
+  <!-- Email -->
+  <div class="chip email">
+    <div class="chip-icon" style="background:#EA4335">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#fff"/></svg>
+    </div>
+    <div><div class="chip-name">Email</div><div class="chip-stat">634 threads</div></div>
+    <div class="chip-badge">8</div>
   </div>
-  <div class="ch-icon gmail">
-    <svg viewBox="0 0 24 24" width="26" height="26"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/></svg>
-    <span class="ch-label">Gmail</span>
+
+  <!-- Telegram -->
+  <div class="chip telegram">
+    <div class="chip-icon" style="background:#26A5E4">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+    </div>
+    <div><div class="chip-name">Telegram</div><div class="chip-stat">178 groups</div></div>
   </div>
-  <div class="ch-icon x">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-    <span class="ch-label">X (Twitter)</span>
+
+  <!-- SMS -->
+  <div class="chip sms">
+    <div class="chip-icon" style="background:#7c3aed; font-size:14px; color:#fff">💬</div>
+    <div><div class="chip-name">SMS</div><div class="chip-stat">156 texts</div></div>
+    <div class="chip-badge">2</div>
   </div>
-  <div class="ch-icon telegram">
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-    <span class="ch-label">Telegram</span>
+
+  <!-- Messenger -->
+  <div class="chip messenger">
+    <div class="chip-icon" style="background:linear-gradient(135deg,#00B2FF,#006AFF)">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M12 0C5.374 0 0 4.974 0 11.111c0 3.498 1.744 6.614 4.469 8.654V24l4.088-2.242c1.092.3 2.246.464 3.443.464 6.626 0 12-4.974 12-11.111C24 4.974 18.626 0 12 0zm1.191 14.963l-3.055-3.26-5.963 3.26 6.558-6.963 3.129 3.26 5.889-3.26-6.558 6.963z"/></svg>
+    </div>
+    <div><div class="chip-name">Messenger</div><div class="chip-stat">90 threads</div></div>
   </div>
 
 </div>
 <script>
-  // Draw connector lines from center to each icon
-  const svg = document.getElementById('connectors');
-  const center = { x: 210, y: 190 };
-  const icons = document.querySelectorAll('.ch-icon');
-  const wrap = document.querySelector('.ch-wrap');
-  const wRect = wrap.getBoundingClientRect();
+  const svg = document.getElementById('lines');
+  const scene = document.querySelector('.scene');
+  const hub  = document.getElementById('hub');
+
+  function mid(el) {
+    const sr = scene.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    return { x: er.left - sr.left + er.width/2, y: er.top - sr.top + er.height/2 };
+  }
 
   function drawLines() {
     svg.innerHTML = '';
-    icons.forEach(icon => {
-      const r = icon.getBoundingClientRect();
-      const ix = r.left - wRect.left + r.width / 2;
-      const iy = r.top - wRect.top + r.height / 2;
-      // Direction vector
-      const dx = ix - center.x, dy = iy - center.y;
+    const hc = mid(hub);
+    document.querySelectorAll('.chip').forEach(chip => {
+      const cc = mid(chip);
+      const dx = cc.x - hc.x, dy = cc.y - hc.y;
       const len = Math.sqrt(dx*dx + dy*dy);
-      const startX = center.x + (dx/len)*36;
-      const startY = center.y + (dy/len)*36;
-      const endX = ix - (dx/len)*28;
-      const endY = iy - (dy/len)*28;
-
+      const sx = hc.x + (dx/len)*55, sy = hc.y + (dy/len)*55;
+      const ex = cc.x - (dx/len)*18, ey = cc.y - (dy/len)*18;
       const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', startX); line.setAttribute('y1', startY);
-      line.setAttribute('x2', endX);   line.setAttribute('y2', endY);
-      line.setAttribute('stroke', 'rgba(13,71,161,.12)');
-      line.setAttribute('stroke-width', '1.5');
-      line.setAttribute('stroke-dasharray', '4 4');
+      line.setAttribute('x1', sx); line.setAttribute('y1', sy);
+      line.setAttribute('x2', ex); line.setAttribute('y2', ey);
+      line.setAttribute('stroke', 'rgba(96,165,250,.18)');
+      line.setAttribute('stroke-width', '1.2');
+      line.setAttribute('stroke-dasharray', '4 5');
       svg.appendChild(line);
     });
   }
-  setTimeout(drawLines, 50);
 
-  // Animate a traveling dot along each line periodically
   let dotIdx = 0;
-  const iconPositions = [];
-  setTimeout(() => {
-    document.querySelectorAll('.ch-icon').forEach(icon => {
-      const r = icon.getBoundingClientRect();
-      const wR = wrap.getBoundingClientRect();
-      iconPositions.push({
-        x: r.left - wR.left + r.width/2,
-        y: r.top - wR.top + r.height/2
-      });
-    });
-    animateDot();
-  }, 100);
-
   function animateDot() {
-    if (iconPositions.length === 0) { setTimeout(animateDot, 200); return; }
-    const pos = iconPositions[dotIdx % iconPositions.length];
-    dotIdx++;
-
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    if (!chips.length) { setTimeout(animateDot, 200); return; }
+    const hc = mid(hub);
+    const chip = chips[dotIdx++ % chips.length];
+    const cc = mid(chip);
+    const dx = cc.x - hc.x, dy = cc.y - hc.y;
     const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    dot.setAttribute('r', '4');
-    dot.setAttribute('fill', '#0D47A1');
-    dot.setAttribute('opacity', '0.7');
+    dot.setAttribute('r', '3.5');
+    dot.setAttribute('fill', '#60a5fa');
     svg.appendChild(dot);
-
-    const dx = pos.x - center.x, dy = pos.y - center.y;
-    const len = Math.sqrt(dx*dx + dy*dy);
     let t = 0;
-    const step = () => {
-      t += 0.03;
-      if (t > 1) { svg.removeChild(dot); setTimeout(animateDot, 400); return; }
-      dot.setAttribute('cx', center.x + dx * t);
-      dot.setAttribute('cy', center.y + dy * t);
-      dot.setAttribute('opacity', t < 0.5 ? t*1.4 : (1-t)*1.4);
+    function step() {
+      t += 0.025;
+      if (t > 1) { try { svg.removeChild(dot); } catch(e) {} setTimeout(animateDot, 380); return; }
+      dot.setAttribute('cx', hc.x + dx*t);
+      dot.setAttribute('cy', hc.y + dy*t);
+      dot.setAttribute('opacity', t < 0.5 ? t*1.8 : (1-t)*1.8);
       requestAnimationFrame(step);
-    };
+    }
     requestAnimationFrame(step);
   }
+
+  setTimeout(() => { drawLines(); setTimeout(animateDot, 150); }, 120);
 </script>
 </body>
 </html>

@@ -132,116 +132,21 @@
   </style>
 </head>
 <body>
-<div class="ab">
-
-  <!-- Visual left -->
-  <div class="ab-visual">
-    <div class="ab-badge">
-      <span class="ab-badge-icon">📊</span>All historic data
-    </div>
-    <div class="ab-hex">
-      <div class="ab-hex-inner">
-        <div class="ab-person">
-          <div class="ab-person-head">👤</div>
-          <div class="ab-person-body"></div>
-        </div>
+<div class="ab" style="background:#fff;">
+  <div class="ab-chart-area" style="flex:1;display:flex;flex-direction:column;padding:16px 18px 12px;overflow:hidden;">
+    <div class="ab-chart-head">
+      <span class="ab-chart-title">Engagement Trend</span>
+      <div class="ab-chart-tabs">
+        <button class="ab-tab on" onclick="setRange(this,'7d')">7D</button>
+        <button class="ab-tab" onclick="setRange(this,'30d')">30D</button>
+        <button class="ab-tab" onclick="setRange(this,'90d')">90D</button>
       </div>
     </div>
-  </div>
-
-  <!-- Analytics panel -->
-  <div class="ab-panel">
-
-    <!-- KPI bar -->
-    <div class="ab-kpi-bar">
-      <div class="ab-kpi">
-        <div class="ab-kpi-label">Total Users</div>
-        <div class="ab-kpi-val" id="kv1">12,480</div>
-        <div class="ab-kpi-delta up" id="kd1">↑ 8.4%</div>
-      </div>
-      <div class="ab-kpi">
-        <div class="ab-kpi-label">Avg Session</div>
-        <div class="ab-kpi-val" id="kv2">23 min</div>
-        <div class="ab-kpi-delta up" id="kd2">↑ 12%</div>
-      </div>
-      <div class="ab-kpi">
-        <div class="ab-kpi-label">Conversion</div>
-        <div class="ab-kpi-val" id="kv3">68%</div>
-        <div class="ab-kpi-delta up" id="kd3">↑ 5.2%</div>
-      </div>
-      <div class="ab-kpi">
-        <div class="ab-kpi-label">Predicted Growth</div>
-        <div class="ab-kpi-val" id="kv4">15% YOY</div>
-        <div class="ab-kpi-delta up" id="kd4">↑ Top 20%</div>
-      </div>
+    <div class="ab-canvas-wrap">
+      <canvas id="chartCanvas"></canvas>
     </div>
-
-    <div class="ab-body">
-
-      <!-- Chart area -->
-      <div class="ab-chart-area">
-        <div class="ab-chart-head">
-          <span class="ab-chart-title">Engagement Trend</span>
-          <div class="ab-chart-tabs">
-            <button class="ab-tab on" onclick="setRange(this,'7d')">7D</button>
-            <button class="ab-tab" onclick="setRange(this,'30d')">30D</button>
-            <button class="ab-tab" onclick="setRange(this,'90d')">90D</button>
-          </div>
-        </div>
-
-        <div class="ab-canvas-wrap">
-          <canvas id="chartCanvas"></canvas>
-        </div>
-
-        <div class="ab-seg-sel" id="segSel"></div>
-
-        <div class="ab-seg-table" id="segTable"></div>
-      </div>
-
-      <!-- Prediction card -->
-      <div class="ab-pred">
-        <div class="ab-pred-title">Prediction</div>
-        <div class="ab-pred-items">
-          <div class="ab-pred-item">
-            <div class="ab-pred-circle" style="background:linear-gradient(135deg,#90caf9,#42a5f5)"></div>
-            <span class="ab-pred-text">83% – 100%</span>
-          </div>
-          <div class="ab-pred-item">
-            <div class="ab-pred-circle" style="background:linear-gradient(135deg,#5c9fd4,#1565C0)"></div>
-            <span class="ab-pred-text">Top 20%</span>
-          </div>
-          <div class="ab-pred-item">
-            <div class="ab-pred-circle" style="background:linear-gradient(135deg,#3b6ea8,#0D47A1)"></div>
-            <span class="ab-pred-text">Predicted Growth: 15% YOY</span>
-          </div>
-        </div>
-        <div class="ab-pred-users" id="predUsers">1,236 users</div>
-
-        <div class="ab-pred-div"></div>
-
-        <div class="ab-perf-title"><div class="ab-perf-dot"></div>Performance Factors:</div>
-        <ul class="ab-perf-list">
-          <li>Avg. Session Duration: 23 mins</li>
-          <li>Content Engagement Rate: 68%</li>
-          <li>Conversion Propensity: High</li>
-          <li>Segment: Outdoor Enthusiasts</li>
-        </ul>
-
-        <div class="ab-pred-div"></div>
-
-        <svg class="ab-wave" viewBox="0 0 210 56" preserveAspectRatio="none" height="56">
-          <defs>
-            <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#0D47A1" stop-opacity=".5"/>
-              <stop offset="100%" stop-color="#0D47A1" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <path id="wavePath" fill="url(#wg)"/>
-          <path id="waveLine" fill="none" stroke="#42a5f5" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-
-    </div>
+    <div class="ab-seg-sel" id="segSel"></div>
+    <div class="ab-seg-table" id="segTable"></div>
   </div>
 </div>
 

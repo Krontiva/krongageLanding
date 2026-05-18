@@ -88,66 +88,21 @@
 <body>
 <div class="kb">
 
-  <!-- Top bar -->
-  <div class="kb-top">
-    <div class="kb-logo">
-      <div class="kb-logo-icon">K</div>
-      <span class="kb-logo-text">KronGage</span>
-    </div>
-    <div class="kb-search-wrap">
-      <span class="kb-search-icon">🔍</span>
-      <input class="kb-search" placeholder="Search" />
-    </div>
-    <div class="kb-toggle-wrap">
-      <span class="kb-toggle-label">Smart Retrieval</span>
-      <label class="kb-toggle">
-        <input type="checkbox" checked />
-        <span class="kb-slider"></span>
-      </label>
-    </div>
-    <div class="kb-notif">🔔<div class="kb-notif-dot"></div></div>
-  </div>
-
-  <div class="kb-body">
-
-    <!-- Icon sidenav -->
-    <div class="kb-sidenav">
-      <div class="kb-si on">🏠</div>
-      <div class="kb-si">⊞</div>
-      <div class="kb-si">👥</div>
-      <div class="kb-si">💬</div>
-      <div class="kb-si">📄</div>
-      <div class="kb-sig"></div>
-      <div class="kb-si">⚙️</div>
-      <div class="kb-si">↗️</div>
-    </div>
-
-    <!-- Main content -->
-    <div class="kb-content">
-
-      <!-- Cards area -->
-      <div class="kb-cards-area">
-        <div class="kb-content-head">
-          <span class="kb-content-title">Knowledge Center</span>
-          <div class="kb-head-btns">
-            <button class="kb-hbtn">⊞ Tiny chunk</button>
-            <button class="kb-hbtn pri">+ Create chunk</button>
-          </div>
-        </div>
-
-        <div class="kb-grid" id="cardGrid"></div>
-
-        <div class="kb-chunks">
-          <div class="kb-chunks-label">Semantic Chunks</div>
-          <div class="kb-chunks-row" id="chunksRow"></div>
-        </div>
+  <!-- Cards area -->
+  <div class="kb-cards-area" style="flex:1;padding:14px 16px;overflow-y:auto;">
+    <div class="kb-content-head">
+      <span class="kb-content-title">Knowledge Center</span>
+      <div class="kb-head-btns">
+        <button class="kb-hbtn">⊞ Tiny chunk</button>
+        <button class="kb-hbtn pri">+ Create chunk</button>
       </div>
+    </div>
 
-      <!-- Graph panel -->
-      <div class="kb-graph-panel">
-        <div class="kb-graph-title">Knowledge Graph</div>
-        <svg class="kb-graph-svg" id="graphSvg" viewBox="0 0 240 320" preserveAspectRatio="xMidYMid meet"></svg>
-      </div>
+    <div class="kb-grid" id="cardGrid"></div>
+
+    <div class="kb-chunks">
+      <div class="kb-chunks-label">Semantic Chunks</div>
+      <div class="kb-chunks-row" id="chunksRow"></div>
     </div>
   </div>
 </div>

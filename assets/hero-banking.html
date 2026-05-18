@@ -6,181 +6,157 @@
   <title>KronGage – Banking & Finance</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f6f8; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #EEF5FD; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 
-    .bk { display: flex; align-items: center; justify-content: center; gap: 0; width: 100%; height: 100vh; padding: 24px; position: relative; }
+    .bk { position: relative; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; }
 
-    /* ── Left: notification stack ── */
-    .bk-cards { display: flex; flex-direction: column; gap: 14px; flex-shrink: 0; width: 360px; }
-
-    .bk-card {
-      background: #0f1f3d;
-      border-radius: 16px;
-      padding: 16px 18px 18px;
-      opacity: 0;
-      transform: translateX(-40px);
-      transition: opacity .5s ease, transform .5s ease;
+    /* ── Shield ── */
+    .bk-shield-wrap {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      width: 180px; height: 200px;
     }
-    .bk-card.visible { opacity: 1; transform: translateX(0); }
 
-    .bk-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .bk-card-left { display: flex; align-items: center; gap: 10px; }
-    .bk-card-icon { width: 30px; height: 30px; border-radius: 8px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; }
-    .bk-card-icon svg { width: 17px; height: 17px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .bk-card-title { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: .3px; }
-    .bk-card-time { font-size: 11px; color: rgba(255,255,255,.4); white-space: nowrap; }
-    .bk-card-body { font-size: 13px; color: rgba(255,255,255,.72); line-height: 1.6; }
-
-    .bk-card.fraud { border-left: 3px solid #ef4444; }
-    .bk-card.action { border-left: 3px solid #f59e0b; }
-    .bk-card.blocked { border-left: 3px solid #4ade80; }
-
-    .bk-card.fraud .bk-card-title { color: #fca5a5; }
-    .bk-card.action .bk-card-title { color: #fcd34d; }
-    .bk-card.blocked .bk-card-title { color: #86efac; }
-
-    /* Reply buttons on action card */
-    .bk-reply-row { display: flex; gap: 8px; margin-top: 12px; }
-    .bk-reply-btn {
-      padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700;
-      border: none; cursor: pointer; transition: all .2s;
+    .bk-shield {
+      width: 160px; height: 180px;
+      background: linear-gradient(160deg, #1565C0, #0D47A1);
+      clip-path: polygon(50% 0%, 100% 18%, 100% 60%, 50% 100%, 0% 60%, 0% 18%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(13,71,161,.45);
+      animation: shieldPulse 4s ease-in-out infinite;
     }
-    .bk-reply-yes { background: #0D47A1; color: #fff; }
-    .bk-reply-yes:hover { background: #1565C0; }
-    .bk-reply-no { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); }
-    .bk-reply-no:hover { background: rgba(255,255,255,.18); }
+    @keyframes shieldPulse { 0%,100%{box-shadow:0 20px 60px rgba(13,71,161,.45)} 50%{box-shadow:0 20px 80px rgba(13,71,161,.7)} }
 
-    /* ── Right: Person illustration ── */
-    .bk-person { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+    /* Outer glow ring */
+    .bk-shield-glow {
+      position: absolute;
+      width: 200px; height: 220px;
+      background: radial-gradient(ellipse at center, rgba(13,71,161,.18), transparent 70%);
+      pointer-events: none;
+    }
 
-    .bk-fig { position: relative; display: flex; flex-direction: column; align-items: center; }
+    /* Pulse rings */
+    .bk-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(13,71,161,.25);
+      animation: ringExpand 3s ease-out infinite;
+      pointer-events: none;
+    }
+    .bk-ring:nth-child(1) { width: 240px; height: 240px; animation-delay: 0s; }
+    .bk-ring:nth-child(2) { width: 310px; height: 310px; animation-delay: .8s; }
+    .bk-ring:nth-child(3) { width: 380px; height: 380px; animation-delay: 1.6s; }
+    @keyframes ringExpand { 0%{opacity:.7;transform:scale(.7)} 100%{opacity:0;transform:scale(1)} }
 
-    .bk-head {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: linear-gradient(135deg, #d4956a, #c07840);
-      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+    /* Lock icon inside shield */
+    .bk-lock {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
       position: relative; z-index: 2;
     }
-    .bk-neck { width: 22px; height: 18px; background: #c07840; margin: 0 auto; }
-    .bk-body {
-      width: 130px; height: 160px;
-      background: linear-gradient(160deg, #1a3d6e, #0f2850);
-      border-radius: 50% 50% 0 0;
-      position: relative;
+    .bk-lock svg { width: 52px; height: 52px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .bk-lock-label { font-size: 10px; font-weight: 800; color: rgba(255,255,255,.8); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
+
+    /* Shield facet sheen */
+    .bk-shield::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%);
+      clip-path: polygon(50% 0%, 100% 18%, 100% 60%, 50% 100%, 0% 60%, 0% 18%);
     }
-    /* Phone in hand */
-    .bk-phone {
-      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-      width: 42px; height: 72px;
-      background: #0f172a; border-radius: 8px; border: 2px solid #334155;
+
+    /* ── Floating stat cards ── */
+    .bk-stat {
+      position: absolute;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.1);
+      display: flex; align-items: center; gap: 10px;
+      animation: floatCard var(--dur, 4s) ease-in-out infinite var(--delay, 0s);
+      min-width: 150px;
+    }
+    @keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    .bk-stat-icon {
+      width: 36px; height: 36px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 18px;
     }
-    .bk-phone-screen { width: 32px; height: 58px; background: linear-gradient(160deg,#1e3a6e,#0D47A1); border-radius: 4px; }
+    .bk-stat-val { font-size: 17px; font-weight: 800; color: #0D47A1; line-height: 1; }
+    .bk-stat-lbl { font-size: 10px; color: #64748b; font-weight: 600; margin-top: 3px; }
 
-    /* Ambient glow */
-    .bk-glow {
-      position: absolute; width: 240px; height: 240px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(13,71,161,.12), transparent 70%);
-      top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
+    /* Positions */
+    .bk-stat.s1 { top: 14%; left: 4%;  --dur: 3.8s; --delay: 0s; }
+    .bk-stat.s2 { top: 14%; right: 4%; --dur: 4.2s; --delay: .6s; }
+    .bk-stat.s3 { bottom: 16%; left: 50%; transform: translateX(-50%); --dur: 4s; --delay: 1.2s; animation: floatCardCenter var(--dur) ease-in-out infinite var(--delay); }
+    @keyframes floatCardCenter { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-8px)} }
+
+    /* Checkmark badge */
+    .bk-check {
+      position: absolute;
+      bottom: -8px; right: -8px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #22c55e;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #fff; font-weight: 800;
+      box-shadow: 0 2px 6px rgba(34,197,94,.4);
     }
-
-    /* Stats below */
-    .bk-stats { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; }
-    .bk-stat { background: #fff; border-radius: 10px; padding: 8px 16px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
-    .bk-stat-val { font-size: 16px; font-weight: 800; color: #0D47A1; }
-    .bk-stat-lbl { font-size: 10px; color: #64748b; font-weight: 600; margin-top: 1px; }
   </style>
 </head>
 <body>
 <div class="bk">
 
-  <!-- Notification cards -->
-  <div class="bk-cards">
-    <!-- Fraud detection -->
-    <div class="bk-card fraud" id="c1">
-      <div class="bk-card-head">
-        <div class="bk-card-left">
-          <div class="bk-card-icon">
-            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          </div>
-          <span class="bk-card-title">FRAUD ATTEMPT DETECTED</span>
-        </div>
-        <span class="bk-card-time">4 min ago</span>
-      </div>
-      <div class="bk-card-body">A potential fraudulent transaction has been detected on your account.</div>
-    </div>
+  <!-- Pulse rings -->
+  <div class="bk-ring"></div>
+  <div class="bk-ring"></div>
+  <div class="bk-ring"></div>
 
-    <!-- Action required -->
-    <div class="bk-card action" id="c2">
-      <div class="bk-card-head">
-        <div class="bk-card-left">
-          <div class="bk-card-icon">
-            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          </div>
-          <span class="bk-card-title">ACTION REQUIRED</span>
-        </div>
-        <span class="bk-card-time">3 min ago</span>
+  <!-- Shield -->
+  <div class="bk-shield-wrap">
+    <div class="bk-shield-glow"></div>
+    <div class="bk-shield">
+      <div class="bk-lock">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+          <circle cx="12" cy="16" r="1.5" fill="#fff" stroke="none"/>
+        </svg>
+        <span class="bk-lock-label">Secured</span>
       </div>
-      <div class="bk-card-body">Was this transaction of $2,100.00 at 'Tech-Store-AZ' authorized by you? Reply YES or NO.</div>
-      <div class="bk-reply-row">
-        <button class="bk-reply-btn bk-reply-yes" onclick="handleReply('yes')">YES</button>
-        <button class="bk-reply-btn bk-reply-no" onclick="handleReply('no')">NO</button>
-      </div>
-    </div>
-
-    <!-- Transaction blocked -->
-    <div class="bk-card blocked" id="c3">
-      <div class="bk-card-head">
-        <div class="bk-card-left">
-          <div class="bk-card-icon">
-            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          </div>
-          <span class="bk-card-title">TRANSACTION BLOCKED</span>
-        </div>
-        <span class="bk-card-time">1 min ago</span>
-      </div>
-      <div class="bk-card-body">Thank you for your cooperation. The $2,100.00 transaction has been blocked to secure your account.</div>
     </div>
   </div>
 
-  <!-- Person -->
-  <div class="bk-person">
-    <div class="bk-glow"></div>
-    <div class="bk-fig">
-      <div class="bk-head"></div>
-      <div class="bk-neck"></div>
-      <div class="bk-body">
-        <div class="bk-phone"><div class="bk-phone-screen"></div></div>
-      </div>
+  <!-- Stat: Fraud Detection -->
+  <div class="bk-stat s1">
+    <div class="bk-stat-icon" style="background:#eff6ff;">🛡️</div>
+    <div>
+      <div class="bk-stat-val">99.2%</div>
+      <div class="bk-stat-lbl">Fraud Detection</div>
     </div>
-    <div class="bk-stats">
-      <div class="bk-stat"><div class="bk-stat-val">99.2%</div><div class="bk-stat-lbl">Fraud Detection</div></div>
-      <div class="bk-stat"><div class="bk-stat-val">&lt;30s</div><div class="bk-stat-lbl">Alert Delivery</div></div>
-      <div class="bk-stat"><div class="bk-stat-val">$4.8M</div><div class="bk-stat-lbl">Fraud Prevented</div></div>
+    <div class="bk-check">✓</div>
+  </div>
+
+  <!-- Stat: Alert Delivery -->
+  <div class="bk-stat s2">
+    <div class="bk-stat-icon" style="background:#f0fdf4;">⚡</div>
+    <div>
+      <div class="bk-stat-val">&lt;30s</div>
+      <div class="bk-stat-lbl">Alert Delivery</div>
     </div>
+    <div class="bk-check">✓</div>
+  </div>
+
+  <!-- Stat: Fraud Prevented -->
+  <div class="bk-stat s3">
+    <div class="bk-stat-icon" style="background:#fefce8;">💰</div>
+    <div>
+      <div class="bk-stat-val">$4.8M</div>
+      <div class="bk-stat-lbl">Fraud Prevented</div>
+    </div>
+    <div class="bk-check">✓</div>
   </div>
 
 </div>
-<script>
-  // Stagger animation on load
-  function animateCards() {
-    const cards = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
-    cards.forEach(c => { c.classList.remove('visible'); c.style.transform = 'translateX(-40px)'; c.style.opacity = '0'; });
-    cards.forEach((c, i) => setTimeout(() => c.classList.add('visible'), 300 + i * 600));
-  }
-
-  animateCards();
-  setInterval(animateCards, 8000);
-
-  function handleReply(choice) {
-    const btn = event.target;
-    btn.style.background = choice === 'yes' ? '#ef4444' : '#4ade80';
-    btn.style.color = '#fff';
-    setTimeout(() => {
-      btn.style.background = '';
-      btn.style.color = '';
-    }, 2000);
-  }
-</script>
 </body>
 </html>
