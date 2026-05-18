@@ -9,19 +9,48 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
     a { text-decoration: none; color: inherit; }
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
-    .nav-logo img { height: 38px; width: auto; }
-    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
-    .nav-links li a { color: #475569; transition: color .2s; }
-    .nav-links li a:hover { color: #0D47A1; }
-    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
-    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
-    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
-    .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
+    /* ── NAV ── */
+    .nav-links li { position: relative; }
+    .nav-links li > a { display: flex; align-items: center; gap: 4px; padding: 8px 0; }
+    .nav-links li > a:hover { color: #0D47A1; }
+    .nav-links li.has-mega > a::after {
+      content: ''; display: inline-block; width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid currentColor; margin-left: 2px; transition: transform .2s;
+    }
+    .nav-links li.has-mega.is-open > a::after { transform: rotate(180deg); }
+    .mega-menu {
+      display: none; position: fixed; top: 68px; left: 0; width: 100vw;
+      background: #fff; border-top: 2px solid #0D47A1;
+      box-shadow: 0 20px 60px rgba(0,0,0,.12); z-index: 199; padding: 36px 60px 40px;
+    }
+    .nav-links li.has-mega.is-open .mega-menu { display: block; }
+    .mega-inner { display: grid; max-width: 1100px; margin: 0 auto; gap: 48px; }
+    .mega-inner.cols-3 { grid-template-columns: 1.6fr 1fr 1fr; }
+    .mega-inner.cols-2b { grid-template-columns: 1fr 1.4fr; }
+    .mega-col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 18px; }
+    .mega-brand-head { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+    .mega-brand-sub { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
+    .mega-brand-link { font-size: 13px; font-weight: 700; color: #0D47A1; }
+    .mega-feature-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: inherit; }
+    .mega-feature-row:last-child { border-bottom: none; }
+    .mega-feat-icon { width: 34px; height: 34px; background: #EEF5FD; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+    .mega-feat-text strong { display: block; font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+    .mega-feat-text span { font-size: 12px; color: #64748b; }
+    .mega-channel-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; text-decoration: none; color: inherit; }
+    .mega-channel-row:last-child { border-bottom: none; }
+    .mega-channel-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #0D47A1; }
+    .mega-view-all { font-size: 13px; font-weight: 700; color: #0D47A1; margin-top: 4px; display: inline-block; }
+    .mega-how-card { background: #EEF5FD; border-radius: 10px; padding: 14px; margin-top: 16px; display: flex; gap: 12px; align-items: flex-start; }
+    .mega-how-icon { width: 38px; height: 38px; background: #0D47A1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .mega-how-text strong { font-size: 13px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 4px; }
+    .mega-how-text span { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .mega-industry-list { list-style: none; }
+    .mega-industry-list li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
+    .mega-industry-list li:last-child { border-bottom: none; }
+    .mega-ind-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #0D47A1; }
+    .mega-article-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
+    .mega-article-sub { font-size: 12px; color: #64748b; line-height: 1.6; }
 
     /* Article hero */
     .article-hero { background: linear-gradient(135deg, #0f172a 0%, #0D47A1 100%); padding: 72px 60px 80px; position: relative; overflow: hidden; }
@@ -102,13 +131,64 @@
 </head>
 <body>
 <nav>
-  <a href="/" class="nav-logo"><img src="../../Krongage-Logo.png" alt="KronGage" /></a>
+  <a href="/" class="nav-logo"><img src="/Krongage-Logo.png" alt="KronGage" style="height:38px;width:auto;" /></a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
     <li><a href="/platform/">Why KronGage?</a></li>
-    <li><a href="/platform/">Platform</a></li>
-    <li><a href="/solutions/">Solutions</a></li>
-    <li><a href="/blog/" style="color:#0D47A1">Blog</a></li>
+    <li class="has-mega">
+      <a href="/platform/">Platform</a>
+      <div class="mega-menu">
+        <div class="mega-inner cols-3">
+          <div>
+            <p class="mega-brand-head">The KronGage Platform</p>
+            <p class="mega-brand-sub">All your customer data, channels and engagement orchestration in one place.</p>
+            <a href="/platform/" class="mega-brand-link">View the platform →</a>
+            <div style="margin-top:20px;">
+              <a href="/platform/customer-data/" class="mega-feature-row"><div class="mega-feat-icon">👥</div><div class="mega-feat-text"><strong>Customer 360</strong><span>Know who your customer is regardless of the touch point or channel.</span></div></a>
+              <a href="/platform/omnichannel-inbox/" class="mega-feature-row"><div class="mega-feat-icon">📥</div><div class="mega-feat-text"><strong>Omnichannel Inbox</strong><span>Send all messages from one place.</span></div></a>
+            </div>
+          </div>
+          <div>
+            <p class="mega-col-title">Featured Capabilities</p>
+            <a href="/platform/campaign-management/" class="mega-feature-row"><div class="mega-feat-icon">📣</div><div class="mega-feat-text"><strong>Campaign Management</strong><span>Manage the customer journey for SMS, WhatsApp and email</span></div></a>
+            <a href="/platform/ai-automation/" class="mega-feature-row"><div class="mega-feat-icon">🤖</div><div class="mega-feat-text"><strong>AI Automation</strong><span>Automate the mundane communication flows</span></div></a>
+            <a href="/platform/social-media/" class="mega-feature-row"><div class="mega-feat-icon">📲</div><div class="mega-feat-text"><strong>Social Media Management</strong><span>All your social media channels in one place.</span></div></a>
+            <a href="/platform/social-intelligence/" class="mega-feature-row"><div class="mega-feat-icon">🎧</div><div class="mega-feat-text"><strong>Social Listening</strong><span>Understand your brand sentiment in real-time.</span></div></a>
+          </div>
+          <div>
+            <p class="mega-col-title">Featured Channels</p>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row"><div class="mega-channel-icon">✉️</div>Email</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row"><div class="mega-channel-icon">💬</div>Web Messaging &amp; SMS/RCS</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row"><div class="mega-channel-icon">📱</div>SMS/RCS</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-channel-row"><div class="mega-channel-icon">🟢</div>WhatsApp</a>
+            <a href="/platform/omnichannel-inbox/" class="mega-view-all">✳ View All Channels</a>
+            <div class="mega-how-card"><div class="mega-how-icon">💡</div><div class="mega-how-text"><strong>How it works?</strong><span>Understand how our omni channel inbox works to keep message clutter at bay.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="has-mega">
+      <a href="/solutions/">Solutions</a>
+      <div class="mega-menu">
+        <div class="mega-inner cols-2b">
+          <div>
+            <p class="mega-col-title">Industries</p>
+            <ul class="mega-industry-list">
+              <li><a href="/solutions/banking/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🏦</div>Banking &amp; Finance</a></li>
+              <li><a href="/solutions/telecom/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">📡</div>Telecommunications</a></li>
+              <li><a href="/solutions/fmcg/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🛒</div>FMCG &amp; Retail</a></li>
+              <li><a href="/solutions/healthcare/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🏥</div>Healthcare</a></li>
+              <li><a href="/solutions/insurance/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🛡️</div>Insurance</a></li>
+              <li><a href="/solutions/government/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;"><div class="mega-ind-icon">🏛️</div>Government &amp; Public Sector</a></li>
+            </ul>
+          </div>
+          <div>
+            <a href="/blog/retention-gap/" style="text-decoration:none;color:inherit;display:block;"><p class="mega-article-title">The Retention Gap: Why Success Teams Struggle</p>
+            <p class="mega-article-sub">In an era of endless options, customer success has become more than just a department — it's a survival strategy.</p></a>
+          </div>
+        </div>
+      </div>
+    </li>
   </ul>
   <a href="/contact/" class="btn-nav">Get Started</a>
   <button class="nav-toggle" onclick="document.querySelector('.mobile-menu').classList.toggle('open')" aria-label="Menu">
@@ -120,7 +200,6 @@
   <a href="/platform/">Why KronGage?</a>
   <a href="/platform/">Platform</a>
   <a href="/solutions/">Solutions</a>
-  <a href="/blog/">Blog</a>
   <a href="/contact/" class="btn-nav-mobile">Get Started</a>
 </div>
 
@@ -339,5 +418,38 @@
     </div>
   </div>
 </footer>
+<script>
+  // Mega menu with hover delay
+  (function() {
+    var DELAY = 200;
+    document.querySelectorAll('.nav-links li.has-mega').forEach(function(li) {
+      var timer = null;
+      function open() {
+        clearTimeout(timer);
+        document.querySelectorAll('.nav-links li.has-mega').forEach(function(o) {
+          if (o !== li) o.classList.remove('is-open');
+        });
+        li.classList.add('is-open');
+      }
+      function scheduleClose() {
+        timer = setTimeout(function() { li.classList.remove('is-open'); }, DELAY);
+      }
+      li.addEventListener('mouseenter', open);
+      li.addEventListener('mouseleave', scheduleClose);
+      var menu = li.querySelector('.mega-menu');
+      if (menu) {
+        menu.addEventListener('mouseenter', function() { clearTimeout(timer); });
+        menu.addEventListener('mouseleave', scheduleClose);
+      }
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.has-mega')) {
+        document.querySelectorAll('.nav-links li.has-mega').forEach(function(li) {
+          li.classList.remove('is-open');
+        });
+      }
+    });
+  })();
+</script>
 </body>
 </html>
