@@ -1,6 +1,6 @@
 # KronGage Web — Site Structure
 
-Static multi-page marketing site for KronGage, an enterprise AI customer engagement platform by Krondiva. No framework, no build tool — pure HTML, CSS, and vanilla JS, deployed via Vercel.
+Static multi-page marketing site for KronGage, an enterprise AI customer engagement platform by Krontiva. No framework, no build tool — pure HTML, CSS, and vanilla JS, deployed via Vercel.
 
 ---
 
