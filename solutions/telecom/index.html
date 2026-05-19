@@ -226,6 +226,8 @@
     .feat-blocks { background: #fff; padding: 0 60px 80px; }
     .feat-block { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; padding: 56px 0; border-top: 1px solid #f1f5f9; max-width: 1080px; margin: 0 auto; }
     .feat-block.solo { grid-template-columns: 1fr; max-width: 600px; }
+    .feat-visual-iframe { border-radius: 20px; overflow: hidden; height: 300px; box-shadow: 0 20px 60px rgba(13,71,161,.1); background: #f0f4f9; }
+    .feat-visual-iframe iframe { width: 100%; height: 100%; border: none; display: block; }
     .feat-title { font-size: 20px; font-weight: 800; color: #0D47A1; margin-bottom: 14px; line-height: 1.3; }
     .feat-body { font-size: 15px; color: #475569; line-height: 1.7; margin-bottom: 24px; }
     .feat-btn { display: inline-block; background: #0D47A1; color: #fff; padding: 12px 28px; border-radius: 50px; font-size: 14px; font-weight: 700; transition: background .2s; }
@@ -414,31 +416,23 @@
 </div></div>
   </div>
   <div class="feat-block">
-    <div><div class="ai-feat-visual">
-  <div class="ai-feat-circle">
-    <div style="display:flex;flex-direction:column;align-items:center;position:absolute;bottom:0;">
-      <div style="width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#8B5A2B,#6B4423);position:relative;">
-        <div style="position:absolute;top:-2px;left:-3px;right:-3px;height:26px;background:#1a0a00;border-radius:50% 50% 0 0;"></div>
-      </div>
-      <div style="width:16px;height:9px;background:#7a4a28;margin:0 auto;"></div>
-      <div style="width:110px;height:140px;background:linear-gradient(160deg,#1d4ed8,#1e40af);border-radius:50% 50% 0 0;"></div>
+    <div class="feat-visual-iframe">
+      <iframe src="/assets/ai-telecom-support.html" loading="lazy" title="AI-Powered Telecom Support demo"></iframe>
     </div>
-  </div>
-  <div class="ai-feat-fi tl">🤖</div>
-  <div class="ai-feat-fi tr">💬</div>
-  <div class="ai-feat-fi br">⚡</div>
-</div></div>
     <div>
       <h3 class="feat-title">AI-Powered Telecom Support</h3>
       <p class="feat-body">Integrate autonomous AI to resolve high-volume service requests, freeing your specialists to leverage intelligent diagnostics for complex roaming and connectivity issues.</p>
       <a href="/contact/" class="feat-btn">Learn more</a>
     </div>
   </div>
-  <div class="feat-block solo">
+  <div class="feat-block">
     <div>
       <h3 class="feat-title">Customer 360 &amp; Predictive Intelligence</h3>
       <p class="feat-body">Consolidate fragmented data streams into a unified subscriber profile, providing active visibility into the global end-to-end relationship.</p>
       <a href="/contact/" class="feat-btn">Contact Us</a>
+    </div>
+    <div class="feat-visual-iframe">
+      <iframe src="/assets/customer-360.html" loading="lazy" title="Customer 360 demo"></iframe>
     </div>
   </div>
   </section>
