@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – AI-Powered Telecom Support</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #EEF5FD;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Layout ── */
+    .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      width: 100%;
+      max-width: 860px;
+      padding: 24px;
+    }
+
+    /* ── Left panel: ticket stream ── */
+    .stream-panel {
+      width: 260px;
+      flex-shrink: 0;
+    }
+    .panel-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      padding-left: 2px;
+    }
+    .ticket-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .ticket {
+      background: #fff;
+      border-radius: 11px;
+      padding: 10px 12px;
+      border: 1.5px solid #f1f5f9;
+      transition: border-color .3s, opacity .4s, transform .4s;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .ticket.resolving {
+      border-color: #4ade80;
+    }
+    .ticket.escalating {
+      border-color: #f97316;
+    }
+    .ticket-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .ticket-icon.ai-icon  { background: #dbeafe; }
+    .ticket-icon.esc-icon { background: #fff7ed; }
+    .ticket-body { flex: 1; min-width: 0; }
+    .ticket-id   { font-size: 9px; font-weight: 700; color: #94a3b8; letter-spacing: .5px; margin-bottom: 2px; }
+    .ticket-text { font-size: 11px; font-weight: 600; color: #0f172a; line-height: 1.4; }
+    .ticket-meta { font-size: 10px; color: #94a3b8; margin-top: 3px; }
+    .ticket-status {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      white-space: nowrap;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .status-ai       { background: #dcfce7; color: #15803d; }
+    .status-escalate { background: #fff7ed; color: #c2410c; }
+    .status-pending  { background: #f1f5f9; color: #64748b; }
+
+    /* ── Center: main card ── */
+    .main-card {
+      flex: 1;
+      min-width: 0;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 12px 48px rgba(13,71,161,.13), 0 2px 8px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+
+    /* Card header */
+    .card-head {
+      background: #0D47A1;
+      padding: 18px 20px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-head::after {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+    .card-head-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .card-head-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 0 3px rgba(74,222,128,.25);
+    }
+    .brand-name { font-size: 12px; font-weight: 800; color: #fff; letter-spacing: .2px; }
+    .ai-badge {
+      font-size: 9px;
+      font-weight: 700;
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: .5px;
+    }
+    .card-head-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .head-stats {
+      display: flex;
+      gap: 16px;
+    }
+    .head-stat { }
+    .head-stat-val { font-size: 18px; font-weight: 900; color: #fff; line-height: 1; }
+    .head-stat-lbl { font-size: 9px; color: rgba(255,255,255,.6); font-weight: 600; margin-top: 2px; letter-spacing: .3px; }
+
+    /* Progress bar */
+    .resolution-bar {
+      margin: 0 20px;
+      padding: 12px 0 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .bar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .bar-label { font-size: 10px; font-weight: 700; color: #64748b; }
+    .bar-pct   { font-size: 11px; font-weight: 800; color: #0D47A1; }
+    .bar-track {
+      height: 6px;
+      background: #f1f5f9;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #0D47A1, #42a5f5);
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* AI action row */
+    .action-area { padding: 14px 20px; }
+    .action-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
+    .action-chat {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .chat-bubble {
+      max-width: 85%;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .4s, transform .4s;
+    }
+    .chat-bubble.visible { opacity: 1; transform: translateY(0); }
+    .bubble-ai {
+      background: #f0f7ff;
+      color: #0f172a;
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+      border-left: 2px solid #0D47A1;
+    }
+    .bubble-sys {
+      background: #f8fafc;
+      color: #475569;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+      text-align: right;
+    }
+    .bubble-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 3px;
+      letter-spacing: .4px;
+    }
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 9px 12px;
+      background: #f0f7ff;
+      border-radius: 12px;
+      border-bottom-left-radius: 4px;
+      border-left: 2px solid #0D47A1;
+      width: fit-content;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .typing.visible { opacity: 1; }
+    .typing span {
+      width: 5px; height: 5px;
+      background: #0D47A1;
+      border-radius: 50%;
+      animation: bounce 1s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: .15s; }
+    .typing span:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%,80%,100% { transform: translateY(0); opacity: .4; }
+      40%          { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* Specialist row at bottom */
+    .specialist-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px 14px;
+      border-top: 1px solid #f1f5f9;
+      background: #fafbff;
+    }
+    .spec-avatars {
+      display: flex;
+    }
+    .spec-av {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      margin-right: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .spec-text { flex: 1; }
+    .spec-title { font-size: 11px; font-weight: 700; color: #0f172a; }
+    .spec-sub   { font-size: 10px; color: #64748b; margin-top: 1px; }
+    .spec-btn {
+      font-size: 10px;
+      font-weight: 700;
+      background: #fff7ed;
+      color: #c2410c;
+      padding: 5px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    /* ── Right panel: resolution metrics ── */
+    .metrics-panel {
+      width: 160px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .metric-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 12px rgba(13,71,161,.08);
+    }
+    .metric-icon {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: #EEF5FD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    .metric-val  { font-size: 20px; font-weight: 900; color: #0D47A1; line-height: 1; }
+    .metric-lbl  { font-size: 10px; color: #64748b; font-weight: 600; margin-top: 3px; line-height: 1.35; }
+    .metric-delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 9px;
+      font-weight: 700;
+      margin-top: 5px;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+    .delta-up   { background: #dcfce7; color: #15803d; }
+    .delta-down { background: #fff7ed; color: #c2410c; }
+
+    /* Diagnostic pill */
+    .diag-pill {
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 12px rgba(13,71,161,.08);
+    }
+    .diag-title { font-size: 10px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .diag-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .diag-name { font-size: 10px; color: #64748b; }
+    .diag-bar-track {
+      width: 60px;
+      height: 4px;
+      background: #f1f5f9;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .diag-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1.5s cubic-bezier(.4,0,.2,1);
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- LEFT: live ticket stream -->
+  <div class="stream-panel">
+    <div class="panel-label">Live Requests</div>
+    <div class="ticket-list" id="ticketList"></div>
+  </div>
+
+  <!-- CENTER: main card -->
+  <div class="main-card">
+
+    <div class="card-head">
+      <div class="card-head-top">
+        <div class="card-head-brand">
+          <div class="brand-dot"></div>
+          <div class="brand-name">KronGage AI</div>
+        </div>
+        <div class="ai-badge">AUTONOMOUS MODE</div>
+      </div>
+      <div class="card-head-title">AI-Powered Telecom Support</div>
+      <div class="head-stats">
+        <div class="head-stat">
+          <div class="head-stat-val" id="resolvedCount">0</div>
+          <div class="head-stat-lbl">Resolved Today</div>
+        </div>
+        <div class="head-stat">
+          <div class="head-stat-val" id="avgTime">—</div>
+          <div class="head-stat-lbl">Avg Handle Time</div>
+        </div>
+        <div class="head-stat">
+          <div class="head-stat-val" id="aiRate">—</div>
+          <div class="head-stat-lbl">AI Resolution Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resolution-bar">
+      <div class="bar-row">
+        <span class="bar-label">AI Resolution Capacity</span>
+        <span class="bar-pct" id="barPct">0%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="barFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="action-area">
+      <div class="action-label">AI Diagnostics — Active</div>
+      <div class="action-chat" id="chatArea"></div>
+    </div>
+
+    <div class="specialist-row">
+      <div class="spec-avatars" id="specAvatars"></div>
+      <div class="spec-text">
+        <div class="spec-title">Specialists On Standby</div>
+        <div class="spec-sub" id="specSub">2 complex cases queued</div>
+      </div>
+      <div class="spec-btn">↗ Escalate</div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: metrics -->
+  <div class="metrics-panel">
+    <div class="metric-card">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-val">73%</div>
+      <div class="metric-lbl">Tickets auto-resolved</div>
+      <div class="metric-delta delta-up">↑ 18%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">🕐</div>
+      <div class="metric-val">38s</div>
+      <div class="metric-lbl">Avg AI resolution</div>
+      <div class="metric-delta delta-up">↓ 4.2 min</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">📡</div>
+      <div class="metric-val" id="roamingCount">0</div>
+      <div class="metric-lbl">Roaming issues detected</div>
+      <div class="metric-delta delta-down">↑ 3 today</div>
+    </div>
+    <div class="diag-pill">
+      <div class="diag-title">Issue Breakdown</div>
+      <div class="diag-row">
+        <span class="diag-name">Roaming</span>
+        <div class="diag-bar-track"><div class="diag-bar-fill" id="db1" style="width:0%;background:#0D47A1"></div></div>
+      </div>
+      <div class="diag-row">
+        <span class="diag-name">Data</span>
+        <div class="diag-bar-track"><div class="diag-bar-fill" id="db2" style="width:0%;background:#42a5f5"></div></div>
+      </div>
+      <div class="diag-row">
+        <span class="diag-name">Billing</span>
+        <div class="diag-bar-track"><div class="diag-bar-fill" id="db3" style="width:0%;background:#7c3aed"></div></div>
+      </div>
+      <div class="diag-row">
+        <span class="diag-name">Calls</span>
+        <div class="diag-bar-track"><div class="diag-bar-fill" id="db4" style="width:0%;background:#f97316"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ── Ticket data ── */
+  const TICKETS = [
+    { id:'#TK-8831', text:'Roaming not working in Spain', type:'ai',   status:'status-ai',       label:'AI Resolving',    icon:'🤖' },
+    { id:'#TK-8832', text:'Data balance incorrect',       type:'ai',   status:'status-ai',       label:'AI Resolved',     icon:'🤖' },
+    { id:'#TK-8833', text:'No signal after SIM swap',     type:'esc',  status:'status-escalate', label:'Escalated',       icon:'👤' },
+    { id:'#TK-8834', text:'International calls blocked',  type:'ai',   status:'status-ai',       label:'AI Resolving',    icon:'🤖' },
+    { id:'#TK-8835', text:'MMS failing on LTE network',   type:'ai',   status:'status-ai',       label:'AI Resolved',     icon:'🤖' },
+    { id:'#TK-8836', text:'Complex roaming configuration',type:'esc',  status:'status-escalate', label:'Escalated',       icon:'👤' },
+  ];
+
+  /* ── Chat messages ── */
+  const CHAT_STEPS = [
+    { type:'ai',  label:'AI AGENT', text:'Diagnosing roaming issue for +27 83 *** 1192 — checking carrier agreements with Vodafone ES...' },
+    { type:'sys', label:'SYSTEM',   text:'SIM provisioned. Roaming profile: EU-Standard. Last ping: Madrid Cell ID 4471.' },
+    { type:'ai',  label:'AI AGENT', text:'Issue identified: APN mismatch on international profile. Pushing config update — estimated fix: 28 seconds.' },
+  ];
+
+  /* ── Specialist avatars ── */
+  const SPECS = [
+    { initials:'AJ', bg:'#0D47A1' },
+    { initials:'MB', bg:'#7c3aed' },
+    { initials:'TK', bg:'#059669' },
+  ];
+
+  /* ── Init avatars ── */
+  const avCont = document.getElementById('specAvatars');
+  SPECS.forEach(s => {
+    const d = document.createElement('div');
+    d.className = 'spec-av';
+    d.style.background = s.bg;
+    d.textContent = s.initials;
+    avCont.appendChild(d);
+  });
+
+  /* ── Animate bar fill ── */
+  let barTarget = 73;
+  setTimeout(() => {
+    document.getElementById('barFill').style.width = barTarget + '%';
+    document.getElementById('barPct').textContent = barTarget + '%';
+  }, 400);
+
+  /* ── Animate diagnostic bars ── */
+  const diagVals = [68, 82, 45, 55];
+  setTimeout(() => {
+    ['db1','db2','db3','db4'].forEach((id,i) => {
+      document.getElementById(id).style.width = diagVals[i] + '%';
+    });
+  }, 600);
+
+  /* ── Count-up header stats ── */
+  function countUp(id, target, suffix, duration) {
+    let start = 0;
+    const step = target / (duration / 50);
+    const el = document.getElementById(id);
+    const t = setInterval(() => {
+      start = Math.min(start + step, target);
+      el.textContent = Math.floor(start) + suffix;
+      if (start >= target) clearInterval(t);
+    }, 50);
+  }
+  setTimeout(() => {
+    countUp('resolvedCount', 1284, '', 1200);
+    setTimeout(() => { document.getElementById('avgTime').textContent = '38s'; }, 800);
+    setTimeout(() => { document.getElementById('aiRate').textContent = '73%'; }, 1000);
+  }, 300);
+
+  /* ── Roaming counter ── */
+  setTimeout(() => { countUp('roamingCount', 47, '', 1000); }, 500);
+
+  /* ── Render tickets ── */
+  const listEl = document.getElementById('ticketList');
+  TICKETS.forEach((tk, i) => {
+    const d = document.createElement('div');
+    d.className = `ticket ${tk.type === 'ai' ? 'resolving' : 'escalating'}`;
+    d.style.opacity = '0';
+    d.innerHTML = `
+      <div class="ticket-icon ${tk.type === 'ai' ? 'ai-icon' : 'esc-icon'}">${tk.icon}</div>
+      <div class="ticket-body">
+        <div class="ticket-id">${tk.id}</div>
+        <div class="ticket-text">${tk.text}</div>
+        <span class="ticket-status ${tk.status}">${tk.label}</span>
+      </div>`;
+    listEl.appendChild(d);
+    setTimeout(() => { d.style.opacity = '1'; d.style.transition = 'opacity .4s'; }, 200 + i * 120);
+  });
+
+  /* ── Chat animation ── */
+  const chatEl = document.getElementById('chatArea');
+  let chatIdx = 0;
+
+  function showTyping() {
+    const t = document.createElement('div');
+    t.className = 'typing';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    chatEl.appendChild(t);
+    requestAnimationFrame(() => { t.classList.add('visible'); });
+    return t;
+  }
+
+  function appendBubble(step) {
+    const wrap = document.createElement('div');
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.alignItems = step.type === 'ai' ? 'flex-start' : 'flex-end';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'bubble-label';
+    lbl.textContent = step.label;
+
+    const b = document.createElement('div');
+    b.className = `chat-bubble ${step.type === 'ai' ? 'bubble-ai' : 'bubble-sys'}`;
+    b.textContent = step.text;
+
+    wrap.appendChild(lbl);
+    wrap.appendChild(b);
+    chatEl.appendChild(wrap);
+    requestAnimationFrame(() => { b.classList.add('visible'); });
+  }
+
+  function runChat() {
+    if (chatIdx >= CHAT_STEPS.length) {
+      chatIdx = 0;
+      setTimeout(() => {
+        chatEl.innerHTML = '';
+        runChat();
+      }, 4000);
+      return;
+    }
+    const step = CHAT_STEPS[chatIdx];
+    if (step.type === 'ai') {
+      const typing = showTyping();
+      setTimeout(() => {
+        chatEl.removeChild(typing);
+        appendBubble(step);
+        chatIdx++;
+        setTimeout(runChat, 900);
+      }, 1400);
+    } else {
+      appendBubble(step);
+      chatIdx++;
+      setTimeout(runChat, 1000);
+    }
+  }
+
+  setTimeout(runChat, 800);
+
+  /* ── Cycle new incoming tickets ── */
+  const NEW_TICKETS = [
+    { id:'#TK-8837', text:'VoLTE not available roaming', type:'ai', status:'status-ai', label:'AI Resolving', icon:'🤖' },
+    { id:'#TK-8838', text:'Balance deduction query', type:'ai', status:'status-ai', label:'AI Resolved', icon:'🤖' },
+    { id:'#TK-8839', text:'Port-in failed — manual review', type:'esc', status:'status-escalate', label:'Escalated', icon:'👤' },
+  ];
+  let newIdx = 0;
+  setInterval(() => {
+    const tk = NEW_TICKETS[newIdx % NEW_TICKETS.length];
+    const d = document.createElement('div');
+    d.className = `ticket ${tk.type === 'ai' ? 'resolving' : 'escalating'}`;
+    d.style.opacity = '0';
+    d.style.transform = 'translateY(-8px)';
+    d.innerHTML = `
+      <div class="ticket-icon ${tk.type === 'ai' ? 'ai-icon' : 'esc-icon'}">${tk.icon}</div>
+      <div class="ticket-body">
+        <div class="ticket-id">${tk.id}</div>
+        <div class="ticket-text">${tk.text}</div>
+        <span class="ticket-status ${tk.status}">${tk.label}</span>
+      </div>`;
+    listEl.insertBefore(d, listEl.firstChild);
+    requestAnimationFrame(() => {
+      d.style.transition = 'opacity .4s, transform .4s';
+      d.style.opacity = '1';
+      d.style.transform = 'translateY(0)';
+    });
+    // remove last if too many
+    if (listEl.children.length > 6) {
+      const last = listEl.lastChild;
+      last.style.transition = 'opacity .3s';
+      last.style.opacity = '0';
+      setTimeout(() => { if (last.parentNode) listEl.removeChild(last); }, 300);
+    }
+    newIdx++;
+    // update specialist queue count
+    const q = 2 + (newIdx % 3);
+    document.getElementById('specSub').textContent = `${q} complex cases queued`;
+  }, 4200);
+</script>
+</body>
+</html>
