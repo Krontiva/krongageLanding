@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Government & Public Sector</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #EEF5FD; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+    .gov { display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh; padding: 24px; }
+
+    /* ── Government portal ── */
+    .gov-portal {
+      width: 100%; max-width: 340px;
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 48px rgba(13,71,161,.1), 0 2px 8px rgba(0,0,0,.05);
+    }
+
+    .gov-portal-head {
+      background: linear-gradient(135deg, #0D47A1, #0a3680);
+      padding: 16px 18px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .gov-portal-logo {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .gov-portal-title { color: #fff; font-size: 13px; font-weight: 800; }
+    .gov-portal-sub { color: rgba(255,255,255,.6); font-size: 10px; margin-top: 1px; }
+
+    .gov-citizen-bar {
+      background: #EEF5FD; padding: 10px 16px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid #dbeafe;
+    }
+    .gov-citizen-av { width: 32px; height: 32px; border-radius: 50%; background: #0D47A1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .gov-citizen-name { font-size: 12px; font-weight: 800; color: #0f172a; }
+    .gov-citizen-id { font-size: 10px; color: #64748b; }
+    .gov-verified { font-size: 10px; font-weight: 700; background: #dcfce7; color: #16a34a; padding: 2px 7px; border-radius: 5px; margin-left: auto; display: flex; align-items: center; gap: 3px; }
+
+    .gov-services { padding: 12px; }
+    .gov-svc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-bottom: 8px; }
+    .gov-svc-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 11px; border-radius: 10px;
+      background: #f8fafc; border: 1px solid #f1f5f9;
+      margin-bottom: 7px; cursor: pointer;
+      transition: all .2s;
+    }
+    .gov-svc-item:last-child { margin-bottom: 0; }
+    .gov-svc-item:hover { border-color: #0D47A1; background: #EEF5FD; }
+    .gov-svc-item.active { border-color: #0D47A1; background: #EEF5FD; }
+    .gov-svc-icon { width: 32px; height: 32px; border-radius: 8px; background: #EEF5FD; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .gov-svc-info { flex: 1; }
+    .gov-svc-title { font-size: 12px; font-weight: 700; color: #0f172a; }
+    .gov-svc-sub { font-size: 10px; color: #64748b; margin-top: 1px; }
+    .gov-svc-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #0D47A1; color: #fff; white-space: nowrap; }
+    .gov-svc-badge.alert { background: #ef4444; }
+    .gov-svc-badge.done { background: #16a34a; }
+
+    /* ── Notification bar ── */
+    .gov-notif-wrap { padding: 0 12px 12px; margin-top: 10px; }
+    .gov-notif {
+      background: #0f1f3d; border-radius: 10px;
+      padding: 11px 14px; display: flex; gap: 10px; align-items: center;
+      min-height: 44px;
+    }
+    .gov-notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; animation: blink 1.5s ease infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .gov-notif-text {
+      font-size: 11px; color: rgba(255,255,255,.85); line-height: 1.4;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .gov-notif-text.fade-out { opacity: 0; transform: translateY(-4px); }
+    .gov-notif-text.fade-in  { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+<div class="gov">
+
+  <div class="gov-portal">
+    <div class="gov-portal-head">
+      <div class="gov-portal-logo">🏛️</div>
+      <div>
+        <div class="gov-portal-title">CitizenConnect</div>
+        <div class="gov-portal-sub">Powered by KronGage</div>
+      </div>
+    </div>
+
+    <div class="gov-citizen-bar">
+      <div class="gov-citizen-av">JO</div>
+      <div>
+        <div class="gov-citizen-name">John Owusu</div>
+        <div class="gov-citizen-id">ID: GH-2024-00847</div>
+      </div>
+      <div class="gov-verified">✓ Verified</div>
+    </div>
+
+    <div class="gov-services">
+      <div class="gov-svc-label">Government Services</div>
+
+      <div class="gov-svc-item active" onclick="selectSvc(this)">
+        <div class="gov-svc-icon">📋</div>
+        <div class="gov-svc-info">
+          <div class="gov-svc-title">Permit Application</div>
+          <div class="gov-svc-sub">Business license renewal</div>
+        </div>
+        <span class="gov-svc-badge">In Review</span>
+      </div>
+
+      <div class="gov-svc-item" onclick="selectSvc(this)">
+        <div class="gov-svc-icon">💳</div>
+        <div class="gov-svc-info">
+          <div class="gov-svc-title">Tax Filing</div>
+          <div class="gov-svc-sub">Annual return 2024</div>
+        </div>
+        <span class="gov-svc-badge alert">Due Soon</span>
+      </div>
+
+    </div>
+
+    <div class="gov-notif-wrap">
+      <div class="gov-notif">
+        <div class="gov-notif-dot"></div>
+        <div class="gov-notif-text fade-in" id="notifText"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  const messages = [
+    'Your permit is being reviewed. Expected: 2 business days.',
+    'Tax filing due in 5 days. File now to avoid penalties.',
+    'Your NHIS card renewal is ready for collection.'
+  ];
+  let msgIndex = 0;
+  const el = document.getElementById('notifText');
+
+  function showMessage(text) {
+    el.classList.remove('fade-in');
+    el.classList.add('fade-out');
+    setTimeout(() => {
+      el.textContent = text;
+      el.classList.remove('fade-out');
+      el.classList.add('fade-in');
+    }, 380);
+  }
+
+  el.textContent = messages[0];
+  el.classList.add('fade-in');
+
+  setInterval(() => {
+    msgIndex = (msgIndex + 1) % messages.length;
+    showMessage(messages[msgIndex]);
+  }, 3500);
+
+  function selectSvc(el) {
+    document.querySelectorAll('.gov-svc-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>

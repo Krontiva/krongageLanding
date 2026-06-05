@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Omnichannel Inbox</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; overflow: hidden; height: 100vh; }
+
+    .ib { display: flex; width: 100%; height: 100vh; background: #fff; overflow: hidden; }
+
+    /* ── Conversation list ── */
+    .ib-list { width: 208px; border-right: 1px solid #f1f5f9; display: flex; flex-direction: column; flex-shrink: 0; }
+    .ib-lhead { padding: 13px 12px 10px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+    .ib-ltitle { font-size: 15px; font-weight: 800; color: #0f172a; }
+    .ib-lbtns { display: flex; gap: 5px; }
+    .ib-lbtn { width: 26px; height: 26px; border-radius: 6px; background: #f1f5f9; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 13px; transition: background .2s; }
+    .ib-lbtn:hover { background: #e2e8f0; }
+    .ib-convs { overflow-y: auto; flex: 1; }
+    .ib-conv { display: flex; align-items: flex-start; gap: 8px; padding: 9px 11px; cursor: pointer; border-bottom: 1px solid #f8fafc; transition: background .15s; }
+    .ib-conv:hover { background: #f8fafc; }
+    .ib-conv.sel { background: #EEF5FD; }
+    .ib-av { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; margin-top: 1px; }
+    .ib-cbody { flex: 1; min-width: 0; }
+    .ib-ctop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+    .ib-cname { font-size: 12px; font-weight: 700; color: #0f172a; }
+    .ib-ctime { font-size: 10px; color: #94a3b8; flex-shrink: 0; }
+    .ib-crow2 { display: flex; align-items: center; gap: 4px; }
+    .ib-badge { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; white-space: nowrap; }
+    .bwa { background: #dcfce7; color: #16a34a; }
+    .bwc { background: #dbeafe; color: #1d4ed8; }
+    .bem { background: #fef3c7; color: #b45309; }
+    .ib-cprev { font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+    .ib-unread { width: 15px; height: 15px; border-radius: 50%; background: #0D47A1; color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* ── Chat thread ── */
+    .ib-thread { flex: 1; display: flex; flex-direction: column; min-width: 0; border-right: 1px solid #f1f5f9; }
+    .ib-thead { padding: 11px 14px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+    .ib-tinfo { display: flex; flex-direction: column; }
+    .ib-tname { font-size: 13px; font-weight: 800; color: #0f172a; }
+    .ib-tsub { font-size: 11px; color: #64748b; }
+    .ib-tbtns { display: flex; gap: 6px; align-items: center; }
+    .ib-tbtn { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0; background: #fff; color: #475569; cursor: pointer; transition: all .15s; }
+    .ib-tbtn:hover { border-color: #cbd5e1; background: #f8fafc; }
+    .ib-tbtn.pri { background: #0D47A1; color: #fff; border-color: #0D47A1; }
+    .ib-tbtn.pri:hover { background: #0a3a84; }
+    .ib-tbtn.ico { width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center; }
+    .ib-msgs { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: #f8fafc; }
+    .ib-msg { display: flex; flex-direction: column; max-width: 74%; }
+    .ib-msg.them { align-self: flex-start; }
+    .ib-msg.us { align-self: flex-end; }
+    .ib-mlabel { font-size: 10px; color: #94a3b8; margin-bottom: 3px; }
+    .ib-msg.us .ib-mlabel { text-align: right; }
+    .ib-bubble { padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.55; }
+    .ib-msg.them .ib-bubble { background: #fff; border: 1px solid #e2e8f0; border-bottom-left-radius: 3px; color: #1e293b; }
+    .ib-msg.us .ib-bubble { background: #0D47A1; color: #fff; border-bottom-right-radius: 3px; }
+    .ib-mtime { font-size: 10px; color: #94a3b8; margin-top: 3px; }
+    .ib-msg.us .ib-mtime { text-align: right; }
+    .ib-sys { text-align: center; font-size: 10px; color: #94a3b8; padding: 2px 0; }
+    .ib-typing { display: flex; gap: 3px; align-items: center; padding: 9px 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; border-bottom-left-radius: 3px; width: fit-content; }
+    .ib-typing span { width: 5px; height: 5px; border-radius: 50%; background: #94a3b8; animation: td 1.2s infinite; }
+    .ib-typing span:nth-child(2) { animation-delay: .2s; }
+    .ib-typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes td { 0%,60%,100%{opacity:.3;transform:scale(.8)} 30%{opacity:1;transform:scale(1)} }
+    .ib-inp { padding: 10px 14px; border-top: 1px solid #f1f5f9; background: #fff; display: flex; align-items: center; gap: 8px; }
+    .ib-inpfield { flex: 1; border: 1px solid #e2e8f0; border-radius: 18px; padding: 7px 13px; font-size: 12px; color: #475569; outline: none; font-family: inherit; background: #f8fafc; }
+    .ib-inpfield:focus { border-color: #93c5fd; background: #fff; }
+    .ib-sendbtn { width: 30px; height: 30px; border-radius: 50%; background: #0D47A1; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; flex-shrink: 0; transition: background .2s; }
+    .ib-sendbtn:hover { background: #0a3a84; }
+
+    .ib-tag { display: inline-flex; align-items: center; gap: 4px; background: #EEF5FD; color: #0D47A1; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+<div class="ib">
+
+  <!-- Conversation list -->
+  <div class="ib-list">
+    <div class="ib-lhead">
+      <span class="ib-ltitle">Inbox</span>
+      <div class="ib-lbtns">
+        <button class="ib-lbtn" title="Refresh">↻</button>
+        <button class="ib-lbtn" title="New conversation">+</button>
+      </div>
+    </div>
+    <div class="ib-convs" id="convList"></div>
+  </div>
+
+  <!-- Thread -->
+  <div class="ib-thread">
+    <div class="ib-thead">
+      <div class="ib-tinfo">
+        <span class="ib-tname" id="tName">Sarah J.</span>
+        <span class="ib-tsub" id="tSub">Webchat / WhatsApp</span>
+      </div>
+      <div class="ib-tbtns">
+        <button class="ib-tbtn ico" title="Call">📞</button>
+      </div>
+    </div>
+    <div class="ib-msgs" id="msgArea"></div>
+    <div class="ib-inp">
+      <input class="ib-inpfield" id="msgInput" placeholder="Type a message…" />
+      <button class="ib-sendbtn" id="sendBtn">➤</button>
+    </div>
+  </div>
+
+
+</div>
+<script>
+  const CONVS = [
+    { id:1, name:'Sarah J.',  ch:'WhatsApp', prev:'Hey was you can thing tom…',     color:'#0D47A1', init:'SJ', unread:1 },
+    { id:2, name:'Mike T.',   ch:'Webchat',  prev:'We want you sending to hi…',     color:'#7c3aed', init:'MT', unread:0 },
+    { id:3, name:'Alice K.',  ch:'Webchat',  prev:'Thank you for logging to…',      color:'#059669', init:'AK', unread:1 },
+    { id:4, name:'Alice K.',  ch:'Email',    prev:'We want you to have come…',      color:'#059669', init:'AK', unread:0 },
+    { id:5, name:'Mike T.',   ch:'Webchat',  prev:'We have you sending to hi…',     color:'#7c3aed', init:'MT', unread:0 },
+    { id:6, name:'Alice K.',  ch:'Email',    prev:'Thank you for about cust…',      color:'#059669', init:'AK', unread:0 },
+    { id:7, name:'Sarah J.',  ch:'Email',    prev:'We have sending from…',          color:'#0D47A1', init:'SJ', unread:0 },
+    { id:8, name:'Mike T.',   ch:'Webchat',  prev:'Thank you for about custo…',     color:'#7c3aed', init:'MT', unread:0 },
+    { id:9, name:'Alice K.',  ch:'Webchat',  prev:'Hello, thats apo that your i…',  color:'#059669', init:'AK', unread:0 },
+  ];
+
+  const THREADS = {
+    1:[
+      { t:'label', text:'Sarah J. via WhatsApp' },
+      { t:'them',  text:'Hello, friend — can you write something for the cost at an online store?' },
+      { t:'sys',   text:'What did you command?' },
+      { t:'them',  text:'Are you able to help with the customer campaign this week?' },
+      { t:'sys',   text:'9:09 PM' },
+      { t:'them',  text:'Hi, please never also go without updating your customers.' },
+      { t:'sys',   text:'What type in has writing?' },
+      { t:'us',    text:"You'll need to solve our best tracking. Let me pull up the details right now." },
+    ],
+    2:[
+      { t:'them', text:'Hi, I need help with my account settings.' },
+      { t:'us',   text:'Of course! What seems to be the issue?' },
+      { t:'them', text:'I cannot find the data export feature.' },
+      { t:'us',   text:"It's under Settings → Data → Export. Let me walk you through it step by step." },
+      { t:'them', text:'Found it, thank you so much!' },
+    ],
+    3:[
+      { t:'them', text:'Thank you for the quick resolution yesterday!' },
+      { t:'us',   text:'Happy to help! Is there anything else we can assist with today?' },
+      { t:'them', text:'Actually yes — can I upgrade my plan online?' },
+      { t:'us',   text:'Absolutely, head to Billing → Upgrade Plan. Shall I send you the direct link?' },
+    ],
+  };
+
+  let sel = 1;
+
+  function badgeCls(ch) { return ch==='WhatsApp'?'bwa':ch==='Email'?'bem':'bwc'; }
+
+  function renderList() {
+    document.getElementById('convList').innerHTML = CONVS.map(c => `
+      <div class="ib-conv${c.id===sel?' sel':''}" onclick="pick(${c.id})">
+        <div class="ib-av" style="background:${c.color}">${c.init}</div>
+        <div class="ib-cbody">
+          <div class="ib-ctop">
+            <span class="ib-cname">${c.name}</span>
+          </div>
+          <div class="ib-crow2">
+            <span class="ib-badge ${badgeCls(c.ch)}">${c.ch}</span>
+            <span class="ib-cprev">${c.prev}</span>
+            ${c.unread?`<span class="ib-unread">${c.unread}</span>`:''}
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderThread(id) {
+    const msgs = THREADS[id] || THREADS[1];
+    const area = document.getElementById('msgArea');
+    area.innerHTML = msgs.map(m => {
+      if (m.t==='label') return `<div class="ib-sys" style="font-weight:600;color:#64748b;margin-bottom:2px;">${m.text}</div>`;
+      if (m.t==='sys') return `<div class="ib-sys">${m.text}</div>`;
+      return `<div class="ib-msg ${m.t}">
+        <div class="ib-bubble">${m.text}</div>
+      </div>`;
+    }).join('');
+    area.innerHTML += `<div class="ib-msg them"><div class="ib-typing"><span></span><span></span><span></span></div></div>`;
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function pick(id) {
+    sel = id;
+    const c = CONVS.find(x=>x.id===id);
+    document.getElementById('tName').textContent = c.name;
+    document.getElementById('tSub').textContent = `Webchat / ${c.ch}`;
+    renderList();
+    renderThread(id);
+  }
+
+  // Send message
+  document.getElementById('sendBtn').addEventListener('click', sendMsg);
+  document.getElementById('msgInput').addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
+  function sendMsg() {
+    const inp = document.getElementById('msgInput');
+    const txt = inp.value.trim();
+    if (!txt) return;
+    const area = document.getElementById('msgArea');
+    // remove typing indicator
+    const typing = area.querySelector('.ib-typing');
+    if (typing) typing.closest('.ib-msg').remove();
+    // add user bubble
+    const div = document.createElement('div');
+    div.className = 'ib-msg us';
+    div.innerHTML = `<div class="ib-bubble">${txt}</div>`;
+    area.appendChild(div);
+    // re-add typing
+    const td = document.createElement('div');
+    td.className = 'ib-msg them';
+    td.innerHTML = `<div class="ib-typing"><span></span><span></span><span></span></div>`;
+    area.appendChild(td);
+    area.scrollTop = area.scrollHeight;
+    inp.value = '';
+  }
+
+  renderList();
+  renderThread(1);
+</script>
+</body>
+</html>

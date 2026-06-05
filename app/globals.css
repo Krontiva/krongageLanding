@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+  --kg-blue: #0D47A1;
+  --kg-blue-dark: #0a3680;
+  --kg-navy: #0f172a;
+  --kg-bg: #EEF5FD;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  color: var(--kg-navy);
+  background: #fff;
+}
+
+a { text-decoration: none; color: inherit; }

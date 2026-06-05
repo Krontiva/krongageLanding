@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Healthcare</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #EEF5FD; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+    .hc { display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh; padding: 32px; }
+
+    /* ── Journey card ── */
+    .hc-card {
+      width: 100%; max-width: 340px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(13,71,161,.1), 0 2px 8px rgba(0,0,0,.05);
+      overflow: hidden;
+    }
+
+    /* Card header */
+    .hc-card-head {
+      background: linear-gradient(135deg, #0D47A1, #1565C0);
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hc-head-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,255,255,.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .hc-head-title { font-size: 14px; font-weight: 800; color: #fff; }
+    .hc-head-sub { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
+
+    /* Patient row */
+    .hc-patient {
+      padding: 12px 20px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .hc-av {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #0D47A1, #1976D2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: #fff;
+    }
+    .hc-patient-name { font-size: 13px; font-weight: 800; color: #0f172a; }
+    .hc-patient-sub { font-size: 11px; color: #64748b; margin-top: 1px; }
+    .hc-patient-badge { margin-left: auto; font-size: 10px; font-weight: 700; background: #dbeafe; color: #0D47A1; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+
+    /* Timeline */
+    .hc-timeline { padding: 16px 20px 20px; position: relative; }
+
+    .hc-step {
+      display: flex; align-items: flex-start; gap: 14px;
+      position: relative; padding-bottom: 22px;
+      opacity: 0; transform: translateX(-10px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .hc-step:last-child { padding-bottom: 0; }
+    .hc-step.lit { opacity: 1; transform: translateX(0); }
+
+    /* Vertical connector */
+    .hc-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px; top: 34px;
+      width: 2px; height: calc(100% - 34px);
+      background: #e2e8f0;
+      transition: background .4s ease;
+    }
+    .hc-step.lit:not(:last-child)::after { background: #bbf7d0; }
+
+    /* Step icon circle */
+    .hc-step-icon {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      background: #f1f5f9; border: 2px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      transition: background .4s ease, border-color .4s ease;
+      position: relative; z-index: 1;
+    }
+    .hc-step.lit .hc-step-icon {
+      background: #f0fdf4; border-color: #86efac;
+    }
+
+    /* Step text */
+    .hc-step-body { flex: 1; padding-top: 4px; }
+    .hc-step-title { font-size: 13px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px; }
+    .hc-step-sub { font-size: 11px; color: #64748b; margin-top: 3px; line-height: 1.5; }
+
+    /* Checkmark badge */
+    .hc-check {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #22c55e; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: scale(.5);
+      transition: opacity .3s ease .15s, transform .3s ease .15s;
+    }
+    .hc-check svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .hc-step.lit .hc-check { opacity: 1; transform: scale(1); }
+  </style>
+</head>
+<body>
+<div class="hc">
+
+  <div class="hc-card">
+
+    <!-- Header -->
+    <div class="hc-card-head">
+      <div class="hc-head-icon">🏥</div>
+      <div>
+        <div class="hc-head-title">Patient Engagement Journey</div>
+        <div class="hc-head-sub">Powered by KronGage</div>
+      </div>
+    </div>
+
+    <!-- Patient -->
+    <div class="hc-patient">
+      <div class="hc-av">KM</div>
+      <div>
+        <div class="hc-patient-name">Kofi Mensah</div>
+        <div class="hc-patient-sub">GP Visit · Dr. Amara Okonkwo</div>
+      </div>
+      <span class="hc-patient-badge">Active</span>
+    </div>
+
+    <!-- Timeline -->
+    <div class="hc-timeline">
+
+      <div class="hc-step" id="s1">
+        <div class="hc-step-icon">📅</div>
+        <div class="hc-step-body">
+          <div class="hc-step-title">
+            Appointment Booked
+            <div class="hc-check"><svg viewBox="0 0 16 16"><polyline points="3 8 7 12 13 5"/></svg></div>
+          </div>
+          <div class="hc-step-sub">Friday, 3:00 PM · City Clinic</div>
+        </div>
+      </div>
+
+      <div class="hc-step" id="s2">
+        <div class="hc-step-icon">🔔</div>
+        <div class="hc-step-body">
+          <div class="hc-step-title">
+            Reminder Sent
+            <div class="hc-check"><svg viewBox="0 0 16 16"><polyline points="3 8 7 12 13 5"/></svg></div>
+          </div>
+          <div class="hc-step-sub">24h notice via WhatsApp · Delivered ✓✓</div>
+        </div>
+      </div>
+
+      <div class="hc-step" id="s3">
+        <div class="hc-step-icon">✅</div>
+        <div class="hc-step-body">
+          <div class="hc-step-title">
+            Patient Confirmed
+            <div class="hc-check"><svg viewBox="0 0 16 16"><polyline points="3 8 7 12 13 5"/></svg></div>
+          </div>
+          <div class="hc-step-sub">Replied "Yes" · 2h before appointment</div>
+        </div>
+      </div>
+
+      <div class="hc-step" id="s4">
+        <div class="hc-step-icon">📋</div>
+        <div class="hc-step-body">
+          <div class="hc-step-title">
+            Follow-up Scheduled
+            <div class="hc-check"><svg viewBox="0 0 16 16"><polyline points="3 8 7 12 13 5"/></svg></div>
+          </div>
+          <div class="hc-step-sub">Post-visit check-in · 7 days later</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<script>
+  function runTimeline() {
+    ['s1','s2','s3','s4'].forEach(id => document.getElementById(id).classList.remove('lit'));
+    const delays = [300, 1100, 1900, 2700];
+    ['s1','s2','s3','s4'].forEach((id, i) => setTimeout(() => document.getElementById(id).classList.add('lit'), delays[i]));
+  }
+  runTimeline();
+  setInterval(runTimeline, 9000);
+</script>
+</body>
+</html>

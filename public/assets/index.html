@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/Krongage-Logo.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage — Component Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; min-height: 100vh; }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #f1f5f9;
+      padding: 0 48px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo { font-size: 18px; font-weight: 800; color: #0D47A1; display: flex; align-items: center; gap: 8px; }
+    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: #0D47A1; }
+    .header-meta { font-size: 12px; color: #94a3b8; }
+
+    .hero {
+      padding: 48px 48px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .hero h1 { font-size: 32px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 8px; }
+    .hero p { font-size: 14px; color: #64748b; line-height: 1.7; }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 0 48px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 7px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 2px solid #e2e8f0;
+      background: #fff;
+      color: #475569;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .filter-btn:hover { border-color: #0D47A1; color: #0D47A1; }
+    .filter-btn.active { background: #0D47A1; border-color: #0D47A1; color: #fff; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+      padding: 0 48px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #f1f5f9;
+      overflow: hidden;
+      transition: box-shadow .2s, transform .2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { box-shadow: 0 12px 40px rgba(13,71,161,.12); transform: translateY(-2px); }
+
+    .card-preview {
+      height: 240px;
+      background: #f8fafc;
+      overflow: hidden;
+      position: relative;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .card-preview iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      pointer-events: none;
+    }
+    .card-preview .preview-overlay {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .card-body { padding: 16px 18px 18px; flex: 1; }
+    .card-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .tag-dashboard { background: #ede9fe; color: #6d28d9; }
+    .tag-industry  { background: #dbeafe; color: #1e40af; }
+    .tag-platform  { background: #dcfce7; color: #15803d; }
+
+    .card-title { font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+    .card-desc  { font-size: 12px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
+
+    .card-footer { display: flex; align-items: center; gap: 8px; }
+    .card-used { font-size: 10px; color: #94a3b8; margin-top: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .card-used-label { font-weight: 700; color: #cbd5e1; white-space: nowrap; }
+    .card-used a { color: #0D47A1; font-weight: 600; text-decoration: none; background: #eff6ff; padding: 2px 7px; border-radius: 10px; transition: background .15s; }
+    .card-used a:hover { background: #dbeafe; }
+    .card-open {
+      display: inline-block;
+      background: #0D47A1;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .card-open:hover { background: #0a3680; }
+    .card-file { font-size: 11px; color: #94a3b8; font-family: monospace; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 1100px;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,.25);
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .modal-title { font-size: 15px; font-weight: 800; }
+    .modal-file { font-size: 11px; color: #94a3b8; font-family: monospace; margin-top: 2px; }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: #64748b;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: #e2e8f0; }
+    .modal-iframe { flex: 1; border: none; display: block; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><div class="logo-dot"></div>KronGage Components</div>
+  <div class="header-meta">20 components · Click any card to preview full screen</div>
+</header>
+
+<div class="hero">
+  <h1>Component Library</h1>
+  <p>All animated UI components built for the KronGage platform. Click a card to preview full screen, or open the file directly.</p>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterCards('all', this)">All (21)</button>
+  <button class="filter-btn" onclick="filterCards('dashboard', this)">Dashboard Views</button>
+  <button class="filter-btn" onclick="filterCards('industry', this)">Industry Heroes</button>
+  <button class="filter-btn" onclick="filterCards('platform', this)">Platform Features</button>
+</div>
+
+<div class="grid" id="componentGrid">
+
+  <!-- ── DASHBOARD ── -->
+  <div class="card" data-tag="dashboard">
+    <div class="card-preview">
+      <iframe src="/assets/dashboard-demo.html" loading="lazy" title="Dashboard Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('KronGage Platform Dashboard', '/assets/dashboard-demo.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-dashboard">Dashboard</span>
+      <div class="card-title">Platform Dashboard</div>
+      <div class="card-desc">Full interactive dashboard with 9 switchable views: Dashboard, Inbox, Social Publishing, Campaigns, Social Intelligence, Customer 360, Knowledge, Settings, Usage & Limits.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/dashboard-demo.html" target="_blank">Open ↗</a>
+        <span class="card-file">dashboard-demo.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/" target="_blank">Home</a></div>
+    </div>
+  </div>
+
+  <!-- ── INDUSTRY HEROES ── -->
+  <div class="card" data-tag="industry">
+    <div class="card-preview">
+      <iframe src="/assets/hero-banking.html" loading="lazy" title="Banking Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('Banking & Finance Hero', '/assets/hero-banking.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-industry">Industry Hero</span>
+      <div class="card-title">Banking & Finance</div>
+      <div class="card-desc">Animated banking UI showing transaction alerts, balance cards, and real-time notification feed for financial services.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-banking.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-banking.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/" target="_blank">Home</a><a href="/solutions/banking/" target="_blank">Banking</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="industry">
+    <div class="card-preview">
+      <iframe src="/assets/hero-telecom.html" loading="lazy" title="Telecom Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('Telecommunications Hero', '/assets/hero-telecom.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-industry">Industry Hero</span>
+      <div class="card-title">Telecommunications</div>
+      <div class="card-desc">Telecom subscriber portal showing data bundle usage, recharge prompts, and multi-channel engagement notifications.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-telecom.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-telecom.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/" target="_blank">Home</a><a href="/solutions/telecom/" target="_blank">Telecom</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="industry">
+    <div class="card-preview">
+      <iframe src="/assets/hero-fmcg.html" loading="lazy" title="FMCG Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('FMCG & Retail Hero', '/assets/hero-fmcg.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-industry">Industry Hero</span>
+      <div class="card-title">FMCG & Retail</div>
+      <div class="card-desc">Consumer engagement panel showing loyalty points, promotional campaigns, and purchase journey notifications.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-fmcg.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-fmcg.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/" target="_blank">Home</a><a href="/solutions/fmcg/" target="_blank">FMCG</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="industry">
+    <div class="card-preview">
+      <iframe src="/assets/hero-healthcare.html" loading="lazy" title="Healthcare Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('Healthcare Hero', '/assets/hero-healthcare.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-industry">Industry Hero</span>
+      <div class="card-title">Healthcare</div>
+      <div class="card-desc">Patient engagement with animated appointment reminder chat bubbles, confirmation CTA, and appointment detail card.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-healthcare.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-healthcare.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/" target="_blank">Home</a><a href="/solutions/healthcare/" target="_blank">Healthcare</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="industry">
+    <div class="card-preview">
+      <iframe src="/assets/hero-insurance.html" loading="lazy" title="Insurance Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('Insurance Hero', '/assets/hero-insurance.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-industry">Industry Hero</span>
+      <div class="card-title">Insurance</div>
+      <div class="card-desc">Insurance profile onboarding card with animated shield, pulsing rings, progress bar, and multi-step profile flow.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-insurance.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-insurance.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/" target="_blank">Home</a><a href="/solutions/insurance/" target="_blank">Insurance</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="industry">
+    <div class="card-preview">
+      <iframe src="/assets/insurance-360.html" loading="lazy" title="360° Policyholder Identity"></iframe>
+      <div class="preview-overlay" onclick="openModal('360° Policyholder Identity & Predictive Intelligence', '/assets/insurance-360.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-industry">Industry Widget</span>
+      <div class="card-title">360° Policyholder Identity</div>
+      <div class="card-desc">Interactive orbit widget cycling 3 policyholders with 5 data nodes (Claims, Telematics, Support, Billing, Behavioral), predictive health pill, animated connectors, and live feed panel.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/insurance-360.html" target="_blank">Open ↗</a>
+        <span class="card-file">insurance-360.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/solutions/insurance/" target="_blank">Insurance</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="industry">
+    <div class="card-preview">
+      <iframe src="/assets/hero-government.html" loading="lazy" title="Government Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('Government Hero', '/assets/hero-government.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-industry">Industry Hero</span>
+      <div class="card-title">Government & Public Sector</div>
+      <div class="card-desc">CitizenConnect portal showing government service tracking, permit status, tax deadlines, and animated notification feed.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-government.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-government.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/" target="_blank">Home</a><a href="/solutions/government/" target="_blank">Government</a></div>
+    </div>
+  </div>
+
+  <!-- ── PLATFORM FEATURE HEROES ── -->
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/ai-telecom-support.html" loading="lazy" title="AI Telecom Support"></iframe>
+      <div class="preview-overlay" onclick="openModal('AI-Powered Telecom Support', '/assets/ai-telecom-support.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Feature</span>
+      <div class="card-title">AI-Powered Telecom Support</div>
+      <div class="card-desc">Autonomous AI triage resolving high-volume service requests in real time, with intelligent diagnostics for complex roaming and connectivity issues and specialist escalation flow.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/ai-telecom-support.html" target="_blank">Open ↗</a>
+        <span class="card-file">ai-telecom-support.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/solutions/telecom/" target="_blank">Telecom</a><a href="/solutions/banking/" target="_blank">Banking</a><a href="/solutions/healthcare/" target="_blank">Healthcare</a><a href="/solutions/fmcg/" target="_blank">FMCG</a><a href="/solutions/government/" target="_blank">Government</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/hero-chatbot.html" loading="lazy" title="AI Chatbot Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('AI & Automation Hero', '/assets/hero-chatbot.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Hero</span>
+      <div class="card-title">AI & Automation</div>
+      <div class="card-desc">Animated AI chatbot conversation sequence with typing indicators, bot responses, and AI Copilot status chip.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-chatbot.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-chatbot.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/ai-automation/" target="_blank">AI Automation</a><a href="/solutions/" target="_blank">Solutions</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/hero-channels.html" loading="lazy" title="Omnichannel Hero"></iframe>
+      <div class="preview-overlay" onclick="openModal('Omnichannel Inbox Hero', '/assets/hero-channels.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Hero</span>
+      <div class="card-title">Omnichannel Inbox</div>
+      <div class="card-desc">8 channel icons (WhatsApp, Facebook, Instagram, X, Gmail, TikTok, Telegram, Messenger) orbiting the KronGage hub with animated SVG connectors.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/hero-channels.html" target="_blank">Open ↗</a>
+        <span class="card-file">hero-channels.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/omnichannel-inbox/" target="_blank">Omnichannel Inbox</a><a href="/solutions/" target="_blank">Solutions</a></div>
+    </div>
+  </div>
+
+  <!-- ── PLATFORM FEATURE DEMOS ── -->
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/inbox-demo.html" loading="lazy" title="Inbox Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Omnichannel Inbox Demo', '/assets/inbox-demo.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Omnichannel Inbox Demo</div>
+      <div class="card-desc">Live inbox interface showing multi-channel conversations, agent assignment, AI routing, and real-time message updates.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/inbox-demo.html" target="_blank">Open ↗</a>
+        <span class="card-file">inbox-demo.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/social-publishing.html" loading="lazy" title="Social Publishing Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Social Publishing Demo', '/assets/social-publishing.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Social Publishing</div>
+      <div class="card-desc">Multi-platform content scheduler showing post composition, channel selection, scheduling queue, and engagement preview.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/social-publishing.html" target="_blank">Open ↗</a>
+        <span class="card-file">social-publishing.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/social-media/" target="_blank">Social Media</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/social-media-mgmt.html" loading="lazy" title="Social Listening Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Social Listening & Monitoring Demo', '/assets/social-media-mgmt.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Social Listening & Monitoring</div>
+      <div class="card-desc">Brand monitoring dashboard with sentiment analysis, mention tracking, competitor benchmarking, and trend alerts.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/social-media-mgmt.html" target="_blank">Open ↗</a>
+        <span class="card-file">social-media-mgmt.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/social-intelligence/" target="_blank">Social Intelligence</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/knowledge-base.html" loading="lazy" title="Knowledge Base Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Knowledge Management & RAG Demo', '/assets/knowledge-base.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Knowledge Management & RAG</div>
+      <div class="card-desc">AI knowledge base interface with RAG-powered search, document management, article editor, and self-service analytics.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/knowledge-base.html" target="_blank">Open ↗</a>
+        <span class="card-file">knowledge-base.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/security-demo.html" loading="lazy" title="Security Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Security & Compliance Demo', '/assets/security-demo.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Security & Compliance</div>
+      <div class="card-desc">Enterprise security dashboard with SSO, MFA controls, role-based access, encryption status, and audit log feed.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/security-demo.html" target="_blank">Open ↗</a>
+        <span class="card-file">security-demo.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/security/" target="_blank">Security</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/analytics-bi.html" loading="lazy" title="Analytics Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Analytics & Business Intelligence Demo', '/assets/analytics-bi.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Analytics & Business Intelligence</div>
+      <div class="card-desc">Comprehensive BI dashboard with live charts, KPI cards, custom report builder, and white-label export controls.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/analytics-bi.html" target="_blank">Open ↗</a>
+        <span class="card-file">analytics-bi.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/analytics/" target="_blank">Analytics</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/campaign-management.html" loading="lazy" title="Campaign Management Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Campaign Management Demo', '/assets/campaign-management.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Campaign Management</div>
+      <div class="card-desc">Journey builder and campaign orchestration tool with drag-and-drop flows, audience targeting, and A/B test results.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/campaign-management.html" target="_blank">Open ↗</a>
+        <span class="card-file">campaign-management.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/campaign-management/" target="_blank">Campaigns</a><a href="/solutions/" target="_blank">Solutions</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/customer-360.html" loading="lazy" title="Customer 360 Demo"></iframe>
+      <div class="preview-overlay" onclick="openModal('Customer 360 Demo', '/assets/customer-360.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Customer 360</div>
+      <div class="card-desc">Unified customer profiles with 360° view, segmentation, timeline activity, journey tracking, and intelligence scores.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/customer-360.html" target="_blank">Open ↗</a>
+        <span class="card-file">customer-360.html</span>
+      </div>
+        <div class="card-used"><span class="card-used-label">Used on:</span><a href="/platform/" target="_blank">Platform</a><a href="/platform/customer-data/" target="_blank">Customer Data</a><a href="/solutions/telecom/" target="_blank">Telecom</a><a href="/solutions/banking/" target="_blank">Banking</a><a href="/solutions/healthcare/" target="_blank">Healthcare</a><a href="/solutions/fmcg/" target="_blank">FMCG</a><a href="/solutions/government/" target="_blank">Government</a></div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/channel-orbit.html" loading="lazy" title="Channel Orbit"></iframe>
+      <div class="preview-overlay" onclick="openModal('Channel Orbit Animation', '/assets/channel-orbit.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Channel Orbit</div>
+      <div class="card-desc">Animated orbit ring showing all supported channels rotating around the KronGage logo — used in the homepage hero.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/channel-orbit.html" target="_blank">Open ↗</a>
+        <span class="card-file">channel-orbit.html</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-tag="platform">
+    <div class="card-preview">
+      <iframe src="/assets/fragmented-tools.html" loading="lazy" title="Fragmented Tools"></iframe>
+      <div class="preview-overlay" onclick="openModal('Fragmented Tools Scene', '/assets/fragmented-tools.html')"></div>
+    </div>
+    <div class="card-body">
+      <span class="card-tag tag-platform">Platform Demo</span>
+      <div class="card-title">Fragmented Tools Scene</div>
+      <div class="card-desc">Animated problem visualisation showing disconnected tools (email, CRM, WhatsApp, X) with siloed data warnings — used in the problem section.</div>
+      <div class="card-footer">
+        <a class="card-open" href="/assets/fragmented-tools.html" target="_blank">Open ↗</a>
+        <span class="card-file">fragmented-tools.html</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalIfBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-file" id="modalFile"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <iframe class="modal-iframe" id="modalIframe" src="" title="Component preview"></iframe>
+  </div>
+</div>
+
+<script>
+  function openModal(title, file) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalFile').textContent = file;
+    document.getElementById('modalIframe').src = file;
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('modalIframe').src = '';
+  }
+  function closeModalIfBg(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+  function filterCards(tag, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.card').forEach(card => {
+      const show = tag === 'all' || card.dataset.tag === tag;
+      card.style.display = show ? 'flex' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Campaign Management</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #EEF5FD; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+    .cm { display: flex; flex-direction: column; width: 100%; max-width: 400px; height: 100vh; padding: 16px; gap: 10px; overflow: hidden; }
+
+    /* ── Team row ── */
+    .cm-team-row { display: flex; gap: 8px; flex-shrink: 0; }
+    .cm-person-chip {
+      flex: 1; background: #fff; border-radius: 12px; padding: 10px 12px;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      cursor: pointer; transition: box-shadow .2s;
+      border: 1.5px solid transparent;
+    }
+    .cm-person-chip:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+    .cm-person-chip.active { border-color: #0D47A1; }
+    .cm-av { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; }
+    .cm-chip-info { min-width: 0; }
+    .cm-chip-name { font-size: 12px; font-weight: 800; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cm-chip-meta { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+    .cm-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .online { background: #4ade80; box-shadow: 0 0 5px rgba(74,222,128,.6); }
+    .offline { background: #94a3b8; }
+    .cm-chip-role { font-size: 10px; color: #64748b; font-weight: 600; }
+
+    /* ── Campaign card ── */
+    .cm-campaign-card {
+      background: #fff; border-radius: 12px; padding: 12px 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06); flex-shrink: 0;
+    }
+    .cm-camp-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-bottom: 5px; }
+    .cm-camp-name { font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
+    .cm-prog-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .cm-prog-label { font-size: 11px; font-weight: 600; color: #64748b; }
+    .cm-prog-pct { font-size: 11px; font-weight: 700; color: #0D47A1; }
+    .cm-prog-track { height: 6px; background: #EEF5FD; border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
+    .cm-prog-fill { height: 100%; background: #0D47A1; border-radius: 3px; }
+    .cm-camp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .cm-chip-tag { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; color: #fff; }
+    .fb { background: #1877F2; } .ig { background: #e1306c; } .em { background: #059669; } .sms { background: #7c3aed; }
+
+    /* ── Activity timeline ── */
+    .cm-activity {
+      flex-shrink: 0;
+      background: #0f172a; border-radius: 16px;
+      padding: 14px 16px;
+    }
+    .cm-act-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .cm-act-title { font-size: 13px; font-weight: 800; color: #fff; }
+    .cm-act-filters { display: flex; gap: 5px; }
+    .cm-af { padding: 4px 9px; border-radius: 5px; font-size: 10px; font-weight: 700; background: rgba(255,255,255,.08); color: rgba(255,255,255,.45); cursor: pointer; border: none; transition: all .2s; }
+    .cm-af.on { background: #0D47A1; color: #fff; }
+
+    .cm-titem { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.05); cursor: pointer; transition: background .15s; border-radius: 5px; }
+    .cm-titem:last-child { border-bottom: none; }
+    .cm-titem:hover { background: rgba(255,255,255,.03); }
+    .cm-titem.expanded { background: rgba(13,71,161,.15); padding-left: 4px; }
+
+    .cm-t-time { font-size: 10px; color: rgba(255,255,255,.3); font-weight: 600; min-width: 44px; text-align: right; flex-shrink: 0; padding-top: 2px; }
+    .cm-t-icon-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .cm-t-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+    .ti-done { background: #0D47A1; color: #fff; }
+    .ti-pend { background: rgba(255,255,255,.12); color: rgba(255,255,255,.4); }
+    .ti-warn { background: #b45309; color: #fff; }
+    .cm-t-vline { width: 1px; flex: 1; background: rgba(255,255,255,.07); margin-top: 4px; min-height: 16px; }
+    .cm-titem:last-child .cm-t-vline { display: none; }
+
+    .cm-t-body { flex: 1; min-width: 0; }
+    .cm-t-title { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .cm-t-title.pending { color: rgba(255,255,255,.5); }
+    .cm-t-sub { font-size: 11px; color: rgba(255,255,255,.35); line-height: 1.4; }
+    .cm-t-expand { margin-top: 8px; background: rgba(255,255,255,.05); border-radius: 7px; padding: 8px 10px; display: none; }
+    .cm-titem.expanded .cm-t-expand { display: block; }
+    .cm-t-expand-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .cm-t-metric-lbl { font-size: 9px; color: rgba(255,255,255,.3); font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
+    .cm-t-metric-val { font-size: 13px; font-weight: 800; color: #60a5fa; }
+  </style>
+</head>
+<body>
+<div class="cm">
+
+  <!-- Team -->
+  <div class="cm-team-row">
+    <div class="cm-person-chip" onclick="selectChip(this)">
+      <div class="cm-av" style="background:linear-gradient(135deg,#7c3aed,#5b21b6)">EM</div>
+      <div class="cm-chip-info">
+        <div class="cm-chip-name">Efua Mensah</div>
+        <div class="cm-chip-meta">
+          <div class="cm-status-dot offline"></div>
+          <span class="cm-chip-role">Lead Strategist</span>
+        </div>
+      </div>
+    </div>
+    <div class="cm-person-chip active" onclick="selectChip(this)">
+      <div class="cm-av" style="background:linear-gradient(135deg,#0D47A1,#1565C0)">KM</div>
+      <div class="cm-chip-info">
+        <div class="cm-chip-name">Kofi Manu</div>
+        <div class="cm-chip-meta">
+          <div class="cm-status-dot online"></div>
+          <span class="cm-chip-role">Campaign Mgr</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campaign -->
+  <div class="cm-campaign-card">
+    <div class="cm-camp-label">Active Campaign</div>
+    <div class="cm-camp-name">Holiday '24 — Q4 Launch</div>
+    <div class="cm-prog-row">
+      <span class="cm-prog-label">Completion</span>
+      <span class="cm-prog-pct">72%</span>
+    </div>
+    <div class="cm-prog-track"><div class="cm-prog-fill" style="width:72%"></div></div>
+    <div class="cm-camp-chips">
+      <span class="cm-chip-tag fb">Facebook</span>
+      <span class="cm-chip-tag ig">Instagram</span>
+      <span class="cm-chip-tag em">Email</span>
+      <span class="cm-chip-tag sms">SMS</span>
+    </div>
+  </div>
+
+  <!-- Activity timeline -->
+  <div class="cm-activity">
+    <div class="cm-act-head">
+      <span class="cm-act-title">Activity</span>
+      <div class="cm-act-filters">
+        <button class="cm-af on" onclick="filterAct(this,'all')">All</button>
+        <button class="cm-af" onclick="filterAct(this,'done')">Done</button>
+        <button class="cm-af" onclick="filterAct(this,'pending')">Pending</button>
+      </div>
+    </div>
+    <div class="cm-timeline" id="timeline"></div>
+  </div>
+
+</div>
+<script>
+  const ACTIVITIES = [
+    { id:4, time:'1d ago', status:'done', title:'Ad set optimization complete', sub:'ROAS: 4.5x · CPA: $8.40', metrics:[{lbl:'ROAS',val:'4.5x'},{lbl:'Daily Spend',val:'$2,000'},{lbl:'CPA',val:'$8.40'}] },
+    { id:5, time:'4h ago', status:'done', title:'Engagement report generated',  sub:'Reach: 150k · CTR: 3.1%', metrics:[{lbl:'Reach',val:'150k'},{lbl:'CTR',val:'3.1%'},{lbl:'Impressions',val:'4.8M'}] },
+  ];
+
+  let activeFilter = 'all', expandedId = null;
+
+  function iconCls(s) { return s==='done'?'ti-done':s==='warn'?'ti-warn':'ti-pend'; }
+  function iconChar(s) { return s==='done'?'✓':s==='warn'?'!':'◯'; }
+
+  function renderTimeline() {
+    const items = activeFilter==='all' ? ACTIVITIES : activeFilter==='done' ? ACTIVITIES.filter(a=>a.status==='done') : ACTIVITIES.filter(a=>a.status!=='done');
+    document.getElementById('timeline').innerHTML = items.map(a => `
+      <div class="cm-titem${expandedId===a.id?' expanded':''}" onclick="toggleExpand(${a.id})">
+        <span class="cm-t-time">${a.time}</span>
+        <div class="cm-t-icon-wrap">
+          <div class="cm-t-icon ${iconCls(a.status)}">${iconChar(a.status)}</div>
+          <div class="cm-t-vline"></div>
+        </div>
+        <div class="cm-t-body">
+          <div class="cm-t-title${a.status!=='done'?' pending':''}">${a.title}</div>
+          ${a.sub?`<div class="cm-t-sub">${a.sub}</div>`:''}
+          <div class="cm-t-expand">
+            <div class="cm-t-expand-row">
+              ${a.metrics.map(m=>`<div><div class="cm-t-metric-lbl">${m.lbl}</div><div class="cm-t-metric-val">${m.val}</div></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function toggleExpand(id) { expandedId = expandedId===id ? null : id; renderTimeline(); }
+  function filterAct(btn, f) { document.querySelectorAll('.cm-af').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); activeFilter=f; renderTimeline(); }
+  function selectChip(el) { document.querySelectorAll('.cm-person-chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
+
+  renderTimeline();
+</script>
+</body>
+</html>
