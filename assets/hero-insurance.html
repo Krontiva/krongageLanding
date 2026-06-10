@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – Insurance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4fa;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      padding: 20px 24px 16px;
+      gap: 10px;
+    }
+
+    /* Header */
+    .hdr {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-shrink: 0;
+    }
+    .hdr-left { display: flex; align-items: center; gap: 9px; }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #16a34a;
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .hdr-title { font-size: 13px; font-weight: 700; color: #1e293b; }
+    .hdr-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+    .hdr-time { font-size: 10px; color: #94a3b8; }
+
+    /* Metric strip */
+    .metric-strip {
+      display: flex; align-items: center;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 9px;
+      padding: 10px 16px;
+      flex-shrink: 0;
+      gap: 0;
+    }
+    .m-item { display: flex; flex-direction: column; }
+    .m-val { font-size: 20px; font-weight: 800; color: #1e293b; line-height: 1; }
+    .m-val .hi { color: #2563EB; }
+    .m-lbl { font-size: 10px; color: #64748b; margin-top: 3px; font-weight: 500; }
+    .m-sep {
+      width: 1px; height: 32px;
+      background: #e2e8f0;
+      margin: 0 16px; flex-shrink: 0;
+    }
+    .m-bar-wrap { flex: 1; }
+    .m-bar-top {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: #64748b; margin-bottom: 5px;
+    }
+    .m-bar-track {
+      height: 5px; background: #e2e8f0;
+      border-radius: 3px; overflow: hidden;
+    }
+    .m-bar-fill {
+      height: 100%; border-radius: 3px;
+      background: linear-gradient(90deg, #1d4ed8, #2563EB);
+      width: 0%;
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* Queue header */
+    .q-hdr {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-shrink: 0;
+    }
+    .q-label {
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .6px;
+      color: #64748b;
+    }
+    .q-count { font-size: 10px; color: #94a3b8; }
+
+    /* Claim rows */
+    .claim {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity .35s ease, transform .35s ease;
+      flex-shrink: 0;
+    }
+    .claim.show { opacity: 1; transform: translateX(0); }
+    .claim.active {
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .claim-main {
+      display: flex; align-items: center;
+      gap: 9px; padding: 10px 13px;
+    }
+
+    .type-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 4px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .type-motor { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+    .type-life  { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+    .type-prop  { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+
+    .claim-id {
+      font-size: 10px; color: #94a3b8;
+      font-variant-numeric: tabular-nums; flex-shrink: 0;
+    }
+    .claim-desc {
+      font-size: 11px; color: #475569;
+      flex: 1; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .claim-time { font-size: 10px; color: #94a3b8; flex-shrink: 0; }
+
+    .status {
+      font-size: 10px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .s-resolved  { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+    .s-escalated { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+    .s-pending   { background: #fefce8; color: #ca8a04; border: 1px solid #fde68a; }
+
+    /* Expandable detail */
+    .claim-expand {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .45s ease;
+    }
+    .claim-expand.open { max-height: 100px; }
+
+    .expand-inner {
+      margin: 0 13px 12px;
+      padding-top: 10px;
+      border-top: 1px solid #e2e8f0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .exp-label {
+      font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .5px;
+      color: #64748b; margin-bottom: 4px;
+    }
+    .exp-text { font-size: 11px; color: #475569; line-height: 1.5; }
+    .exp-text strong { color: #1e293b; font-weight: 600; }
+  
+
+    /* ── MOBILE SCALE ── */
+    html, body { overflow-x: hidden; }
+    @media (max-width: 768px) {
+      html { font-size: 87.5%; }
+    }
+    </style>
+</head>
+<body>
+<div class="panel">
+
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="live-dot"></div>
+      <div>
+        <div class="hdr-title">Claims Triage Queue</div>
+        <div class="hdr-sub">Inbound · Auto-processing enabled</div>
+      </div>
+    </div>
+    <div class="hdr-time">Refreshed just now</div>
+  </div>
+
+  <div class="metric-strip">
+    <div class="m-item">
+      <div class="m-val"><span class="hi">64</span>&thinsp;/&thinsp;89</div>
+      <div class="m-lbl">Auto-resolved today</div>
+    </div>
+    <div class="m-sep"></div>
+    <div class="m-item">
+      <div class="m-val">71<span class="hi">%</span></div>
+      <div class="m-lbl">Resolution rate</div>
+    </div>
+    <div class="m-sep"></div>
+    <div class="m-bar-wrap">
+      <div class="m-bar-top">
+        <span>Auto-resolution progress</span>
+        <span>71%</span>
+      </div>
+      <div class="m-bar-track">
+        <div class="m-bar-fill" id="resBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="q-hdr">
+    <span class="q-label">Live queue</span>
+    <span class="q-count">3 inbound · 2 agents active</span>
+  </div>
+
+  <!-- Claim 1: Motor, Auto-Resolved -->
+  <div class="claim" id="c1">
+    <div class="claim-main">
+      <span class="type-badge type-motor">Motor</span>
+      <span class="claim-id">CLM-240891</span>
+      <span class="claim-desc">Rear collision · Accra–Tema Motorway · vehicle damage est. GH₵ 4,200</span>
+      <span class="claim-time">09:14</span>
+      <span class="status s-resolved">Auto-Resolved</span>
+    </div>
+  </div>
+
+  <!-- Claim 2: Life, Escalated — expands -->
+  <div class="claim" id="c2">
+    <div class="claim-main">
+      <span class="type-badge type-life">Life</span>
+      <span class="claim-id">CLM-240887</span>
+      <span class="claim-desc">Beneficiary dispute · supporting documents uploaded · policy #LF-2024-00187</span>
+      <span class="claim-time">08:52</span>
+      <span class="status s-escalated">Escalated</span>
+    </div>
+    <div class="claim-expand" id="exp2">
+      <div class="expand-inner">
+        <div>
+          <div class="exp-label">Triage summary</div>
+          <div class="exp-text">Beneficiary name mismatch on policy. <strong>3 documents</strong> uploaded; 2 verified, 1 pending. Confidence below auto-resolve threshold.</div>
+        </div>
+        <div>
+          <div class="exp-label">Adjuster handoff</div>
+          <div class="exp-text">Routed to <strong>Senior Adj. Ama K.</strong> — manual identity verification required per SOP-L4 before payout.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Claim 3: Property, Pending Review -->
+  <div class="claim" id="c3">
+    <div class="claim-main">
+      <span class="type-badge type-prop">Property</span>
+      <span class="claim-id">CLM-240903</span>
+      <span class="claim-desc">Storm damage · roof &amp; exterior · Kumasi residential · 3 photos attached</span>
+      <span class="claim-time">09:31</span>
+      <span class="status s-pending">Pending Review</span>
+    </div>
+  </div>
+
+</div>
+<script>
+  function reset() {
+    ['c1','c2','c3'].forEach(function(id) {
+      var el = document.getElementById(id);
+      el.classList.remove('show','active');
+    });
+    document.getElementById('exp2').classList.remove('open');
+    document.getElementById('resBar').style.width = '0%';
+  }
+
+  function play() {
+    setTimeout(function(){ document.getElementById('resBar').style.width = '71%'; }, 300);
+    setTimeout(function(){ document.getElementById('c1').classList.add('show'); }, 500);
+    setTimeout(function(){ document.getElementById('c2').classList.add('show'); }, 900);
+    setTimeout(function(){ document.getElementById('c3').classList.add('show'); }, 1300);
+    setTimeout(function(){
+      document.getElementById('c2').classList.add('active');
+      document.getElementById('exp2').classList.add('open');
+    }, 2100);
+  }
+
+  play();
+  setInterval(function(){ reset(); setTimeout(play, 600); }, 8000);
+</script>
+</body>
+</html>

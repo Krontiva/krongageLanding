@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/Krongage-Logo.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy – KronGage</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; color: inherit; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
+    .nav-links li a { color: #475569; transition: color .2s; }
+    .nav-links li a:hover { color: #0D47A1; }
+    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
+
+    main { flex: 1; max-width: 800px; margin: 0 auto; padding: 60px 24px 80px; width: 100%; }
+    .page-header { margin-bottom: 48px; }
+    .page-header h1 { font-size: 42px; font-weight: 800; color: #0D47A1; margin-bottom: 10px; }
+    .page-header p { font-size: 14px; color: #94a3b8; }
+    .content h2 { font-size: 22px; font-weight: 800; color: #0D47A1; margin: 36px 0 12px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: #0D47A1; margin: 24px 0 8px; }
+    .content p { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 16px; }
+    .content ul { padding-left: 24px; margin-bottom: 16px; }
+    .content ul li { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 6px; }
+
+    footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand .logo { font-size: 22px; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
+    .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
+    .footer-brand .dev-credit { font-size: 12px; color: #475569; margin-bottom: 20px; }
+    .badge-meta { display: inline-flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: 600; color: #94a3b8; }
+    .badge-meta .meta-icon { width: 28px; height: 28px; background: #0D47A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
+    .footer-col ul li a { color: #64748b; transition: color .2s; }
+    .footer-col ul li a:hover { color: #38bdf8; }
+    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 12px; color: #475569; }
+    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
+    .footer-legal a:hover { color: #38bdf8; }
+
+    @media (max-width: 1024px) {
+      footer { padding: 48px 32px 24px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; height: 56px; }
+      .nav-links { display: none; }
+      .btn-nav { display: none; }
+      .nav-toggle { display: flex; }
+      .page-header h1 { font-size: 30px; }
+      footer { padding: 40px 20px 20px; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-brand { grid-column: auto; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  
+
+    /* ── MOBILE SCALE ── */
+    html, body { overflow-x: hidden; }
+    @media (max-width: 768px) {
+      html { font-size: 87.5%; }
+    }
+    </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo"><img src="../Krongage-Logo.png" alt="KronGage" /></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/platform/">Why KronGage?</a></li>
+    <li><a href="/platform/">Platform</a></li>
+    <li><a href="/solutions/">Solutions</a></li>
+    
+  </ul>
+  <a href="/contact/" class="btn-nav">Get Started</a>
+  <button class="nav-toggle" onclick="document.querySelector('.mobile-menu').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu">
+  <a href="/">Home</a><a href="/platform/">Why KronGage?</a><a href="/platform/">Platform</a><a href="/solutions/">Solutions</a>
+  <a href="/contact/" class="btn-nav-mobile">Get Started</a>
+</div>
+
+<main>
+  <div class="page-header">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: May 2025</p>
+  </div>
+  <div class="content">
+    <p>Krontiva Ltd ("we", "our", or "us") operates the KronGage platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.</p>
+
+    <h2>1. Information We Collect</h2>
+    <h3>Information you provide directly</h3>
+    <p>We collect information that you provide when you register for an account, fill out a form, or communicate with us. This may include:</p>
+    <ul>
+      <li>Name, email address, phone number and job title</li>
+      <li>Company name and billing information</li>
+      <li>Content you submit through the platform</li>
+      <li>Customer data you upload or sync to KronGage</li>
+    </ul>
+
+    <h3>Information collected automatically</h3>
+    <p>When you use our platform, we automatically collect certain technical information including IP address, browser type, device identifiers, pages visited, and usage patterns.</p>
+
+    <h2>2. How We Use Your Information</h2>
+    <p>We use the information we collect to provide, maintain, and improve our services, process transactions, send transactional and promotional communications, and comply with legal obligations.</p>
+
+    <h2>3. Data Sharing</h2>
+    <p>We do not sell your personal data. We may share information with trusted third-party service providers who assist us in operating our platform, subject to confidentiality agreements. We may also disclose information when required by law or to protect our rights.</p>
+
+    <h2>4. Data Retention</h2>
+    <p>We retain your personal data for as long as your account is active or as needed to provide our services. You may request deletion of your data at any time by contacting us.</p>
+
+    <h2>5. Security</h2>
+    <p>We implement industry-standard security measures including encryption in transit and at rest, access controls, and regular security audits. KronGage maintains SOC 1 compliance and HIPAA-compatible data handling practices.</p>
+
+    <h2>6. Your Rights</h2>
+    <p>Depending on your jurisdiction, you may have the right to access, correct, delete, or port your personal data. To exercise these rights, contact us at <strong>privacy@krontiva.com</strong>.</p>
+
+    <h2>7. Contact Us</h2>
+    <p>If you have questions about this Privacy Policy, please contact Krontiva Ltd at <strong>privacy@krontiva.com</strong> or via our <a href="/contact/" style="color:#0D47A1;font-weight:700;">Contact page</a>.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">KronGage</div>
+      <p>Enterprise AI Customer Engagement — World-Class Platform</p>
+      <p class="dev-credit">Developed by Krontiva.<br/>Delivering world-class enterprise solutions globally.<br/>Certified Meta WhatsApp Technology Provider.</p>
+      <div class="badge-meta">
+        <div class="meta-icon">f</div>
+        <div>
+          <div style="color:#e2e8f0;font-size:11px;font-weight:700;">Certified Meta</div>
+          <div style="font-size:10px;">WhatsApp Business Partner</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="/platform/">Omnichannel Inbox</a></li>
+        <li><a href="/platform/social-media/">Social Media Management</a></li>
+        <li><a href="/platform/ai-automation/">AI &amp; Automation</a></li>
+        <li><a href="/platform/customer-data/">Customer 360</a></li>
+        <li><a href="/platform/campaign-management/">Campaign Management</a></li>
+        <li><a href="/platform/analytics/">Analytics &amp; BI</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Solutions</h4>
+      <ul>
+        <li><a href="/solutions/banking/">Banking &amp; Finance</a></li>
+        <li><a href="/solutions/telecom/">Telecommunications</a></li>
+        <li><a href="/solutions/fmcg/">FMCG &amp; Retail</a></li>
+        <li><a href="/solutions/healthcare/">Healthcare</a></li>
+        <li><a href="/solutions/insurance/">Insurance</a></li>
+        <li><a href="/solutions/government/">Government</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/platform/">About Krontiva</a></li>
+        <li><a href="/contact/">Contact Us</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+        <li><a href="/terms-of-service/">Terms of Service</a></li>
+        <li><a href="/data-protection/">Data Protection</a></li>
+        <li><a href="/sitemap/">Sitemap</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Krontiva. KronGage is a product of Krontiva Ltd. All Rights Reserved.</p>
+    <div class="footer-legal">
+      <a href="/privacy-policy/">Privacy Policy</a>
+      <a href="/terms-of-service/">Terms of Service</a>
+      <a href="/data-protection/">Data Protection</a>
+      <a href="/sitemap/">Sitemap</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

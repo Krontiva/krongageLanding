@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KronGage – AI-Powered Telecom Support</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #EEF5FD;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .metrics-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 340px;
+    }
+    .metric-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 12px rgba(13,71,161,.08);
+    }
+    .metric-icon {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: #EEF5FD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    .metric-val  { font-size: 20px; font-weight: 900; color: #0D47A1; line-height: 1; }
+    .metric-lbl  { font-size: 10px; color: #64748b; font-weight: 600; margin-top: 3px; line-height: 1.35; }
+    .metric-delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 9px;
+      font-weight: 700;
+      margin-top: 5px;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+    .delta-up   { background: #dcfce7; color: #15803d; }
+    .delta-down { background: #fff7ed; color: #c2410c; }
+
+    .diag-pill {
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 12px rgba(13,71,161,.08);
+    }
+    .diag-title { font-size: 10px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .diag-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .diag-name { font-size: 10px; color: #64748b; }
+    .diag-bar-track {
+      width: 80px;
+      height: 4px;
+      background: #f1f5f9;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .diag-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1.5s cubic-bezier(.4,0,.2,1);
+    }
+  
+
+    /* ── MOBILE SCALE ── */
+    html, body { overflow-x: hidden; }
+    @media (max-width: 768px) {
+      html { font-size: 87.5%; }
+    }
+    </style>
+</head>
+<body>
+
+<div class="metrics-panel">
+  <div class="metric-card">
+    <div class="metric-icon">⚡</div>
+    <div class="metric-val">73%</div>
+    <div class="metric-lbl">Tickets auto-resolved</div>
+    <div class="metric-delta delta-up">↑ 18%</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-icon">🕐</div>
+    <div class="metric-val">38s</div>
+    <div class="metric-lbl">Avg AI resolution</div>
+    <div class="metric-delta delta-up">↓ 4.2 min</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-icon">📡</div>
+    <div class="metric-val" id="roamingCount">0</div>
+    <div class="metric-lbl">Roaming issues detected</div>
+    <div class="metric-delta delta-down">↑ 3 today</div>
+  </div>
+  <div class="diag-pill">
+    <div class="diag-title">Issue Breakdown</div>
+    <div class="diag-row">
+      <span class="diag-name">Roaming</span>
+      <div class="diag-bar-track"><div class="diag-bar-fill" id="db1" style="width:0%;background:#0D47A1"></div></div>
+    </div>
+    <div class="diag-row">
+      <span class="diag-name">Data</span>
+      <div class="diag-bar-track"><div class="diag-bar-fill" id="db2" style="width:0%;background:#42a5f5"></div></div>
+    </div>
+    <div class="diag-row">
+      <span class="diag-name">Billing</span>
+      <div class="diag-bar-track"><div class="diag-bar-fill" id="db3" style="width:0%;background:#7c3aed"></div></div>
+    </div>
+    <div class="diag-row">
+      <span class="diag-name">Calls</span>
+      <div class="diag-bar-track"><div class="diag-bar-fill" id="db4" style="width:0%;background:#f97316"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function countUp(id, target, duration) {
+    let start = 0;
+    const step = target / (duration / 50);
+    const el = document.getElementById(id);
+    const t = setInterval(() => {
+      start = Math.min(start + step, target);
+      el.textContent = Math.floor(start);
+      if (start >= target) clearInterval(t);
+    }, 50);
+  }
+
+  setTimeout(() => { countUp('roamingCount', 47, 1000); }, 400);
+
+  setTimeout(() => {
+    document.getElementById('db1').style.width = '68%';
+    document.getElementById('db2').style.width = '82%';
+    document.getElementById('db3').style.width = '45%';
+    document.getElementById('db4').style.width = '55%';
+  }, 600);
+</script>
+</body>
+</html>
