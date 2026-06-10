@@ -6,11 +6,13 @@ interface Plan {
   id: string;
   name: string;
   monthlyPrice: number | null;
+  annualPrice: number | null;
   currency: string;
 }
 
 interface Props {
   plan: Plan;
+  annual: boolean;
   onClose: () => void;
 }
 
@@ -24,7 +26,7 @@ interface UserForm {
 
 type Step = 'details' | 'paying' | 'success' | 'error';
 
-export default function PaystackCheckout({ plan, onClose }: Props) {
+export default function PaystackCheckout({ plan, annual, onClose }: Props) {
   const [step, setStep] = useState<Step>('details');
   const [form, setForm] = useState<UserForm>({
     firstName: '', lastName: '', email: '', company: '', phone: '',
@@ -32,9 +34,10 @@ export default function PaystackCheckout({ plan, onClose }: Props) {
   const [errors, setErrors] = useState<Partial<UserForm>>({});
   const [serverError, setServerError] = useState('');
 
-  const price = plan.monthlyPrice!;
+  const price = annual ? plan.annualPrice! : plan.monthlyPrice!;
   // Paystack amount in smallest currency unit (cents for USD)
-  const amountInCents = price * 100;
+  // Annual = monthly rate × 12 charged upfront
+  const amountInCents = annual ? price * 12 * 100 : price * 100;
 
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
 
@@ -48,7 +51,7 @@ export default function PaystackCheckout({ plan, onClose }: Props) {
       custom_fields: [
         { display_name: 'Plan', variable_name: 'plan', value: plan.name },
         { display_name: 'Company', variable_name: 'company', value: form.company },
-        { display_name: 'Billing', variable_name: 'billing', value: 'monthly' },
+        { display_name: 'Billing', variable_name: 'billing', value: annual ? 'annual' : 'monthly' },
       ],
     },
   };
@@ -81,7 +84,7 @@ export default function PaystackCheckout({ plan, onClose }: Props) {
           plan: {
             id: plan.id,
             name: plan.name,
-            billing: 'monthly',
+            billing: annual ? 'annual' : 'monthly',
           },
           reference,
           status,
@@ -122,12 +125,18 @@ export default function PaystackCheckout({ plan, onClose }: Props) {
         <div className="bg-[#0D47A1] px-6 py-5 text-white">
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs font-bold uppercase tracking-wider opacity-70">
-              Monthly Plan
+              {annual ? 'Annual Plan' : 'Monthly Plan'}
             </span>
             <button onClick={onClose} className="opacity-60 hover:opacity-100 text-xl leading-none">×</button>
           </div>
           <div className="text-xl font-extrabold">{plan.name} — ${price.toLocaleString()}/mo</div>
-          <div className="text-xs opacity-60 mt-0.5">Billed monthly · Cancel anytime</div>
+          {annual ? (
+            <div className="text-xs opacity-70 mt-0.5">
+              ${(price * 12).toLocaleString()} charged annually · Save 12%
+            </div>
+          ) : (
+            <div className="text-xs opacity-60 mt-0.5">Billed monthly · Cancel anytime</div>
+          )}
         </div>
 
         {/* Body */}
@@ -202,7 +211,12 @@ export default function PaystackCheckout({ plan, onClose }: Props) {
 
               <button type="submit" disabled={step === 'paying'}
                 className="w-full bg-[#0D47A1] text-white font-bold py-3 rounded-xl hover:bg-[#0a3680] transition-colors disabled:opacity-60 text-sm mt-2">
-                {step === 'paying' ? 'Opening Paystack...' : `Pay $${price.toLocaleString()}/mo →`}
+                {step === 'paying'
+                  ? 'Opening Paystack...'
+                  : annual
+                    ? `Pay $${(price * 12).toLocaleString()}/yr →`
+                    : `Pay $${price.toLocaleString()}/mo →`
+                }
               </button>
 
               <p className="text-xs text-slate-400 text-center">

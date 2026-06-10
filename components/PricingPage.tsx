@@ -10,6 +10,7 @@ const PLANS = [
     name: 'Free',
     tagline: 'Get started at no cost',
     monthlyPrice: 0,
+    annualPrice: 0,
     currency: 'USD',
     color: '#64748b',
     badge: null,
@@ -34,6 +35,7 @@ const PLANS = [
     name: 'Growth',
     tagline: 'For growing teams',
     monthlyPrice: 5000,
+    annualPrice: 4400,   // 12% off → $4,400/mo billed annually
     currency: 'USD',
     color: '#0D47A1',
     badge: 'Most Popular',
@@ -59,6 +61,7 @@ const PLANS = [
     name: 'Professional',
     tagline: 'For established businesses',
     monthlyPrice: 6000,
+    annualPrice: 5280,   // 12% off → $5,280/mo billed annually
     currency: 'USD',
     color: '#7c3aed',
     badge: null,
@@ -84,6 +87,7 @@ const PLANS = [
     name: 'Enterprise',
     tagline: 'On-prem for large organisations',
     monthlyPrice: null,
+    annualPrice: null,
     currency: 'USD',
     color: '#0f172a',
     badge: 'On-Premise',
@@ -107,6 +111,7 @@ const PLANS = [
 ];
 
 export default function PricingPage() {
+  const [annual, setAnnual] = useState(false);
   const [checkoutPlan, setCheckoutPlan] = useState<typeof PLANS[0] | null>(null);
 
   return (
@@ -120,9 +125,30 @@ export default function PricingPage() {
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
           Plans that grow<br />with your team
         </h1>
-        <p className="text-slate-500 text-lg max-w-xl mx-auto">
+        <p className="text-slate-500 text-lg max-w-xl mx-auto mb-10">
           Start free. Scale as you grow. Billed monthly via Paystack.
         </p>
+
+        {/* Billing toggle */}
+        <div className="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full p-1.5 shadow-sm">
+          <button
+            onClick={() => setAnnual(false)}
+            className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${
+              !annual ? 'bg-[#0D47A1] text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            }`}>
+            Monthly
+          </button>
+          <button
+            onClick={() => setAnnual(true)}
+            className={`px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${
+              annual ? 'bg-[#0D47A1] text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            }`}>
+            Annual
+            <span className={`text-xs px-2 py-0.5 rounded-full font-bold transition-all ${
+              annual ? 'bg-white/20 text-white' : 'bg-green-100 text-green-700'
+            }`}>Save 12%</span>
+          </button>
+        </div>
       </section>
 
       {/* Cards */}
@@ -155,12 +181,19 @@ export default function PricingPage() {
                   ) : plan.free ? (
                     <div className="text-3xl font-extrabold text-slate-900">Free</div>
                   ) : (
-                    <div className="flex items-end gap-1">
-                      <span className="text-3xl font-extrabold text-slate-900">
-                        ${plan.monthlyPrice!.toLocaleString()}
-                      </span>
-                      <span className="text-slate-400 text-sm mb-1">/mo</span>
-                    </div>
+                    <>
+                      <div className="flex items-end gap-1">
+                        <span className="text-3xl font-extrabold text-slate-900">
+                          ${(annual ? plan.annualPrice! : plan.monthlyPrice!).toLocaleString()}
+                        </span>
+                        <span className="text-slate-400 text-sm mb-1">/mo</span>
+                      </div>
+                      {annual && (
+                        <div className="text-xs text-green-600 font-semibold mt-1">
+                          ${(plan.annualPrice! * 12).toLocaleString()}/yr · billed annually
+                        </div>
+                      )}
+                    </>
                   )}
 
                   <div className="text-xs text-slate-400 mt-1.5">{plan.deployment}</div>
@@ -266,6 +299,7 @@ export default function PricingPage() {
       {checkoutPlan && (
         <PaystackCheckout
           plan={checkoutPlan}
+          annual={annual}
           onClose={() => setCheckoutPlan(null)}
         />
       )}
