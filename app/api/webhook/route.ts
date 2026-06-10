@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { buildSecureHeaders } from '@/src/lib/webhook-security';
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,31 +10,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'WEBHOOK_URL not configured' }, { status: 500 });
     }
 
-    // Forward the full payload to your server
+    // Build the canonical payload we'll forward to your server
+    const payload = JSON.stringify({
+      user: body.user,          // { firstName, lastName, email, company, phone }
+      plan: body.plan,          // { id, name, billing }
+      paystack: {
+        reference: body.reference,
+        status:    body.status,
+        amount:    body.amount,
+        currency:  body.currency,
+      },
+      timestamp: new Date().toISOString(),
+      source: 'krongage-web',
+    });
+
+    // Build HMAC-signed headers (X-KronGage-Signature + X-KronGage-Timestamp)
+    const headers = buildSecureHeaders(payload);
+
     const response = await fetch(webhookUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // Optional auth header if your server requires it
-        ...(process.env.WEBHOOK_SECRET
-          ? { 'X-Webhook-Secret': process.env.WEBHOOK_SECRET }
-          : {}),
-      },
-      body: JSON.stringify({
-        // User & plan details
-        user: body.user,
-        plan: body.plan,
-        billing: body.billing,
-        // Paystack transaction reference
-        paystack: {
-          reference: body.reference,
-          status: body.status,
-          amount: body.amount,
-          currency: body.currency,
-        },
-        timestamp: new Date().toISOString(),
-        source: 'krongage-web',
-      }),
+      headers,
+      body: payload,
     });
 
     if (!response.ok) {

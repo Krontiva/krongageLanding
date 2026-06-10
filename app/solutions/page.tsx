@@ -1,0 +1,557 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Solutions – KronGage',
+  description: 'KronGage – Unified Customer Engagement Platform',
+};
+
+export default function Page() {
+  return (
+    <>
+      <style>{`
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 200; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
+    .nav-links li a { color: #475569; transition: color .2s; }
+    .nav-links li a:hover { color: #0D47A1; }
+    .nav-links .active a { color: #0D47A1; }
+    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
+
+    /* ── MEGA MENU ── */
+    .nav-links li { position: relative; }
+    .nav-links li > a { display: flex; align-items: center; gap: 4px; padding: 8px 0; }
+    .nav-links li.has-mega > a::after { content: ''; display: inline-block; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid currentColor; margin-left: 2px; transition: transform .2s; }
+    .nav-links li.has-mega.is-open > a::after { transform: rotate(180deg); }
+    .mega-menu { display: none; position: fixed; top: 68px; left: 0; width: 100vw; background: #fff; border-top: 2px solid #0D47A1; box-shadow: 0 20px 60px rgba(0,0,0,.12); z-index: 199; padding: 36px 60px 40px; }
+    .nav-links li.has-mega.is-open .mega-menu { display: block; }
+    .mega-inner { display: grid; max-width: 1100px; margin: 0 auto; gap: 48px; }
+    .mega-inner.cols-3 { grid-template-columns: 1.6fr 1fr 1fr; }
+    .mega-inner.cols-2b { grid-template-columns: 1fr 1.4fr; }
+    .mega-col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 18px; }
+    .mega-brand-head { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+    .mega-brand-sub { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
+    .mega-brand-link { font-size: 13px; font-weight: 700; color: #0D47A1; }
+    .mega-feature-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .mega-feature-row:last-child { border-bottom: none; }
+    .mega-feat-icon { width: 34px; height: 34px; background: #EEF5FD; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+    .mega-feat-text strong { display: block; font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+    .mega-feat-text span { font-size: 12px; color: #64748b; }
+    .mega-channel-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
+    .mega-channel-row:last-child { border-bottom: none; }
+    .mega-channel-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #0D47A1; }
+    .mega-view-all { font-size: 13px; font-weight: 700; color: #0D47A1; margin-top: 4px; display: inline-block; }
+    .mega-how-card { background: #EEF5FD; border-radius: 10px; padding: 14px; margin-top: 16px; display: flex; gap: 12px; align-items: flex-start; }
+    .mega-how-icon { width: 38px; height: 38px; background: #0D47A1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .mega-how-text strong { font-size: 13px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 4px; }
+    .mega-how-text span { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .mega-industry-list { list-style: none; }
+    .mega-industry-list li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
+    .mega-industry-list li:last-child { border-bottom: none; }
+    .mega-ind-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #0D47A1; }
+    .mega-use-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
+    .mega-use-row:last-child { border-bottom: none; }
+    .mega-article-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
+    .mega-article-sub { font-size: 12px; color: #64748b; line-height: 1.6; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #0D47A1 60%, #1565C0 100%);
+      padding: 80px 60px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 0h40v40H0zM40 40h40v40H40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+    .hero-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px; }
+    .hero h1 { font-size: 56px; font-weight: 800; color: #fff; line-height: 1.08; max-width: 680px; margin-bottom: 20px; letter-spacing: -1px; }
+    .hero h1 em { font-style: normal; color: #93c5fd; }
+    .hero-sub { font-size: 18px; color: rgba(255,255,255,.7); max-width: 540px; line-height: 1.65; margin-bottom: 40px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 60px; }
+    .btn-white { background: #fff; color: #0D47A1; padding: 13px 28px; border-radius: 50px; font-size: 15px; font-weight: 700; transition: opacity .2s; }
+    .btn-white:hover { opacity: .9; }
+    .btn-ghost { border: 2px solid rgba(255,255,255,.35); color: #fff; padding: 11px 26px; border-radius: 50px; font-size: 15px; font-weight: 700; transition: background .2s; }
+    .btn-ghost:hover { background: rgba(255,255,255,.1); }
+
+    /* Industry pill selector in hero */
+    .hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.8);
+      padding: 8px 16px; border-radius: 50px;
+      font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+    }
+    .hero-pill:hover, .hero-pill.active {
+      background: #fff; color: #0D47A1; border-color: #fff;
+    }
+    .hero-pill-icon { font-size: 15px; }
+
+    /* ── INDUSTRY CARDS GRID ── */
+    .industries { padding: 80px 60px; background: #fff; }
+    .industries-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 12px; font-weight: 700; color: #0D47A1; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+    .section-heading { font-size: 36px; font-weight: 800; color: #0f172a; max-width: 560px; line-height: 1.2; margin-bottom: 48px; }
+    .ind-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .ind-card {
+      position: relative; border-radius: 20px; overflow: hidden;
+      border: 1px solid #e2e8f0; background: #f8fafc;
+      transition: transform .25s, box-shadow .25s;
+      cursor: pointer;
+    }
+    .ind-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(13,71,161,.12); }
+    .ind-card-body { padding: 32px 28px 28px; }
+    .ind-icon-wrap {
+      width: 56px; height: 56px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 20px;
+    }
+    .ind-card h3 { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
+    .ind-card p { font-size: 14px; color: #64748b; line-height: 1.65; margin-bottom: 20px; }
+    .ind-stat {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 700; color: #0D47A1;
+      background: #EEF5FD; padding: 4px 12px; border-radius: 20px;
+    }
+    .ind-card-footer {
+      border-top: 1px solid #e2e8f0; padding: 14px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13px; font-weight: 700; color: #0D47A1;
+      background: #fff;
+    }
+    .ind-card:hover .ind-card-footer { background: #0D47A1; color: #fff; }
+    .ind-card:hover .ind-card-footer .ind-arrow { transform: translateX(4px); }
+    .ind-arrow { transition: transform .2s; }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      background: linear-gradient(135deg, #0f172a 0%, #0D47A1 100%);
+      padding: 64px 60px;
+    }
+    .stats-strip-inner { max-width: 1100px; margin: 0 auto; }
+    .stats-strip-head { text-align: center; margin-bottom: 48px; }
+    .stats-strip-head h2 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .stats-strip-head p { font-size: 15px; color: rgba(255,255,255,.6); }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+    .stat-item {
+      text-align: center; padding: 32px 24px;
+      background: rgba(255,255,255,.06);
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-size: 52px; font-weight: 900; color: #fff;
+      line-height: 1; margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-num span { font-size: 32px; color: #93c5fd; }
+    .stat-desc { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 600; line-height: 1.5; max-width: 160px; margin: 0 auto; }
+
+    /* ── PLATFORM TABS ── */
+    .platform-tabs { padding: 80px 60px; background: #f8fafc; }
+    .platform-tabs-inner { max-width: 1100px; margin: 0 auto; }
+    .pt-layout { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: start; }
+    .pt-nav { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 88px; }
+    .pt-tab {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; border-radius: 12px;
+      font-size: 14px; font-weight: 700; color: #64748b;
+      cursor: pointer; transition: all .2s; border: 1px solid transparent;
+    }
+    .pt-tab:hover { background: #fff; color: #0f172a; }
+    .pt-tab.active {
+      background: #fff; color: #0D47A1;
+      border-color: #e2e8f0;
+      box-shadow: 0 2px 12px rgba(13,71,161,.08);
+    }
+    .pt-tab-icon {
+      width: 36px; height: 36px; border-radius: 9px; background: #EEF5FD;
+      display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .pt-tab.active .pt-tab-icon { background: #0D47A1; }
+    .pt-panel { display: none; }
+    .pt-panel.active { display: block; }
+    .pt-panel-head { margin-bottom: 28px; }
+    .pt-panel-head h3 { font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
+    .pt-panel-head p { font-size: 15px; color: #64748b; line-height: 1.7; }
+    .pt-iframe-wrap {
+      border-radius: 20px; overflow: hidden;
+      height: 420px; box-shadow: 0 16px 48px rgba(13,71,161,.12);
+      border: 1px solid #e2e8f0; margin-bottom: 24px;
+    }
+    .pt-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+    .pt-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .pt-feat {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #fff; border-radius: 12px; padding: 14px 16px;
+      border: 1px solid #e2e8f0;
+    }
+    .pt-feat-dot { width: 8px; height: 8px; border-radius: 50%; background: #0D47A1; margin-top: 5px; flex-shrink: 0; }
+    .pt-feat span { font-size: 13px; font-weight: 600; color: #374151; line-height: 1.45; }
+
+    /* ── CTA ── */
+    .cta { padding: 100px 60px; background: #fff; }
+    .cta-inner {
+      max-width: 1100px; margin: 0 auto;
+      background: linear-gradient(135deg, #0f172a 0%, #0D47A1 60%, #1565C0 100%);
+      border-radius: 28px; padding: 72px 80px;
+      display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-inner::before {
+      content: '';
+      position: absolute; right: -60px; top: -60px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      pointer-events: none;
+    }
+    .cta-inner::after {
+      content: '';
+      position: absolute; right: 60px; bottom: -80px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(255,255,255,.03);
+      pointer-events: none;
+    }
+    .cta-text h2 { font-size: 36px; font-weight: 800; color: #fff; margin-bottom: 14px; line-height: 1.2; }
+    .cta-text p { font-size: 16px; color: rgba(255,255,255,.7); line-height: 1.65; max-width: 500px; }
+    .cta-actions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+    .btn-cta-primary { background: #fff; color: #0D47A1; padding: 14px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; text-align: center; white-space: nowrap; transition: opacity .2s; }
+    .btn-cta-primary:hover { opacity: .9; }
+    .btn-cta-ghost { border: 2px solid rgba(255,255,255,.35); color: #fff; padding: 12px 28px; border-radius: 50px; font-size: 15px; font-weight: 700; text-align: center; white-space: nowrap; transition: background .2s; }
+    .btn-cta-ghost:hover { background: rgba(255,255,255,.1); }
+
+    /* ── FOOTER ── */
+    footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand .logo { font-size: 22px; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
+    .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
+    .footer-brand .dev-credit { font-size: 12px; color: #475569; margin-bottom: 20px; }
+    .badge-meta { display: inline-flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: 600; color: #94a3b8; }
+    .badge-meta .meta-icon { width: 28px; height: 28px; background: #0D47A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
+    .footer-col ul li a { color: #64748b; transition: color .2s; }
+    .footer-col ul li a:hover { color: #38bdf8; }
+    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 12px; color: #475569; }
+    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
+    .footer-legal a:hover { color: #38bdf8; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      nav { padding: 0 32px; }
+      .hero { padding: 64px 32px 80px; }
+      .hero h1 { font-size: 42px; }
+      .industries { padding: 64px 32px; }
+      .ind-grid { grid-template-columns: 1fr 1fr; }
+      .stats-strip { padding: 56px 32px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); }
+      .stat-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.08); }
+      .stat-item:nth-last-child(-n+2) { border-bottom: none; }
+      .platform-tabs { padding: 64px 32px; }
+      .pt-layout { grid-template-columns: 1fr; }
+      .pt-nav { flex-direction: row; flex-wrap: wrap; position: static; }
+      .cta { padding: 64px 32px; }
+      .cta-inner { padding: 48px; grid-template-columns: 1fr; }
+      .cta-actions { flex-direction: row; }
+      footer { padding: 48px 32px 24px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; height: 56px; }
+      .nav-links, .btn-nav { display: none; }
+      .nav-toggle { display: flex; }
+      .hero { padding: 48px 20px 64px; }
+      .hero h1 { font-size: 30px; }
+      .hero-sub { font-size: 15px; }
+      .industries { padding: 48px 20px; }
+      .ind-grid { grid-template-columns: 1fr; }
+      .stats-strip { padding: 48px 20px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .platform-tabs { padding: 48px 20px; }
+      .pt-features { grid-template-columns: 1fr; }
+      .cta { padding: 40px 20px; }
+      .cta-inner { padding: 36px 28px; }
+      .cta-actions { flex-direction: column; }
+      .cta-text h2 { font-size: 26px; }
+      footer { padding: 40px 20px 20px; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-brand { grid-column: auto; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  
+      `}</style>
+{/* ── HERO ── */}
+<section className="hero">
+  <div className="hero-inner">
+    <div className="hero-label">Industry Solutions</div>
+    <h1>Built for the Industries<br />That <em>Run the World</em></h1>
+    <p className="hero-sub">KronGage delivers tailored customer engagement for every major vertical — from regulated banking environments to high-volume telecoms and public sector services.</p>
+    <div className="hero-btns">
+      <a href="/contact/" className="btn-white">Talk to a Specialist</a>
+      <a href="#industries" className="btn-ghost">Explore Industries</a>
+    </div>
+    <div className="hero-pills">
+      <div className="hero-pill active"><span className="hero-pill-icon">🏦</span>Banking</div>
+      <div className="hero-pill"><span className="hero-pill-icon">📡</span>Telecom</div>
+      <div className="hero-pill"><span className="hero-pill-icon">🛒</span>FMCG &amp; Retail</div>
+      <div className="hero-pill"><span className="hero-pill-icon">🏥</span>Healthcare</div>
+      <div className="hero-pill"><span className="hero-pill-icon">🛡️</span>Insurance</div>
+      <div className="hero-pill"><span className="hero-pill-icon">🏛️</span>Government</div>
+    </div>
+  </div>
+</section>
+
+{/* ── INDUSTRY CARDS ── */}
+<section className="industries" id="industries">
+  <div className="industries-inner">
+    <div className="section-label">Verticals We Serve</div>
+    <h2 className="section-heading">Deep expertise across six industries</h2>
+    <div className="ind-grid">
+
+      <a href="/solutions/banking/" className="ind-card">
+        <div className="ind-card-body">
+          <div className="ind-icon-wrap" style={{background:"#EEF5FD"}}>🏦</div>
+          <h3>Banking &amp; Finance</h3>
+          <p>Unify customer relationships across retail, SME, and corporate banking with compliant, contextual engagement at every touchpoint.</p>
+          <span className="ind-stat">↑ 34% retention improvement</span>
+        </div>
+        <div className="ind-card-footer">
+          Explore Banking <span className="ind-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="/solutions/telecom/" className="ind-card">
+        <div className="ind-card-body">
+          <div className="ind-icon-wrap" style={{background:"#f0fdf4"}}>📡</div>
+          <h3>Telecommunications</h3>
+          <p>Reduce churn, drive upsell, and manage high-volume customer interactions across prepaid, postpaid, and enterprise segments.</p>
+          <span className="ind-stat">↓ 70% response time</span>
+        </div>
+        <div className="ind-card-footer">
+          Explore Telecom <span className="ind-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="/solutions/fmcg/" className="ind-card">
+        <div className="ind-card-body">
+          <div className="ind-icon-wrap" style={{background:"#fef9c3"}}>🛒</div>
+          <h3>FMCG &amp; Retail</h3>
+          <p>Drive loyalty, personalise promotions, and close the loop between digital campaigns and in-store or e-commerce purchases.</p>
+          <span className="ind-stat">3× campaign ROI</span>
+        </div>
+        <div className="ind-card-footer">
+          Explore FMCG <span className="ind-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="/solutions/healthcare/" className="ind-card">
+        <div className="ind-card-body">
+          <div className="ind-icon-wrap" style={{background:"#fdf2f8"}}>🏥</div>
+          <h3>Healthcare</h3>
+          <p>Improve patient outcomes with secure, HIPAA-aware communication across appointment reminders, care follow-ups, and chronic disease management.</p>
+          <span className="ind-stat">↑ 28% patient engagement</span>
+        </div>
+        <div className="ind-card-footer">
+          Explore Healthcare <span className="ind-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="/solutions/insurance/" className="ind-card">
+        <div className="ind-card-body">
+          <div className="ind-icon-wrap" style={{background:"#f0f9ff"}}>🛡️</div>
+          <h3>Insurance</h3>
+          <p>Accelerate claims resolution, reduce policyholder churn, and personalise renewal campaigns with AI-driven engagement workflows.</p>
+          <span className="ind-stat">↑ 22% renewal rate</span>
+        </div>
+        <div className="ind-card-footer">
+          Explore Insurance <span className="ind-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="/solutions/government/" className="ind-card">
+        <div className="ind-card-body">
+          <div className="ind-icon-wrap" style={{background:"#faf5ff"}}>🏛️</div>
+          <h3>Government &amp; Public Sector</h3>
+          <p>Deliver citizen services at scale across WhatsApp, SMS, and digital portals — with full audit trails and compliance built in.</p>
+          <span className="ind-stat">5× citizen reach</span>
+        </div>
+        <div className="ind-card-footer">
+          Explore Government <span className="ind-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+{/* ── STATS STRIP ── */}
+<section className="stats-strip">
+  <div className="stats-strip-inner">
+    <div className="stats-strip-head">
+      <h2>Measurable impact across every industry</h2>
+      <p>Average outcomes reported by KronGage customers in the first 12 months</p>
+    </div>
+    <div className="stats-row">
+      <div className="stat-item">
+        <div className="stat-num" data-target="3" data-suffix="×">0<span>×</span></div>
+        <div className="stat-desc">More conversations handled per agent with AI Copilot</div>
+      </div>
+      <div className="stat-item">
+        <div className="stat-num" data-target="25" data-suffix="%">0<span>%</span></div>
+        <div className="stat-desc">Increase in customer satisfaction scores</div>
+      </div>
+      <div className="stat-item">
+        <div className="stat-num" data-target="70" data-suffix="%">0<span>%</span></div>
+        <div className="stat-desc">Reduction in average response time</div>
+      </div>
+      <div className="stat-item">
+        <div className="stat-num" data-target="5" data-suffix="×">0<span>×</span></div>
+        <div className="stat-desc">More channels served from a single platform</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ── PLATFORM PREVIEW TABS ── */}
+<section className="platform-tabs">
+  <div className="platform-tabs-inner">
+    <div className="section-label">One Platform</div>
+    <h2 className="section-heading" style={{marginBottom:"40px"}}>The same platform.<br />Tuned for your industry.</h2>
+    <div className="pt-layout">
+
+      {/* Tab nav */}
+      <div className="pt-nav">
+        <div className="pt-tab active" data-tab="customer360">
+          <div className="pt-tab-icon">👥</div>
+          Customer 360
+        </div>
+        <div className="pt-tab" data-tab="inbox">
+          <div className="pt-tab-icon">📥</div>
+          Omnichannel Inbox
+        </div>
+        <div className="pt-tab" data-tab="campaigns">
+          <div className="pt-tab-icon">📣</div>
+          Campaign Management
+        </div>
+        <div className="pt-tab" data-tab="ai">
+          <div className="pt-tab-icon">🤖</div>
+          AI &amp; Automation
+        </div>
+      </div>
+
+      {/* Panels */}
+      <div>
+
+        <div className="pt-panel active" id="panel-customer360">
+          <div className="pt-panel-head">
+            <h3>A complete picture of every customer</h3>
+            <p>Regardless of which industry you operate in, KronGage gives your teams a single, continuously updated profile for every customer — combining transactional, behavioural, and communication data in one place.</p>
+          </div>
+          <div className="pt-iframe-wrap">
+            <iframe src="/assets/customer-360.html" title="Customer 360"></iframe>
+          </div>
+          <div className="pt-features">
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Unified customer timeline across all channels</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>AI-powered engagement &amp; loyalty scoring</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Preferred channel detection &amp; enforcement</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Next Best Action recommendations</span></div>
+          </div>
+        </div>
+
+        <div className="pt-panel" id="panel-inbox">
+          <div className="pt-panel-head">
+            <h3>Every channel. One inbox.</h3>
+            <p>WhatsApp, Email, SMS, Instagram, Facebook, X — all routed into a single intelligent inbox with full customer context. Your agents never switch tools. Your customers never repeat themselves.</p>
+          </div>
+          <div className="pt-iframe-wrap">
+            <iframe src="/assets/hero-channels.html" title="Omnichannel Inbox"></iframe>
+          </div>
+          <div className="pt-features">
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>8+ channels in a unified agent workspace</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Smart routing by skill, language, and priority</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>AI-suggested replies with customer context</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>SLA tracking and escalation workflows</span></div>
+          </div>
+        </div>
+
+        <div className="pt-panel" id="panel-campaigns">
+          <div className="pt-panel-head">
+            <h3>Campaigns that reach, convert, and retain</h3>
+            <p>Build multi-step journeys across SMS, WhatsApp, and email. Trigger based on behaviour, lifecycle stage, or custom events — and measure every outcome in real time.</p>
+          </div>
+          <div className="pt-iframe-wrap">
+            <iframe src="/assets/campaign-management.html" title="Campaign Management"></iframe>
+          </div>
+          <div className="pt-features">
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Visual journey builder with branching logic</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Behavioural and event-based triggers</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>A/B testing across message variants</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Real-time delivery and conversion tracking</span></div>
+          </div>
+        </div>
+
+        <div className="pt-panel" id="panel-ai">
+          <div className="pt-panel-head">
+            <h3>AI that works around the clock</h3>
+            <p>Automate tier-1 queries, draft contextual replies, detect intent, and escalate complex cases — all without losing the human touch your customers expect.</p>
+          </div>
+          <div className="pt-iframe-wrap">
+            <iframe src="/assets/hero-chatbot.html" title="AI Automation"></iframe>
+          </div>
+          <div className="pt-features">
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>AI agents for 24/7 tier-1 resolution</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Contextual reply suggestions for human agents</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Intent detection and smart escalation</span></div>
+            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Multilingual support across all channels</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ── CTA ── */}
+<section className="cta">
+  <div className="cta-inner">
+    <div className="cta-text">
+      <h2>Ready to see KronGage in your industry?</h2>
+      <p>Talk to one of our industry specialists and see how KronGage is already transforming customer engagement for organisations like yours across Africa, the Middle East, and beyond.</p>
+    </div>
+    <div className="cta-actions">
+      <a href="/contact/" className="btn-cta-primary">Book a Demo</a>
+      <a href="/platform/" className="btn-cta-ghost">Explore Platform</a>
+    </div>
+  </div>
+</section>
+
+{/* ── FOOTER ── */}
+    </>
+  );
+}
