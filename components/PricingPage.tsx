@@ -6,7 +6,7 @@ const PaystackCheckout = dynamic(() => import('./PaystackCheckout'), { ssr: fals
 
 const PLANS = [
   {
-    id: 'free',
+    id: 'starter',
     name: 'Free',
     tagline: 'Get started at no cost',
     monthlyPrice: 0,

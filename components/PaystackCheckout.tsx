@@ -48,10 +48,16 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
     publicKey,
     currency: 'USD',
     metadata: {
+      // All user + plan fields embedded so the server-side Paystack webhook
+      // can reconstruct the full payload without relying on the client callback.
       custom_fields: [
-        { display_name: 'Plan', variable_name: 'plan', value: plan.name },
-        { display_name: 'Company', variable_name: 'company', value: form.company },
-        { display_name: 'Billing', variable_name: 'billing', value: annual ? 'annual' : 'monthly' },
+        { display_name: 'First Name',  variable_name: 'first_name',  value: form.firstName },
+        { display_name: 'Last Name',   variable_name: 'last_name',   value: form.lastName },
+        { display_name: 'Company',     variable_name: 'company',     value: form.company },
+        { display_name: 'Phone',       variable_name: 'phone',       value: form.phone },
+        { display_name: 'Plan ID',     variable_name: 'plan_id',     value: plan.id },
+        { display_name: 'Plan Name',   variable_name: 'plan_name',   value: plan.name },
+        { display_name: 'Billing',     variable_name: 'billing',     value: annual ? 'annual' : 'monthly' },
       ],
     },
   };
@@ -88,7 +94,7 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
           },
           reference,
           status,
-          amount: price,
+          amount: amountInCents,   // cents, per canonical spec (500000 = $5,000)
           currency: plan.currency,
         }),
       });
