@@ -77,6 +77,13 @@
     html, body { overflow-x: hidden; }
     @media (max-width: 768px) {
       html { font-size: 87.5%; }
+      img, video, iframe { max-width: 100%; }
+      body { overflow-x: hidden; }
+      .ib {
+        width: 100% !important;
+        min-width: unset !important;
+        overflow-x: hidden !important;
+      }
     }
     </style>
 </head>

@@ -279,6 +279,23 @@
     html, body { overflow-x: hidden; }
     @media (max-width: 768px) {
       html { font-size: 87.5%; }
+      img, video, iframe { max-width: 100%; }
+    }
+    @media (max-width: 768px) {
+      .feat-visual-iframe,
+      .hero-visual,
+      [class*="visual"],
+      [class*="demo"],
+      [class*="component"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+      }
+      .feat-visual-iframe iframe,
+      .hero-visual iframe {
+        width: 100% !important;
+        height: 100% !important;
+      }
     }
     </style>
 </head>

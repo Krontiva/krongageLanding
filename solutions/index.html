@@ -306,6 +306,19 @@
     html, body { overflow-x: hidden; }
     @media (max-width: 768px) {
       html { font-size: 87.5%; }
+      img, video, iframe { max-width: 100%; }
+      .pt-iframe-wrap,
+      [class*="visual"],
+      [class*="demo"],
+      [class*="component"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+      }
+      .pt-iframe-wrap iframe {
+        width: 100% !important;
+        height: 100% !important;
+      }
     }
     </style>
 </head>
