@@ -495,11 +495,25 @@
     @media (max-width: 768px) {
       html { font-size: 87.5%; }
       img, video, iframe { max-width: 100%; }
-      body { overflow-x: hidden; }
+    }
+    /* Scale the full dashboard shell down to fit the mobile viewport.
+       This preserves the exact desktop layout as a miniature preview. */
+    @media (max-width: 640px) {
+      html, body { overflow: hidden; height: 100vh; width: 100%; }
       .kd {
-        width: 100% !important;
+        transform: scale(0.55);
+        transform-origin: top left;
+        width: calc(100% / 0.55) !important;
+        height: calc(100vh / 0.55) !important;
         min-width: unset !important;
-        overflow-x: hidden !important;
+        overflow: hidden !important;
+      }
+    }
+    @media (max-width: 390px) {
+      .kd {
+        transform: scale(0.48);
+        width: calc(100% / 0.48) !important;
+        height: calc(100vh / 0.48) !important;
       }
     }
     </style>
