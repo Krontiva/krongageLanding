@@ -3,25 +3,32 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const PLATFORM_LINKS = [
-  { label: 'Platform Overview', href: '/platform', desc: 'The full KronGage platform' },
-  { label: 'Customer Data', href: '/platform/customer-data', desc: 'Unified profiles & 360° view' },
-  { label: 'Omnichannel Inbox', href: '/platform/omnichannel-inbox', desc: 'Every channel, one inbox' },
-  { label: 'Campaign Management', href: '/platform/campaign-management', desc: 'Automated campaign flows' },
-  { label: 'AI & Automation', href: '/platform/ai-automation', desc: 'Autonomous AI agents' },
-  { label: 'Analytics', href: '/platform/analytics', desc: 'Real-time BI dashboards' },
-  { label: 'Social Intelligence', href: '/platform/social-intelligence', desc: 'Listening & monitoring' },
-  { label: 'Social Media', href: '/platform/social-media', desc: 'Publishing & scheduling' },
-  { label: 'Security', href: '/platform/security', desc: 'Enterprise-grade compliance' },
+const PLATFORM_OVERVIEW = [
+  { label: 'Customer 360', href: '/platform/customer-data', desc: 'Know who your customer is regardless of the touch point or channel.', icon: '👥' },
+  { label: 'Omnichannel Inbox', href: '/platform/omnichannel-inbox', desc: 'Send all messages from one place.', icon: '💬' },
 ];
 
-const SOLUTIONS_LINKS = [
-  { label: 'Telecommunications', href: '/solutions/telecom' },
+const PLATFORM_CAPABILITIES = [
+  { label: 'Campaign Management', href: '/platform/campaign-management', desc: 'Manage the customer journey for SMS, WhatsApp and email', icon: '📣' },
+  { label: 'AI Automation', href: '/platform/ai-automation', desc: 'Automate the mundane communication flows', icon: '🤖' },
+  { label: 'Social Media Management', href: '/platform/social-media', desc: 'All your social media channels in one place.', icon: '📱' },
+  { label: 'Social Listening', href: '/platform/social-intelligence', desc: 'Monitor conversations across all social channels.', icon: '🎧' },
+];
+
+const PLATFORM_CHANNELS = [
+  { label: 'Email', icon: '✉️', href: '/platform/channels/email' },
+  { label: 'Web Messaging SMS/RCS WhatsApp', icon: '🌐', href: '/platform/channels/web' },
+  { label: 'SMS/RCS', icon: '📲', href: '/platform/channels/sms' },
+  { label: 'WhatsApp', icon: '💚', href: '/platform/channels/whatsapp' },
+];
+
+const SOLUTIONS_INDUSTRIES = [
   { label: 'Banking & Finance', href: '/solutions/banking' },
-  { label: 'Healthcare', href: '/solutions/healthcare' },
+  { label: 'Telecommunications', href: '/solutions/telecom' },
   { label: 'FMCG & Retail', href: '/solutions/fmcg' },
+  { label: 'Healthcare', href: '/solutions/healthcare' },
   { label: 'Insurance', href: '/solutions/insurance' },
-  { label: 'Government', href: '/solutions/government' },
+  { label: 'Government & Public Sector', href: '/solutions/government' },
 ];
 
 export default function Nav() {
@@ -29,90 +36,203 @@ export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav style={{ fontFamily: 'Manrope, system-ui, sans-serif' }} className="sticky top-0 z-50 bg-white border-b border-slate-100">
-      <div className="flex items-center justify-between h-[68px] max-w-[1200px] mx-auto" style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-        {/* Logo */}
-        <Link href="/" className="flex-shrink-0">
-          <Image src="/Krongage-Logo.png" alt="KronGage" width={38} height={38} className="h-[38px] w-auto" />
-        </Link>
+    <>
+      <style>{`
+        .nav-link { color: #475569; text-decoration: none; font-size: 14px; font-weight: 600; transition: color 0.15s; }
+        .nav-link:hover { color: #0f172a; }
+        .nav-dropdown-btn { background: none; border: none; cursor: pointer; font-family: Manrope, system-ui, sans-serif; font-size: 14px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 4px; transition: color 0.15s; padding: 0; }
+        .nav-dropdown-btn:hover { color: #0f172a; }
+        .mega-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 10px; text-decoration: none; transition: background 0.12s; }
+        .mega-item:hover { background: #f8fafc; }
+        .channel-item { display: flex; align-items: center; gap: 8px; padding-left: 10px; padding-right: 10px; padding-top: 7px; padding-bottom: 7px; border-radius: 8px; text-decoration: none; color: #334155; font-size: 13px; font-weight: 500; transition: background 0.12s; }
+        .channel-item:hover { background: #f8fafc; }
+        .solutions-item { display: block; padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; border-radius: 8px; text-decoration: none; color: #334155; font-size: 14px; font-weight: 500; transition: background 0.12s; }
+        .solutions-item:hover { background: #f8fafc; color: #0D47A1; }
+        @media (min-width: 768px) { .nav-desktop { display: flex !important; } .nav-mobile-btn { display: none !important; } }
+      `}</style>
+      <nav style={{ fontFamily: 'Manrope, system-ui, sans-serif', position: 'sticky', top: 0, zIndex: 50, background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px', maxWidth: '1200px', margin: '0 auto', paddingLeft: '32px', paddingRight: '32px' }}>
 
-        {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-8 list-none text-[14px] font-semibold text-slate-500">
-          <li><Link href="/" className="hover:text-slate-900 transition-colors">Home</Link></li>
-          <li><Link href="/about" className="hover:text-slate-900 transition-colors">Why KronGage?</Link></li>
-
-          {/* Platform mega */}
-          <li className="relative"
-            onMouseEnter={() => setOpen('platform')}
-            onMouseLeave={() => setOpen(null)}>
-            <button className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer bg-transparent border-0 text-[14px] font-semibold text-slate-500">
-              Platform <span className="text-xs">▾</span>
-            </button>
-            {open === 'platform' && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[560px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-5 grid grid-cols-3 gap-3">
-                {PLATFORM_LINKS.map(l => (
-                  <Link key={l.href} href={l.href}
-                    className="rounded-xl p-3 hover:bg-slate-50 transition-colors">
-                    <div className="text-[13px] font-700 text-slate-900 font-bold">{l.label}</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">{l.desc}</div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </li>
-
-          {/* Solutions mega */}
-          <li className="relative"
-            onMouseEnter={() => setOpen('solutions')}
-            onMouseLeave={() => setOpen(null)}>
-            <button className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer bg-transparent border-0 text-[14px] font-semibold text-slate-500">
-              Solutions <span className="text-xs">▾</span>
-            </button>
-            {open === 'solutions' && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[280px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 flex flex-col gap-1">
-                {SOLUTIONS_LINKS.map(l => (
-                  <Link key={l.href} href={l.href}
-                    className="text-[13px] font-semibold text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors">
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </li>
-        </ul>
-
-        {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link href="/pricing" className="text-[14px] font-semibold text-[#0D47A1] hover:underline">Pricing</Link>
-          <Link href="/contact"
-            className="bg-[#0D47A1] text-white px-5 py-2.5 rounded-full text-[14px] font-bold hover:bg-[#0a3680] transition-colors">
-            Get Started
+          {/* Logo */}
+          <Link href="/" style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+            <Image src="/Krongage-Logo.png" alt="KronGage" width={38} height={38} style={{ height: '38px', width: 'auto' }} />
           </Link>
+
+          {/* Desktop nav links */}
+          <ul className="nav-desktop" style={{ display: 'none', alignItems: 'center', gap: '32px', listStyle: 'none', margin: 0 }}>
+            <li><Link href="/" className="nav-link">Home</Link></li>
+            <li><Link href="/about" className="nav-link">Why KronGage?</Link></li>
+
+            {/* Platform mega */}
+            <li style={{ position: 'relative' }}
+              onMouseEnter={() => setOpen('platform')}
+              onMouseLeave={() => setOpen(null)}>
+              <button className="nav-dropdown-btn">
+                Platform <span style={{ fontSize: '10px' }}>{open === 'platform' ? '▲' : '▾'}</span>
+              </button>
+              {open === 'platform' && (
+                <div style={{
+                  position: 'absolute', top: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)',
+                  width: '760px', background: '#fff', borderRadius: '16px',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9',
+                  display: 'grid', gridTemplateColumns: '240px 1fr 190px',
+                }}>
+                  {/* Left: Overview */}
+                  <div style={{ paddingLeft: '24px', paddingRight: '24px', paddingTop: '24px', paddingBottom: '24px', borderRight: '1px solid #f1f5f9' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>The KronGage Platform</div>
+                    <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.6, marginBottom: '14px' }}>All your customer data, channels and engagement orchestration in one place.</p>
+                    <Link href="/platform" style={{ fontSize: '13px', fontWeight: 700, color: '#0D47A1', textDecoration: 'none' }}>View the platform →</Link>
+                    <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {PLATFORM_OVERVIEW.map(item => (
+                        <a key={item.href} href={item.href} className="mega-item">
+                          <span style={{ fontSize: '20px', flexShrink: 0 }}>{item.icon}</span>
+                          <div>
+                            <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{item.label}</div>
+                            <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>{item.desc}</div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Middle: Featured Capabilities */}
+                  <div style={{ paddingLeft: '24px', paddingRight: '24px', paddingTop: '24px', paddingBottom: '24px', borderRight: '1px solid #f1f5f9' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', marginBottom: '14px' }}>Featured Capabilities</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {PLATFORM_CAPABILITIES.map(item => (
+                        <a key={item.href} href={item.href} className="mega-item">
+                          <span style={{ fontSize: '18px', flexShrink: 0 }}>{item.icon}</span>
+                          <div>
+                            <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{item.label}</div>
+                            <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>{item.desc}</div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right: Featured Channels */}
+                  <div style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '24px', paddingBottom: '24px' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', marginBottom: '14px' }}>Featured Channels</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      {PLATFORM_CHANNELS.map(ch => (
+                        <a key={ch.href} href={ch.href} className="channel-item">
+                          <span style={{ fontSize: '15px' }}>{ch.icon}</span>
+                          <span>{ch.label}</span>
+                        </a>
+                      ))}
+                      <a href="/platform/channels" style={{ fontSize: '12px', fontWeight: 700, color: '#0D47A1', textDecoration: 'none', paddingLeft: '10px', paddingTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        ✳ View All Channels
+                      </a>
+                    </div>
+                    <div style={{ marginTop: '14px', background: '#EEF5FD', borderRadius: '10px', paddingLeft: '12px', paddingRight: '12px', paddingTop: '12px', paddingBottom: '12px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                      <div style={{ background: '#0D47A1', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <span style={{ fontSize: '14px' }}>🔒</span>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '12px', fontWeight: 700, color: '#0f172a' }}>How it works?</div>
+                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>Understand how our omni channel inbox works to keep message clutter at bay.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </li>
+
+            {/* Solutions mega */}
+            <li style={{ position: 'relative' }}
+              onMouseEnter={() => setOpen('solutions')}
+              onMouseLeave={() => setOpen(null)}>
+              <button className="nav-dropdown-btn">
+                Solutions <span style={{ fontSize: '10px' }}>{open === 'solutions' ? '▲' : '▾'}</span>
+              </button>
+              {open === 'solutions' && (
+                <div style={{
+                  position: 'absolute', top: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)',
+                  width: '520px', background: '#fff', borderRadius: '16px',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9',
+                  display: 'grid', gridTemplateColumns: '210px 1fr',
+                }}>
+                  {/* Left: Industries */}
+                  <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px', borderRight: '1px solid #f1f5f9' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', marginBottom: '12px' }}>Industries</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      {SOLUTIONS_INDUSTRIES.map(item => (
+                        <a key={item.href} href={item.href} className="solutions-item">{item.label}</a>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right: Feature highlight */}
+                  <div style={{ paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px', paddingBottom: '20px' }}>
+                    <div style={{ background: 'linear-gradient(135deg, #EEF5FD 0%, #dbeafe 100%)', borderRadius: '10px', height: '90px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                      <span style={{ fontSize: '36px' }}>📊</span>
+                    </div>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', lineHeight: 1.4, marginBottom: '6px' }}>
+                      The Retention Gap: Why Success Teams Struggle
+                    </div>
+                    <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.5 }}>
+                      In an era of endless options, &ldquo;customer success&rdquo; has become more than just a department — it&apos;s a survival strategy.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </li>
+          </ul>
+
+          {/* Desktop CTA */}
+          <div className="nav-desktop" style={{ display: 'none', alignItems: 'center', gap: '20px' }}>
+            <a
+              href="https://web.krongage.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: '14px', fontWeight: 600, color: '#0D47A1', textDecoration: 'none' }}
+            >
+              Log in
+            </a>
+            <Link
+              href="/pricing"
+              style={{
+                background: '#0D47A1', color: '#fff', textDecoration: 'none',
+                paddingLeft: '20px', paddingRight: '20px', paddingTop: '10px', paddingBottom: '10px',
+                borderRadius: '50px', fontSize: '14px', fontWeight: 700,
+              }}
+            >
+              Get Started
+            </Link>
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="nav-mobile-btn"
+            style={{ display: 'flex', flexDirection: 'column', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            <span style={{ width: '20px', height: '2px', background: '#475569', display: 'block' }} />
+            <span style={{ width: '20px', height: '2px', background: '#475569', display: 'block' }} />
+            <span style={{ width: '20px', height: '2px', background: '#475569', display: 'block' }} />
+          </button>
         </div>
 
-        {/* Mobile hamburger */}
-        <button className="md:hidden flex flex-col gap-1.5 p-2" onClick={() => setMobileOpen(!mobileOpen)}>
-          <span className="w-5 h-0.5 bg-slate-700 block" />
-          <span className="w-5 h-0.5 bg-slate-700 block" />
-          <span className="w-5 h-0.5 bg-slate-700 block" />
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-slate-100 px-6 py-4 flex flex-col gap-3 text-[15px] font-semibold">
-          <Link href="/" onClick={() => setMobileOpen(false)}>Home</Link>
-          <Link href="/about" onClick={() => setMobileOpen(false)}>Why KronGage?</Link>
-          <Link href="/platform" onClick={() => setMobileOpen(false)}>Platform</Link>
-          <Link href="/solutions" onClick={() => setMobileOpen(false)}>Solutions</Link>
-          <Link href="/pricing" onClick={() => setMobileOpen(false)}>Pricing</Link>
-          <Link href="/contact"
-            className="bg-[#0D47A1] text-white px-5 py-2.5 rounded-full text-center font-bold"
-            onClick={() => setMobileOpen(false)}>
-            Get Started
-          </Link>
-        </div>
-      )}
-    </nav>
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div style={{ background: '#fff', borderTop: '1px solid #f1f5f9', paddingLeft: '24px', paddingRight: '24px', paddingTop: '16px', paddingBottom: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <Link href="/" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Home</Link>
+            <Link href="/about" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Why KronGage?</Link>
+            <Link href="/platform" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Platform</Link>
+            <Link href="/solutions" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Solutions</Link>
+            <Link href="/pricing" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Pricing</Link>
+            <a href="https://web.krongage.io/" target="_blank" rel="noopener noreferrer" style={{ fontSize: '15px', fontWeight: 600, color: '#0D47A1', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Log in</a>
+            <Link
+              href="/pricing"
+              style={{ background: '#0D47A1', color: '#fff', textDecoration: 'none', paddingTop: '12px', paddingBottom: '12px', borderRadius: '50px', textAlign: 'center', fontSize: '15px', fontWeight: 700, display: 'block' }}
+              onClick={() => setMobileOpen(false)}
+            >
+              Get Started
+            </Link>
+          </div>
+        )}
+      </nav>
+    </>
   );
 }

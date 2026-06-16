@@ -2,11 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "kronGage",
-      "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd '/Users/dibelaba/Documents/GitHub/Claude/Internal Tool/kronGage web' && python3 -m http.server 3456"],
-      "port": 3456,
-      "autoPort": false
+      "name": "kronGage-next",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }
