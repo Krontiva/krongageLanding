@@ -4,7 +4,7 @@ import Image from 'next/image';
 export default function Footer() {
   return (
     <footer style={{ fontFamily: 'Manrope, system-ui, sans-serif', background: '#0f172a', color: '#fff' }}>
-      <div className="max-w-[1200px] mx-auto px-14 pt-16 pb-8">
+      <div className="max-w-[1200px] mx-auto pt-16 pb-8" style={{ paddingLeft: '24px', paddingRight: '24px' }}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">

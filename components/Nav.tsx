@@ -30,7 +30,7 @@ export default function Nav() {
 
   return (
     <nav style={{ fontFamily: 'Manrope, system-ui, sans-serif' }} className="sticky top-0 z-50 bg-white border-b border-slate-100">
-      <div className="flex items-center justify-between px-14 h-[68px] max-w-[1280px] mx-auto">
+      <div className="flex items-center justify-between h-[68px] max-w-[1200px] mx-auto" style={{ paddingLeft: '32px', paddingRight: '32px' }}>
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">
           <Image src="/Krongage-Logo.png" alt="KronGage" width={38} height={38} className="h-[38px] w-auto" />
