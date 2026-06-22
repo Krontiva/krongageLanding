@@ -183,7 +183,7 @@ export default function Nav() {
           {/* Desktop CTA */}
           <div className="nav-desktop" style={{ display: 'none', alignItems: 'center', gap: '20px' }}>
             <a
-              href="https://web.krongage.io/"
+              href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'}/`}
               target="_blank"
               rel="noopener noreferrer"
               style={{ fontSize: '14px', fontWeight: 600, color: '#0D47A1', textDecoration: 'none' }}
@@ -222,7 +222,7 @@ export default function Nav() {
             <Link href="/platform" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Platform</Link>
             <Link href="/solutions" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Solutions</Link>
             <Link href="/pricing" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Pricing</Link>
-            <a href="https://web.krongage.io/" target="_blank" rel="noopener noreferrer" style={{ fontSize: '15px', fontWeight: 600, color: '#0D47A1', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Log in</a>
+            <a href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'}/`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '15px', fontWeight: 600, color: '#0D47A1', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Log in</a>
             <Link
               href="/pricing"
               style={{ background: '#0D47A1', color: '#fff', textDecoration: 'none', paddingTop: '12px', paddingBottom: '12px', borderRadius: '50px', textAlign: 'center', fontSize: '15px', fontWeight: 700, display: 'block' }}

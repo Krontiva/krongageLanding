@@ -48,11 +48,30 @@ export async function POST(req: NextRequest) {
 
   const event = JSON.parse(rawBody);
 
-  // 2. Only act on successful charges — acknowledge everything else silently
+  // Helper — relay raw Paystack body to billing endpoint (fire-and-forget)
+  function relayToBilling() {
+    const billingUrl = process.env.BILLING_WEBHOOK_URL;
+    if (!billingUrl) return;
+    fetch(billingUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-paystack-signature': paystackSig,
+        'User-Agent': 'KronGage-Webhook/1.0',
+      },
+      body: rawBody,
+    }).catch(err => console.error('[paystack-webhook] Billing relay error:', err));
+  }
+
+  // 2. Non-charge.success events — relay to billing immediately, nothing to provision
   if (event.event !== 'charge.success') {
+    relayToBilling();
     return NextResponse.json({ received: true });
   }
 
+  // 3. charge.success — PROVISION FIRST, then relay billing.
+  //    On the last test the billing webhook arrived ~3.5s before the tenant was created,
+  //    so it was dropped as "no matching tenant." Provision must complete before billing relay.
   const { data } = event;
   const fields = extractFields(data.metadata?.custom_fields);
 
@@ -62,7 +81,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'WEBHOOK_URL not configured' }, { status: 500 });
   }
 
-  // 3. Build the canonical provisioning payload
+  // 4. Build the canonical provisioning payload
   //    User fields come from Paystack metadata (set by PaystackCheckout.tsx at transaction init).
   //    Email + name also available on data.customer as fallback.
   const payload = JSON.stringify({
@@ -88,7 +107,7 @@ export async function POST(req: NextRequest) {
     source: 'krongage-web',
   });
 
-  // 4. HMAC-sign and forward to provisioning-api
+  // 5. HMAC-sign and forward to provisioning-api — await 200 before billing relay
   const headers = buildSecureHeaders(payload);
 
   try {
@@ -106,6 +125,10 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('[paystack-webhook] Provisioned:', data.reference);
+
+    // 6. Tenant now exists — safe to relay billing event
+    relayToBilling();
+
     return NextResponse.json({ received: true });
 
   } catch (err) {

@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 
-const PaystackCheckout = dynamic(() => import('./PaystackCheckout'), { ssr: false });
+const PaystackCheckout   = dynamic(() => import('./PaystackCheckout'),   { ssr: false });
+const StarterSignupModal = dynamic(() => import('./StarterSignupModal'),  { ssr: false });
 
 const PLANS = [
   {
@@ -122,8 +123,9 @@ const COMPARISON_ROWS = [
 ];
 
 export default function PricingPage() {
-  const [annual, setAnnual] = useState(false);
-  const [checkoutPlan, setCheckoutPlan] = useState<typeof PLANS[0] | null>(null);
+  const [annual, setAnnual]               = useState(false);
+  const [checkoutPlan, setCheckoutPlan]   = useState<typeof PLANS[0] | null>(null);
+  const [showStarterModal, setShowStarterModal] = useState(false);
 
   return (
     <>
@@ -676,7 +678,13 @@ export default function PricingPage() {
                   </ul>
 
                   {/* CTA */}
-                  {plan.ctaHref ? (
+                  {plan.id === 'starter' ? (
+                    <button
+                      onClick={() => setShowStarterModal(true)}
+                      className="pg-cta-primary pg-cta-ghost">
+                      {plan.cta}
+                    </button>
+                  ) : plan.ctaHref ? (
                     <a
                       href={plan.ctaHref}
                       className={`pg-cta-primary ${
@@ -755,13 +763,18 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* ── Checkout modal ── */}
+      {/* ── Paid checkout modal ── */}
       {checkoutPlan && (
         <PaystackCheckout
           plan={checkoutPlan}
           annual={annual}
           onClose={() => setCheckoutPlan(null)}
         />
+      )}
+
+      {/* ── Starter free signup modal ── */}
+      {showStarterModal && (
+        <StarterSignupModal onClose={() => setShowStarterModal(false)} />
       )}
     </>
   );

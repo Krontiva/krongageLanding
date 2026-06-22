@@ -1,6 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { usePaystackPayment } from 'react-paystack';
+
+function buildReference(planId: string, billing: 'monthly' | 'annual'): string {
+  const planShort  = planId === 'professional' ? 'PRO' : planId.toUpperCase();
+  const billingShort = billing === 'annual' ? 'ANN' : 'MO';
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
+  const hex  = Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, '0');
+  return `KG-${planShort}-${billingShort}-${date}-${hex}`;
+}
 
 interface Plan {
   id: string;
@@ -34,17 +42,43 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
   const [errors, setErrors] = useState<Partial<UserForm>>({});
   const [serverError, setServerError] = useState('');
 
-  const price = annual ? plan.annualPrice! : plan.monthlyPrice!;
-  const amountInCents = annual ? price * 12 * 100 : price * 100;
+  const billing  = annual ? 'annual' : 'monthly';
+  const price    = annual ? plan.annualPrice! : plan.monthlyPrice!;
+  const usdTotal = annual ? price * 12 : price;   // full USD charge (12 months if annual)
 
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
 
+  const [ghsRate, setGhsRate]         = useState<number>(0);
+  const [rateLoading, setRateLoading] = useState(true);
+  const [rateError, setRateError]     = useState(false);
+
+  useEffect(() => {
+    fetch('/api/exchange-rate')
+      .then(r => { if (!r.ok) throw new Error('rate unavailable'); return r.json(); })
+      .then(data => {
+        if (!data?.rate) throw new Error('missing rate');
+        setGhsRate(data.rate);
+      })
+      .catch(() => setRateError(true))
+      .finally(() => setRateLoading(false));
+  }, []);
+
+  const ghsTotal        = Math.round(usdTotal * ghsRate);
+  const amountInPesewas = ghsTotal * 100;
+
+  // Reference is stable for the lifetime of this modal — never changes on re-render
+  const reference = useMemo(
+    () => buildReference(plan.id, billing),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   const config = {
-    reference: `KG-${plan.id}-${Date.now()}`,
-    email: form.email,
-    amount: amountInCents,
+    reference,
+    email:    form.email,
+    amount:   amountInPesewas,   // GHS pesewas
     publicKey,
-    currency: 'USD',
+    currency: 'GHS',
     metadata: {
       custom_fields: [
         { display_name: 'First Name',  variable_name: 'first_name',  value: form.firstName },
@@ -53,7 +87,7 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
         { display_name: 'Phone',       variable_name: 'phone',       value: form.phone },
         { display_name: 'Plan ID',     variable_name: 'plan_id',     value: plan.id },
         { display_name: 'Plan Name',   variable_name: 'plan_name',   value: plan.name },
-        { display_name: 'Billing',     variable_name: 'billing',     value: annual ? 'annual' : 'monthly' },
+        { display_name: 'Billing',     variable_name: 'billing',     value: billing },
       ],
     },
   };
@@ -70,7 +104,7 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
     return Object.keys(e).length === 0;
   }
 
-  async function handleWebhook(reference: string, status: string) {
+  async function handleWebhook(ref: string, status: string) {
     try {
       const res = await fetch('/api/webhook', {
         method: 'POST',
@@ -78,20 +112,16 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
         body: JSON.stringify({
           user: {
             firstName: form.firstName,
-            lastName: form.lastName,
-            email: form.email,
-            company: form.company,
-            phone: form.phone,
+            lastName:  form.lastName,
+            email:     form.email,
+            company:   form.company,
+            phone:     form.phone,
           },
-          plan: {
-            id: plan.id,
-            name: plan.name,
-            billing: annual ? 'annual' : 'monthly',
-          },
-          reference,
+          plan:      { id: plan.id, name: plan.name, billing },
+          reference: ref,
           status,
-          amount: amountInCents,
-          currency: plan.currency,
+          amount:    amountInPesewas,  // actual GHS pesewas charged
+          currency:  'GHS',
         }),
       });
       if (!res.ok) throw new Error(await res.text());
@@ -102,7 +132,28 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
 
   function onSuccess(ref: { reference: string }) {
     handleWebhook(ref.reference, 'success');
-    setStep('success');
+
+    // Save receipt data for the receipt page (sessionStorage survives the redirect)
+    const receipt = {
+      reference:    ref.reference,
+      planName:     plan.name,
+      planId:       plan.id,
+      billing,
+      amount:       amountInPesewas,  // GHS pesewas
+      currency:     'GHS',
+      exchangeRate: ghsRate,          // rate used at checkout (1 USD = X GHS)
+      usdPrice:     usdTotal,         // original USD amount for display
+      issuedAt:     new Date().toISOString(),
+      user: {
+        firstName: form.firstName,
+        lastName:  form.lastName,
+        email:     form.email,
+        company:   form.company,
+        phone:     form.phone,
+      },
+    };
+    sessionStorage.setItem('kg_receipt', JSON.stringify(receipt));
+    window.location.href = `/receipt?ref=${encodeURIComponent(ref.reference)}`;
   }
 
   function onPaystackClose() {
@@ -170,6 +221,7 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
           {/* Header */}
           <div style={{ background: '#0D47A1', paddingLeft: '28px', paddingRight: '28px', paddingTop: '24px', paddingBottom: '24px', color: '#fff', position: 'relative' }}>
             <button
+              type="button"
               onClick={onClose}
               style={{
                 position: 'absolute', top: '16px', right: '20px',
@@ -285,33 +337,63 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
                   </div>
                 ))}
 
-                <button
-                  type="submit"
-                  disabled={step === 'paying'}
-                  style={{
-                    width: '100%',
-                    background: step === 'paying' ? '#94a3b8' : '#0D47A1',
-                    color: '#fff',
-                    fontFamily: 'Manrope, system-ui, sans-serif',
-                    fontWeight: 800,
-                    fontSize: '15px',
-                    border: 'none',
-                    cursor: step === 'paying' ? 'not-allowed' : 'pointer',
-                    paddingTop: '14px',
-                    paddingBottom: '14px',
-                    borderRadius: '50px',
-                    marginTop: '4px',
-                    transition: 'background 0.15s',
-                    letterSpacing: '0.01em',
-                  }}
-                >
-                  {step === 'paying'
-                    ? 'Opening Paystack…'
-                    : annual
-                      ? `Pay $${(price * 12).toLocaleString()}/yr →`
-                      : `Pay $${price.toLocaleString()}/mo →`
-                  }
-                </button>
+                {rateError ? (
+                  <div style={{ textAlign: 'center' }}>
+                    <p style={{ fontSize: '13px', color: '#ef4444', marginBottom: '10px' }}>
+                      Unable to load rate — please try again.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRateError(false);
+                        setRateLoading(true);
+                        fetch('/api/exchange-rate')
+                          .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+                          .then(data => { if (!data?.rate) throw new Error(); setGhsRate(data.rate); })
+                          .catch(() => setRateError(true))
+                          .finally(() => setRateLoading(false));
+                      }}
+                      style={{
+                        background: '#0D47A1', color: '#fff', fontFamily: 'Manrope, system-ui, sans-serif',
+                        fontWeight: 800, fontSize: '15px', border: 'none', cursor: 'pointer',
+                        paddingTop: '14px', paddingBottom: '14px', width: '100%',
+                        borderRadius: '50px', transition: 'background 0.15s',
+                      }}
+                    >
+                      Retry
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={step === 'paying' || rateLoading}
+                    style={{
+                      width: '100%',
+                      background: (step === 'paying' || rateLoading) ? '#94a3b8' : '#0D47A1',
+                      color: '#fff',
+                      fontFamily: 'Manrope, system-ui, sans-serif',
+                      fontWeight: 800,
+                      fontSize: '15px',
+                      border: 'none',
+                      cursor: (step === 'paying' || rateLoading) ? 'not-allowed' : 'pointer',
+                      paddingTop: '14px',
+                      paddingBottom: '14px',
+                      borderRadius: '50px',
+                      marginTop: '4px',
+                      transition: 'background 0.15s',
+                      letterSpacing: '0.01em',
+                    }}
+                  >
+                    {rateLoading
+                      ? 'Loading…'
+                      : step === 'paying'
+                        ? 'Opening Paystack…'
+                        : annual
+                          ? `Pay $${(price * 12).toLocaleString()}/yr →`
+                          : `Pay $${price.toLocaleString()}/mo →`
+                    }
+                  </button>
+                )}
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                   <svg width="12" height="14" viewBox="0 0 12 14" fill="none" style={{ flexShrink: 0 }}>
