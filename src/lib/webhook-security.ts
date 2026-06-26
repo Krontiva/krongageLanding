@@ -1,7 +1,7 @@
 /**
  * KronGage Webhook Security — HMAC-SHA256 signing & verification
  *
- * Sending side  (this file, used by /api/webhook/route.ts):
+ * Sending side  (this file, used by /api/paystack/webhook & /api/signup/starter):
  *   - Signs every outbound payload with HMAC-SHA256 using WEBHOOK_SECRET
  *   - Adds X-KronGage-Signature and X-KronGage-Timestamp headers
  *   - Timestamp prevents replay attacks on your server

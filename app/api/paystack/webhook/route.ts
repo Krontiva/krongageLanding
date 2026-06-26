@@ -19,6 +19,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac } from 'crypto';
 import { buildSecureHeaders } from '@/src/lib/webhook-security';
+import { verifyPaidAmount } from '@/src/lib/verify-amount';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /** Verify Paystack's own HMAC signature on the raw request body */
 function verifyPaystackSignature(rawBody: string, signature: string): boolean {
@@ -81,6 +85,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'WEBHOOK_URL not configured' }, { status: 500 });
   }
 
+  // 3b. Anti-tampering: the plan claimed in metadata is client-supplied, so
+  //     independently recompute the expected charge and reject underpayment
+  //     (e.g. "pay 1 GHS, claim Professional"). data.amount/currency come from
+  //     Paystack itself (signature already verified), so they are authoritative.
+  const amountCheck = await verifyPaidAmount({
+    planId: fields.plan_id || '',
+    billing: fields.billing || 'monthly',
+    paidPesewas: data.amount,
+    currency: data.currency,
+  });
+  if (!amountCheck.ok) {
+    console.warn(
+      `[paystack-webhook] Amount verification failed for ${data.reference}: ${amountCheck.reason}`,
+    );
+    // Do NOT provision. Return 500 so Paystack retries if this was a transient
+    // price/rate lookup failure; genuine tampering will keep failing and never
+    // provision. A real underpaid charge should be refunded out-of-band.
+    return NextResponse.json({ error: 'Amount verification failed' }, { status: 500 });
+  }
+
   // 4. Build the canonical provisioning payload
   //    User fields come from Paystack metadata (set by PaystackCheckout.tsx at transaction init).
   //    Email + name also available on data.customer as fallback.
@@ -126,7 +150,32 @@ export async function POST(req: NextRequest) {
 
     console.log('[paystack-webhook] Provisioned:', data.reference);
 
-    // 6. Tenant now exists — safe to relay billing event
+    // 6. Send welcome email — fire-and-forget
+    const userEmail = data.customer?.email;
+    const userName = fields.first_name || data.customer?.first_name || '';
+    const planName = fields.plan_name || 'your plan';
+    if (userEmail) {
+      resend.emails.send({
+        from: 'KronGage <info@krontiva.com>',
+        to: userEmail,
+        subject: `Welcome to KronGage — ${planName} account being set up`,
+        html: `
+          <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1e293b">
+            <div style="background:#0D47A1;padding:24px 32px;border-radius:8px 8px 0 0">
+              <h1 style="margin:0;color:#fff;font-size:22px">Welcome to KronGage</h1>
+            </div>
+            <div style="padding:32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px">
+              <p style="font-size:15px;line-height:1.7">Hi ${userName || 'there'},</p>
+              <p style="font-size:15px;line-height:1.7">Payment confirmed — thank you! We're setting up your <strong>${planName}</strong> account now and you'll receive your login details shortly.</p>
+              <p style="font-size:15px;line-height:1.7">If you have any questions, reply to this email or reach us at <a href="mailto:support@krontiva.africa" style="color:#0D47A1">support@krontiva.africa</a>.</p>
+              <p style="font-size:15px;line-height:1.7;margin-top:24px">— The KronGage Team</p>
+            </div>
+          </div>
+        `,
+      }).catch(err => console.error('[paystack-webhook] Welcome email error:', err));
+    }
+
+    // 7. Tenant now exists — safe to relay billing event
     relayToBilling();
 
     return NextResponse.json({ received: true });

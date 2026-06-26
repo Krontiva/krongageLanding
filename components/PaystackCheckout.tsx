@@ -104,34 +104,11 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
     return Object.keys(e).length === 0;
   }
 
-  async function handleWebhook(ref: string, status: string) {
-    try {
-      const res = await fetch('/api/webhook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user: {
-            firstName: form.firstName,
-            lastName:  form.lastName,
-            email:     form.email,
-            company:   form.company,
-            phone:     form.phone,
-          },
-          plan:      { id: plan.id, name: plan.name, billing },
-          reference: ref,
-          status,
-          amount:    amountInPesewas,  // actual GHS pesewas charged
-          currency:  'GHS',
-        }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-    } catch (err) {
-      console.error('Webhook error:', err);
-    }
-  }
-
   function onSuccess(ref: { reference: string }) {
-    handleWebhook(ref.reference, 'success');
+    // NOTE: Account provisioning happens server-side ONLY, via Paystack's signed
+    // charge.success webhook (/api/paystack/webhook). The browser must never
+    // trigger provisioning — a client-supplied "success" can't be trusted.
+    // Here we only persist receipt data for display and redirect the user.
 
     // Save receipt data for the receipt page (sessionStorage survives the redirect)
     const receipt = {

@@ -1,11 +1,27 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 const PaystackCheckout   = dynamic(() => import('./PaystackCheckout'),   { ssr: false });
 const StarterSignupModal = dynamic(() => import('./StarterSignupModal'),  { ssr: false });
 
-const PLANS = [
+type Plan = {
+  id: string;
+  name: string;
+  tagline: string;
+  monthlyPrice: number | null;
+  annualPrice: number | null;
+  currency: string;
+  badge: string | null;
+  featured: boolean;
+  free: boolean;
+  enterprise: boolean;
+  cta: string;
+  ctaHref: string | null;
+  features: string[];
+};
+
+const PLANS: Plan[] = [
   {
     id: 'starter',
     name: 'Free',
@@ -124,8 +140,36 @@ const COMPARISON_ROWS = [
 
 export default function PricingPage() {
   const [annual, setAnnual]               = useState(false);
+  const [plans, setPlans]                 = useState(PLANS);
   const [checkoutPlan, setCheckoutPlan]   = useState<typeof PLANS[0] | null>(null);
   const [showStarterModal, setShowStarterModal] = useState(false);
+
+  // Overlay live prices from admin (via /api/pricing). Falls back to the
+  // hardcoded PLANS above if admin is unreachable — the page never breaks.
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/pricing')
+      .then(res => (res.ok ? res.json() : Promise.reject(new Error('pricing unavailable'))))
+      .then((data: { plans?: Array<{ id: string; monthlyPrice?: number | null; annualPrice?: number | null; currency?: string }> }) => {
+        if (cancelled || !Array.isArray(data.plans)) return;
+
+        const byId = new Map(data.plans.map(p => [p.id, p]));
+        setPlans(PLANS.map(plan => {
+          const live = byId.get(plan.id);
+          if (!live) return plan;
+          return {
+            ...plan,
+            monthlyPrice: live.monthlyPrice ?? plan.monthlyPrice,
+            annualPrice:  live.annualPrice  ?? plan.annualPrice,
+            currency:     live.currency     ?? plan.currency,
+          };
+        }));
+      })
+      .catch(() => { /* keep hardcoded fallback prices */ });
+
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <>
@@ -615,7 +659,7 @@ export default function PricingPage() {
       {/* ── Cards ── */}
       <div className="pg-cards-outer">
         <div className="pg-cards">
-          {PLANS.map(plan => {
+          {plans.map(plan => {
             const price = annual ? plan.annualPrice : plan.monthlyPrice;
             const isFeatured = plan.featured;
             const isEnterprise = plan.enterprise;
@@ -740,7 +784,7 @@ export default function PricingPage() {
             <thead>
               <tr>
                 <th></th>
-                {PLANS.map(p => (
+                {plans.map(p => (
                   <th key={p.id} className={p.featured ? 'pg-th-featured' : ''}>
                     {p.name}
                   </th>
