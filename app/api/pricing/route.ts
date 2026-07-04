@@ -11,34 +11,14 @@
  */
 
 import { NextResponse } from 'next/server';
-
-const ADMIN_PRICING_URL = 'https://admin.krongage.io/api/pricing/plans';
+import { getLivePlans } from '@/src/lib/pricing';
 
 export async function GET() {
-  const secret = process.env.WEBHOOK_SECRET;
+  const plans = await getLivePlans();
 
-  if (!secret) {
-    console.error('[pricing] WEBHOOK_SECRET not set');
-    return NextResponse.json({ error: 'Server misconfigured' }, { status: 503 });
-  }
-
-  try {
-    const res = await fetch(ADMIN_PRICING_URL, {
-      headers: { Authorization: `Bearer ${secret}` },
-      next: { revalidate: 60 },
-    });
-
-    if (!res.ok) throw new Error(`admin responded ${res.status}`);
-
-    const data = await res.json();
-    const plans = data?.plans;
-
-    if (!Array.isArray(plans)) throw new Error('Unexpected response shape');
-
-    return NextResponse.json({ plans, source: data.source ?? 'admin' });
-
-  } catch (err) {
-    console.error('[pricing] Admin fetch failed:', err);
+  if (!plans) {
     return NextResponse.json({ error: 'Pricing unavailable' }, { status: 503 });
   }
+
+  return NextResponse.json({ plans, source: 'admin' });
 }

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 
 const PaystackCheckout   = dynamic(() => import('./PaystackCheckout'),   { ssr: false });
@@ -138,38 +138,31 @@ const COMPARISON_ROWS = [
   ['Support',             'Community','Email',  'Priority', 'Dedicated CSM'],
 ];
 
-export default function PricingPage() {
+type LivePlan = { id: string; monthlyPrice?: number | null; annualPrice?: number | null; currency?: string };
+
+// Overlays live admin prices onto the hardcoded PLANS. Falls back to the
+// hardcoded defaults for any plan admin doesn't return — the page never breaks.
+function mergeLivePlans(livePlans: LivePlan[] | null | undefined) {
+  if (!Array.isArray(livePlans)) return PLANS;
+
+  const byId = new Map(livePlans.map(p => [p.id, p]));
+  return PLANS.map(plan => {
+    const live = byId.get(plan.id);
+    if (!live) return plan;
+    return {
+      ...plan,
+      monthlyPrice: live.monthlyPrice ?? plan.monthlyPrice,
+      annualPrice:  live.annualPrice  ?? plan.annualPrice,
+      currency:     live.currency     ?? plan.currency,
+    };
+  });
+}
+
+export default function PricingPage({ initialLivePlans }: { initialLivePlans?: LivePlan[] | null }) {
   const [annual, setAnnual]               = useState(false);
-  const [plans, setPlans]                 = useState(PLANS);
+  const [plans, setPlans]                 = useState(() => mergeLivePlans(initialLivePlans));
   const [checkoutPlan, setCheckoutPlan]   = useState<typeof PLANS[0] | null>(null);
   const [showStarterModal, setShowStarterModal] = useState(false);
-
-  // Overlay live prices from admin (via /api/pricing). Falls back to the
-  // hardcoded PLANS above if admin is unreachable — the page never breaks.
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch('/api/pricing')
-      .then(res => (res.ok ? res.json() : Promise.reject(new Error('pricing unavailable'))))
-      .then((data: { plans?: Array<{ id: string; monthlyPrice?: number | null; annualPrice?: number | null; currency?: string }> }) => {
-        if (cancelled || !Array.isArray(data.plans)) return;
-
-        const byId = new Map(data.plans.map(p => [p.id, p]));
-        setPlans(PLANS.map(plan => {
-          const live = byId.get(plan.id);
-          if (!live) return plan;
-          return {
-            ...plan,
-            monthlyPrice: live.monthlyPrice ?? plan.monthlyPrice,
-            annualPrice:  live.annualPrice  ?? plan.annualPrice,
-            currency:     live.currency     ?? plan.currency,
-          };
-        }));
-      })
-      .catch(() => { /* keep hardcoded fallback prices */ });
-
-    return () => { cancelled = true; };
-  }, []);
 
   return (
     <>
