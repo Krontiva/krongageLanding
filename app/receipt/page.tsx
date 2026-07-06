@@ -94,10 +94,12 @@ function ReceiptContent() {
   }
 
   const subtotal      = data.amount / 100;
-  const getfund       = +(subtotal * 0.025).toFixed(2);
-  const nhil          = +(subtotal * 0.025).toFixed(2);
-  const vat           = +(subtotal * 0.15).toFixed(2);
-  const total         = +(subtotal + getfund + nhil + vat).toFixed(2);
+  // --- VAT / Ghana taxes temporarily disabled — will restore later ---
+  // const getfund       = +(subtotal * 0.025).toFixed(2);
+  // const nhil          = +(subtotal * 0.025).toFixed(2);
+  // const vat           = +(subtotal * 0.15).toFixed(2);
+  // const total         = +(subtotal + getfund + nhil + vat).toFixed(2);
+  const total         = subtotal;   // no taxes for now — total = amount actually charged
   const curr          = data.currency;
   const fmt           = (n: number) => new Intl.NumberFormat('en-GH', { style: 'currency', currency: curr, minimumFractionDigits: 2 }).format(n);
 
@@ -209,10 +211,11 @@ function ReceiptContent() {
             <div style={{ maxWidth: '280px', marginLeft: 'auto' }}>
               {[
                 ['Subtotal',                           fmt(subtotal)],
-                ['Total excluding tax',                fmt(subtotal)],
-                [`GETFund – Ghana (2.5% on ${fmt(subtotal)})`, fmt(getfund)],
-                [`NHIL – Ghana (2.5% on ${fmt(subtotal)})`,    fmt(nhil)],
-                [`VAT – Ghana (15% on ${fmt(subtotal)})`,       fmt(vat)],
+                // --- VAT / Ghana taxes temporarily disabled — will restore later ---
+                // ['Total excluding tax',                fmt(subtotal)],
+                // [`GETFund – Ghana (2.5% on ${fmt(subtotal)})`, fmt(getfund)],
+                // [`NHIL – Ghana (2.5% on ${fmt(subtotal)})`,    fmt(nhil)],
+                // [`VAT – Ghana (15% on ${fmt(subtotal)})`,       fmt(vat)],
               ].map(([label, value]) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '13px', color: '#475569', borderBottom: '1px solid #f1f5f9' }}>
                   <span>{label}</span>
