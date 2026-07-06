@@ -29,6 +29,9 @@ function getResend(): Resend | null {
   return resend;
 }
 
+/** Small delay between billing-relay retry attempts */
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 /** Verify Paystack's own HMAC signature on the raw request body */
 function verifyPaystackSignature(rawBody: string, signature: string): boolean {
   const secret = process.env.PAYSTACK_SECRET_KEY;
@@ -69,24 +72,47 @@ export async function POST(req: NextRequest) {
 
   const event = JSON.parse(rawBody);
 
-  // Helper — relay raw Paystack body to billing endpoint (fire-and-forget)
-  function relayToBilling() {
+  // Helper — relay raw Paystack body to the billing endpoint, awaited with retries.
+  // Returns true if billing acknowledged (2xx), false if every attempt failed.
+  // The caller returns 500 on false so Paystack retries the whole event, instead
+  // of silently dropping a suspend/reactivate lifecycle message.
+  async function relayToBilling(): Promise<boolean> {
     const billingUrl = process.env.BILLING_WEBHOOK_URL;
-    if (!billingUrl) return;
-    fetch(billingUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-paystack-signature': paystackSig,
-        'User-Agent': 'KronGage-Webhook/1.0',
-      },
-      body: rawBody,
-    }).catch(err => console.error('[paystack-webhook] Billing relay error:', err));
+    if (!billingUrl) {
+      console.warn('[paystack-webhook] BILLING_WEBHOOK_URL not configured — skipping billing relay');
+      return true; // nothing to relay to; not a failure of this request
+    }
+    const maxAttempts = 3;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const res = await fetch(billingUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-paystack-signature': paystackSig,
+            'User-Agent': 'KronGage-Webhook/1.0',
+          },
+          body: rawBody,
+        });
+        if (res.ok) return true;
+        console.error(`[paystack-webhook] Billing relay attempt ${attempt}/${maxAttempts} → ${res.status}`);
+      } catch (err) {
+        console.error(`[paystack-webhook] Billing relay attempt ${attempt}/${maxAttempts} error:`, err);
+      }
+      if (attempt < maxAttempts) await sleep(300 * attempt);
+    }
+    return false;
   }
 
-  // 2. Non-charge.success events — relay to billing immediately, nothing to provision
+  // 2. Non-charge.success events — relay to billing (nothing to provision).
+  //    Await delivery: on failure return 500 so Paystack retries rather than
+  //    dropping a lifecycle event (e.g. subscription.disable) on the floor.
   if (event.event !== 'charge.success') {
-    relayToBilling();
+    const relayed = await relayToBilling();
+    if (!relayed) {
+      console.error(`[paystack-webhook] Billing relay failed for ${event.event} — asking Paystack to retry`);
+      return NextResponse.json({ error: 'Billing relay failed' }, { status: 500 });
+    }
     return NextResponse.json({ received: true });
   }
 
@@ -220,8 +246,15 @@ export async function POST(req: NextRequest) {
       }).catch(err => console.error('[paystack-webhook] Welcome email error:', err));
     }
 
-    // 7. Tenant now exists — safe to relay billing event
-    relayToBilling();
+    // 7. Tenant now exists — safe to relay billing event. Await delivery; on
+    //    failure return 500 so Paystack retries. Provisioning is idempotent by
+    //    paystack_reference, so the retry no-ops the tenant create and just
+    //    re-attempts this relay.
+    const relayed = await relayToBilling();
+    if (!relayed) {
+      console.error(`[paystack-webhook] Provisioned ${data.reference} but billing relay failed — asking Paystack to retry`);
+      return NextResponse.json({ error: 'Billing relay failed after provisioning' }, { status: 500 });
+    }
 
     return NextResponse.json({ received: true });
 
