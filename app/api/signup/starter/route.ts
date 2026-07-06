@@ -9,6 +9,13 @@ function getResend(): Resend | null {
   return resend;
 }
 
+/** True if WEBHOOK_URL was accidentally pointed at the always-200 billing endpoint. */
+function isBillingUrl(url: string): boolean {
+  const billing = process.env.BILLING_WEBHOOK_URL;
+  if (billing && url === billing) return true;
+  return /\/billing(\/|$)/.test(url) && !/\/provision\//.test(url);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -16,6 +23,15 @@ export async function POST(req: NextRequest) {
     const webhookUrl = process.env.WEBHOOK_URL;
     if (!webhookUrl) {
       return NextResponse.json({ error: 'WEBHOOK_URL not configured' }, { status: 500 });
+    }
+    // WEBHOOK_URL must be the provisioning endpoint, not the always-200 billing
+    // endpoint — pointing it at billing would silently create no account.
+    if (isBillingUrl(webhookUrl)) {
+      console.error(
+        `[starter-signup] MISCONFIG: WEBHOOK_URL points at a billing endpoint (${webhookUrl}); ` +
+        `it must be …/provision/signup. Refusing to provision.`,
+      );
+      return NextResponse.json({ error: 'WEBHOOK_URL misconfigured' }, { status: 500 });
     }
 
     // Starter has no paystack block — provision immediately, tenant gets status=active
@@ -40,7 +56,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Signup failed', detail: text }, { status: 502 });
     }
 
-    const data = await response.json().catch(() => ({ ok: true }));
+    // A 200 alone is not proof of provisioning — require the { ok:true, tenant_id }
+    // success contract (see docs/provisioning-api-signup-endpoint.md §5). A response
+    // without tenant_id means the call did not actually create a tenant (e.g. it
+    // landed on the always-200 billing endpoint); don't send a welcome email for it.
+    const data = await response.json().catch(() => null);
+    if (!data || data.ok !== true || !data.tenant_id) {
+      console.error(
+        `[starter-signup] Provisioning returned 200 but not a valid signup response. ` +
+        `Expected { ok:true, tenant_id }, got: ${JSON.stringify(data)}.`,
+      );
+      return NextResponse.json({ error: 'Provisioning not confirmed' }, { status: 502 });
+    }
 
     // Send welcome email — fire-and-forget, don't block the response
     const { user } = body;

@@ -37,6 +37,18 @@ function verifyPaystackSignature(rawBody: string, signature: string): boolean {
   return hash === signature;
 }
 
+/**
+ * True if a URL looks like the billing webhook rather than the provisioning
+ * endpoint. Used to catch a WEBHOOK_URL that was accidentally pointed at the
+ * always-200 billing endpoint. Compared against BILLING_WEBHOOK_URL when set,
+ * plus a path-substring fallback.
+ */
+function isBillingUrl(url: string): boolean {
+  const billing = process.env.BILLING_WEBHOOK_URL;
+  if (billing && url === billing) return true;
+  return /\/billing(\/|$)/.test(url) && !/\/provision\//.test(url);
+}
+
 /** Turn Paystack custom_fields array into a flat key→value map */
 function extractFields(customFields: Array<{ variable_name: string; value: string }> = []): Record<string, string> {
   const map: Record<string, string> = {};
@@ -88,6 +100,18 @@ export async function POST(req: NextRequest) {
   if (!webhookUrl) {
     console.error('[paystack-webhook] WEBHOOK_URL not configured');
     return NextResponse.json({ error: 'WEBHOOK_URL not configured' }, { status: 500 });
+  }
+  // Misconfiguration guard: WEBHOOK_URL must point at the provisioning endpoint,
+  // NOT the billing endpoint. The billing endpoint always returns 200 {ok:true}
+  // even with no matching tenant, so pointing provisioning at it would silently
+  // "succeed" while creating nothing — the exact failure that lost a paid signup.
+  if (isBillingUrl(webhookUrl)) {
+    console.error(
+      `[paystack-webhook] MISCONFIG: WEBHOOK_URL points at a billing endpoint (${webhookUrl}). ` +
+      `It must be the provisioning endpoint (…/provision/signup). Refusing to provision.`,
+    );
+    // 500 so Paystack retries once the env is corrected, and so this never no-ops silently.
+    return NextResponse.json({ error: 'WEBHOOK_URL misconfigured' }, { status: 500 });
   }
 
   // 3b. Anti-tampering: the plan claimed in metadata is client-supplied, so
@@ -153,7 +177,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Provisioning failed' }, { status: 500 });
     }
 
-    console.log('[paystack-webhook] Provisioned:', data.reference);
+    // A 200 alone is NOT proof of provisioning. The provisioning-api success
+    // contract is { ok: true, tenant_id: "…" } (see docs/provisioning-api-signup-endpoint.md §5).
+    // A response missing tenant_id means we did NOT hit /provision/signup — most
+    // likely a request that landed on the billing endpoint, which always 200s
+    // {ok:true} with no tenant. Treat that as a failure so Paystack retries and
+    // no customer is told "you're all set" when no account exists.
+    const result = await response.json().catch(() => null);
+    if (!result || result.ok !== true || !result.tenant_id) {
+      console.error(
+        `[paystack-webhook] Provisioning returned 200 but not a valid signup response for ${data.reference}. ` +
+        `Expected { ok:true, tenant_id }, got: ${JSON.stringify(result)}. ` +
+        `Check that WEBHOOK_URL and the Paystack webhook both target /provision/signup.`,
+      );
+      return NextResponse.json({ error: 'Provisioning not confirmed' }, { status: 500 });
+    }
+
+    console.log('[paystack-webhook] Provisioned:', data.reference, '→ tenant', result.tenant_id);
 
     // 6. Send welcome email — fire-and-forget
     const userEmail = data.customer?.email;
