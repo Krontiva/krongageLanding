@@ -22,7 +22,12 @@ import { buildSecureHeaders } from '@/src/lib/webhook-security';
 import { verifyPaidAmount } from '@/src/lib/verify-amount';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend | null = null;
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null;
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 /** Verify Paystack's own HMAC signature on the raw request body */
 function verifyPaystackSignature(rawBody: string, signature: string): boolean {
@@ -154,8 +159,8 @@ export async function POST(req: NextRequest) {
     const userEmail = data.customer?.email;
     const userName = fields.first_name || data.customer?.first_name || '';
     const planName = fields.plan_name || 'your plan';
-    if (userEmail) {
-      resend.emails.send({
+    if (userEmail && getResend()) {
+      getResend()!.emails.send({
         from: 'KronGage <info@krontiva.com>',
         to: userEmail,
         subject: `Welcome to KronGage — ${planName} account being set up`,

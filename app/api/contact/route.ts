@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend | null = null;
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null;
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +17,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    await resend.emails.send({
+    const client = getResend();
+    if (!client) {
+      console.error('[contact] RESEND_API_KEY not configured');
+      return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
+    }
+
+    await client.emails.send({
       from: 'KronGage <info@krontiva.com>',
       to: 'support@krontiva.africa',
       replyTo: email,
