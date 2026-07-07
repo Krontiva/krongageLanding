@@ -50,8 +50,8 @@ const PLANS: Plan[] = [
     id: 'growth',
     name: 'Growth',
     tagline: 'For growing teams',
-    monthlyPrice: 5000,
-    annualPrice: 4400,
+    monthlyPrice: 59,
+    annualPrice: 624,
     currency: 'USD',
     badge: 'Most Popular',
     featured: true,
@@ -75,8 +75,8 @@ const PLANS: Plan[] = [
     id: 'professional',
     name: 'Professional',
     tagline: 'For established businesses',
-    monthlyPrice: 6000,
-    annualPrice: 5280,
+    monthlyPrice: 129,
+    annualPrice: 1368,
     currency: 'USD',
     badge: null,
     featured: false,
@@ -684,11 +684,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                         <span className="pg-price-amount">{price!.toLocaleString()}</span>
                         <span className="pg-price-mo">/mo</span>
                       </div>
-                      <div className="pg-price-annual">
-                        {annual
-                          ? `$${(price! * 12).toLocaleString()} billed annually`
-                          : ' '}
-                      </div>
+                      <div className="pg-price-annual">{' '}</div>
                     </>
                   )}
 
