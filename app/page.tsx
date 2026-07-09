@@ -209,7 +209,7 @@ export default function HomePage() {
             <h1>Meet your customers wherever they are.</h1>
             <p>Technology should be the bridge to your customers, not the barrier. KronGage transforms fragmented data into a single, intelligent conversation — allowing your team to move past the &apos;search&apos; and straight to the &apos;solution.&apos;</p>
             <div className="hero-buttons">
-              <Link href="/contact" className="btn-primary">Get Started</Link>
+              <Link href="/contact" className="btn-primary">Request a Demo</Link>
               <Link href="/platform" className="btn-outline">Explore the Platform</Link>
             </div>
           </div>
