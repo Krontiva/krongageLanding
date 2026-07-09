@@ -26,8 +26,8 @@ const PLANS: Plan[] = [
     id: 'starter',
     name: 'Free',
     tagline: 'Get started at no cost',
-    monthlyPrice: 0,
-    annualPrice: 0,
+    monthlyPrice: null,
+    annualPrice: null,
     currency: 'USD',
     badge: null,
     featured: false,
@@ -36,22 +36,23 @@ const PLANS: Plan[] = [
     cta: 'Get Started Free',
     ctaHref: '/contact',
     features: [
-      '2 team members · 1 channel',
-      'KronChat (live chat + email)',
-      'Social Publishing — 2 accounts',
-      'KronCampaign — 500 contacts',
-      'Basic AI Workflows',
-      '1,000 AI requests / month',
-      'Basic analytics',
-      'Community support',
+      '1 team member',
+      'KronChat — WhatsApp & Email',
+      'Social Publishing — X, LinkedIn, Facebook, Telegram',
+      '10 social posts / month',
+      'KronCampaign — SMS only · 50 contacts/mo · 1 campaign',
+      '1,000 AI tokens / month',
+      '7-day data retention',
+      'Data archive requests',
+      'Email support',
     ],
   },
   {
     id: 'growth',
     name: 'Growth',
     tagline: 'For growing teams',
-    monthlyPrice: 5000,
-    annualPrice: 4400,
+    monthlyPrice: null,
+    annualPrice: null,
     currency: 'USD',
     badge: 'Most Popular',
     featured: true,
@@ -60,14 +61,14 @@ const PLANS: Plan[] = [
     cta: 'Start Growth Plan',
     ctaHref: null,
     features: [
-      '5 team members · 3 channels',
-      'KronChat (WhatsApp, SMS, Social DMs)',
-      'Social Publishing — 5 accounts',
-      'KronCampaign — 5,000 contacts',
-      'Full AI Workflows + AI Studio',
-      'Social Listening (lite)',
-      '10,000 AI requests / month',
-      'Standard analytics + CSAT',
+      '5 team members',
+      'KronChat — any 3 channels',
+      'Social Publishing — X, LinkedIn, Instagram, Facebook, Threads, Telegram, YouTube, Pinterest',
+      '25 social posts / month',
+      'KronCampaign — 125 contacts/mo · 5 campaigns',
+      '10,000 AI tokens / month',
+      '30-day data retention',
+      'Data archive requests',
       'Email support · Self-serve onboarding',
     ],
   },
@@ -75,8 +76,8 @@ const PLANS: Plan[] = [
     id: 'professional',
     name: 'Professional',
     tagline: 'For established businesses',
-    monthlyPrice: 6000,
-    annualPrice: 5280,
+    monthlyPrice: null,
+    annualPrice: null,
     currency: 'USD',
     badge: null,
     featured: false,
@@ -85,31 +86,34 @@ const PLANS: Plan[] = [
     cta: 'Start Professional Plan',
     ctaHref: null,
     features: [
-      '10 team members · 10 channels',
-      'All Growth features',
+      '10 team members',
+      'KronChat — any 5 channels',
+      'Social Publishing — all channels',
+      '100 social posts / month',
+      'KronCampaign — 200 contacts/mo · 10 campaigns',
+      '100,000 AI tokens / month',
+      '90-day data retention',
+      'Data archive requests',
       'Customer 360 CDP (unified profiles)',
-      'KronCampaign — 50,000 contacts + WhatsApp',
-      'Knowledge / RAG (lite)',
-      'Advanced analytics + downloadable reports',
       'SLA policies · 99.9% uptime',
-      '100,000 AI requests / month',
       'Priority support · Guided onboarding',
     ],
   },
   {
     id: 'enterprise',
     name: 'Enterprise',
-    tagline: 'On-prem for large organisations',
+    tagline: 'For large organisations',
     monthlyPrice: null,
     annualPrice: null,
     currency: 'USD',
-    badge: 'On-Premise',
+    badge: null,
     featured: false,
     free: false,
     enterprise: true,
     cta: 'Contact Sales',
     ctaHref: '/contact',
     features: [
+      'Deployment — on-prem & cloud',
       'Unlimited team members & channels',
       'Customer 360 CDP — all 4 scoring models',
       'Social Listening (enterprise-grade)',
@@ -124,36 +128,41 @@ const PLANS: Plan[] = [
 ];
 
 const COMPARISON_ROWS = [
-  ['Team members',        '2',       '5',       '10',      'Unlimited'],
-  ['Messaging channels',  '1',       '3',       '10',      'Unlimited'],
-  ['Storage',             '100 MB',  '1 GB',    '10 GB',   'Custom'],
-  ['AI requests / mo',    '1,000',   '10,000',  '100,000', 'Custom'],
-  ['KronChat Captain AI', '100 msgs','1,000 msgs','10,000 msgs','500K+'],
-  ['Campaign contacts',   '500',     '5,000',   '50,000',  'Custom'],
-  ['Social accounts',     '2',       '5',       '15',      'Unlimited'],
-  ['Customer 360 CDP',    '—',       '—',       'Lite',    'Full'],
-  ['Social Listening',    '—',       'Lite',    'Lite',    'Enterprise'],
-  ['Knowledge / RAG',     '—',       '—',       'Lite',    'Enterprise'],
-  ['Uptime SLA',          '—',       '—',       '99.9%',   'Custom'],
-  ['Support',             'Community','Email',  'Priority', 'Dedicated CSM'],
+  ['Team members',           '1',               '5',          '10',          'Unlimited'],
+  ['KronChat channels',      'WhatsApp, Email', 'Any 3',      'Any 5',       'Unlimited'],
+  ['KronChat Captain AI',    '100 msgs',        '1,000 msgs', '10,000 msgs', '500K+'],
+  ['Social channels',        '4',               '8',          'All',         'All'],
+  ['Social posts / mo',      '10',              '25',         '100',         'Custom'],
+  ['Campaign contacts / mo', '50',              '125',        '200',         'Custom'],
+  ['Campaigns / mo',         '1',               '5',          '10',          'Custom'],
+  ['AI tokens / mo',         '1,000',           '10,000',     '100,000',     'Custom'],
+  ['Data retention',         '7 days',          '30 days',    '90 days',     'Custom'],
+  ['Customer 360 CDP',       '—',               '—',          '✓',           '✓'],
+  ['Social Listening',       '—',               '—',          '—',           '✓'],
+  ['Knowledge / RAG',        '—',               '—',          '—',           '✓'],
+  ['Uptime SLA',             '—',               '—',          '99.9%',       'Custom'],
+  ['Data archive requests',  '✓',               '✓',          '✓',           '✓'],
+  ['Support',                'Email',            'Email',      'Priority',    'Dedicated CSM'],
 ];
 
 type LivePlan = { id: string; monthlyPrice?: number | null; annualPrice?: number | null; currency?: string };
 
-// Overlays live admin prices onto the hardcoded PLANS. Falls back to the
-// hardcoded defaults for any plan admin doesn't return — the page never breaks.
+// Prices are owned entirely by the admin app — the code holds NO hardcoded
+// prices. This applies the admin-supplied prices to each plan's marketing
+// shell (name, tagline, features, which admin does not provide). Any plan the
+// admin doesn't return a price for stays null and renders as "unavailable"
+// rather than showing a stale hardcoded number.
 function mergeLivePlans(livePlans: LivePlan[] | null | undefined) {
-  if (!Array.isArray(livePlans)) return PLANS;
-
-  const byId = new Map(livePlans.map(p => [p.id, p]));
+  const byId = new Map(
+    Array.isArray(livePlans) ? livePlans.map(p => [p.id, p] as const) : []
+  );
   return PLANS.map(plan => {
     const live = byId.get(plan.id);
-    if (!live) return plan;
     return {
       ...plan,
-      monthlyPrice: live.monthlyPrice ?? plan.monthlyPrice,
-      annualPrice:  live.annualPrice  ?? plan.annualPrice,
-      currency:     live.currency     ?? plan.currency,
+      monthlyPrice: live?.monthlyPrice ?? null,
+      annualPrice:  live?.annualPrice  ?? null,
+      currency:     live?.currency     ?? plan.currency,
     };
   });
 }
@@ -654,6 +663,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
         <div className="pg-cards">
           {plans.map(plan => {
             const price = annual ? plan.annualPrice : plan.monthlyPrice;
+            const hasPrice = price != null;
             const isFeatured = plan.featured;
             const isEnterprise = plan.enterprise;
             const cardClass = `pg-card${isFeatured ? ' pg-featured' : ''}${isEnterprise ? ' pg-enterprise' : ''}`;
@@ -677,16 +687,18 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                     <div className="pg-price-free">Free</div>
                   ) : isEnterprise ? (
                     <div className="pg-price-custom">Custom</div>
+                  ) : !hasPrice ? (
+                    <div className="pg-price-free">—</div>
                   ) : (
                     <>
                       <div className="pg-price-row">
                         <span className="pg-price-dollar">$</span>
-                        <span className="pg-price-amount">{price!.toLocaleString()}</span>
+                        <span className="pg-price-amount">{price.toLocaleString()}</span>
                         <span className="pg-price-mo">/mo</span>
                       </div>
                       <div className="pg-price-annual">
                         {annual
-                          ? `$${(price! * 12).toLocaleString()} billed annually`
+                          ? `$${(price * 12).toLocaleString()} billed annually`
                           : ' '}
                       </div>
                     </>
@@ -734,8 +746,10 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                   ) : (
                     <button
                       onClick={() => setCheckoutPlan(plan)}
+                      disabled={!hasPrice}
+                      style={!hasPrice ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
                       className={`pg-cta-primary ${isFeatured ? 'pg-cta-blue' : 'pg-cta-outline'}`}>
-                      {plan.cta}
+                      {hasPrice ? plan.cta : 'Pricing unavailable'}
                     </button>
                   )}
                 </div>

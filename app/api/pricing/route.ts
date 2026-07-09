@@ -2,12 +2,12 @@
  * GET /api/pricing
  *
  * Proxies to admin.krongage.io/api/pricing/plans using the shared WEBHOOK_SECRET.
- * Returns plan prices keyed by plan id so the pricing page can override its
- * hardcoded defaults. Returns 503 if admin is unreachable — the page then
- * falls back to its built-in prices, so the page never breaks.
+ * The admin app is the single source of truth for prices — the site holds no
+ * hardcoded prices. Returns 503 if admin is unreachable; the pricing page then
+ * renders each plan without a price ("—") rather than showing a stale number.
  *
  * Expected admin response shape:
- *   { "plans": [ { "id": "growth", "monthlyPrice": 5000, "annualPrice": 4400, "currency": "USD" }, ... ] }
+ *   { "plans": [ { "id": "growth", "monthlyPrice": 59, "annualPrice": 52, "currency": "USD" }, ... ] }
  */
 
 import { NextResponse } from 'next/server';

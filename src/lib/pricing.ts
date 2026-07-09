@@ -8,9 +8,10 @@ export type LivePlan = {
 const ADMIN_PRICING_URL = 'https://admin.krongage.io/api/pricing/plans';
 
 /**
- * Fetches live plan prices from the admin app. Used server-side so the
- * pricing page's first paint already reflects admin-set prices — avoids
- * the flicker of rendering hardcoded defaults before a client fetch resolves.
+ * Fetches live plan prices from the admin app — the single source of truth
+ * for pricing. Used server-side so the pricing page's first paint already
+ * reflects admin-set prices. Returns null if the fetch fails; the page then
+ * renders plans without a price rather than falling back to any hardcoded value.
  */
 export async function getLivePlans(): Promise<LivePlan[] | null> {
   const secret = process.env.WEBHOOK_SECRET;
