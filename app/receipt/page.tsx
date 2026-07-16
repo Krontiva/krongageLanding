@@ -7,10 +7,16 @@ interface ReceiptData {
   planName:     string;
   planId:       string;
   billing:      string;
-  amount:       number;       // in smallest unit (pesewas)
+  amount:       number;       // charged today, in smallest unit (pesewas)
   currency:     string;
   exchangeRate?: number;      // 1 USD = X GHS at time of payment
   usdPrice?:    number;       // original USD price (before conversion)
+  // 14-day free-trial signups: only a small card-verification amount is charged
+  // today; the full plan price is first charged on firstChargeDate.
+  trial?:              boolean;
+  trialDays?:          number;
+  firstChargeDate?:    string;   // ISO — when the first real charge happens
+  firstChargePesewas?: number;   // full plan price in GHS pesewas
   issuedAt:     string;
   user: {
     firstName: string;
@@ -103,6 +109,11 @@ function ReceiptContent() {
   const curr          = data.currency;
   const fmt           = (n: number) => new Intl.NumberFormat('en-GH', { style: 'currency', currency: curr, minimumFractionDigits: 2 }).format(n);
 
+  const isTrial              = !!data.trial;
+  const firstCharge          = (data.firstChargePesewas ?? 0) / 100;
+  const firstChargeDateLabel = data.firstChargeDate ? formatDate(data.firstChargeDate) : '';
+  const cadence              = data.billing === 'annual' ? 'annually' : 'monthly';
+
   return (
     <>
       <style>{`
@@ -184,6 +195,22 @@ function ReceiptContent() {
               </div>
             </div>
 
+            {/* Free-trial notice */}
+            {isTrial && (
+              <div style={{ background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: '12px', padding: '16px 20px', marginBottom: '28px' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#16a34a', marginBottom: '6px' }}>
+                  🎁 Your {data.trialDays ?? 14}-day free trial is active
+                </div>
+                <div style={{ fontSize: '13px', color: '#475569', lineHeight: 1.7 }}>
+                  You were charged <strong>{fmt(subtotal)}</strong> today only to verify your card — not for the plan.
+                  {data.firstChargePesewas != null && firstChargeDateLabel && (
+                    <> Your first payment of <strong>{fmt(firstCharge)}</strong> will be on <strong>{firstChargeDateLabel}</strong>, then {cadence}.</>
+                  )}{' '}
+                  Cancel anytime before then and you won&apos;t be charged.
+                </div>
+              </div>
+            )}
+
             {/* Line items table */}
             <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '24px' }}>
               <thead>
@@ -197,8 +224,16 @@ function ReceiptContent() {
               <tbody>
                 <tr>
                   <td style={{ padding: '14px 12px', fontSize: '14px', color: '#0f172a' }}>
-                    <div style={{ fontWeight: 600 }}>KronGage {data.planName} — {data.billing === 'annual' ? 'Annual' : 'Monthly'} Plan</div>
-                    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '3px' }}>{billingPeriod(data.issuedAt, data.billing)}</div>
+                    <div style={{ fontWeight: 600 }}>
+                      {isTrial
+                        ? `Card verification — KronGage ${data.planName} (${data.billing === 'annual' ? 'Annual' : 'Monthly'})`
+                        : `KronGage ${data.planName} — ${data.billing === 'annual' ? 'Annual' : 'Monthly'} Plan`}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '3px' }}>
+                      {isTrial
+                        ? `${data.trialDays ?? 14}-day free trial${firstChargeDateLabel ? ` · first charge ${firstChargeDateLabel}` : ''}`
+                        : billingPeriod(data.issuedAt, data.billing)}
+                    </div>
                   </td>
                   <td style={{ padding: '14px 12px', textAlign: 'center', fontSize: '14px', color: '#475569' }}>1</td>
                   <td style={{ padding: '14px 12px', textAlign: 'right', fontSize: '14px', color: '#475569' }}>{fmt(subtotal)}</td>
@@ -236,14 +271,22 @@ function ReceiptContent() {
             <div style={{ marginTop: '36px', paddingTop: '20px', borderTop: '1.5px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
               <div style={{ fontSize: '12px', color: '#94a3b8' }}>
                 <div>Paid via Paystack · {data.reference}</div>
-                {data.exchangeRate && data.usdPrice && (
-                  <div style={{ marginTop: '4px' }}>
-                    ${data.usdPrice.toLocaleString()} USD charged at 1 USD = {data.exchangeRate.toFixed(2)} GHS
-                  </div>
+                {isTrial ? (
+                  data.exchangeRate && data.usdPrice ? (
+                    <div style={{ marginTop: '4px' }}>
+                      First charge ${data.usdPrice.toLocaleString()} USD at 1 USD = {data.exchangeRate.toFixed(2)} GHS
+                    </div>
+                  ) : null
+                ) : (
+                  data.exchangeRate && data.usdPrice && (
+                    <div style={{ marginTop: '4px' }}>
+                      ${data.usdPrice.toLocaleString()} USD charged at 1 USD = {data.exchangeRate.toFixed(2)} GHS
+                    </div>
+                  )
                 )}
               </div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#dcfce7', color: '#16a34a', fontWeight: 700, fontSize: '12px', padding: '4px 12px', borderRadius: '50px' }}>
-                ✓ Payment confirmed
+                {isTrial ? '✓ Trial started' : '✓ Payment confirmed'}
               </div>
             </div>
 

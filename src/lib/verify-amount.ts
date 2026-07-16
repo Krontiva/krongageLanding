@@ -2,9 +2,11 @@
  * Server-side payment-amount verification.
  *
  * The browser chooses the Paystack charge amount and the plan metadata, so
- * NEITHER can be trusted (a tampered client could pay 1 GHS while claiming the
+ * NEITHER can be trusted (a tampered client could pay 5 GHS while claiming the
  * Professional plan). Before provisioning, we independently recompute what the
- * charge SHOULD have been from authoritative sources and reject underpayment.
+ * charge SHOULD have been from authoritative sources and enforce an allowlist:
+ * accept EITHER the exact tokenization charge (14-day free-trial signup) OR a
+ * charge ≈ the full plan price (legacy charge-now); reject everything between.
  *
  * Authoritative sources (same ones the public proxy routes use):
  *   - Canonical USD plan prices:  admin.krongage.io/api/pricing/plans
@@ -20,6 +22,8 @@
  * retry the webhook later (once admin is reachable) rather than provisioning on
  * an unverified amount.
  */
+
+import { TOKENIZATION_PESEWAS } from './billing-constants';
 
 const ADMIN_PRICING_URL = 'https://admin.krongage.io/api/pricing/plans';
 const ADMIN_RATE_URL = 'https://admin.krongage.io/api/exchange-rate';
@@ -113,10 +117,21 @@ export async function verifyPaidAmount(params: {
   const expectedPesewas = Math.round(usdTotal * rate) * 100;
   const minAcceptable = Math.floor(expectedPesewas * (1 - TOLERANCE));
 
+  // Two legitimate charge amounts, everything between is tampering (allowlist):
+  //   1. The exact tokenization charge → a 14-day free-trial signup. Paystack
+  //      only saves a reusable card after a real charge, so the trial charges a
+  //      tiny fixed amount (GHS 1); the platform then sets the first real charge
+  //      to day 14. See docs/09-PAYSTACK-SUBSCRIPTIONS-HANDOFF.md §0.
+  //   2. ≈ the full plan price → the legacy charge-now flow.
+  // Anything in between (e.g. "pay 5 GHS, claim Professional") is rejected.
+  if (paidPesewas === TOKENIZATION_PESEWAS) {
+    return { ok: true, expectedPesewas, paidPesewas };
+  }
+
   if (paidPesewas < minAcceptable) {
     return {
       ok: false,
-      reason: `underpaid: paid ${paidPesewas} pesewas, expected ~${expectedPesewas} (min ${minAcceptable})`,
+      reason: `unexpected amount: paid ${paidPesewas} pesewas, expected either the tokenization charge (${TOKENIZATION_PESEWAS}) or ~full price (${expectedPesewas}, min ${minAcceptable})`,
       expectedPesewas,
       paidPesewas,
     };

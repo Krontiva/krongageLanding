@@ -1,6 +1,7 @@
 'use client';
 import { useState, useMemo, useEffect } from 'react';
 import { usePaystackPayment } from 'react-paystack';
+import { TOKENIZATION_PESEWAS, TOKENIZATION_GHS, TRIAL_DAYS } from '@/src/lib/billing-constants';
 
 function buildReference(planId: string, billing: 'monthly' | 'annual'): string {
   const planShort  = planId === 'professional' ? 'PRO' : planId.toUpperCase();
@@ -63,8 +64,22 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
       .finally(() => setRateLoading(false));
   }, []);
 
+  // The full plan price in GHS. No longer charged at signup — the trial only
+  // tokenizes the card (see below) — but still shown so the customer knows what
+  // will be charged when the trial ends.
   const ghsTotal        = Math.round(usdTotal * ghsRate);
   const amountInPesewas = ghsTotal * 100;
+
+  // 14-day free trial: charge only a tiny fixed tokenization amount now (GHS 1)
+  // to save the card; the platform sets the first real charge to trial-end.
+  // Kept as a constant shared with the server-side amount guard.
+  const firstChargeDate = useMemo(
+    () => new Date(Date.now() + TRIAL_DAYS * 864e5),
+    [],
+  );
+  const firstChargeLabel = firstChargeDate.toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
 
   // Reference is stable for the lifetime of this modal — never changes on re-render
   const reference = useMemo(
@@ -76,7 +91,7 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
   const config = {
     reference,
     email:    form.email,
-    amount:   amountInPesewas,   // GHS pesewas
+    amount:   TOKENIZATION_PESEWAS,   // GHS 1 card tokenization — NOT the plan price (14-day free trial)
     publicKey,
     currency: 'GHS',
     metadata: {
@@ -116,8 +131,13 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
       planName:     plan.name,
       planId:       plan.id,
       billing,
-      amount:       amountInPesewas,  // GHS pesewas
+      amount:       TOKENIZATION_PESEWAS,   // charged today: GHS 1 card verification
       currency:     'GHS',
+      // 14-day free trial: nothing billed for the plan yet; first real charge at trial-end.
+      trial:            true,
+      trialDays:        TRIAL_DAYS,
+      firstChargeDate:  firstChargeDate.toISOString(),
+      firstChargePesewas: amountInPesewas,  // full plan price in GHS, charged on firstChargeDate
       exchangeRate: ghsRate,          // rate used at checkout (1 USD = X GHS)
       usdPrice:     usdTotal,         // original USD amount for display
       issuedAt:     new Date().toISOString(),
@@ -220,16 +240,18 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
               <span style={{ fontSize: '28px', fontWeight: 800 }}>${price.toLocaleString()}</span>
               <span style={{ fontSize: '14px', opacity: 0.7 }}>/mo</span>
+              {annual && (
+                <span style={{ fontSize: '12px', opacity: 0.7, marginLeft: '4px' }}>
+                  · <span style={{ color: '#86efac', fontWeight: 700 }}>Save 12%</span>
+                </span>
+              )}
             </div>
-            {annual ? (
-              <div style={{ fontSize: '12px', opacity: 0.7, marginTop: '4px' }}>
-                ${(price * 12).toLocaleString()} billed annually · <span style={{ color: '#86efac', fontWeight: 700 }}>Save 12%</span>
-              </div>
-            ) : (
-              <div style={{ fontSize: '12px', opacity: 0.65, marginTop: '4px' }}>
-                Billed monthly · Cancel anytime
-              </div>
-            )}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '10px', background: 'rgba(134,239,172,0.18)', color: '#bbf7d0', fontWeight: 700, fontSize: '12px', padding: '4px 10px', borderRadius: '50px' }}>
+              🎁 14-day free trial
+            </div>
+            <div style={{ fontSize: '12px', opacity: 0.75, marginTop: '8px', lineHeight: 1.5 }}>
+              GHS {TOKENIZATION_GHS} card verification today · first charge{annual ? ` ($${(price * 12).toLocaleString()}/yr)` : ` ($${price.toLocaleString()}/mo)`} on {firstChargeLabel} · cancel anytime
+            </div>
           </div>
 
           {/* Body */}
@@ -268,7 +290,7 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '2px' }}>
-                  Fill in your details to complete your subscription.
+                  Fill in your details to start your 14-day free trial.
                 </p>
 
                 {/* Name row */}
@@ -365,9 +387,7 @@ export default function PaystackCheckout({ plan, annual, onClose }: Props) {
                       ? 'Loading…'
                       : step === 'paying'
                         ? 'Opening Paystack…'
-                        : annual
-                          ? `Pay $${(price * 12).toLocaleString()}/yr →`
-                          : `Pay $${price.toLocaleString()}/mo →`
+                        : `Start free trial · GHS ${TOKENIZATION_GHS} today →`
                     }
                   </button>
                 )}
