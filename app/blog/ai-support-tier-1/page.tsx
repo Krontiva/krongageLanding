@@ -212,7 +212,7 @@ export default function Page() {
     <div className="rule-block">
       <div className="rule-num">Rule 02</div>
       <div className="rule-title">Set escalation triggers — don't leave them to chance</div>
-      <div className="rule-body">Frustration signals in text are detectable: repetition, caps, explicit requests for a human, certain sentiment patterns. Your AI should be wired to recognize these and escalate immediately — not after another bot response that makes the customer angrier. Define your triggers deliberately. Review them monthly. The triggers you set today won't be right in six months.</div>
+      <div className="rule-body">Frustration signals in text are detectable: repetition, caps, explicit requests for a human, certain sentiment patterns. Your AI should be wired to recognise these and escalate immediately — not after another bot response that makes the customer angrier. Define your triggers deliberately. Review them monthly. The triggers you set today won't be right in six months.</div>
     </div>
 
     <div className="rule-block">

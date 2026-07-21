@@ -201,8 +201,8 @@ export default function Page() {
 <section className="feature">
   <div className="feature-text">
     <div className="tag">Omnichannel Inbox</div>
-    <h2>Every Conversation. Every Channel – One Workspace</h2>
-    <p>The command centre of KronGage. Manage all customer conversations across 15+ channels in a single, intelligent interface. Your agents never need to switch between tools – every interaction is visible, searchable, and contextually enriched.</p>
+    <h2>Every Conversation. Every Channel. One Workspace.</h2>
+    <p>The command centre of KronGage. Manage all customer conversations across 15+ channels in a single, intelligent interface. Agents never need to switch between tools: every interaction is visible, searchable, and contextually enriched.</p>
     <a href="/platform/omnichannel-inbox/" className="btn-blue">Learn More</a>
   </div>
   <div className="feature-visual">
@@ -234,7 +234,7 @@ export default function Page() {
   <div className="feature-text">
     <div className="tag">Social Listening &amp; Monitoring</div>
     <h2>Know What They're Saying Before It's Too Late</h2>
-    <p>Monitor your brand across multiple platforms in real time. Track mentions, analyse sentiment, benchmark competitors, and respond proactively to emerging conversations – all from one powerful dashboard.</p>
+    <p>Monitor brand activity across multiple platforms in real time. Track mentions, analyse sentiment, benchmark competitors, and respond proactively to emerging conversations, all from one powerful dashboard.</p>
     <a href="/contact/" className="btn-dark">Contact Us</a>
   </div>
   <div className="feature-visual">
@@ -250,7 +250,7 @@ export default function Page() {
   <div className="feature-text">
     <div className="tag">Knowledge Management &amp; RAG</div>
     <h2>Smart Answers. Instantly.</h2>
-    <p>Power both customer self-service and agent-assisted support with an AI-driven knowledge base. Retrieval Augmented Generation (RAG) technology ensures every answer is contextually relevant, accurate, and drawn from your most current information.</p>
+    <p>Power both customer self-service and agent-assisted support with an AI-driven knowledge base. Retrieval-Augmented Generation (RAG) technology ensures every answer is contextually relevant, accurate, and drawn from the most current information.</p>
     <a href="/contact/" className="btn-dark">Contact Us</a>
   </div>
   <div className="feature-visual">
@@ -266,14 +266,14 @@ export default function Page() {
   <div className="feature-text">
     <div className="tag">Security &amp; Compliance</div>
     <h2>Enterprise-Grade Security, Built In</h2>
-    <p>Manage complex teams, enforce security policies, and maintain compliance with enterprise-grade controls designed for agencies managing multiple client accounts and organisations with distributed teams.</p>
+    <p>Manage complex teams, enforce security policies, and maintain compliance with enterprise-grade controls designed for agencies managing multiple client accounts and for organisations with distributed teams.</p>
     <p style={{fontWeight:"700",color:"#0f172a",marginTop:"20px",marginBottom:"12px",fontSize:"14px"}}>Enterprise Authentication &amp; Security</p>
     <ul>
-      <li>Single Sign On (SSO) with OIDC and OAuth 2.0 support</li>
+      <li>Single Sign-On (SSO) with OIDC and OAuth 2.0 support</li>
       <li>Field-level encryption for personally identifiable information (PII)</li>
-      <li>Multi-Factor Authentication (MFA) with TOTP and SMS options</li>
+      <li>Multi-factor authentication (MFA) with TOTP and SMS options</li>
       <li>Session management and automatic timeout controls</li>
-      <li>Flexible Role-Based Access Control</li>
+      <li>Flexible role-based access control</li>
     </ul>
     <a href="/contact/" className="btn-dark">Contact Us</a>
   </div>
@@ -290,7 +290,7 @@ export default function Page() {
   <div className="feature-text">
     <div className="tag">AI &amp; Automation</div>
     <h2>Automate Conversations. Delight Customers.</h2>
-    <p>Deploy intelligent AI copilots and chatbots that handle routine queries instantly, escalate complex issues seamlessly, and learn from every interaction — freeing your team to focus on what matters most.</p>
+    <p>Deploy intelligent AI copilots and chatbots that handle routine queries instantly, escalate complex issues seamlessly, and learn from every interaction, freeing teams to focus on what matters most.</p>
     <a href="/platform/ai-automation/" className="btn-blue">Learn More</a>
   </div>
   <div className="feature-visual">
@@ -306,7 +306,7 @@ export default function Page() {
   <div className="feature-text">
     <div className="tag">Customer 360</div>
     <h2>A Complete View of Every Customer</h2>
-    <p>Unify customer data from every touchpoint into a single, real-time profile. Understand behaviour, predict needs, and personalise every interaction — all from one powerful data platform.</p>
+    <p>Unify customer data from every touchpoint into a single, real-time profile. Understand behaviour, predict needs, and personalise every interaction, all from one powerful data platform.</p>
     <a href="/platform/customer-data/" className="btn-blue">Learn More</a>
   </div>
   <div className="feature-visual">
@@ -322,7 +322,7 @@ export default function Page() {
   <div className="feature-text">
     <div className="tag">Campaign Management</div>
     <h2>Run Smarter Campaigns Across Every Channel</h2>
-    <p>Plan, execute, and optimise multi-channel campaigns from a single workspace. Track performance in real time, collaborate with your team, and drive measurable results across email, SMS, social, and more.</p>
+    <p>Plan, execute, and optimise multi-channel campaigns from a single workspace. Track performance in real time, collaborate across teams, and drive measurable results across email, SMS, social, and more.</p>
     <a href="/platform/campaign-management/" className="btn-blue">Learn More</a>
   </div>
   <div className="feature-visual">
@@ -335,7 +335,7 @@ export default function Page() {
 {/* DARK CTA */}
 <section className="dark-cta">
   <h2>Transform Customer Engagement Today</h2>
-  <p>Request your enterprise demo today and see how KronGage can replace 5–7 tools with a single, united platform built for your organisation.</p>
+  <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
   <div className="cta-buttons">
     <a href="/contact/" className="btn-white">Request a Demo →</a>
   </div>

@@ -178,7 +178,7 @@ export default function Page() {
 
     <p>And three months later, churn is at 8%.</p>
 
-    <p>This is the vanity metric trap, and it is far more expensive than most leadership teams realize. Not because these numbers are fake — they're real. But because they measure activity, not outcomes. They tell you what happened to your content, not what happened to your customers.</p>
+    <p>This is the vanity metric trap, and it is far more expensive than most leadership teams realise. Not because these numbers are fake — they're real. But because they measure activity, not outcomes. They tell you what happened to your content, not what happened to your customers.</p>
 
     <p>The companies that are winning the retention game have figured out a different set of numbers to obsess over. Let me tell you what those are and why they're different.</p>
 
@@ -207,7 +207,7 @@ export default function Page() {
         <tr><th>Vanity Metric</th><th>What You Track Instead</th><th>Why It's Better</th></tr>
       </thead>
       <tbody>
-        <tr><td>Email open rate</td><td>Post-email conversion / action rate</td><td>Measures whether the email drove a behavior, not just a click</td></tr>
+        <tr><td>Email open rate</td><td>Post-email conversion / action rate</td><td>Measures whether the email drove a behaviour, not just a click</td></tr>
         <tr><td>Total followers</td><td>Engaged audience growth rate</td><td>Growth in people who actually respond, not just observe</td></tr>
         <tr><td>Monthly active users</td><td>Feature adoption depth &amp; session frequency trends</td><td>Distinguishes shallow engagement from sticky usage</td></tr>
         <tr><td>CSAT score</td><td>CSAT-to-renewal correlation by segment</td><td>Connects satisfaction to the business outcome it's supposed to predict</td></tr>
@@ -252,7 +252,7 @@ export default function Page() {
 
     <h2 id="celebrate">Changing What You Celebrate</h2>
 
-    <p>This is ultimately a leadership question as much as a technology one. The metrics you put on the weekly slide determine what behavior gets rewarded. If you're celebrating open rates, your team will optimize for open rates. If you're celebrating retention cohorts, your team will protect them.</p>
+    <p>This is ultimately a leadership question as much as a technology one. The metrics you put on the weekly slide determine what behaviour gets rewarded. If you're celebrating open rates, your team will optimise for open rates. If you're celebrating retention cohorts, your team will protect them.</p>
 
     <p>The shift isn't complicated to explain. It's just uncomfortable to make, because it means retiring some numbers that felt like wins. It means being honest that a 40% open rate on a campaign where 30% of those customers churned within 90 days is not, in fact, something to celebrate.</p>
 

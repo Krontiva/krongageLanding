@@ -202,7 +202,7 @@ export default function Page() {
       </div>
     </div>
 
-    <p>This isn't a technology problem anymore. It was, five years ago. Now the infrastructure exists to unify everything. The problem today is mostly organizational — teams that operate in silos, tools that don't talk to each other, and leadership that hasn't connected the dots between fragmented experience and churn.</p>
+    <p>This isn't a technology problem anymore. It was, five years ago. Now the infrastructure exists to unify everything. The problem today is mostly organisational — teams that operate in silos, tools that don't talk to each other, and leadership that hasn't connected the dots between fragmented experience and churn.</p>
 
     <div className="pull-quote">
       <p>"Your customer doesn't care which department they're talking to. They have one relationship with your brand. The moment you make them feel otherwise, you've already started losing them."</p>
@@ -216,7 +216,7 @@ export default function Page() {
 
     <p><strong>Context-carrying conversations.</strong> When a conversation moves from WhatsApp to email to a phone call, the context travels with it. The agent doesn't say "how can I help you?" — they say "I can see you've been waiting on your claim since last Tuesday. Let me look into this."</p>
 
-    <p><strong>A single inbox for your team.</strong> Your agents shouldn't be logged into four different applications to handle WhatsApp, email, Instagram and SMS. One inbox, unified routing, AI-assisted prioritization. This isn't a nice-to-have. Agent efficiency and customer experience are directly tied.</p>
+    <p><strong>A single inbox for your team.</strong> Your agents shouldn't be logged into four different applications to handle WhatsApp, email, Instagram and SMS. One inbox, unified routing, AI-assisted prioritisation. This isn't a nice-to-have. Agent efficiency and customer experience are directly tied.</p>
 
     <p><strong>Channel-agnostic escalation paths.</strong> A customer who starts on self-service and needs a human should reach a human regardless of which channel they're on — and that handoff should feel like a continuation, not a fresh start.</p>
 
@@ -226,9 +226,9 @@ export default function Page() {
 
     <p>WhatsApp is a brilliant channel. But it can become a data silo as easily as any other tool if you're not intentional about integration. Your engagement data needs to flow back into a central profile, trigger downstream actions, and inform campaigns on every other channel. Otherwise, you've just moved your silo to a green icon.</p>
 
-    <h2 id="build-toward">What to Actually Build Toward</h2>
+    <h2 id="build-towards">What to Actually Build Towards</h2>
 
-    <p>The brands winning at this in 2025 have two things in common. First, they've standardized on a platform that provides the unified layer — not stitched together from six tools with a middleware nightmare, but genuinely unified from the ground up. Second, they've organized their customer-facing teams around the customer, not around the channel.</p>
+    <p>The brands winning at this in 2025 have two things in common. First, they've standardised on a platform that provides the unified layer — not stitched together from six tools with a middleware nightmare, but genuinely unified from the ground up. Second, they've organised their customer-facing teams around the customer, not around the channel.</p>
 
     <p>That second part is often harder than the technology. It requires breaking down the "WhatsApp team" and the "email team" and replacing them with a "customer team" that happens to handle multiple channels. It changes how you measure performance, how you assign ownership, and how you compensate people.</p>
 
@@ -250,7 +250,7 @@ export default function Page() {
       <a href="#multi-vs-omni" className="toc-item"><div className="toc-num">1</div>Multi-Channel vs. Omnichannel</a>
       <a href="#requirements" className="toc-item"><div className="toc-num">2</div>What True Omnichannel Requires</a>
       <a href="#whatsapp-trap" className="toc-item"><div className="toc-num">3</div>The WhatsApp Trap</a>
-      <a href="#build-toward" className="toc-item"><div className="toc-num">4</div>What to Actually Build Toward</a>
+      <a href="#build-towards" className="toc-item"><div className="toc-num">4</div>What to Actually Build Towards</a>
     </div>
     <div className="sidebar-card">
       <h4>Related Reading</h4>

@@ -19,7 +19,7 @@ const SOLUTIONS_LINKS = [
 ];
 
 const COMPANY_LINKS = [
-  ['About Krondiva', '/about'],
+  ['About Krontiva', '/about'],
   ['Contact Us', '/contact'],
   ['Blog', '/blog'],
   ['Privacy Policy', '/privacy-policy'],
@@ -53,7 +53,7 @@ export default function Footer() {
               Enterprise AI Customer Engagement — World-Class Platform
             </p>
             <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.7 }}>
-              Developed by Krondiva.<br />
+              Developed by Krontiva.<br />
               Delivering world-class enterprise solutions globally.<br />
               Certified Meta WhatsApp Technology Provider.
             </p>
@@ -106,7 +106,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid #1e293b', paddingTop: '28px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
           <span style={{ fontSize: '13px', color: '#475569' }}>
-            © {new Date().getFullYear()} Krondiva. KronGage is a product of Krondiva Ltd. All Rights Reserved.
+            © {new Date().getFullYear()} Krontiva. KronGage is a product of Krontiva Ltd. All Rights Reserved.
           </span>
           <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
             <Link href="/privacy-policy" className="ft-bottom-link">Privacy Policy</Link>

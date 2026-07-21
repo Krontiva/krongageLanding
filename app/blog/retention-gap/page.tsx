@@ -196,30 +196,30 @@ export default function Page() {
 
     <h2 id="signal-problem">The Signal Problem</h2>
 
-    <p>Most CS platforms generate enormous volumes of data: login frequency, feature usage, support ticket sentiment, NPS scores, renewal dates. But data isn't insight, and insight without action is theater.</p>
+    <p>Most CS platforms generate enormous volumes of data: login frequency, feature usage, support ticket sentiment, NPS scores, renewal dates. But data isn't insight, and insight without action is theatre.</p>
 
     <p>The classic failure mode looks like this: a customer's engagement score drops 40% over three weeks. The dashboard turns amber. A CS manager sees it on their Friday review. They flag it for Monday follow-up. By Monday, the customer has already spoken to a competitor.</p>
 
     <div className="pull-quote">
-      <p>"The gap isn't data. It's the distance between when a signal fires and when a human acts on it. In most organizations, that gap is measured in days — sometimes weeks."</p>
+      <p>"The gap isn't data. It's the distance between when a signal fires and when a human acts on it. In most organisations, that gap is measured in days — sometimes weeks."</p>
     </div>
 
-    <p>The root cause is structural. CS teams are organized around accounts, not moments. They monitor, they schedule, they react. But retention is won and lost in moments of friction — a failed payment, a confusing upgrade flow, an unanswered question at 11pm — that don't wait for office hours.</p>
+    <p>The root cause is structural. CS teams are organised around accounts, not moments. They monitor, they schedule, they react. But retention is won and lost in moments of friction — a failed payment, a confusing upgrade flow, an unanswered question at 11pm — that don't wait for office hours.</p>
 
     <h2 id="tooling">Why Tooling Alone Won't Save You</h2>
 
-    <p>The market has responded to the retention crisis with a flood of tooling: customer health platforms, AI-powered scoring, predictive churn models. These tools are valuable. But most organizations implement them in silos, disconnected from the channels where customers actually communicate.</p>
+    <p>The market has responded to the retention crisis with a flood of tooling: customer health platforms, AI-powered scoring, predictive churn models. These tools are valuable. But most organisations implement them in silos, disconnected from the channels where customers actually communicate.</p>
 
-    <p>Consider the typical enterprise stack: a CRM for relationship data, a ticketing system for support, a CDP for behavioral data, a separate tool for WhatsApp or SMS outreach, and a BI layer that ties none of them together in real time. The CS manager lives in five tabs and a spreadsheet.</p>
+    <p>Consider the typical enterprise stack: a CRM for relationship data, a ticketing system for support, a CDP for behavioural data, a separate tool for WhatsApp or SMS outreach, and a BI layer that ties none of them together in real time. The CS manager lives in five tabs and a spreadsheet.</p>
 
-    <p>The result: by the time a churn risk is identified, escalated, and a personalized outreach is composed and sent, the window has closed. The customer didn't wait. They rarely do.</p>
+    <p>The result: by the time a churn risk is identified, escalated, and a personalised outreach is composed and sent, the window has closed. The customer didn't wait. They rarely do.</p>
 
     <h2 id="three-patterns">Three Patterns That Separate Retainers from Churners</h2>
 
-    <p>Across our customer base, the organizations with the lowest churn share three operational patterns that most teams lack:</p>
+    <p>Across our customer base, the organisations with the lowest churn share three operational patterns that most teams lack:</p>
 
     <h3>1. Real-time signal routing</h3>
-    <p>The best retention teams don't wait for weekly reviews. They have systems that automatically route behavioral signals — a sudden drop in login frequency, a support ticket with specific keywords, a payment failure — directly to a response workflow. The response may be automated (an AI agent sends a check-in message), semi-automated (a CS manager is alerted with a suggested action), or manual (a senior CSM calls the account). But the routing is instant.</p>
+    <p>The best retention teams don't wait for weekly reviews. They have systems that automatically route behavioural signals — a sudden drop in login frequency, a support ticket with specific keywords, a payment failure — directly to a response workflow. The response may be automated (an AI agent sends a check-in message), semi-automated (a CS manager is alerted with a suggested action), or manual (a senior CSM calls the account). But the routing is instant.</p>
 
     <h3>2. Channel-native engagement</h3>
     <p>Sending an email to a customer who communicates exclusively on WhatsApp is not engagement — it's noise. High-retention teams map every customer's preferred channel during onboarding and enforce that preference in every outreach. When a churn signal fires, the response goes to the right channel, in the right format, with the right tone.</p>
@@ -235,13 +235,13 @@ export default function Page() {
 
     <p>Artificial intelligence is often positioned as a replacement for human CS teams. That's the wrong frame. The more valuable application is using AI to eliminate the latency that causes the Retention Gap in the first place.</p>
 
-    <p>AI agents can monitor engagement signals continuously, draft personalized outreach in the customer's preferred language and tone, respond to routine queries at any hour, and flag complex situations for human escalation — all without the scheduling constraints and context-switching costs that plague human-only teams.</p>
+    <p>AI agents can monitor engagement signals continuously, draft personalised outreach in the customer's preferred language and tone, respond to routine queries at any hour, and flag complex situations for human escalation — all without the scheduling constraints and context-switching costs that plague human-only teams.</p>
 
     <p>The key is not automation for its own sake. It's using automation to compress the time between signal and response, while ensuring that human CS professionals are focused on high-complexity, high-value interactions where empathy and judgment matter most.</p>
 
     <h2 id="in-practice">What This Looks Like in Practice</h2>
 
-    <p>One of our telecom customers in West Africa was facing 22% annual churn — industry-average for their segment, but painful at their scale. After implementing a unified engagement layer that connected their behavioral data to automated WhatsApp outreach and a centralized CS workspace, they saw:</p>
+    <p>One of our telecom customers in West Africa was facing 22% annual churn — industry-average for their segment, but painful at their scale. After implementing a unified engagement layer that connected their behavioural data to automated WhatsApp outreach and a centralised CS workspace, they saw:</p>
 
     <ul>
       <li>Churn signals now trigger outreach within 4 hours on average (down from 11 days)</li>
@@ -254,9 +254,9 @@ export default function Page() {
 
     <h2 id="closing">Closing the Gap</h2>
 
-    <p>The Retention Gap is not a technology problem. It's an organizational problem enabled by disconnected technology. Teams that close the gap do so by unifying their data, automating the routine, and empowering their humans to focus where it matters.</p>
+    <p>The Retention Gap is not a technology problem. It's an organisational problem enabled by disconnected technology. Teams that close the gap do so by unifying their data, automating the routine, and empowering their humans to focus where it matters.</p>
 
-    <p>The good news: the signals are already there. Your customers are telling you — through their behavior, their support tickets, their engagement patterns — exactly when they're at risk. The question is whether your systems are listening fast enough to respond before it's too late.</p>
+    <p>The good news: the signals are already there. Your customers are telling you — through their behaviour, their support tickets, their engagement patterns — exactly when they're at risk. The question is whether your systems are listening fast enough to respond before it's too late.</p>
 
     <div className="cta-box">
       <h3>See How KronGage Closes the Gap</h3>

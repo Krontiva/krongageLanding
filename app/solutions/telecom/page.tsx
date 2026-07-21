@@ -291,8 +291,8 @@ export default function Page() {
   <div className="hero-layout">
     <div className="hero-text">
       <div className="breadcrumb"><a href="/solutions/">Solutions</a><span>›</span>Telecommunications</div>
-      <h1>Revolutionize How Your Network Engages Subscribers Across Every Global Touchpoint</h1>
-      <p>At the heart of every Tier-1 carrier is the subscriber relationship. KronGage helps CSPs bridge the gap between fragmented network data and meaningful customer engagement. By unifying every interaction—from billing inquiries to technical support—into one intelligent hub, your teams can deliver a proactive, high-touch experience.</p>
+      <h1>Revolutionise How Networks Engage Subscribers Across Every Global Touchpoint</h1>
+      <p>At the heart of every Tier-1 carrier is the subscriber relationship. KronGage helps CSPs bridge the gap between fragmented network data and meaningful customer engagement. By unifying every interaction, from billing enquiries to technical support, into one intelligent hub, teams can deliver a proactive, high-touch experience.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Schedule A Demo</a></div>
     </div>
     <div className="hero-visual">
@@ -303,17 +303,17 @@ export default function Page() {
 
   <section className="challenge-section">
     <h2>The Digital Subscriber Dilemma</h2>
-    <p>We understand that for today's CSPs, the network is only as strong as the subscriber's experience on it. It's a massive challenge to drive meaningful customer engagement when your teams are fighting against fragmented legacy systems and rising OPEX.</p>
+    <p>We understand that for today's CSPs, the network is only as strong as the subscriber's experience on it. It's a massive challenge to drive meaningful customer engagement when teams are fighting against fragmented legacy systems and rising opex.</p>
   </section>
 
   <section className="opp-section">
     <h2>The Telecom Customer Engagement Opportunity</h2>
-    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">5x</div><div className="opp-stat-lbl">cheaper to retain a subscriber than acquire a new one.</div></div><div className="opp-stat"><div className="opp-stat-num">2.5x</div><div className="opp-stat-lbl">higher ARPU from subscribers with positive engagement.</div></div><div className="opp-stat"><div className="opp-stat-num">60%</div><div className="opp-stat-lbl">of subscriber inquiries can be automated with AI.</div></div></div>
+    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">5x</div><div className="opp-stat-lbl">cheaper to retain a subscriber than acquire a new one</div></div><div className="opp-stat"><div className="opp-stat-num">2.5x</div><div className="opp-stat-lbl">higher ARPU from subscribers with positive engagement.</div></div><div className="opp-stat"><div className="opp-stat-num">60%</div><div className="opp-stat-lbl">of subscriber enquiries can be automated with AI</div></div></div>
   </section>
 
   <section className="service-intro">
     <h2>KronGage for Telecommunication Services</h2>
-    <p>KronGage is designed to bridge the gap between complex network operations and meaningful customer engagement. By unifying every subscriber touchpoint into one intelligent interface, your teams can move from reactive troubleshooting to proactive care—delivering a frictionless experience.</p>
+    <p>KronGage is designed to bridge the gap between complex network operations and meaningful customer engagement. By unifying every subscriber touchpoint into one intelligent interface, teams can move from reactive troubleshooting to proactive care, delivering a frictionless experience.</p>
   </section>
 
   <section className="feat-blocks">
@@ -352,7 +352,7 @@ export default function Page() {
     </div>
     <div>
       <h3 className="feat-title">AI-Powered Telecom Support</h3>
-      <p className="feat-body">Integrate autonomous AI to resolve high-volume service requests, freeing your specialists to leverage intelligent diagnostics for complex roaming and connectivity issues.</p>
+      <p className="feat-body">Integrate autonomous AI to resolve high-volume service requests, freeing specialists to leverage intelligent diagnostics for complex roaming and connectivity issues.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
   </div>
@@ -371,7 +371,7 @@ export default function Page() {
   <section className="cta-dark">
     <div className="cta-badge">⊕ Enterprise Demo</div>
     <h2>Transform Customer Engagement In Your Network Today</h2>
-    <p>Request your enterprise demo today and see how KronGage can replace 5-7 tools with a single, unified platform built for your organization.</p>
+    <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
     <div className="cta-dark-btns">
       <a href="/contact/" className="btn-dark-outline">Request a Demo →</a>
       <a href="/platform/" className="btn-dark-ghost">⊕ Explore the Platform</a>

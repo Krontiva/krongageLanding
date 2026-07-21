@@ -222,7 +222,7 @@ export default function Page() {
     <div className="hero-text">
       <div className="breadcrumb"><a href="/platform/">Platform</a><span>›</span>Customer 360</div>
       <h1>Customer 360</h1>
-      <p>The KronGage Customer 360 (CDP) serves as the intelligence backbone of the entire platform, creating unified, actionable customer profiles from every interaction across all channels and touchpoints. Unlike siloed CRM systems, the CDP provides instantaneous, dynamic customer intelligence that powers personalization, segmentation, and predictive engagement across the entire KronGage ecosystem.</p>
+      <p>The KronGage Customer 360, a customer data platform (CDP), serves as the intelligence backbone of the entire platform, creating unified, actionable customer profiles from every interaction across all channels and touchpoints. Unlike siloed CRM systems, the CDP provides instantaneous, dynamic customer intelligence that powers personalisation, segmentation, and predictive engagement across the KronGage ecosystem.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Contact Us</a></div>
     </div>
     <div className="hero-visual">
@@ -241,15 +241,15 @@ export default function Page() {
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">360-Degree Customer Profiles</h3>
-        <p className="bi-card-desc">Each unified profile contains a comprehensive view of the customer including demographic information, contact details across all channels, complete interaction history, social media profiles and engagement data.</p>
+        <p className="bi-card-desc">Each unified profile contains a comprehensive view of the customer, including demographic information, contact details across all channels, complete interaction history, social media profiles, and engagement data.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Business Intelligence & Analytics</h3>
-        <p className="bi-card-desc">KronGage's analytics engine provides comprehensive business intelligence across all platform modules, powered by a high-performance analytics engine that can aggregate millions of data points in real-time.</p>
+        <p className="bi-card-desc">KronGage's analytics suite provides comprehensive business intelligence across all platform modules, powered by a high-performance engine that can aggregate millions of data points in real time.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Custom Report Builder</h3>
-        <p className="bi-card-desc">Beyond pre-built dashboards, KronGage provides a powerful custom report builder that enables users to create tailored reports by selecting specific metrics, date ranges, filters, and visualization types.</p>
+        <p className="bi-card-desc">Beyond pre-built dashboards, KronGage provides a powerful custom report builder that enables users to create tailored reports by selecting specific metrics, date ranges, filters, and visualisation types.</p>
       </div>
       </div>
     </div>

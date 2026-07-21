@@ -285,7 +285,7 @@ export default function Page() {
     <div className="hero-text">
       <div className="breadcrumb"><a href="/solutions/">Solutions</a><span>›</span>Government &amp; Public Sector</div>
       <h1>Transforming Public Service Delivery Through Digital Citizen Engagement</h1>
-      <p>KronGage delivers unified citizen engagement for state agencies, combining omnichannel service delivery, AI-powered management automation in one intelligent platform.</p>
+      <p>KronGage delivers unified citizen engagement for state agencies, combining omnichannel service delivery and AI-powered management automation in one intelligent platform.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Schedule A Demo</a></div>
     </div>
     <div className="hero-visual">
@@ -296,17 +296,17 @@ export default function Page() {
 
   <section className="challenge-section">
     <h2>The Citizen Engagement Dilemma</h2>
-    <p>Public servants are tasked with a vital mission: ensuring every member of the community feels heard and supported. We know that systemic complexity and siloed data often make it difficult to provide the responsive, constituent-centered engagement that your agency strives for.</p>
+    <p>Public servants are tasked with a vital mission: ensuring every member of the community feels heard and supported. We know that systemic complexity and siloed data often make it difficult to provide the responsive, constituent-centred engagement that agencies strive for.</p>
   </section>
 
   <section className="opp-section">
     <h2>The Government — Citizen Engagement Opportunity</h2>
-    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">60%</div><div className="opp-stat-lbl">of routine government inquiries can be automated.</div></div><div className="opp-stat"><div className="opp-stat-num">45%</div><div className="opp-stat-lbl">reduction in call volumes with digital self-service.</div></div><div className="opp-stat"><div className="opp-stat-num">3x</div><div className="opp-stat-lbl">citizen satisfaction with proactive digital communication.</div></div></div>
+    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">60%</div><div className="opp-stat-lbl">of routine government enquiries can be automated</div></div><div className="opp-stat"><div className="opp-stat-num">45%</div><div className="opp-stat-lbl">reduction in call volumes with digital self-service</div></div><div className="opp-stat"><div className="opp-stat-num">3x</div><div className="opp-stat-lbl">higher citizen satisfaction with proactive digital communication</div></div></div>
   </section>
 
   <section className="service-intro">
     <h2>KronGage for Government &amp; Public Services</h2>
-    <p>KronGage unifies these complex data ecosystems into a single hub, empowering your teams to provide faster, more accurate service across every jurisdiction while maintaining the highest standards of data sovereignty and public trust.</p>
+    <p>KronGage unifies complex data ecosystems into a single hub, empowering teams to provide faster, more accurate service across every jurisdiction, while maintaining the highest standards of data sovereignty and public trust.</p>
   </section>
 
   <section className="feat-blocks">
@@ -345,7 +345,7 @@ export default function Page() {
     </div>
     <div>
       <h3 className="feat-title">AI-Powered Public Support</h3>
-      <p className="feat-body">Integrate autonomous AI to resolve high-volume constituent inquiries, freeing your case managers and program specialists to leverage intelligent data insights for complex eligibility adjudications and inter-agency coordination hurdles.</p>
+      <p className="feat-body">Integrate autonomous AI to resolve high-volume constituent enquiries, freeing case managers and programme specialists to leverage intelligent data insights for complex eligibility adjudication and inter-agency coordination hurdles.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
   </div>
@@ -365,7 +365,7 @@ export default function Page() {
   <section className="cta-dark">
     <div className="cta-badge">⊕ Enterprise Demo</div>
     <h2>Transform Citizen Engagement Today</h2>
-    <p>Request your enterprise demo today and see how KronGage can replace 5-7 tools with a single, unified platform built for your organization.</p>
+    <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
     <div className="cta-dark-btns">
       <a href="/contact/" className="btn-dark-outline">Request a Demo →</a>
       <a href="/platform/" className="btn-dark-ghost">⊕ Explore the Platform</a>

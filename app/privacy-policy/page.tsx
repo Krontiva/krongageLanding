@@ -80,13 +80,13 @@ export default function Page() {
     <p>Last updated: May 2025</p>
   </div>
   <div className="content">
-    <p>Krondiva Ltd ("we", "our", or "us") operates the KronGage platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.</p>
+    <p>Krontiva Ltd ("we", "our", or "us") operates the KronGage platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.</p>
 
     <h2>1. Information We Collect</h2>
     <h3>Information you provide directly</h3>
     <p>We collect information that you provide when you register for an account, fill out a form, or communicate with us. This may include:</p>
     <ul>
-      <li>Name, email address, phone number and job title</li>
+      <li>Name, email address, phone number, and job title</li>
       <li>Company name and billing information</li>
       <li>Content you submit through the platform</li>
       <li>Customer data you upload or sync to KronGage</li>
@@ -105,13 +105,13 @@ export default function Page() {
     <p>We retain your personal data for as long as your account is active or as needed to provide our services. You may request deletion of your data at any time by contacting us.</p>
 
     <h2>5. Security</h2>
-    <p>We implement industry-standard security measures including encryption in transit and at rest, access controls, and regular security audits. KronGage maintains SOC 1 compliance and HIPAA-compatible data handling practices.</p>
+    <p>We implement industry-standard security measures including encryption in transit and at rest, access controls, and regular security audits. KronGage maintains SOC 2 compliance and HIPAA-compliant data handling practices.</p>
 
     <h2>6. Your Rights</h2>
-    <p>Depending on your jurisdiction, you may have the right to access, correct, delete, or port your personal data. To exercise these rights, contact us at <strong>privacy@krondiva.com</strong>.</p>
+    <p>Depending on your jurisdiction, you may have the right to access, correct, delete, or port your personal data. To exercise these rights, contact us at <strong>privacy@krontiva.africa</strong>.</p>
 
     <h2>7. Contact Us</h2>
-    <p>If you have questions about this Privacy Policy, please contact Krondiva Ltd at <strong>privacy@krondiva.com</strong> or via our <a href="/contact/" style={{color:"#0D47A1",fontWeight:"700"}}>Contact page</a>.</p>
+    <p>If you have questions about this Privacy Policy, please contact Krontiva Ltd at <strong>privacy@krontiva.africa</strong> or via our <a href="/contact/" style={{color:"#0D47A1",fontWeight:"700"}}>Contact page</a>.</p>
   </div>
 </main>
     </>

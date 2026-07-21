@@ -291,8 +291,8 @@ export default function Page() {
   <div className="hero-layout">
     <div className="hero-text">
       <div className="breadcrumb"><a href="/solutions/">Solutions</a><span>›</span>Banking &amp; Finance</div>
-      <h1>Transform How Your Bank Connects with Customers Across Every Global Channel</h1>
-      <p>KronGage delivers unified customer engagement for banks and financial institutions—combining omnichannel communication, AI-powered automation, and enterprise-grade compliance in one intelligent platform.</p>
+      <h1>Transform How Banks Connect with Customers Across Every Global Channel</h1>
+      <p>KronGage delivers unified customer engagement for banks and financial institutions, combining omnichannel communication, AI-powered automation, and enterprise-grade compliance in one intelligent platform.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Schedule A Demo</a></div>
     </div>
     <div className="hero-visual">
@@ -303,17 +303,17 @@ export default function Page() {
 
   <section className="challenge-section">
     <h2>The Modern Banking Challenge</h2>
-    <p>Customers don't see your internal complexities; they only see the friction when a global transfer or a simple inquiry takes too long. KronGage creates a single, intelligent flow for customer engagement, allowing your staff to provide immediate, personalized support.</p>
+    <p>Customers don't see a bank's internal complexities; they only see the friction when a global transfer or a simple enquiry takes too long. KronGage creates a single, intelligent flow for customer engagement, allowing staff to provide immediate, personalised support.</p>
   </section>
 
   <section className="opp-section">
     <h2>The Banking Customer Engagement Opportunity</h2>
-    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">3.5x</div><div className="opp-stat-lbl">higher retention rates when banks deliver true omnichannel experiences.</div></div><div className="opp-stat"><div className="opp-stat-num">40%</div><div className="opp-stat-lbl">reduction in contact center costs through AI-driven automation.</div></div><div className="opp-stat"><div className="opp-stat-num">25%</div><div className="opp-stat-lbl">increase in cross-sell revenue with unified customer data.</div></div></div>
+    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">3.5x</div><div className="opp-stat-lbl">higher retention rates when banks deliver true omnichannel experiences</div></div><div className="opp-stat"><div className="opp-stat-num">40%</div><div className="opp-stat-lbl">reduction in contact centre costs through AI-driven automation</div></div><div className="opp-stat"><div className="opp-stat-num">25%</div><div className="opp-stat-lbl">increase in cross-sell revenue with unified customer data</div></div></div>
   </section>
 
   <section className="service-intro">
     <h2>KronGage for Financial Services</h2>
-    <p>Growth shouldn't come at the cost of the customer experience. KronGage unifies your engagement tools so you can scale into new markets without losing the personal touch that built your brand in the first place.</p>
+    <p>Growth shouldn't come at the cost of the customer experience. KronGage unifies engagement tools so financial institutions can scale into new markets without losing the personal touch that built their brand in the first place.</p>
   </section>
 
   <section className="feat-blocks">
@@ -352,14 +352,14 @@ export default function Page() {
     </div>
     <div>
       <h3 className="feat-title">AI-Powered Banking Support</h3>
-      <p className="feat-body">Deploy AI that handles routine inquiries while empowering your agents with intelligent assistance for complex global interactions.</p>
+      <p className="feat-body">Deploy AI that handles routine enquiries while empowering agents with intelligent assistance for complex global interactions.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
   </div>
   <div className="feat-block">
     <div>
     <h3 className="feat-title">Customer 360 &amp; Predictive Intelligence</h3>
-      <p className="feat-body">Break down data silos and gain a unified view of each customer's relationship with your bank across all regions.</p>
+      <p className="feat-body">Break down data silos and gain a unified view of each customer's relationship with their bank across all regions.</p>
       <a href="/contact/" className="feat-btn">Contact Us</a>
     </div>
 
@@ -372,7 +372,7 @@ export default function Page() {
   <section className="cta-dark">
     <div className="cta-badge">⊕ Enterprise Demo</div>
     <h2>Transform Customer Engagement In Your Bank Today</h2>
-    <p>Request your enterprise demo today and see how KronGage can replace 5-7 tools with a single, unified platform built for your organization.</p>
+    <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
     <div className="cta-dark-btns">
       <a href="/contact/" className="btn-dark-outline">Request a Demo →</a>
       <a href="/platform/" className="btn-dark-ghost">⊕ Explore the Platform</a>

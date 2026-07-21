@@ -80,11 +80,11 @@ export default function Page() {
     <p>Last updated: May 2025</p>
   </div>
   <div className="content">
-    <p>At Krondiva, protecting your data is not just a compliance obligation — it is central to how we build and operate KronGage. This page outlines our data protection practices, certifications, and your rights as a data subject.</p>
+    <p>At Krontiva, protecting your data is not just a compliance obligation; it is central to how we build and operate KronGage. This page outlines our data protection practices, certifications, and your rights as a data subject.</p>
 
     <h2>Our Certifications</h2>
     <div className="cert-grid">
-      <div className="cert-card"><div className="badge">🛡️</div><strong>SOC 1 Type II</strong><span>Audited financial controls</span></div>
+      <div className="cert-card"><div className="badge">🛡️</div><strong>SOC 2 Type II</strong><span>Audited security controls</span></div>
       <div className="cert-card"><div className="badge">🏥</div><strong>HIPAA Compatible</strong><span>Healthcare data ready</span></div>
       <div className="cert-card"><div className="badge">🔐</div><strong>AES-256 Encryption</strong><span>Data at rest and in transit</span></div>
     </div>
@@ -96,23 +96,23 @@ export default function Page() {
       <li><strong>Access controls:</strong> Role-based access control (RBAC) ensures employees only access data necessary for their role.</li>
       <li><strong>Audit logging:</strong> Every data access and modification is logged with tamper-evident audit trails.</li>
       <li><strong>Regular penetration testing:</strong> We engage independent security firms to conduct annual penetration tests.</li>
-      <li><strong>Vulnerability management:</strong> Continuous scanning and patching of known vulnerabilities.</li>
+      <li><strong>Vulnerability management:</strong> We continuously scan for and patch known vulnerabilities.</li>
     </ul>
 
     <h2>Data Residency</h2>
     <p>KronGage supports regional data residency options. Enterprise customers can select their preferred data region at the time of onboarding. We currently support data hosting in the EU, UK, and Africa regions.</p>
 
     <h2>GDPR Compliance</h2>
-    <p>For customers operating in the European Economic Area (EEA) or United Kingdom, Krondiva acts as a Data Processor on your behalf. We provide a Data Processing Agreement (DPA) that governs how we handle personal data. Contact us to request a copy of our DPA.</p>
+    <p>For customers operating in the European Economic Area (EEA) or United Kingdom, Krontiva acts as a Data Processor on your behalf. We provide a Data Processing Agreement (DPA) that governs how we handle personal data. Contact us to request a copy of our DPA.</p>
 
     <h2>Data Breach Response</h2>
-    <p>In the event of a data breach affecting your information, Krondiva will notify affected customers within 72 hours of becoming aware of the breach, in compliance with GDPR Article 33 requirements.</p>
+    <p>In the event of a data breach affecting your information, Krontiva will notify affected customers without undue delay and within 72 hours of becoming aware of the breach, consistent with GDPR requirements.</p>
 
     <h2>Sub-processors</h2>
     <p>We use a limited number of vetted sub-processors to deliver our services. A full list of our sub-processors is available upon request. All sub-processors are bound by data protection obligations no less stringent than our own.</p>
 
     <h2>Contact Our Data Protection Team</h2>
-    <p>For data protection enquiries, please contact our Data Protection Officer at <strong>dpo@krondiva.com</strong> or via our <a href="/contact/" style={{color:"#0D47A1",fontWeight:"700"}}>Contact page</a>.</p>
+    <p>For data protection enquiries, please contact our Data Protection Officer at <strong>dpo@krontiva.africa</strong> or via our <a href="/contact/" style={{color:"#0D47A1",fontWeight:"700"}}>Contact page</a>.</p>
   </div>
 </main>
     </>

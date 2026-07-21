@@ -183,7 +183,7 @@ export default function Page() {
   <div className="contact-hero">
     <div className="contact-left">
       <h1>Ready to grow?<br />Talk to our<br />sales team.</h1>
-      <p>Join organisations of all sizes taking customer engagement to the next level. See how KronGage can increase lifetime value, simplify your tech stack, and boost brand loyalty.</p>
+      <p>Join organisations of all sizes taking customer engagement to the next level. See how KronGage can increase lifetime value, simplify tech stacks, and boost brand loyalty.</p>
       <a href="mailto:support@krontiva.africa" className="btn-general">Have a more general question?</a>
     </div>
     <div className="contact-right">

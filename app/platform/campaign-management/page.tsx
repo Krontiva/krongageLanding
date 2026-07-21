@@ -222,7 +222,7 @@ export default function Page() {
     <div className="hero-text">
       <div className="breadcrumb"><a href="/platform/">Platform</a><span>›</span>Campaign Management</div>
       <h1>Campaign Management</h1>
-      <p>The Campaign Management module enables marketing teams to design, execute, and optimize multi-channel campaigns with sophisticated A/B testing, journey orchestration, and automated performance tracking.</p>
+      <p>The Campaign Management module enables marketing teams to design, execute, and optimise multi-channel campaigns with sophisticated A/B testing, journey orchestration, and automated performance tracking.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Contact Us</a></div>
     </div>
     <div className="hero-visual">
@@ -237,19 +237,19 @@ export default function Page() {
       <div className="bi-grid">
       <div className="bi-card">
         <h3 className="bi-card-title">Broadcast Campaigns</h3>
-        <p className="bi-card-desc">For announcements, promotions, and one-time communications delivered at scale across SMS, WhatsApp, Email, and Push Notifications.</p>
+        <p className="bi-card-desc">For announcements, promotions, and one-time communications delivered at scale across SMS, WhatsApp, email, and push notifications.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Multi-channel Campaign Execution</h3>
-        <p className="bi-card-desc">Across WhatsApp, SMS, Email, Push Notifications, In-App Messages, and Social platforms — reach customers on every channel they use.</p>
+        <p className="bi-card-desc">Across WhatsApp, SMS, email, push notifications, in-app messages, and social platforms, reach customers on every channel they use.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Event-triggered Campaigns</h3>
-        <p className="bi-card-desc">Responding to customer actions such as cart abandonment, sign-up, or inactivity with timely, personalized automated messages.</p>
+        <p className="bi-card-desc">Responding to customer actions such as cart abandonment, sign-up, or inactivity with timely, personalised automated messages.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Visual Journey Builder</h3>
-        <p className="bi-card-desc">With drag-and-drop workflow design for complex, multi-step customer journeys — no engineering resources required.</p>
+        <p className="bi-card-desc">With drag-and-drop workflow design for complex, multi-step customer journeys. No engineering resources required.</p>
       </div>
       </div>
     </div>

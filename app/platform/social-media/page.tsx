@@ -244,8 +244,8 @@ export default function Page() {
         <p className="bi-card-desc">KronGage supports bulk scheduling via CSV upload with up to 500 posts per batch. Each CSV can include content, target platforms, scheduled date and time, media URLs, first comments, and hashtag groups.</p>
       </div>
       <div className="bi-card">
-        <h3 className="bi-card-title">AI-Powered Content Optimization</h3>
-        <p className="bi-card-desc">AI analyzes historical engagement data to recommend the best times to post for each platform and audience. Generate platform-optimized posts from topic briefs, product descriptions, or campaign themes.</p>
+        <h3 className="bi-card-title">AI-Powered Content Optimisation</h3>
+        <p className="bi-card-desc">AI analyses historical engagement data to recommend the best times to post for each platform and audience. Generate platform-optimised posts from topic briefs, product descriptions, or campaign themes.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Analytics & Reporting</h3>

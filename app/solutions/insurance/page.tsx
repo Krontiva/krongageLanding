@@ -296,24 +296,24 @@ export default function Page() {
 
   <section className="challenge-section">
     <h2>The Digital Policyholder Paradox</h2>
-    <p>Insurance leaders are caught in a difficult position: They are expected to deliver the 'instant' enquiry response to satisfy modern policyholders demand, yet they are often anchored by systems that weren't built for seamless customer engagement for today's global scale.</p>
+    <p>Insurance leaders are caught in a difficult position: they are expected to deliver the 'instant' enquiry response modern policyholders demand, yet they are often anchored by systems that weren't built for seamless customer engagement at today's global scale.</p>
   </section>
 
   <section className="opp-section">
     <h2>The Insurance Customer Engagement Opportunity</h2>
-    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">40%</div><div className="opp-stat-lbl">increase in renewal rates with timely personalized outreach.</div></div><div className="opp-stat"><div className="opp-stat-num">60%</div><div className="opp-stat-lbl">of claims inquiries can be handled by AI for status updates.</div></div><div className="opp-stat"><div className="opp-stat-num">3x</div><div className="opp-stat-lbl">higher satisfaction when claims communication is proactive.</div></div></div>
+    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">40%</div><div className="opp-stat-lbl">increase in renewal rates with timely, personalised outreach</div></div><div className="opp-stat"><div className="opp-stat-num">60%</div><div className="opp-stat-lbl">of claims status enquiries can be handled by AI</div></div><div className="opp-stat"><div className="opp-stat-num">3x</div><div className="opp-stat-lbl">higher satisfaction when claims communication is proactive</div></div></div>
   </section>
 
   <section className="service-intro">
     <h2>KronGage for Insurance Services</h2>
-    <p>KronGage is engineered to help turn fragmented interactions into a seamless Customer Engagement strategy. By unifying every policyholder touchpoint into one intelligent hub, your teams can deliver a proactive, high-touch experience.</p>
+    <p>KronGage is engineered to help turn fragmented interactions into a seamless customer engagement strategy. By unifying every policyholder touchpoint into one intelligent hub, teams can deliver a proactive, high-touch experience.</p>
   </section>
 
   <section className="feat-blocks">
   <div className="feat-block">
     <div>
       <h3 className="feat-title">Omnichannel Global Insurance Service</h3>
-      <p className="feat-body">Build lasting trust by turning the policyholder lifecycle into a continuous, personalized conversation. KronGage unifies every interaction into a single engagement hub, ensuring that whether a client is filing a claim or updating their coverage, they experience a seamless journey.</p>
+      <p className="feat-body">Build lasting trust by turning the policyholder lifecycle into a continuous, personalised conversation. KronGage unifies every interaction into a single engagement hub, ensuring that whether a client is filing a claim or updating their coverage, they experience a seamless journey.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
     <div><div className="feat-widget">
@@ -356,14 +356,14 @@ export default function Page() {
 </div></div>
     <div>
       <h3 className="feat-title">AI-Powered Insurance Support</h3>
-      <p className="feat-body">Integrate autonomous AI to resolve high-volume policyholder inquiries, freeing your adjusters and underwriters to leverage intelligent risk diagnostics for complex claims adjudications and coverage disputes.</p>
+      <p className="feat-body">Integrate autonomous AI to resolve high-volume policyholder enquiries, freeing adjusters and underwriters to leverage intelligent risk diagnostics for complex claims adjudication and coverage disputes.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
   </div>
   <div className="feat-block">
     <div>
       <h3 className="feat-title">360° Policyholder Identity &amp; Predictive Intelligence</h3>
-      <p className="feat-body">Unify fragmented touch points into a single, intelligent profile — 360-degree visibility across every interaction: every policy, every life moment. Anticipate needs, engage proactively, build loyalty that lasts.</p>
+      <p className="feat-body">Unify fragmented touchpoints into a single, intelligent profile. Gain complete visibility across every interaction: every policy, every life moment. Anticipate needs, engage proactively, build loyalty that lasts.</p>
       <a href="/contact/" className="feat-btn">Contact Us</a>
     </div>
     <div className="feat-visual-iframe">
@@ -375,7 +375,7 @@ export default function Page() {
   <section className="cta-dark">
     <div className="cta-badge">⊕ Enterprise Demo</div>
     <h2>Transform Customer Engagement Today</h2>
-    <p>Request your enterprise demo today and see how KronGage can replace 5-7 tools with a single, unified platform built for your organization.</p>
+    <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
     <div className="cta-dark-btns">
       <a href="/contact/" className="btn-dark-outline">Request a Demo →</a>
       <a href="/platform/" className="btn-dark-ghost">⊕ Explore the Platform</a>

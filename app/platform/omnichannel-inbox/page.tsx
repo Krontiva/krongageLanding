@@ -222,7 +222,7 @@ export default function Page() {
     <div className="hero-text">
       <div className="breadcrumb"><a href="/platform/">Platform</a><span>›</span>Omnichannel Inbox</div>
       <h1>KronGage Omnichannel Inbox</h1>
-      <p>The KronGage Omnichannel Inbox transforms how businesses handle customer interactions by consolidating every communication channel into a single, intelligent workspace. Whether a customer reaches out via WhatsApp, emails a support query, comments on a social media post, every interaction flows into one unified conversation thread with complete context.</p>
+      <p>The KronGage Omnichannel Inbox transforms how businesses handle customer interactions by consolidating every communication channel into a single, intelligent workspace. Whether a customer reaches out via WhatsApp, emails a support query, or comments on a social media post, every interaction flows into one unified conversation thread with complete context.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Contact Us</a></div>
     </div>
     <div className="hero-visual">
@@ -241,7 +241,7 @@ export default function Page() {
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Customer Satisfaction</h3>
-        <p className="bi-card-desc">15-25% increase through faster, more consistent and contextual service delivered across every channel.</p>
+        <p className="bi-card-desc">15-25% increase through faster, more consistent, and contextual service delivered across every channel.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Average Response Time</h3>
@@ -249,7 +249,7 @@ export default function Page() {
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Channel Coverage</h3>
-        <p className="bi-card-desc">3-5x more channels managed from a single platform — no more siloed tools for each communication channel.</p>
+        <p className="bi-card-desc">3-5x more channels managed from a single platform, with no more siloed tools for each communication channel.</p>
       </div>
       </div>
     </div>

@@ -12,8 +12,17 @@
  *     3. Reconstruct user + plan from Paystack metadata
  *     4. HMAC-sign and forward to provisioning-api (WEBHOOK_URL)
  *
- * Register this URL in Paystack Dashboard → Settings → API Keys & Webhooks:
- *   https://krongage.io/api/paystack/webhook
+ * Register this route in Paystack Dashboard → Settings → API Keys & Webhooks:
+ *   https://<THIS-NEXT-APP-HOST>/api/paystack/webhook
+ *
+ * IMPORTANT — the host is the domain THIS Next.js checkout app is deployed to.
+ *   - It is NOT bare `krongage.io` (marketing/static site — it does not serve
+ *     this route, so a delivery there 404s and provisioning silently never fires).
+ *   - It is NOT `web.krongage.io` — that is the platform's own app host (nginx);
+ *     the platform serves /billing/paystack/webhook there, not this route.
+ *   - TODO(ronald): fill in the confirmed checkout-app host once decided.
+ * Register it under the Paystack MODE you actually charge in (Test vs Live have
+ * separate webhook URLs); a Test charge only notifies the Test webhook.
  */
 
 import { NextRequest, NextResponse } from 'next/server';

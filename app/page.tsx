@@ -4,23 +4,23 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 const INDUSTRIES = [
-  { id: 'banking',    label: 'Banking & Finance',  h3: 'Compliant, Personalised Banking Engagement', p: "Deliver real-time transaction alerts, fraud notifications, and personalised financial guidance across WhatsApp, SMS, and email — all within a fully compliant, bank-grade platform.", href: '/solutions/banking', cta: 'Explore Banking Solutions →', iframe: '/assets/hero-banking.html' },
+  { id: 'banking',    label: 'Banking & Finance',  h3: 'Compliant, Personalised Banking Engagement', p: "Deliver real-time transaction alerts, fraud notifications, and personalised financial guidance across WhatsApp, SMS, and email, all within a fully compliant, bank-grade platform.", href: '/solutions/banking', cta: 'Explore Banking Solutions →', iframe: '/assets/hero-banking.html' },
   { id: 'telecom',    label: 'Telecommunications', h3: 'Customer Retention at Telecom Scale',        p: "Reduce churn with proactive usage alerts, data bundle promotions, and AI-powered support. Manage millions of subscribers across every channel from one unified platform.",         href: '/solutions/telecom', cta: 'Explore Telecom Solutions →',  iframe: '/assets/hero-telecom.html' },
-  { id: 'fmcg',       label: 'FMCG & Retail',      h3: 'Drive Sales Across Every Consumer Touchpoint', p: "Connect with consumers at the point of purchase, run loyalty campaigns, and gather real-time market intelligence — from urban retail chains to last-mile distribution networks.", href: '/solutions/fmcg',   cta: 'Explore FMCG & Retail →',    iframe: '/assets/hero-fmcg.html' },
-  { id: 'healthcare', label: 'Healthcare',          h3: 'Patient Engagement That Improves Outcomes',  p: "Reduce no-shows with automated appointment reminders, support medication adherence, and deliver health information to patients across SMS, WhatsApp, and web — securely.",       href: '/solutions/healthcare', cta: 'Explore Healthcare →',     iframe: '/assets/hero-healthcare.html' },
-  { id: 'insurance',  label: 'Insurance',           h3: 'End-to-End Insurance Customer Journeys',    p: "Accelerate policy onboarding, automate renewal reminders, and guide claimants through every step of the process — reducing drop-offs and improving policyholder satisfaction.", href: '/solutions/insurance', cta: 'Explore Insurance →',    iframe: '/assets/hero-insurance.html' },
-  { id: 'government', label: 'Government',          h3: 'Smart Government-to-Citizen Communications', p: "Keep citizens informed across SMS, WhatsApp, and web at every step of their service journey — from permit applications to tax deadlines — boosting digital self-service rates.", href: '/solutions/government', cta: 'Explore Government →',  iframe: '/assets/hero-government.html' },
+  { id: 'fmcg',       label: 'FMCG & Retail',      h3: 'Drive Sales Across Every Consumer Touchpoint', p: "Connect with consumers at the point of purchase, run loyalty campaigns, and gather real-time market intelligence, from urban retail chains to last-mile distribution networks.", href: '/solutions/fmcg',   cta: 'Explore FMCG & Retail →',    iframe: '/assets/hero-fmcg.html' },
+  { id: 'healthcare', label: 'Healthcare',          h3: 'Patient Engagement That Improves Outcomes',  p: "Reduce no-shows with automated appointment reminders, support medication adherence, and securely deliver health information to patients across SMS, WhatsApp, and web.",       href: '/solutions/healthcare', cta: 'Explore Healthcare →',     iframe: '/assets/hero-healthcare.html' },
+  { id: 'insurance',  label: 'Insurance',           h3: 'End-to-End Insurance Customer Journeys',    p: "Accelerate policy onboarding, automate renewal reminders, and guide claimants through every step of the process, reducing drop-offs and improving policyholder satisfaction.", href: '/solutions/insurance', cta: 'Explore Insurance →',    iframe: '/assets/hero-insurance.html' },
+  { id: 'government', label: 'Government',          h3: 'Smart Government-to-Citizen Communications', p: "Keep citizens informed across SMS, WhatsApp, and web at every step of their service journey, from permit applications to tax deadlines, boosting digital self-service rates.", href: '/solutions/government', cta: 'Explore Government →',  iframe: '/assets/hero-government.html' },
 ];
 
 const FEATURES = [
   { icon: '📥', title: 'Omnichannel Inbox',      desc: 'All channels, AI routing, one unified view' },
   { icon: '📣', title: 'Social Publishing',      desc: 'Multi-platform, bulk scheduling' },
   { icon: '🤖', title: 'AI Automation',          desc: 'Agents, RAG knowledge, smart flows' },
-  { icon: '🗃️', title: 'Customer 360',           desc: '360° profiles, segmentation' },
+  { icon: '🗃️', title: 'Customer 360',           desc: 'Unified profiles, segmentation' },
   { icon: '📊', title: 'Campaign Management',    desc: 'Journey builder, A/B testing' },
   { icon: '📈', title: 'Analytics & BI',         desc: 'Dashboards, white-label reports' },
-  { icon: '🔍', title: 'Social Intelligence',    desc: 'Manage public sentiment about your brand' },
-  { icon: '🛡️', title: 'Security & Compliance', desc: 'SOC1, HIPAA encryption, audit logs' },
+  { icon: '🔍', title: 'Social Intelligence',    desc: 'Sentiment tracking, brand monitoring' },
+  { icon: '🛡️', title: 'Security & Compliance', desc: 'SOC 2, HIPAA, encryption, audit logs' },
 ];
 
 const ORBIT_CHIPS = [
@@ -207,7 +207,7 @@ export default function HomePage() {
         <div className="hero">
           <div className="hero-left">
             <h1>Meet your customers wherever they are.</h1>
-            <p>Technology should be the bridge to your customers, not the barrier. KronGage transforms fragmented data into a single, intelligent conversation — allowing your team to move past the &apos;search&apos; and straight to the &apos;solution.&apos;</p>
+            <p>Technology should be the bridge to customers, not the barrier. KronGage transforms fragmented data into a single, intelligent conversation, allowing teams to move past the &apos;search&apos; and straight to the &apos;solution&apos;.</p>
             <div className="hero-buttons">
               <Link href="/contact" className="btn-primary">Request a Demo</Link>
               <Link href="/platform" className="btn-outline">Explore the Platform</Link>
@@ -293,7 +293,7 @@ export default function HomePage() {
           </div>
           <div className="problem-text">
             <h2>Too many tools, not enough connection.</h2>
-            <p>Most businesses are slowed down by a &quot;fragmented stack&quot; — using separate, disconnected tools for WhatsApp, social media, support, and analytics. The result? Missed conversations, duplicate effort, and a customer experience that feels anything but seamless.</p>
+            <p>Most businesses are slowed down by a &apos;fragmented stack&apos;, using separate, disconnected tools for WhatsApp, social media, support, and analytics. The result? Missed conversations, duplicate effort, and a customer experience that feels anything but seamless.</p>
           </div>
         </div>
       </section>
@@ -303,7 +303,7 @@ export default function HomePage() {
         <div className="platform-section">
           <div className="platform-left">
             <h2>One platform that thinks in systems, not silos.</h2>
-            <p>Krongage was engineered to excel in demanding environments — where infrastructure varies, regulations shift, and customer behavior is diverse. It&apos;s robust because it had to be.</p>
+            <p>KronGage was engineered to excel in demanding environments, where infrastructure varies, regulations shift, and customer behaviour is diverse. It&apos;s robust because it had to be.</p>
             <Link href="/platform" className="btn-outline-blue">View Full Platform</Link>
           </div>
           <div className="feature-grid">
@@ -352,8 +352,8 @@ export default function HomePage() {
 
       {/* DEMO CTA */}
       <section className="dashboard-section">
-        <p className="demo-heading">What Would KronGage Look Like for Your Business?</p>
-        <p className="demo-sub">Most enterprises don&apos;t realize how much their fragmented tools are costing them in revenue and trust until they see the alternative.</p>
+        <p className="demo-heading">What Would KronGage Look Like in Action?</p>
+        <p className="demo-sub">Most enterprises don&apos;t realise how much their fragmented tools are costing them in revenue and trust until they see the alternative.</p>
         <div className="demo-dashboard-wrap">
           <iframe src="/assets/dashboard-demo.html" id="demoDashboard" scrolling="no" title="KronGage Platform Preview" />
         </div>

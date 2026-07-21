@@ -237,11 +237,11 @@ export default function Page() {
       <div className="bi-grid">
       <div className="bi-card">
         <h3 className="bi-card-title">Customer Support Agent</h3>
-        <p className="bi-card-desc">The Support Agent handles incoming customer inquiries across all channels. It searches the knowledge base, looks up customer history and account information, and provides accurate, contextual responses.</p>
+        <p className="bi-card-desc">The Support Agent handles incoming customer enquiries across all channels. It searches the knowledge base, looks up customer history and account information, and provides accurate, contextual responses.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Content Creation Agent</h3>
-        <p className="bi-card-desc">The Content Agent assists marketing teams in generating, optimizing, and repurposing content for social media and campaigns.</p>
+        <p className="bi-card-desc">The Content Agent assists marketing teams in generating, optimising, and repurposing content for social media and campaigns.</p>
       </div>
       <div className="bi-card">
         <h3 className="bi-card-title">Routing Agent</h3>

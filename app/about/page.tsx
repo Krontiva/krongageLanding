@@ -269,7 +269,7 @@ export default function Page() {
       <div className="module-item">
         <div className="module-icon">✨</div>
         <h4>AI Content Creation</h4>
-        <p>Generate, optimize, and repurpose content using globally-optimized AI models.</p>
+        <p>Generate, optimise, and repurpose content using globally-optimised AI models.</p>
       </div>
       <div className="module-item">
         <div className="module-icon">🔍</div>
@@ -304,7 +304,7 @@ export default function Page() {
 <section className="dark-cta">
   <div className="label-tag">⊕ ENTERPRISE DEMO</div>
   <h2>Let Us Transform Your Customer Engagement Together</h2>
-  <p>Request your enterprise demo today and see how KronGage can replace 5–7 tools with a single, unified platform built for your organization.</p>
+  <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
   <div className="cta-buttons">
     <a href="/contact/" className="btn-white">Request a Demo →</a>
     <a href="/platform/" className="btn-outline-white">⊕ Explore the Platform</a>

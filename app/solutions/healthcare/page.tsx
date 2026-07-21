@@ -292,7 +292,7 @@ export default function Page() {
     <div className="hero-text">
       <div className="breadcrumb"><a href="/solutions/">Solutions</a><span>›</span>Healthcare</div>
       <h1>Transform Patient Engagement Across the Entire Continuum of Care</h1>
-      <p>KronGage delivers unified patient engagement for health systems and providers—combining omnichannel communication, AI-powered clinical automation, in one intelligent platform.</p>
+      <p>KronGage delivers unified patient engagement for health systems and providers, combining omnichannel communication and AI-powered clinical automation in one intelligent platform.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Schedule A Demo</a></div>
     </div>
     <div className="hero-visual">
@@ -303,24 +303,24 @@ export default function Page() {
 
   <section className="challenge-section">
     <h2>The Virtual Care Continuity Gap</h2>
-    <p>Today's patients expect seamless, personalized experiences at every touchpoint—scheduling, communication, care delivery, and follow-up. Yet most health organizations are held back by fragmented systems, complex workflows, and rising operational costs.</p>
+    <p>Today's patients expect seamless, personalised experiences at every touchpoint: scheduling, communication, care delivery, and follow-up. Yet most health organisations are held back by fragmented systems, complex workflows, and rising operational costs.</p>
   </section>
 
   <section className="opp-section">
     <h2>The Healthcare Customer Engagement Opportunity</h2>
-    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">38%</div><div className="opp-stat-lbl">reduction in no-shows with automated multi-channel reminders.</div></div><div className="opp-stat"><div className="opp-stat-num">55%</div><div className="opp-stat-lbl">of routine inquiries can be handled by AI (Scheduling, results).</div></div><div className="opp-stat"><div className="opp-stat-num">4x</div><div className="opp-stat-lbl">improvement in patient satisfaction with proactive communication.</div></div></div>
+    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">38%</div><div className="opp-stat-lbl">reduction in no-shows with automated multi-channel reminders</div></div><div className="opp-stat"><div className="opp-stat-num">55%</div><div className="opp-stat-lbl">of routine enquiries can be handled by AI (scheduling, results)</div></div><div className="opp-stat"><div className="opp-stat-num">4x</div><div className="opp-stat-lbl">improvement in patient satisfaction with proactive communication</div></div></div>
   </section>
 
   <section className="service-intro">
     <h2>KronGage for Healthcare Services</h2>
-    <p>KronGage unifies patient engagement across the entire journey, turning disconnected interactions into continuous, meaningful relationships—without adding burden to your clinical or administrative teams.</p>
+    <p>KronGage unifies patient engagement across the entire journey, turning disconnected interactions into continuous, meaningful relationships, without adding burden to clinical or administrative teams.</p>
   </section>
 
   <section className="feat-blocks">
   <div className="feat-block">
     <div>
       <h3 className="feat-title">Omnichannel Global Healthcare Service</h3>
-      <p className="feat-body">Engineered specifically for enterprise healthcare providers navigating fragmented clinical landscapes, KronGage unifies every patient touchpoint into a single intelligent clinical command center. This empowers your care coordination teams to deliver frictionless care journeys.</p>
+      <p className="feat-body">Engineered specifically for enterprise healthcare providers navigating fragmented clinical landscapes, KronGage unifies every patient touchpoint into a single intelligent clinical command centre. This empowers care coordination teams to deliver frictionless care journeys.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
     <div><div className="feat-widget">
@@ -352,7 +352,7 @@ export default function Page() {
     </div>
     <div>
       <h3 className="feat-title">AI-Driven Patient Engagement &amp; Advocacy</h3>
-      <p className="feat-body">Integrate autonomous AI to resolve high-volume patient inquiries, freeing your care teams to leverage intelligent clinical insights for complex care transitions and diagnostic hurdles.</p>
+      <p className="feat-body">Integrate autonomous AI to resolve high-volume patient enquiries, freeing care teams to leverage intelligent clinical insights for complex care transitions and diagnostic hurdles.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
   </div>
@@ -372,7 +372,7 @@ export default function Page() {
   <section className="cta-dark">
     <div className="cta-badge">⊕ Enterprise Demo</div>
     <h2>Transform Patient Engagement Today</h2>
-    <p>Request your enterprise demo today and see how KronGage can replace 5-7 tools with a single, unified platform built for your organization.</p>
+    <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
     <div className="cta-dark-btns">
       <a href="/contact/" className="btn-dark-outline">Request a Demo →</a>
       <a href="/platform/" className="btn-dark-ghost">⊕ Explore the Platform</a>

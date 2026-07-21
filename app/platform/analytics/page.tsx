@@ -235,10 +235,10 @@ export default function Page() {
     <div className="bi-inner">
       <h2 className="bi-heading">Business Impact</h2>
       <div className="bi-grid">
-        <div className="bi-card"><h3 className="bi-card-title">Custom report builder</h3><p className="bi-card-desc">With drag-and-drop metric selection, date range filtering, and visualization options to suit every team's reporting needs.</p></div>
-        <div className="bi-card"><h3 className="bi-card-title">Real-time analytics engine</h3><p className="bi-card-desc">For high-speed aggregation across millions of data points — delivering live insights without delay or sampling.</p></div>
+        <div className="bi-card"><h3 className="bi-card-title">Custom report builder</h3><p className="bi-card-desc">With drag-and-drop metric selection, date range filtering, and visualisation options to suit every team's reporting needs.</p></div>
+        <div className="bi-card"><h3 className="bi-card-title">Real-time analytics engine</h3><p className="bi-card-desc">For high-speed aggregation across millions of data points, delivering live insights without delay or sampling.</p></div>
         <div className="bi-card"><h3 className="bi-card-title">Cross-module analytics</h3><p className="bi-card-desc">Connecting social engagement, customer interactions, campaign performance, and revenue impact in one unified view.</p></div>
-        <div className="bi-card"><h3 className="bi-card-title">Role-based dashboard access</h3><p className="bi-card-desc">Ensuring each team sees relevant metrics and KPIs — from executives to frontline agents — without information overload.</p></div>
+        <div className="bi-card"><h3 className="bi-card-title">Role-based dashboard access</h3><p className="bi-card-desc">Ensuring each team, from executives to frontline agents, sees relevant metrics and KPIs without information overload.</p></div>
       </div>
     </div>
   </section>

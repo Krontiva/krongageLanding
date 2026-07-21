@@ -292,7 +292,7 @@ export default function Page() {
     <div className="hero-text">
       <div className="breadcrumb"><a href="/solutions/">Solutions</a><span>›</span>FMCG &amp; Retail</div>
       <h1>Reinvent the End-to-End Consumer Experience Across Every Global Point of Sale</h1>
-      <p>KronGage scales brand-to-consumer relationships, integrating seamless path-to-purchase communication, AI-driven personalization, and global supply-chain transparency into a single intelligent ecosystem.</p>
+      <p>KronGage scales brand-to-consumer relationships, integrating seamless path-to-purchase communication, AI-driven personalisation, and global supply-chain transparency into a single intelligent ecosystem.</p>
       <div className="hero-btns"><a href="/contact/" className="btn-primary">Schedule A Demo</a></div>
     </div>
     <div className="hero-visual">
@@ -308,19 +308,19 @@ export default function Page() {
 
   <section className="opp-section">
     <h2>The FMCG &amp; Retail Customer Engagement Opportunity</h2>
-    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">4.2x</div><div className="opp-stat-lbl">higher engagement with AI-optimized content vs manual.</div></div><div className="opp-stat"><div className="opp-stat-num">78%</div><div className="opp-stat-lbl">of consumers discover products through social media.</div></div><div className="opp-stat"><div className="opp-stat-num">35%</div><div className="opp-stat-lbl">increase in brand loyalty with consistent omnichannel presence.</div></div></div>
+    <div className="opp-stats"><div className="opp-stat"><div className="opp-stat-num">4.2x</div><div className="opp-stat-lbl">higher engagement with AI-optimised content vs manual</div></div><div className="opp-stat"><div className="opp-stat-num">78%</div><div className="opp-stat-lbl">of consumers discover products through social media</div></div><div className="opp-stat"><div className="opp-stat-num">35%</div><div className="opp-stat-lbl">increase in brand loyalty with consistent omnichannel presence</div></div></div>
   </section>
 
   <section className="service-intro">
     <h2>KronGage for FMCG &amp; Retail Services</h2>
-    <p>KronGage unifies the 'broken' pieces of the consumer journey into a single, intelligent engagement hub. This allows your teams to speak with one consistent, helpful voice—whether a customer is on social media or in-store.</p>
+    <p>KronGage unifies the 'broken' pieces of the consumer journey into a single, intelligent engagement hub. This allows teams to speak with one consistent, helpful voice, whether a customer is on social media or in store.</p>
   </section>
 
   <section className="feat-blocks">
   <div className="feat-block">
     <div>
       <h3 className="feat-title">Omnichannel Global FMCG &amp; Retail Service</h3>
-      <p className="feat-body">Orchestrate the end-to-end shopper journey through a single engagement center, ensuring a seamless brand experience across global retail channels and fragmented digital touchpoints.</p>
+      <p className="feat-body">Orchestrate the end-to-end shopper journey through a single engagement centre, ensuring a seamless brand experience across global retail channels and fragmented digital touchpoints.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
     <div><div className="feat-widget">
@@ -352,14 +352,14 @@ export default function Page() {
     </div>
     <div>
       <h3 className="feat-title">AI-Driven Conversational Commerce</h3>
-      <p className="feat-body">Integrate autonomous AI to resolve high-volume consumer inquiries, freeing your specialists to leverage intelligent shopper insights for complex fulfillment challenges and loyalty-tier escalations.</p>
+      <p className="feat-body">Integrate autonomous AI to resolve high-volume consumer enquiries, freeing specialists to leverage intelligent shopper insights for complex fulfilment challenges and loyalty-tier escalations.</p>
       <a href="/contact/" className="feat-btn">Learn more</a>
     </div>
   </div>
   <div className="feat-block">
     <div>
     <h3 className="feat-title">Customer 360 &amp; Predictive Intelligence</h3>
-      <p className="feat-body">Synchronize fragmented commerce data into a unified consumer identity, providing synchronous visibility into the global shopper journey and brand-to-consumer relationship.</p>
+      <p className="feat-body">Synchronise fragmented commerce data into a unified consumer identity, providing real-time visibility into the global shopper journey and brand-to-consumer relationship.</p>
       <a href="/contact/" className="feat-btn">Contact Us</a>
     </div>
 
@@ -372,7 +372,7 @@ export default function Page() {
   <section className="cta-dark">
     <div className="cta-badge">⊕ Enterprise Demo</div>
     <h2>Transform Your Customer Engagement Today</h2>
-    <p>Request your enterprise demo today and see how KronGage can replace 5-7 tools with a single, unified platform built for your organization.</p>
+    <p>Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
     <div className="cta-dark-btns">
       <a href="/contact/" className="btn-dark-outline">Request a Demo →</a>
       <a href="/platform/" className="btn-dark-ghost">⊕ Explore the Platform</a>
