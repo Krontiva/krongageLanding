@@ -1,15 +1,19 @@
-import { Suspense } from 'react';
 import CompleteContent from './CompleteContent';
 
 /**
  * /signup/complete — Stripe Checkout success_url / return_url, and the
  * free-starter landing.
  *
- * This file is a server component on purpose. The query-dependent copy lives in
- * CompleteContent, which `useSearchParams` forces to render on the client; the
- * shell, the card and the stylesheet stay here so they are in the server HTML.
- * This is the screen a customer lands on in the second after paying, and an
- * unstyled or empty frame at that moment reads as a failed payment.
+ * Fully server-rendered, including the copy. The query is read here as a prop
+ * rather than with `useSearchParams` in the browser, which means the customer's
+ * instructions are in the first byte of HTML with no hydration step to wait on
+ * or get stuck in. It also makes the page verifiable with curl, which matters
+ * more than it sounds: admin checks it that way, and a page whose copy only
+ * exists after JS runs looks identical to a missing route.
+ *
+ * Reading searchParams opts this route out of static generation. That's the
+ * correct trade here — it is a post-checkout page nobody benefits from having
+ * cached, and correctness at this moment beats a prerender.
  *
  * Contract: docs/13-KRONGAGE-IO-STRIPE-HANDOFF.md §5.
  */
@@ -22,28 +26,18 @@ export const metadata = {
 };
 
 /**
- * Shown while CompleteContent hydrates. Mirrors the real content's block sizes
- * so the card doesn't resize under the customer when the copy arrives.
+ * `?plan=` labels the copy and `?type=free` switches it to the free-starter
+ * wording. Both are optional: the paid redirect arrives with no params at all
+ * (or with only Stripe's traceability `session_id`), and the page must read
+ * correctly in that case — which is the common one.
  */
-function CompleteSkeleton() {
-  return (
-    <div className="sc-skel" aria-hidden="true">
-      <div className="sc-skel-ring" />
-      <div className="sc-skel-line sc-skel-title" />
-      <div className="sc-skel-line sc-skel-w90" />
-      <div className="sc-skel-line sc-skel-w75" />
-      <div className="sc-skel-steps">
-        <div className="sc-skel-line sc-skel-w100" />
-        <div className="sc-skel-line sc-skel-w85" />
-        <div className="sc-skel-line sc-skel-w95" />
-      </div>
-      <div className="sc-divider" />
-      <div className="sc-skel-btn" />
-    </div>
-  );
-}
+export default async function SignupCompletePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ plan?: string; type?: string }>;
+}) {
+  const params = await searchParams;
 
-export default function SignupCompletePage() {
   return (
     <>
       <style>{`
@@ -150,59 +144,6 @@ export default function SignupCompletePage() {
           margin-top: 1px;
         }
 
-        /* Hydration placeholder */
-        .sc-skel-ring {
-          width: 72px;
-          height: 72px;
-          border-radius: 50%;
-          background: #EEF5FD;
-          margin: 0 auto 28px;
-        }
-        .sc-skel-line {
-          height: 12px;
-          border-radius: 6px;
-          background: #eef2f7;
-          margin: 0 auto 12px;
-        }
-        .sc-skel-title {
-          height: 26px;
-          width: 62%;
-          border-radius: 8px;
-          margin-bottom: 20px;
-        }
-        .sc-skel-w100 { width: 100%; }
-        .sc-skel-w95  { width: 95%; }
-        .sc-skel-w90  { width: 90%; }
-        .sc-skel-w85  { width: 85%; }
-        .sc-skel-w75  { width: 75%; }
-        .sc-skel-steps {
-          margin-top: 34px;
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-        }
-        .sc-skel-btn {
-          height: 52px;
-          width: 220px;
-          border-radius: 50px;
-          background: #eef2f7;
-          margin: 0 auto;
-        }
-        .sc-skel-ring,
-        .sc-skel-line,
-        .sc-skel-btn {
-          animation: sc-pulse 1.4s ease-in-out infinite;
-        }
-        @keyframes sc-pulse {
-          0%, 100% { opacity: 1; }
-          50%      { opacity: .55; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .sc-skel-ring,
-          .sc-skel-line,
-          .sc-skel-btn { animation: none; }
-        }
-
         @media (max-width: 560px) {
           .sc-card { padding: 36px 24px 32px; }
           .sc-title { font-size: 24px; }
@@ -212,9 +153,10 @@ export default function SignupCompletePage() {
 
       <div className="sc-wrap">
         <div className="sc-card">
-          <Suspense fallback={<CompleteSkeleton />}>
-            <CompleteContent />
-          </Suspense>
+          <CompleteContent
+            planName={params.plan || ''}
+            isFree={params.type === 'free'}
+          />
         </div>
       </div>
     </>

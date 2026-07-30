@@ -1,14 +1,13 @@
-'use client';
-import { useSearchParams } from 'next/navigation';
-
 /**
- * The query-dependent half of /signup/complete.
+ * The body of /signup/complete.
  *
- * `useSearchParams` opts this subtree out of server rendering, so it is
- * deliberately kept to the card's *contents* only. The page shell, the card and
- * the stylesheet live in page.tsx above the Suspense boundary, which means a
- * customer arriving from Stripe sees the branded card immediately instead of an
- * empty page while this hydrates.
+ * Deliberately a *server* component taking plain props. It used to read the
+ * query with `useSearchParams`, which forced the whole card to render on the
+ * client: the HTML arrived with a nav, a footer and nothing in between, so the
+ * page could only show its real copy once JS had loaded and hydrated. This is
+ * the screen a customer lands on in the second after paying — the one moment
+ * where a spinner reads as a failed payment — and it was also unverifiable with
+ * curl, which cost two rounds of "the page is missing" with admin.
  *
  * Two constraints from docs/13-KRONGAGE-IO-STRIPE-HANDOFF.md §5:
  *
@@ -18,15 +17,18 @@ import { useSearchParams } from 'next/navigation';
  *  2. Don't promise instant access. Provisioning runs off that webhook and is
  *     asynchronous. "Check your email" is the correct message.
  *
- * Stripe's success_url may carry `?session_id=…` for support traceability only
- * (§12a) — never read it as proof of anything. The paid path must read correctly
- * with no params at all. The free-starter modal still passes `?type=free`.
+ * `session_id` may be appended for support traceability only (§12a). We do not
+ * read it, and nothing here depends on any query param being present.
  */
-export default function CompleteContent() {
-  const params   = useSearchParams();
-  const planName = params.get('plan') || '';
-  const isFree   = params.get('type') === 'free';
 
+interface Props {
+  /** Optional plan label for the copy. Absent on the paid redirect path. */
+  planName?: string;
+  /** The free-starter modal passes ?type=free; paid arrivals carry nothing. */
+  isFree?: boolean;
+}
+
+export default function CompleteContent({ planName = '', isFree = false }: Props) {
   return (
     <>
       {/* Icon */}
