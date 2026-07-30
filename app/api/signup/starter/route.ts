@@ -50,6 +50,33 @@ export async function POST(req: NextRequest) {
       body: payload,
     });
 
+    // Already registered — a real user path, not a failure.
+    //
+    // /provision/signup gained a 409 when admin added the duplicate-purchase
+    // guard (handoff §12a). Before this, every non-2xx collapsed into a generic
+    // 502 "Signup failed", so someone submitting twice — or signing up free on an
+    // email they already own — was told the site was broken instead of being sent
+    // to sign in. `reason` is passed through so the modal can distinguish a lapsed
+    // plan (self-serve reactivation) from a live one, and `login_url` is treated
+    // as opaque because the inactive variant carries a path.
+    if (response.status === 409) {
+      const conflict = await response.json().catch(() => null);
+      const reason =
+        conflict?.reason === 'subscription_inactive' ? 'subscription_inactive'
+        : conflict?.reason === 'duplicate_purchase'  ? 'duplicate_purchase'
+        : 'active_account';
+
+      console.warn(`[starter-signup] 409 ${reason} for an existing account`);
+      return NextResponse.json(
+        {
+          error: 'email already has an account',
+          reason,
+          login_url: conflict?.login_url || process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io',
+        },
+        { status: 409 },
+      );
+    }
+
     if (!response.ok) {
       const text = await response.text();
       console.error('[starter-signup] Provisioning failed:', text);

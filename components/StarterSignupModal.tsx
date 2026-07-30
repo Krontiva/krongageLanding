@@ -9,7 +9,16 @@ interface UserForm {
   phone: string;
 }
 
-type Step = 'form' | 'submitting' | 'error';
+type Step = 'form' | 'submitting' | 'exists' | 'error';
+
+/**
+ * Why an existing email was rejected. `subscription_inactive` matters because
+ * sending a lapsed customer to a plain "sign in" is a dead end — they can restart
+ * the plan themselves from the Customer Portal. `duplicate_purchase` is admin's
+ * double-submit guard (handoff §12a); the useful instruction is the same as an
+ * active account, so it renders that way.
+ */
+type ConflictReason = 'active_account' | 'subscription_inactive' | 'duplicate_purchase';
 
 interface Props {
   onClose: () => void;
@@ -20,6 +29,8 @@ export default function StarterSignupModal({ onClose }: Props) {
   const [form, setForm]               = useState<UserForm>({ firstName: '', lastName: '', email: '', company: '', phone: '' });
   const [errors, setErrors]           = useState<Partial<UserForm>>({});
   const [serverError, setServerError] = useState('');
+  const [loginUrl, setLoginUrl]       = useState('https://web.krongage.io');
+  const [conflictReason, setConflictReason] = useState<ConflictReason>('active_account');
 
   function validate(): boolean {
     const e: Partial<UserForm> = {};
@@ -43,9 +54,25 @@ export default function StarterSignupModal({ onClose }: Props) {
         body: JSON.stringify({ user: form }),
       });
 
+      const data = await res.json().catch(() => ({}));
+
+      // Already registered — not an error state. Before this was handled, a
+      // double-submit showed "Something went wrong", which reads as a broken site
+      // rather than "you're already signed up".
+      if (res.status === 409) {
+        // login_url is opaque and may carry a path — use exactly what came back.
+        setLoginUrl(data?.login_url || 'https://web.krongage.io');
+        setConflictReason(
+          data?.reason === 'subscription_inactive' ? 'subscription_inactive'
+          : data?.reason === 'duplicate_purchase'  ? 'duplicate_purchase'
+          : 'active_account',
+        );
+        setStep('exists');
+        return;
+      }
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Signup failed');
+        throw new Error(data?.error || 'Signup failed');
       }
 
       window.location.href = `/signup/complete?plan=Starter&billing=free&type=free`;
@@ -137,7 +164,59 @@ export default function StarterSignupModal({ onClose }: Props) {
 
           {/* Body */}
           <div style={{ padding: '24px 28px 28px' }}>
-            {step === 'error' ? (
+            {step === 'exists' ? (
+              <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                <div style={{ fontSize: '40px', marginBottom: '12px' }}>
+                  {conflictReason === 'subscription_inactive' ? '🔑' : '👋'}
+                </div>
+                {conflictReason === 'subscription_inactive' ? (
+                  <>
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                      Your plan isn&apos;t active
+                    </h3>
+                    <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '20px' }}>
+                      You already have a KronGage account for{' '}
+                      <strong style={{ color: '#0f172a' }}>{form.email.trim().toLowerCase()}</strong>, but your
+                      plan isn&apos;t active. Sign in to reactivate it yourself — no need to talk to us.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                      You already have a KronGage account
+                    </h3>
+                    <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '20px' }}>
+                      <strong style={{ color: '#0f172a' }}>{form.email.trim().toLowerCase()}</strong> is already
+                      registered. Sign in instead — nothing has been created twice.
+                    </p>
+                  </>
+                )}
+                <a
+                  href={loginUrl}
+                  style={{
+                    background: '#0D47A1', color: '#fff', fontWeight: 800, fontSize: '15px',
+                    padding: '14px 32px', borderRadius: '50px', textDecoration: 'none',
+                    display: 'inline-block', fontFamily: 'Manrope, system-ui, sans-serif',
+                  }}
+                >
+                  {conflictReason === 'subscription_inactive' ? 'Sign in to reactivate →' : 'Sign in →'}
+                </a>
+                <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '18px', lineHeight: 1.6 }}>
+                  Wrong email?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setStep('form')}
+                    style={{
+                      color: '#0D47A1', fontWeight: 700, background: 'none', border: 'none',
+                      cursor: 'pointer', textDecoration: 'underline', fontSize: '13px', padding: 0,
+                      fontFamily: 'Manrope, system-ui, sans-serif',
+                    }}
+                  >
+                    Go back and edit it
+                  </button>
+                </p>
+              </div>
+            ) : step === 'error' ? (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
                 <div style={{ fontSize: '40px', marginBottom: '12px' }}>⚠️</div>
                 <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
