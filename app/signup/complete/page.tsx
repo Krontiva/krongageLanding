@@ -1,28 +1,49 @@
-'use client';
-import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import CompleteContent from './CompleteContent';
 
 /**
- * /signup/complete — Stripe Checkout success_url, and the free-starter landing.
+ * /signup/complete — Stripe Checkout success_url / return_url, and the
+ * free-starter landing.
  *
- * Two important constraints (docs/13-KRONGAGE-IO-STRIPE-HANDOFF.md §5):
+ * This file is a server component on purpose. The query-dependent copy lives in
+ * CompleteContent, which `useSearchParams` forces to render on the client; the
+ * shell, the card and the stylesheet stay here so they are in the server HTML.
+ * This is the screen a customer lands on in the second after paying, and an
+ * unstyled or empty frame at that moment reads as a failed payment.
  *
- *  1. Landing here is NOT proof of payment. It's a plain redirect anyone can
- *     visit. Payment truth lives in the Stripe webhook admin receives, so this
- *     page must not say "payment confirmed" or unlock anything.
- *  2. Don't promise instant access. Provisioning runs off that webhook and is
- *     asynchronous. "Check your email" is the correct message.
- *
- * Stripe's success_url is configured on the admin side and carries no query
- * params, so the paid path must read correctly with none. The free-starter modal
- * still passes ?type=free.
+ * Contract: docs/13-KRONGAGE-IO-STRIPE-HANDOFF.md §5.
  */
 
-function CompleteContent() {
-  const params   = useSearchParams();
-  const planName = params.get('plan') || '';
-  const isFree   = params.get('type') === 'free';
+export const metadata = {
+  title: 'Check your email — KronGage',
+  // Never index a post-checkout page: it's a dead end for search traffic and
+  // landing here out of context implies an account that doesn't exist.
+  robots: { index: false, follow: false },
+};
 
+/**
+ * Shown while CompleteContent hydrates. Mirrors the real content's block sizes
+ * so the card doesn't resize under the customer when the copy arrives.
+ */
+function CompleteSkeleton() {
+  return (
+    <div className="sc-skel" aria-hidden="true">
+      <div className="sc-skel-ring" />
+      <div className="sc-skel-line sc-skel-title" />
+      <div className="sc-skel-line sc-skel-w90" />
+      <div className="sc-skel-line sc-skel-w75" />
+      <div className="sc-skel-steps">
+        <div className="sc-skel-line sc-skel-w100" />
+        <div className="sc-skel-line sc-skel-w85" />
+        <div className="sc-skel-line sc-skel-w95" />
+      </div>
+      <div className="sc-divider" />
+      <div className="sc-skel-btn" />
+    </div>
+  );
+}
+
+export default function SignupCompletePage() {
   return (
     <>
       <style>{`
@@ -128,6 +149,60 @@ function CompleteContent() {
           flex-shrink: 0;
           margin-top: 1px;
         }
+
+        /* Hydration placeholder */
+        .sc-skel-ring {
+          width: 72px;
+          height: 72px;
+          border-radius: 50%;
+          background: #EEF5FD;
+          margin: 0 auto 28px;
+        }
+        .sc-skel-line {
+          height: 12px;
+          border-radius: 6px;
+          background: #eef2f7;
+          margin: 0 auto 12px;
+        }
+        .sc-skel-title {
+          height: 26px;
+          width: 62%;
+          border-radius: 8px;
+          margin-bottom: 20px;
+        }
+        .sc-skel-w100 { width: 100%; }
+        .sc-skel-w95  { width: 95%; }
+        .sc-skel-w90  { width: 90%; }
+        .sc-skel-w85  { width: 85%; }
+        .sc-skel-w75  { width: 75%; }
+        .sc-skel-steps {
+          margin-top: 34px;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+        .sc-skel-btn {
+          height: 52px;
+          width: 220px;
+          border-radius: 50px;
+          background: #eef2f7;
+          margin: 0 auto;
+        }
+        .sc-skel-ring,
+        .sc-skel-line,
+        .sc-skel-btn {
+          animation: sc-pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes sc-pulse {
+          0%, 100% { opacity: 1; }
+          50%      { opacity: .55; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .sc-skel-ring,
+          .sc-skel-line,
+          .sc-skel-btn { animation: none; }
+        }
+
         @media (max-width: 560px) {
           .sc-card { padding: 36px 24px 32px; }
           .sc-title { font-size: 24px; }
@@ -137,80 +212,11 @@ function CompleteContent() {
 
       <div className="sc-wrap">
         <div className="sc-card">
-
-          {/* Icon */}
-          <div className="sc-icon-ring">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
-              <circle cx="17" cy="17" r="17" fill="#0D47A1" opacity=".12"/>
-              <polyline
-                points="9,17 14,22 25,11"
-                stroke="#0D47A1"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-
-          {/* Heading — never claims payment or ready-to-use access */}
-          <h1 className="sc-title">
-            {isFree ? 'You\'re all set!' : 'Check your email'}
-          </h1>
-          <p className="sc-body">
-            {isFree ? (
-              <>Your free <strong>{planName || 'Starter'}</strong> workspace is being created. We&apos;re setting things up — this takes about a minute.</>
-            ) : (
-              <>
-                Your{planName ? <> <strong>{planName}</strong></> : ''} account is being set up now.
-                We&apos;ll email your login details to <strong>the address you signed up with</strong> —
-                it usually arrives within a minute.
-              </>
-            )}
-          </p>
-
-          {/* Steps */}
-          <div className="sc-steps">
-            <div className="sc-step">
-              <span className="sc-step-num">1</span>
-              <span>Check your inbox — you&apos;ll receive an email from <strong>info@krontiva.com</strong> with your login link and a temporary password.</span>
-            </div>
-            <div className="sc-step">
-              <span className="sc-step-num">2</span>
-              <span>Sign in with your temporary password. KronGage will prompt you to set a new one on your first login.</span>
-            </div>
-            {!isFree && (
-              <div className="sc-step">
-                <span className="sc-step-num">3</span>
-                <span>Nothing has been charged today. Your first payment is taken at the end of your <strong>14-day free trial</strong>, and you can cancel before then.</span>
-              </div>
-            )}
-          </div>
-
-          <div className="sc-divider" />
-
-          {/* CTA */}
-          <a href={process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'} className="sc-btn">
-            Log in to KronGage
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </a>
-
-          <p className="sc-hint">
-            Can&apos;t find the email? Check your spam folder (sender: <strong>info@krontiva.com</strong>)
-            or contact <a href="mailto:support@krontiva.africa" style={{ color: '#0D47A1', fontWeight: 600 }}>support@krontiva.africa</a>.
-          </p>
-
+          <Suspense fallback={<CompleteSkeleton />}>
+            <CompleteContent />
+          </Suspense>
         </div>
       </div>
     </>
-  );
-}
-
-export default function SignupCompletePage() {
-  return (
-    <Suspense>
-      <CompleteContent />
-    </Suspense>
   );
 }
