@@ -1,8 +1,14 @@
 /**
  * POST /api/checkout
  *
- * Creates a Stripe Checkout Session by proxying to the admin app, then returns
- * the hosted-checkout URL for the browser to redirect to.
+ * Creates a Stripe Checkout Session by proxying to the admin app.
+ *
+ * Two modes, chosen by the caller:
+ *   (default)          → { url, session_id }                       redirect to Stripe
+ *   ui_mode:'embedded' → { client_secret, publishable_key, ... }   mount on /checkout
+ *
+ * The default path sends no `ui_mode` at all, which is what keeps admin's
+ * response byte-identical to the flow that was proven end to end.
  *
  * This MUST stay server-side: it carries WEBHOOK_SECRET as a bearer token, which
  * must never reach client-side JavaScript.
@@ -36,6 +42,7 @@ export async function POST(req: NextRequest) {
   let body: {
     plan?: { id?: string; billing?: string };
     user?: { firstName?: string; lastName?: string; email?: string; company?: string; phone?: string };
+    ui_mode?: string;
   };
   try {
     body = await req.json();
@@ -45,6 +52,10 @@ export async function POST(req: NextRequest) {
 
   const planId = body.plan?.id ?? '';
   const billing = body.plan?.billing === 'annual' ? 'annual' : 'monthly';
+  // Anything other than an explicit "embedded" is the redirect flow. Admin keeps
+  // the no-ui_mode response shape identical, so omitting the field entirely (not
+  // sending "hosted") is what guarantees the redirect path is untouched.
+  const embedded = body.ui_mode === 'embedded';
   const user = body.user ?? {};
   // Email is the login identity, the Stripe customer email, and the key billing
   // events are matched on — normalise it here so one casing is used everywhere.
@@ -74,6 +85,8 @@ export async function POST(req: NextRequest) {
           phone: user.phone?.trim() || '',
         },
         source: 'krongage-web',
+        // Omitted entirely on the redirect path — see `embedded` above.
+        ...(embedded ? { ui_mode: 'embedded' } : {}),
       }),
       cache: 'no-store',
       // Session creation is normally ~1.3s. Without a ceiling, an admin host that
@@ -85,6 +98,28 @@ export async function POST(req: NextRequest) {
     const data = await res.json().catch(() => null);
 
     if (res.ok) {
+      // The two modes return different shapes, so the "is this session usable?"
+      // guard has to differ too. An embedded response carries no `url` at all —
+      // checking for one here would fail every embedded session as a 502.
+      if (embedded) {
+        // Both are required: the secret mounts the form, and the key is what
+        // Stripe.js authenticates with. Admin resolves the key from the same
+        // config that created the session, so a cross-sandbox mismatch can't
+        // happen — but a missing one still leaves nothing to mount.
+        if (!data?.client_secret || !data?.publishable_key) {
+          console.error('[checkout] Admin returned 200 without client_secret/publishable_key:', JSON.stringify(data));
+          return NextResponse.json({ error: 'Could not start checkout' }, { status: 502 });
+        }
+        // The client secret is designed to live in the browser and is scoped to
+        // this one session; the publishable key is publishable by definition.
+        // Neither is WEBHOOK_SECRET, which never leaves this file.
+        return NextResponse.json({
+          client_secret:   data.client_secret,
+          publishable_key: data.publishable_key,
+          session_id:      data.session_id ?? null,
+        });
+      }
+
       // A 200 without a url is not a usable session — treat it as an upstream
       // failure rather than redirecting the browser to `undefined`.
       if (!data?.url) {

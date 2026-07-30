@@ -1,22 +1,33 @@
 'use client';
 import { useState, useMemo } from 'react';
 import { formatUsd } from '@/src/lib/format-price';
+import { storeEmbeddedSession } from '@/src/lib/checkout-session';
 
 /**
- * Paid-plan signup: collect details, then hand off to Stripe-hosted Checkout.
+ * Paid-plan signup: collect details, then hand off to Stripe Checkout.
  *
- * We hold no payment key and load no payment SDK. The flow is:
- *   this form → POST /api/checkout (server, holds WEBHOOK_SECRET)
- *             → admin creates the Stripe session
- *             → we redirect to the returned checkout.stripe.com URL
+ * Two modes, chosen by NEXT_PUBLIC_CHECKOUT_MODE:
  *
- * Everything after the redirect is out of our hands: the card is captured by
- * Stripe, and the account is provisioned from Stripe's webhook to admin — never
- * from the browser. Landing back on /signup/complete is not proof of payment.
+ *   unset / anything else   this form → POST /api/checkout → redirect to
+ *                           checkout.stripe.com. The proven path; the default
+ *                           on purpose, so a missing or fat-fingered env var
+ *                           fails back to the flow that works.
+ *
+ *   'embedded'              this form → POST /api/checkout with ui_mode →
+ *                           client secret → /checkout, where Stripe's form is
+ *                           mounted inside our own layout.
+ *
+ * Either way we hold no secret: the server route holds WEBHOOK_SECRET, and in
+ * embedded mode the publishable key arrives with the session rather than from
+ * our env. The card is always captured by Stripe, and the account is always
+ * provisioned from Stripe's webhook to admin — never from the browser. Landing
+ * on /signup/complete is not proof of payment in either mode.
  *
  * Prices are USD; there is no currency conversion anywhere in this flow.
  * Contract: docs/13-KRONGAGE-IO-STRIPE-HANDOFF.md §2.
  */
+
+const EMBEDDED = process.env.NEXT_PUBLIC_CHECKOUT_MODE === 'embedded';
 
 /** Used only if admin omits trialDays; admin's value always wins. */
 const FALLBACK_TRIAL_DAYS = 14;
@@ -111,6 +122,9 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
             company:   form.company,
             phone:     form.phone,
           },
+          // Omitted entirely in redirect mode so admin's response is byte-for-byte
+          // the one that was proven end to end.
+          ...(EMBEDDED ? { ui_mode: 'embedded' } : {}),
         }),
       });
 
@@ -127,13 +141,37 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
         return;
       }
 
-      if (!res.ok || !data?.url) {
+      const usable = res.ok && (EMBEDDED ? data?.client_secret && data?.publishable_key : data?.url);
+      if (!usable) {
         setServerError(
           res.status === 429
             ? 'Too many attempts — please wait a moment and try again.'
             : 'We couldn’t start checkout. Please try again shortly.',
         );
         setStep('error');
+        return;
+      }
+
+      if (EMBEDDED) {
+        // Stash the session and move to our own page. If storage is unavailable
+        // (private mode, storage disabled) there is nothing for /checkout to
+        // read, so fall through to the error state rather than routing to a page
+        // that can only dead-end.
+        try {
+          storeEmbeddedSession({
+            clientSecret:   data.client_secret,
+            publishableKey: data.publishable_key,
+            sessionId:      data.session_id ?? null,
+            planId:         plan.id,
+            planName:       plan.name,
+            billing,
+          });
+        } catch {
+          setServerError('Your browser blocked checkout storage. Please try again with private browsing off.');
+          setStep('error');
+          return;
+        }
+        window.location.href = '/checkout';
         return;
       }
 
@@ -245,7 +283,9 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
               <strong style={{ fontWeight: 800 }}>
                 Start your {trialDays}-day free trial ($0 today).
               </strong>{' '}
-              Enter your card details on Stripe&apos;s secure checkout page — cancel any time before{' '}
+              {EMBEDDED
+                ? 'Enter your card details on the next step — Stripe handles them securely and we never see them'
+                : 'Enter your card details on Stripe’s secure checkout page'} — cancel any time before{' '}
               <strong style={{ fontWeight: 800 }}>{firstChargeLabel}</strong>{' '}
               and you won&apos;t be charged. Otherwise, it&apos;s{' '}
               <strong style={{ fontWeight: 800 }}>
