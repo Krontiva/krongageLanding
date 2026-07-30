@@ -1,8 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { formatUsd } from '@/src/lib/format-price';
 
-const PaystackCheckout   = dynamic(() => import('./PaystackCheckout'),   { ssr: false });
+const CheckoutModal      = dynamic(() => import('./CheckoutModal'),       { ssr: false });
 const StarterSignupModal = dynamic(() => import('./StarterSignupModal'),  { ssr: false });
 
 type Plan = {
@@ -10,7 +11,11 @@ type Plan = {
   name: string;
   tagline: string;
   monthlyPrice: number | null;
+  /** Discounted monthly-equivalent — the big "/mo" figure on the annual toggle. */
   annualPrice: number | null;
+  /** What Stripe charges for a year. Never derive this by multiplying by 12. */
+  annualTotal?: number | null;
+  trialDays?: number | null;
   currency: string;
   badge: string | null;
   featured: boolean;
@@ -145,7 +150,18 @@ const COMPARISON_ROWS = [
   ['Support',                'Email',            'Email',      'Priority',    'Dedicated CSM'],
 ];
 
-type LivePlan = { id: string; monthlyPrice?: number | null; annualPrice?: number | null; currency?: string };
+type LivePlan = {
+  id: string;
+  monthlyPrice?: number | null;
+  annualPrice?: number | null;
+  annualTotal?: number | null;
+  annualPricePerMonth?: number | null;
+  trialDays?: number | null;
+  currency?: string;
+};
+
+/** Used only if admin omits trialDays; admin's value always wins. */
+const FALLBACK_TRIAL_DAYS = 14;
 
 // Prices are owned entirely by the admin app — the code holds NO hardcoded
 // prices. This applies the admin-supplied prices to each plan's marketing
@@ -158,20 +174,44 @@ function mergeLivePlans(livePlans: LivePlan[] | null | undefined) {
   );
   return PLANS.map(plan => {
     const live = byId.get(plan.id);
+
+    // Prefer admin's exact figures; fall back to the older rounded keys so an
+    // out-of-order deploy degrades to today's behaviour instead of blank prices.
+    const annualPerMonth = live?.annualPricePerMonth ?? live?.annualPrice ?? null;
+    const annualTotal =
+      live?.annualTotal ?? (annualPerMonth != null ? annualPerMonth * 12 : null);
+
     return {
       ...plan,
       monthlyPrice: live?.monthlyPrice ?? null,
-      annualPrice:  live?.annualPrice  ?? null,
-      currency:     live?.currency     ?? plan.currency,
+      annualPrice:  annualPerMonth,
+      annualTotal,
+      trialDays:    live?.trialDays ?? FALLBACK_TRIAL_DAYS,
+      currency:     live?.currency  ?? plan.currency,
     };
   });
 }
 
+type MergedPlan = ReturnType<typeof mergeLivePlans>[number];
+
 export default function PricingPage({ initialLivePlans }: { initialLivePlans?: LivePlan[] | null }) {
   const [annual, setAnnual]               = useState(false);
   const [plans, setPlans]                 = useState(() => mergeLivePlans(initialLivePlans));
-  const [checkoutPlan, setCheckoutPlan]   = useState<typeof PLANS[0] | null>(null);
+  const [checkoutPlan, setCheckoutPlan]   = useState<MergedPlan | null>(null);
   const [showStarterModal, setShowStarterModal] = useState(false);
+
+  // First-charge date, resolved after mount only. This page is prerendered, so a
+  // build-time date would both go stale and mismatch on hydration; until it's
+  // set the copy says "day N" instead of a date.
+  const [firstChargeDate, setFirstChargeDate] = useState<string | null>(null);
+  useEffect(() => {
+    const days = plans.find(p => p.trialDays != null)?.trialDays ?? FALLBACK_TRIAL_DAYS;
+    setFirstChargeDate(
+      new Date(Date.now() + days * 864e5).toLocaleDateString('en-GB', {
+        day: 'numeric', month: 'long', year: 'numeric',
+      }),
+    );
+  }, [plans]);
 
   return (
     <>
@@ -640,7 +680,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
       <section className="pg-hero">
         <div className="pg-eyebrow">Simple, Transparent Pricing</div>
         <h1 className="pg-h1">Plans that grow<br />with your team</h1>
-        <p className="pg-sub">Start free. Scale as you grow. Billed monthly via Paystack — no hidden fees.</p>
+        <p className="pg-sub">Start free. Scale as you grow. All prices in USD — no hidden fees.</p>
 
         {/* Toggle */}
         <div className="pg-toggle-wrap">
@@ -664,6 +704,10 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
           {plans.map(plan => {
             const price = annual ? plan.annualPrice : plan.monthlyPrice;
             const hasPrice = price != null;
+            // On annual, the amount actually charged is the full-year total — not
+            // the "/mo" figure shown above it. Admin sends it exactly.
+            const chargeAmount = annual ? plan.annualTotal ?? null : price;
+            const trialDays = plan.trialDays ?? FALLBACK_TRIAL_DAYS;
             const isFeatured = plan.featured;
             const isEnterprise = plan.enterprise;
             const cardClass = `pg-card${isFeatured ? ' pg-featured' : ''}${isEnterprise ? ' pg-enterprise' : ''}`;
@@ -693,12 +737,12 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                     <>
                       <div className="pg-price-row">
                         <span className="pg-price-dollar">$</span>
-                        <span className="pg-price-amount">{price.toLocaleString()}</span>
+                        <span className="pg-price-amount">{formatUsd(price)}</span>
                         <span className="pg-price-mo">/mo</span>
                       </div>
                       <div className="pg-price-annual">
                         {annual
-                          ? `$${(price * 12).toLocaleString()} billed annually`
+                          ? `$${formatUsd(chargeAmount ?? price * 12)} billed annually`
                           : ' '}
                       </div>
                     </>
@@ -744,13 +788,34 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                       {plan.cta}
                     </a>
                   ) : (
-                    <button
-                      onClick={() => setCheckoutPlan(plan)}
-                      disabled={!hasPrice}
-                      style={!hasPrice ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
-                      className={`pg-cta-primary ${isFeatured ? 'pg-cta-blue' : 'pg-cta-outline'}`}>
-                      {hasPrice ? plan.cta : 'Pricing unavailable'}
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setCheckoutPlan(plan)}
+                        disabled={!hasPrice}
+                        style={!hasPrice ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
+                        className={`pg-cta-primary ${isFeatured ? 'pg-cta-blue' : 'pg-cta-outline'}`}>
+                        {hasPrice ? plan.cta : 'Pricing unavailable'}
+                      </button>
+                      {/* Stripe's trial takes a card but charges $0 today, so never
+                          say "no credit card required" for a paid plan.
+                          On annual we must name the FULL-YEAR amount: someone who
+                          thinks they're trialling a $51.92 plan and then sees
+                          $623.04 leave their account will dispute the charge. */}
+                      {hasPrice && (
+                        <p style={{ fontSize: '12px', color: '#94a3b8', textAlign: 'center', marginTop: '10px', lineHeight: 1.5 }}>
+                          {trialDays}-day free trial · card required · $0 today
+                          {chargeAmount != null && (
+                            <>
+                              <br />
+                              then <strong style={{ color: '#64748b', fontWeight: 700 }}>
+                                ${formatUsd(chargeAmount)}
+                              </strong>{annual ? ' for the full year' : '/mo'}
+                              {firstChargeDate ? ` on ${firstChargeDate}` : ` on day ${trialDays}`}
+                            </>
+                          )}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -763,10 +828,10 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
       <div className="pg-trust">
         {[
           ['✓', 'No credit card for free plan'],
+          ['✓', '14-day free trial — cancel anytime'],
           ['✓', 'Enterprise-grade security'],
-          ['✓', 'Cancel anytime'],
           ['✓', 'Single-tenant hosted'],
-          ['✓', 'Paystack-secured checkout'],
+          ['✓', 'Stripe-secured checkout'],
         ].map(([icon, text]) => (
           <div key={text} className="pg-trust-item">
             <span className="pg-trust-dot">
@@ -816,7 +881,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
 
       {/* ── Paid checkout modal ── */}
       {checkoutPlan && (
-        <PaystackCheckout
+        <CheckoutModal
           plan={checkoutPlan}
           annual={annual}
           onClose={() => setCheckoutPlan(null)}

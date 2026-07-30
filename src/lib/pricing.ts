@@ -1,7 +1,23 @@
 export type LivePlan = {
   id: string;
   monthlyPrice?: number | null;
+  /** Discounted monthly-equivalent, rounded. Superseded by annualPricePerMonth. */
   annualPrice?: number | null;
+  /**
+   * Exact figures, added by admin 2026-07-29 after both sides were double-rounding
+   * (52 × 12 = $624 displayed against a $623.04 charge).
+   *
+   * `annualTotal` is the number Stripe actually charges on an annual plan — always
+   * render the annual figure from it, never from annualPrice × 12. The older
+   * monthlyPrice / annualPrice keys are still sent, so these stay optional and the
+   * page falls back cleanly if a deploy lands out of order.
+   */
+  annualTotalCents?: number | null;
+  annualTotal?: number | null;
+  annualPricePerMonth?: number | null;
+  monthlyPriceCents?: number | null;
+  /** Free-trial length admin applies in Stripe — both cadences get one. */
+  trialDays?: number | null;
   currency?: string;
 };
 

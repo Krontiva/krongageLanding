@@ -11,8 +11,6 @@ function getResend(): Resend | null {
 
 /** True if WEBHOOK_URL was accidentally pointed at the always-200 billing endpoint. */
 function isBillingUrl(url: string): boolean {
-  const billing = process.env.BILLING_WEBHOOK_URL;
-  if (billing && url === billing) return true;
   return /\/billing(\/|$)/.test(url) && !/\/provision\//.test(url);
 }
 
@@ -34,7 +32,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'WEBHOOK_URL misconfigured' }, { status: 500 });
     }
 
-    // Starter has no paystack block — provision immediately, tenant gets status=active
+    // Starter is free — no payment step at all, so provision immediately and the
+    // tenant gets status=active. Paid plans never come through here; they go via
+    // /api/checkout → Stripe → admin's webhook.
     const payload = JSON.stringify({
       user:      body.user,           // { firstName, lastName, email, company, phone }
       plan:      { id: 'starter', billing: 'monthly' },

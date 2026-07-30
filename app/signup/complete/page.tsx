@@ -2,10 +2,25 @@
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
+/**
+ * /signup/complete — Stripe Checkout success_url, and the free-starter landing.
+ *
+ * Two important constraints (docs/13-KRONGAGE-IO-STRIPE-HANDOFF.md §5):
+ *
+ *  1. Landing here is NOT proof of payment. It's a plain redirect anyone can
+ *     visit. Payment truth lives in the Stripe webhook admin receives, so this
+ *     page must not say "payment confirmed" or unlock anything.
+ *  2. Don't promise instant access. Provisioning runs off that webhook and is
+ *     asynchronous. "Check your email" is the correct message.
+ *
+ * Stripe's success_url is configured on the admin side and carries no query
+ * params, so the paid path must read correctly with none. The free-starter modal
+ * still passes ?type=free.
+ */
+
 function CompleteContent() {
   const params   = useSearchParams();
-  const planName = params.get('plan') || 'your plan';
-  const billing  = params.get('billing') || 'monthly';
+  const planName = params.get('plan') || '';
   const isFree   = params.get('type') === 'free';
 
   return (
@@ -137,15 +152,19 @@ function CompleteContent() {
             </svg>
           </div>
 
-          {/* Heading */}
+          {/* Heading — never claims payment or ready-to-use access */}
           <h1 className="sc-title">
-            {isFree ? 'You\'re all set!' : 'Payment confirmed!'}
+            {isFree ? 'You\'re all set!' : 'Check your email'}
           </h1>
           <p className="sc-body">
             {isFree ? (
-              <>Your free <strong>{planName}</strong> workspace is being created. We&apos;re setting things up — this takes about a minute.</>
+              <>Your free <strong>{planName || 'Starter'}</strong> workspace is being created. We&apos;re setting things up — this takes about a minute.</>
             ) : (
-              <>Your <strong>{planName}</strong> ({billing}) subscription is active. We&apos;re setting up your workspace — this takes about a minute.</>
+              <>
+                Your{planName ? <> <strong>{planName}</strong></> : ''} account is being set up now.
+                We&apos;ll email your login details to <strong>the address you signed up with</strong> —
+                it usually arrives within a minute.
+              </>
             )}
           </p>
 
@@ -159,13 +178,19 @@ function CompleteContent() {
               <span className="sc-step-num">2</span>
               <span>Sign in with your temporary password. KronGage will prompt you to set a new one on your first login.</span>
             </div>
+            {!isFree && (
+              <div className="sc-step">
+                <span className="sc-step-num">3</span>
+                <span>Nothing has been charged today. Your first payment is taken at the end of your <strong>14-day free trial</strong>, and you can cancel before then.</span>
+              </div>
+            )}
           </div>
 
           <div className="sc-divider" />
 
           {/* CTA */}
           <a href={process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'} className="sc-btn">
-            Open KronGage App
+            Log in to KronGage
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
