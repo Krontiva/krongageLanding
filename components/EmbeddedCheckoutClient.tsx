@@ -84,7 +84,12 @@ export default function EmbeddedCheckoutClient() {
           padding: 40px 24px 64px;
         }
         .ec-inner {
-          max-width: 760px;
+          /* Stripe picks one-column vs two-column from the width we hand its
+             iframe — we cannot reach inside it. At the old 760px it rendered
+             the narrow variant, which buries the order summary behind "View
+             details". Wide enough here that it lays out side-by-side like
+             checkout.stripe.com does. */
+          max-width: 1100px;
           margin: 0 auto;
         }
         .ec-head {
@@ -107,7 +112,10 @@ export default function EmbeddedCheckoutClient() {
           background: #fff;
           border-radius: 20px;
           box-shadow: 0 24px 64px rgba(13,71,161,.12);
-          padding: 28px 24px;
+          /* No padding: every pixel we take here is a pixel Stripe's iframe
+             doesn't get, and the iframe brings its own internal gutters.
+             overflow:hidden keeps the rounded corners over the frame. */
+          overflow: hidden;
         }
         .ec-state {
           text-align: center;
@@ -149,8 +157,9 @@ export default function EmbeddedCheckoutClient() {
           width: 100%;
         }
         .ec-skel {
-          height: 420px;
-          border-radius: 12px;
+          /* Sized to the two-column frame it is standing in for, so the card
+             doesn't jump height when Stripe mounts. */
+          height: 560px;
           background: #eef2f7;
           animation: ec-pulse 1.4s ease-in-out infinite;
         }
@@ -161,9 +170,14 @@ export default function EmbeddedCheckoutClient() {
         @media (prefers-reduced-motion: reduce) {
           .ec-skel { animation: none; }
         }
+        /* Below Stripe's two-column threshold it falls back to the stacked
+           layout on its own; all we do is stop wasting side margin on it. */
+        @media (max-width: 900px) {
+          .ec-wrap { padding: 28px 12px 48px; }
+        }
         @media (max-width: 560px) {
           .ec-title { font-size: 22px; }
-          .ec-card { padding: 20px 14px; }
+          .ec-skel  { height: 460px; }
         }
       `}</style>
 

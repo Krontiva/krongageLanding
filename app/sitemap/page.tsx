@@ -76,7 +76,7 @@ export default function Page() {
               <li><a href="/privacy-policy">Privacy Policy</a></li>
               <li><a href="/terms-of-service">Terms of Service</a></li>
               <li><a href="/data-protection">Data Protection</a></li>
-              <li><a href="/sitemap-page">Sitemap</a></li>
+              <li><a href="/sitemap">Sitemap</a></li>
             </ul>
           </div>
         </div>

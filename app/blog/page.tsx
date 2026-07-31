@@ -138,7 +138,7 @@ export default function Page() {
     {/* Featured article */}
     <a href="/blog/retention-gap/" className="blog-featured">
       <div className="blog-featured-img">
-        <iframe src="../assets/blog-retention-gap.html" loading="lazy" title="The Retention Gap"></iframe>
+        <iframe src="/assets/blog-retention-gap.html" loading="lazy" title="The Retention Gap"></iframe>
         <div className="img-overlay"></div>
       </div>
       <div className="blog-featured-body">
@@ -163,7 +163,7 @@ export default function Page() {
 
       <a href="/blog/ai-support-tier-1/" className="sidebar-post">
         <div className="sidebar-thumb">
-          <iframe src="../assets/blog-ai-support.html" loading="lazy" title="AI Support"></iframe>
+          <iframe src="/assets/blog-ai-support.html" loading="lazy" title="AI Support"></iframe>
         </div>
         <div className="sidebar-post-body">
           <span className="blog-tag">AI &amp; Automation</span>
@@ -179,7 +179,7 @@ export default function Page() {
 
       <a href="/blog/beyond-whatsapp/" className="sidebar-post">
         <div className="sidebar-thumb">
-          <iframe src="../assets/blog-omnichannel.html" loading="lazy" title="Beyond WhatsApp"></iframe>
+          <iframe src="/assets/blog-omnichannel.html" loading="lazy" title="Beyond WhatsApp"></iframe>
         </div>
         <div className="sidebar-post-body">
           <span className="blog-tag">Omnichannel</span>
@@ -195,7 +195,7 @@ export default function Page() {
 
       <a href="/blog/vanity-metrics-to-value/" className="sidebar-post">
         <div className="sidebar-thumb">
-          <iframe src="../assets/blog-vanity-metrics.html" loading="lazy" title="Vanity Metrics"></iframe>
+          <iframe src="/assets/blog-vanity-metrics.html" loading="lazy" title="Vanity Metrics"></iframe>
         </div>
         <div className="sidebar-post-body">
           <span className="blog-tag">Analytics</span>
