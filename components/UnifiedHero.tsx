@@ -26,26 +26,25 @@ const SPOTS = {
   'left-bottom':  { dxr: -Math.cos(Math.PI / 9), dyr: Math.sin(Math.PI / 9) },
 };
 
-// Only two rings — each carries four badges. Swap/add icons here as more
-// are supplied; `wrap: true` gives bare (non-square) glyphs a white circle
-// backing, `wrap: false` renders already-self-contained brand badges as-is.
+// Only two rings — each carries four badges, rendered at each icon's own
+// natural aspect ratio (no circular/background wrapper forced on top).
 const ORBIT_RINGS = [
   {
     size: 900, topClass: '-top-40', border: 'border-[#0D47A1]/10', duration: 90, spin: 1,
     badges: [
-      { spot: 'right-top',    iconSrc: '/whatsapp-icon.svg',  badgeSize: 34, wrap: true },
-      { spot: 'right-bottom', iconSrc: '/messenger.svg',      badgeSize: 36, wrap: false },
-      { spot: 'left-top',     iconSrc: '/instagram-icon.svg', badgeSize: 36, wrap: false },
-      { spot: 'left-bottom',  iconSrc: '/telegram.svg',       badgeSize: 36, wrap: false },
+      { spot: 'right-top',    iconSrc: '/whatsapp-icon.svg',  w: 36, h: 36 },
+      { spot: 'right-bottom', iconSrc: '/messenger.svg',      w: 36, h: 36 },
+      { spot: 'left-top',     iconSrc: '/instagram-icon.svg', w: 36, h: 36 },
+      { spot: 'left-bottom',  iconSrc: '/telegram.svg',       w: 36, h: 36 },
     ],
   },
   {
     size: 1180, topClass: '-top-64', border: 'border-[#0D47A1]/6', duration: 130, spin: -1,
     badges: [
-      { spot: 'right-top',    iconSrc: '/facebook-icon.svg', badgeSize: 36, wrap: false },
-      { spot: 'right-bottom', iconSrc: '/gmail.svg',         badgeSize: 34, wrap: true },
-      { spot: 'left-top',     iconSrc: '/TikTok_light.svg',  badgeSize: 34, wrap: true },
-      { spot: 'left-bottom',  iconSrc: '/linkedin.svg',      badgeSize: 36, wrap: false },
+      { spot: 'right-top',    iconSrc: '/facebook-icon.svg', w: 36, h: 36 },
+      { spot: 'right-bottom', iconSrc: '/gmail.svg',         w: 46, h: 36 },
+      { spot: 'left-top',     iconSrc: '/TikTok_light.svg',  w: 32, h: 36 },
+      { spot: 'left-bottom',  iconSrc: '/linkedin.svg',      w: 36, h: 36 },
     ],
   },
 ];
@@ -84,14 +83,12 @@ export default function UnifiedHero() {
               return (
                 <motion.div
                   key={j}
-                  className={`absolute top-1/2 left-1/2 rounded-full flex items-center justify-center overflow-hidden ${
-                    badge.wrap ? 'bg-white shadow-[0_4px_14px_rgba(13,71,161,0.18)]' : 'shadow-[0_4px_14px_rgba(13,71,161,0.18)]'
-                  }`}
+                  className="absolute top-1/2 left-1/2"
                   style={{
-                    x: radius * spot.dxr - badge.badgeSize / 2,
-                    y: radius * spot.dyr - badge.badgeSize / 2,
-                    width: badge.badgeSize,
-                    height: badge.badgeSize,
+                    x: radius * spot.dxr - badge.w / 2,
+                    y: radius * spot.dyr - badge.h / 2,
+                    width: badge.w,
+                    height: badge.h,
                   }}
                   animate={{ rotate: -360 * ring.spin }}
                   transition={{ duration: ring.duration, repeat: Infinity, ease: 'linear' }}
@@ -99,9 +96,9 @@ export default function UnifiedHero() {
                   <Image
                     src={badge.iconSrc}
                     alt=""
-                    width={badge.badgeSize}
-                    height={badge.badgeSize}
-                    className={badge.wrap ? 'h-[60%] w-[60%] object-contain' : 'h-full w-full object-contain'}
+                    width={badge.w}
+                    height={badge.h}
+                    className="h-full w-full object-contain drop-shadow-[0_4px_10px_rgba(13,71,161,0.18)]"
                   />
                 </motion.div>
               );
