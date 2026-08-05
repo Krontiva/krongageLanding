@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { formatUsd } from '@/src/lib/format-price';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const CheckoutModal      = dynamic(() => import('./CheckoutModal'),       { ssr: false });
 const StarterSignupModal = dynamic(() => import('./StarterSignupModal'),  { ssr: false });
@@ -194,6 +195,12 @@ function mergeLivePlans(livePlans: LivePlan[] | null | undefined) {
 
 type MergedPlan = ReturnType<typeof mergeLivePlans>[number];
 
+const ctaBaseClass = "block text-center px-5 py-[13px] rounded-full text-sm font-bold cursor-pointer transition-all duration-200 border-2 border-transparent w-full no-underline";
+const ctaGhost = "bg-transparent text-[#0D47A1] border-[#cbd5e1] hover:border-[#0D47A1] hover:bg-[#EEF5FD]";
+const ctaBlue = "bg-white text-[#0D47A1] border-white hover:bg-transparent hover:text-white";
+const ctaDark = "bg-transparent text-white border-white/30 hover:bg-white/10 hover:border-white/60";
+const ctaOutline = "bg-[#0D47A1] text-white border-[#0D47A1] hover:bg-[#0a3680] hover:border-[#0a3680]";
+
 export default function PricingPage({ initialLivePlans }: { initialLivePlans?: LivePlan[] | null }) {
   const [annual, setAnnual]               = useState(false);
   const [plans, setPlans]                 = useState(() => mergeLivePlans(initialLivePlans));
@@ -215,492 +222,43 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
 
   return (
     <>
-      <style>{`
-        /* ─── Hero ─── */
-        .pg-hero {
-          background: #f0f7ff;
-          text-align: center;
-          padding: 80px 24px 56px;
-        }
-        .pg-eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: #0D47A1;
-          color: #fff;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: .12em;
-          text-transform: uppercase;
-          padding: 6px 18px;
-          border-radius: 50px;
-          margin-bottom: 24px;
-        }
-        .pg-h1 {
-          font-size: 52px;
-          font-weight: 800;
-          color: #0D47A1;
-          line-height: 1.08;
-          letter-spacing: -1.5px;
-          margin-bottom: 16px;
-        }
-        .pg-sub {
-          font-size: 17px;
-          color: #475569;
-          line-height: 1.75;
-          max-width: 480px;
-          margin: 0 auto 40px;
-        }
-
-        /* ─── Toggle ─── */
-        .pg-toggle-wrap {
-          display: inline-flex;
-          align-items: center;
-          background: #fff;
-          border: 1.5px solid #e2e8f0;
-          border-radius: 50px;
-          padding: 4px;
-          box-shadow: 0 2px 8px rgba(13,71,161,.07);
-        }
-        .pg-toggle-btn {
-          padding: 10px 28px;
-          border-radius: 50px;
-          font-size: 14px;
-          font-weight: 700;
-          border: none;
-          cursor: pointer;
-          transition: all .2s;
-          background: transparent;
-          color: #64748b;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .pg-toggle-btn.active {
-          background: #0D47A1;
-          color: #fff;
-          box-shadow: 0 2px 10px rgba(13,71,161,.25);
-        }
-        .pg-save-badge {
-          font-size: 11px;
-          font-weight: 700;
-          padding: 2px 8px;
-          border-radius: 50px;
-          background: #dcfce7;
-          color: #16a34a;
-        }
-        .pg-toggle-btn.active .pg-save-badge {
-          background: rgba(255,255,255,.2);
-          color: #fff;
-        }
-
-        /* ─── Cards grid ─── */
-        .pg-cards-outer {
-          padding: 48px 24px 0;
-          max-width: 1240px;
-          margin: 0 auto;
-        }
-        .pg-cards {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 16px;
-          align-items: start;
-        }
-        .pg-card {
-          background: #fff;
-          border: 1.5px solid #e8edf5;
-          border-radius: 20px;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          transition: box-shadow .2s, transform .2s;
-        }
-        .pg-card:hover {
-          box-shadow: 0 12px 40px rgba(13,71,161,.1);
-          transform: translateY(-2px);
-        }
-        .pg-card.pg-featured {
-          background: #0D47A1;
-          border-color: #0D47A1;
-          box-shadow: 0 16px 56px rgba(13,71,161,.28);
-          transform: translateY(-8px);
-        }
-        .pg-card.pg-featured:hover {
-          transform: translateY(-12px);
-          box-shadow: 0 24px 64px rgba(13,71,161,.35);
-        }
-        .pg-card.pg-enterprise {
-          background: #0f172a;
-          border-color: #0f172a;
-        }
-
-        /* ─── Card badge ─── */
-        .pg-badge {
-          font-size: 10px;
-          font-weight: 800;
-          letter-spacing: .1em;
-          text-transform: uppercase;
-          text-align: center;
-          padding: 8px 12px;
-          background: rgba(255,255,255,.15);
-          color: #fff;
-        }
-        .pg-badge-blue {
-          background: #fff;
-          color: #0D47A1;
-        }
-
-        /* ─── Card body ─── */
-        .pg-card-body {
-          padding: 24px 22px 22px;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-        }
-        .pg-plan-name {
-          font-size: 11px;
-          font-weight: 800;
-          letter-spacing: .1em;
-          text-transform: uppercase;
-          color: #0D47A1;
-          margin-bottom: 4px;
-        }
-        .pg-featured .pg-plan-name,
-        .pg-enterprise .pg-plan-name {
-          color: rgba(255,255,255,.65);
-        }
-        .pg-tagline {
-          font-size: 13px;
-          color: #64748b;
-          margin-bottom: 20px;
-          line-height: 1.5;
-        }
-        .pg-featured .pg-tagline,
-        .pg-enterprise .pg-tagline {
-          color: rgba(255,255,255,.55);
-        }
-
-        /* ─── Price ─── */
-        .pg-price-row {
-          display: flex;
-          align-items: flex-end;
-          gap: 4px;
-          margin-bottom: 4px;
-          line-height: 1;
-        }
-        .pg-price-dollar {
-          font-size: 20px;
-          font-weight: 800;
-          color: #0f172a;
-          padding-bottom: 4px;
-        }
-        .pg-featured .pg-price-dollar,
-        .pg-enterprise .pg-price-dollar {
-          color: #fff;
-        }
-        .pg-price-amount {
-          font-size: 44px;
-          font-weight: 800;
-          color: #0f172a;
-          letter-spacing: -2px;
-        }
-        .pg-featured .pg-price-amount,
-        .pg-enterprise .pg-price-amount {
-          color: #fff;
-        }
-        .pg-price-mo {
-          font-size: 14px;
-          color: #94a3b8;
-          padding-bottom: 6px;
-        }
-        .pg-featured .pg-price-mo,
-        .pg-enterprise .pg-price-mo {
-          color: rgba(255,255,255,.5);
-        }
-        .pg-price-annual {
-          font-size: 12px;
-          color: #16a34a;
-          font-weight: 600;
-          margin-bottom: 20px;
-          min-height: 18px;
-        }
-        .pg-featured .pg-price-annual {
-          color: #86efac;
-        }
-        .pg-price-custom {
-          font-size: 44px;
-          font-weight: 800;
-          color: #fff;
-          letter-spacing: -2px;
-          margin-bottom: 24px;
-        }
-        .pg-price-free {
-          font-size: 44px;
-          font-weight: 800;
-          color: #0f172a;
-          letter-spacing: -2px;
-          margin-bottom: 24px;
-        }
-
-        /* ─── Divider ─── */
-        .pg-divider {
-          height: 1px;
-          background: #f1f5f9;
-          margin-bottom: 20px;
-        }
-        .pg-featured .pg-divider,
-        .pg-enterprise .pg-divider {
-          background: rgba(255,255,255,.12);
-        }
-
-        /* ─── Features list ─── */
-        .pg-features {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          margin-bottom: 24px;
-          flex: 1;
-        }
-        .pg-feature-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-          font-size: 13px;
-          color: #475569;
-          line-height: 1.5;
-        }
-        .pg-featured .pg-feature-item,
-        .pg-enterprise .pg-feature-item {
-          color: rgba(255,255,255,.8);
-        }
-        .pg-check {
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          background: #EEF5FD;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          margin-top: 1px;
-        }
-        .pg-check svg { width: 10px; height: 10px; }
-        .pg-check-stroke { stroke: #0D47A1; }
-        .pg-featured .pg-check {
-          background: rgba(255,255,255,.18);
-        }
-        .pg-featured .pg-check-stroke { stroke: #fff; }
-        .pg-enterprise .pg-check {
-          background: rgba(255,255,255,.1);
-        }
-        .pg-enterprise .pg-check-stroke { stroke: rgba(255,255,255,.7); }
-
-        /* ─── CTAs ─── */
-        .pg-cta-primary {
-          display: block;
-          text-align: center;
-          padding: 13px 20px;
-          border-radius: 50px;
-          font-size: 14px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all .2s;
-          border: 2px solid transparent;
-          width: 100%;
-          text-decoration: none;
-        }
-        .pg-cta-ghost {
-          background: transparent;
-          color: #0D47A1;
-          border-color: #cbd5e1;
-        }
-        .pg-cta-ghost:hover {
-          border-color: #0D47A1;
-          background: #EEF5FD;
-        }
-        .pg-cta-blue {
-          background: #fff;
-          color: #0D47A1;
-          border-color: #fff;
-        }
-        .pg-cta-blue:hover {
-          background: transparent;
-          color: #fff;
-          border-color: #fff;
-        }
-        .pg-cta-dark {
-          background: transparent;
-          color: #fff;
-          border-color: rgba(255,255,255,.3);
-        }
-        .pg-cta-dark:hover {
-          background: rgba(255,255,255,.1);
-          border-color: rgba(255,255,255,.6);
-        }
-        .pg-cta-outline {
-          background: #0D47A1;
-          color: #fff;
-          border-color: #0D47A1;
-        }
-        .pg-cta-outline:hover { background: #0a3680; border-color: #0a3680; }
-
-        /* ─── Trust row ─── */
-        .pg-trust {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 24px;
-          padding: 36px 24px;
-          max-width: 900px;
-          margin: 0 auto;
-        }
-        .pg-trust-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 13px;
-          color: #64748b;
-          font-weight: 500;
-        }
-        .pg-trust-dot {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: #EEF5FD;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        /* ─── Comparison ─── */
-        .pg-compare-outer {
-          max-width: 1080px;
-          margin: 0 auto;
-          padding: 0 24px 80px;
-        }
-        .pg-compare-header {
-          text-align: center;
-          margin-bottom: 40px;
-        }
-        .pg-compare-header h2 {
-          font-size: 36px;
-          font-weight: 800;
-          color: #0D47A1;
-          letter-spacing: -.8px;
-          margin-bottom: 8px;
-        }
-        .pg-compare-header p {
-          font-size: 15px;
-          color: #64748b;
-        }
-        .pg-table-wrap {
-          border-radius: 20px;
-          overflow: hidden;
-          border: 1.5px solid #e8edf5;
-          background: #fff;
-        }
-        .pg-table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 14px;
-        }
-        .pg-table thead tr {
-          background: #f8fafc;
-        }
-        .pg-table th {
-          padding: 16px 20px;
-          font-weight: 700;
-          text-align: center;
-          border-bottom: 1.5px solid #e8edf5;
-        }
-        .pg-table th:first-child {
-          text-align: left;
-          color: #94a3b8;
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: .05em;
-          text-transform: uppercase;
-        }
-        .pg-table td {
-          padding: 14px 20px;
-          text-align: center;
-          color: #475569;
-          border-bottom: 1px solid #f1f5f9;
-        }
-        .pg-table td:first-child {
-          text-align: left;
-          color: #0f172a;
-          font-weight: 600;
-        }
-        .pg-table tbody tr:last-child td {
-          border-bottom: none;
-        }
-        .pg-table tbody tr:hover td {
-          background: #f8fafc;
-        }
-        .pg-table td.pg-td-dash {
-          color: #cbd5e1;
-        }
-        .pg-th-featured {
-          color: #0D47A1 !important;
-          background: #EEF5FD;
-        }
-
-        /* ─── Responsive ─── */
-        @media (max-width: 1024px) {
-          .pg-cards {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .pg-card.pg-featured {
-            transform: none;
-          }
-          .pg-card.pg-featured:hover {
-            transform: translateY(-2px);
-          }
-          .pg-h1 { font-size: 40px; }
-        }
-        @media (max-width: 640px) {
-          .pg-hero { padding: 56px 20px 40px; }
-          .pg-h1 { font-size: 34px; letter-spacing: -.5px; }
-          .pg-sub { font-size: 15px; }
-          .pg-cards { grid-template-columns: 1fr; gap: 12px; }
-          .pg-cards-outer { padding: 32px 16px 0; }
-          .pg-toggle-btn { padding: 9px 18px; font-size: 13px; }
-          .pg-compare-outer { padding: 0 16px 60px; }
-          .pg-compare-header h2 { font-size: 28px; }
-          .pg-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-          .pg-table { min-width: 560px; }
-          .pg-trust { gap: 16px; padding: 28px 20px; }
-        }
-      `}</style>
-
-      {/* ── Hero ── */}
-      <section className="pg-hero">
-        <div className="pg-eyebrow">Simple, Transparent Pricing</div>
-        <h1 className="pg-h1">Plans that grow<br />with your team</h1>
-        <p className="pg-sub">Start free. Scale as you grow. All prices in USD — no hidden fees.</p>
+      {/* Hero */}
+      <section className="bg-[#f0f7ff] text-center px-6 pt-[148px] pb-14 max-[640px]:px-5 max-[640px]:pt-[124px] max-[640px]:pb-10">
+        <div className="inline-flex items-center gap-2 bg-[#0D47A1] text-white text-[11px] font-bold tracking-[0.12em] uppercase px-[18px] py-1.5 rounded-full mb-6">Simple, Transparent Pricing</div>
+        <h1 className="text-[52px] font-extrabold text-[#0D47A1] leading-[1.08] tracking-[-1.5px] mb-4 max-[1024px]:text-[40px] max-[640px]:text-[34px] max-[640px]:tracking-[-0.5px]">Plans that grow<br />with your team</h1>
+        <p className="text-[17px] text-[#475569] leading-[1.75] max-w-[480px] mx-auto mb-10 max-[640px]:text-[15px]">Start free. Scale as you grow. All prices in USD — no hidden fees.</p>
 
         {/* Toggle */}
-        <div className="pg-toggle-wrap">
-          <button
-            className={`pg-toggle-btn${!annual ? ' active' : ''}`}
-            onClick={() => setAnnual(false)}>
-            Monthly
-          </button>
-          <button
-            className={`pg-toggle-btn${annual ? ' active' : ''}`}
-            onClick={() => setAnnual(true)}>
-            Annual
-            <span className="pg-save-badge">Save 12%</span>
-          </button>
-        </div>
+        <Tabs value={annual ? 'annual' : 'monthly'} onValueChange={v => setAnnual(v === 'annual')}>
+          <TabsList className="!bg-white !border-[1.5px] !border-[#e2e8f0] !rounded-full !p-1 !h-auto !shadow-[0_2px_8px_rgba(13,71,161,0.07)] !gap-0">
+            <TabsTrigger
+              value="monthly"
+              className="!rounded-full !px-7 !py-2.5 !text-sm !font-bold !text-[#64748b] max-sm:!px-[18px] max-sm:!text-[13px] data-[state=active]:!bg-[#0D47A1] data-[state=active]:!text-white data-[state=active]:!shadow-[0_2px_10px_rgba(13,71,161,0.25)]"
+            >
+              Monthly
+            </TabsTrigger>
+            <TabsTrigger
+              value="annual"
+              className="!rounded-full !px-7 !py-2.5 !text-sm !font-bold !text-[#64748b] !gap-2 max-sm:!px-[18px] max-sm:!text-[13px] data-[state=active]:!bg-[#0D47A1] data-[state=active]:!text-white data-[state=active]:!shadow-[0_2px_10px_rgba(13,71,161,0.25)]"
+            >
+              Annual
+              <span
+                className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                style={{
+                  background: annual ? 'rgba(255,255,255,.2)' : '#dcfce7',
+                  color: annual ? '#fff' : '#16a34a',
+                }}
+              >
+                Save 12%
+              </span>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </section>
 
-      {/* ── Cards ── */}
-      <div className="pg-cards-outer">
-        <div className="pg-cards">
+      {/* Cards */}
+      <div className="pt-12 px-6 max-w-[1240px] mx-auto max-[640px]:pt-8 max-[640px]:px-4">
+        <div className="grid grid-cols-4 gap-4 items-start max-[1024px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-3">
           {plans.map(plan => {
             const price = annual ? plan.annualPrice : plan.monthlyPrice;
             const hasPrice = price != null;
@@ -710,55 +268,68 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
             const trialDays = plan.trialDays ?? FALLBACK_TRIAL_DAYS;
             const isFeatured = plan.featured;
             const isEnterprise = plan.enterprise;
-            const cardClass = `pg-card${isFeatured ? ' pg-featured' : ''}${isEnterprise ? ' pg-enterprise' : ''}`;
+            const isDark = isFeatured || isEnterprise;
+
+            const cardClass = [
+              "bg-white border-[1.5px] border-[#e8edf5] rounded-[20px] overflow-hidden flex flex-col transition-[box-shadow,transform] duration-200 hover:shadow-[0_12px_40px_rgba(13,71,161,0.1)] hover:-translate-y-0.5",
+              isFeatured && "!bg-[#0D47A1] !border-[#0D47A1] shadow-[0_16px_56px_rgba(13,71,161,0.28)] -translate-y-2 hover:-translate-y-3 hover:shadow-[0_24px_64px_rgba(13,71,161,0.35)] max-[1024px]:translate-y-0 max-[1024px]:hover:-translate-y-0.5",
+              isEnterprise && "!bg-[#0f172a] !border-[#0f172a]",
+            ].filter(Boolean).join(' ');
+
+            const nameClass = `text-[11px] font-extrabold tracking-[0.1em] uppercase mb-1 ${isDark ? 'text-white/65' : 'text-[#0D47A1]'}`;
+            const taglineClass = `text-[13px] mb-5 leading-[1.5] ${isDark ? 'text-white/55' : 'text-[#64748b]'}`;
+            const dividerClass = `h-px mb-5 ${isDark ? 'bg-white/[0.12]' : 'bg-[#f1f5f9]'}`;
+            const featureItemClass = `flex items-start gap-2.5 text-[13px] leading-[1.5] ${isDark ? 'text-white/80' : 'text-[#475569]'}`;
+            const checkClass = `w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-px ${isFeatured ? 'bg-white/[0.18]' : isEnterprise ? 'bg-white/10' : 'bg-[#EEF5FD]'}`;
+            const checkStroke = isFeatured ? '#fff' : isEnterprise ? 'rgba(255,255,255,.7)' : '#0D47A1';
 
             return (
               <div key={plan.id} className={cardClass}>
                 {/* Badge */}
                 {plan.badge && (
-                  <div className={`pg-badge${isFeatured ? ' pg-badge-blue' : ''}`}>
+                  <div className={`text-[10px] font-extrabold tracking-[0.1em] uppercase text-center px-3 py-2 ${isFeatured ? 'bg-white text-[#0D47A1]' : 'bg-white/15 text-white'}`}>
                     {plan.badge}
                   </div>
                 )}
 
-                <div className="pg-card-body">
+                <div className="pt-6 px-[22px] pb-[22px] flex-1 flex flex-col">
                   {/* Plan name + tagline */}
-                  <div className="pg-plan-name">{plan.name}</div>
-                  <div className="pg-tagline">{plan.tagline}</div>
+                  <div className={nameClass}>{plan.name}</div>
+                  <div className={taglineClass}>{plan.tagline}</div>
 
                   {/* Price */}
                   {plan.free ? (
-                    <div className="pg-price-free">Free</div>
+                    <div className="text-[44px] font-extrabold text-[#0f172a] tracking-[-2px] mb-6">Free</div>
                   ) : isEnterprise ? (
-                    <div className="pg-price-custom">Custom</div>
+                    <div className="text-[44px] font-extrabold text-white tracking-[-2px] mb-6">Custom</div>
                   ) : !hasPrice ? (
-                    <div className="pg-price-free">—</div>
+                    <div className="text-[44px] font-extrabold text-[#0f172a] tracking-[-2px] mb-6">—</div>
                   ) : (
                     <>
-                      <div className="pg-price-row">
-                        <span className="pg-price-dollar">$</span>
-                        <span className="pg-price-amount">{formatUsd(price)}</span>
-                        <span className="pg-price-mo">/mo</span>
+                      <div className="flex items-end gap-1 mb-1 leading-none">
+                        <span className={`text-xl font-extrabold pb-1 ${isDark ? 'text-white' : 'text-[#0f172a]'}`}>$</span>
+                        <span className={`text-[44px] font-extrabold tracking-[-2px] ${isDark ? 'text-white' : 'text-[#0f172a]'}`}>{formatUsd(price)}</span>
+                        <span className={`text-sm pb-1.5 ${isDark ? 'text-white/50' : 'text-[#94a3b8]'}`}>/mo</span>
                       </div>
-                      <div className="pg-price-annual">
+                      <div className={`text-xs font-semibold mb-5 min-h-[18px] ${isFeatured ? 'text-[#86efac]' : 'text-[#16a34a]'}`}>
                         {annual
                           ? `$${formatUsd(chargeAmount ?? price * 12)} billed annually`
-                          : ' '}
+                          : ' '}
                       </div>
                     </>
                   )}
 
-                  <div className="pg-divider" />
+                  <div className={dividerClass} />
 
                   {/* Features */}
-                  <ul className="pg-features">
+                  <ul className="list-none flex flex-col gap-2.5 mb-6 flex-1">
                     {plan.features.map(f => (
-                      <li key={f} className="pg-feature-item">
-                        <span className="pg-check">
-                          <svg viewBox="0 0 10 10" fill="none">
+                      <li key={f} className={featureItemClass}>
+                        <span className={checkClass}>
+                          <svg viewBox="0 0 10 10" fill="none" className="w-2.5 h-2.5">
                             <polyline
                               points="1.5,5 4,7.5 8.5,2"
-                              className="pg-check-stroke"
+                              stroke={checkStroke}
                               strokeWidth="1.8"
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -774,16 +345,16 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                   {plan.id === 'starter' ? (
                     <button
                       onClick={() => setShowStarterModal(true)}
-                      className="pg-cta-primary pg-cta-ghost">
+                      className={`${ctaBaseClass} ${ctaGhost}`}>
                       {plan.cta}
                     </button>
                   ) : plan.ctaHref ? (
                     <a
                       href={plan.ctaHref}
-                      className={`pg-cta-primary ${
-                        isFeatured ? 'pg-cta-blue' :
-                        isEnterprise ? 'pg-cta-dark' :
-                        'pg-cta-ghost'
+                      className={`${ctaBaseClass} ${
+                        isFeatured ? ctaBlue :
+                        isEnterprise ? ctaDark :
+                        ctaGhost
                       }`}>
                       {plan.cta}
                     </a>
@@ -792,8 +363,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                       <button
                         onClick={() => setCheckoutPlan(plan)}
                         disabled={!hasPrice}
-                        style={!hasPrice ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
-                        className={`pg-cta-primary ${isFeatured ? 'pg-cta-blue' : 'pg-cta-outline'}`}>
+                        className={`${ctaBaseClass} ${isFeatured ? ctaBlue : ctaOutline} ${!hasPrice ? 'opacity-50 cursor-not-allowed' : ''}`}>
                         {hasPrice ? plan.cta : 'Pricing unavailable'}
                       </button>
                       {/* Stripe's trial takes a card but charges $0 today, so never
@@ -802,12 +372,12 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                           thinks they're trialling a $51.92 plan and then sees
                           $623.04 leave their account will dispute the charge. */}
                       {hasPrice && (
-                        <p style={{ fontSize: '12px', color: '#94a3b8', textAlign: 'center', marginTop: '10px', lineHeight: 1.5 }}>
+                        <p className="text-xs text-[#94a3b8] text-center mt-2.5 leading-[1.5]">
                           {trialDays}-day free trial · card required · $0 today
                           {chargeAmount != null && (
                             <>
                               <br />
-                              then <strong style={{ color: '#64748b', fontWeight: 700 }}>
+                              then <strong className="text-[#64748b] font-bold">
                                 ${formatUsd(chargeAmount)}
                               </strong>{annual ? ' for the full year' : '/mo'}
                               {firstChargeDate ? ` on ${firstChargeDate}` : ` on day ${trialDays}`}
@@ -824,8 +394,8 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
         </div>
       </div>
 
-      {/* ── Trust row ── */}
-      <div className="pg-trust">
+      {/* Trust row */}
+      <div className="flex flex-wrap justify-center gap-6 px-6 py-9 max-w-[900px] mx-auto max-[640px]:gap-4 max-[640px]:px-5 max-[640px]:py-7">
         {[
           ['✓', 'No credit card for free plan'],
           ['✓', '14-day free trial — cancel anytime'],
@@ -833,8 +403,8 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
           ['✓', 'Single-tenant hosted'],
           ['✓', 'Stripe-secured checkout'],
         ].map(([icon, text]) => (
-          <div key={text} className="pg-trust-item">
-            <span className="pg-trust-dot">
+          <div key={text} className="flex items-center gap-2 text-[13px] text-[#64748b] font-medium">
+            <span className="w-5 h-5 rounded-full bg-[#EEF5FD] flex items-center justify-center shrink-0">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                 <polyline points="1.5,5 4,7.5 8.5,2" stroke="#0D47A1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -844,20 +414,20 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
         ))}
       </div>
 
-      {/* ── Comparison table ── */}
-      <div className="pg-compare-outer">
-        <div className="pg-compare-header">
-          <h2>Compare all plans</h2>
-          <p>Everything you need to choose the right tier for your team</p>
+      {/* Comparison table */}
+      <div className="max-w-[1080px] mx-auto px-6 pb-20 max-[640px]:px-4 max-[640px]:pb-[60px]">
+        <div className="text-center mb-10">
+          <h2 className="text-4xl font-extrabold text-[#0D47A1] tracking-[-0.8px] mb-2 max-[640px]:text-[28px]">Compare all plans</h2>
+          <p className="text-[15px] text-[#64748b]">Everything you need to choose the right tier for your team</p>
         </div>
 
-        <div className="pg-table-wrap">
-          <table className="pg-table">
+        <div className="rounded-[20px] overflow-hidden border-[1.5px] border-[#e8edf5] bg-white max-[640px]:overflow-x-auto max-[640px]:[-webkit-overflow-scrolling:touch]">
+          <table className="w-full border-collapse text-sm max-[640px]:min-w-[560px]">
             <thead>
-              <tr>
-                <th></th>
+              <tr className="bg-[#f8fafc]">
+                <th className="px-5 py-4 font-bold text-center border-b-[1.5px] border-[#e8edf5] text-left !text-[#94a3b8] text-xs font-semibold tracking-[0.05em] uppercase"></th>
                 {plans.map(p => (
-                  <th key={p.id} className={p.featured ? 'pg-th-featured' : ''}>
+                  <th key={p.id} className={`px-5 py-4 font-bold text-center border-b-[1.5px] border-[#e8edf5] ${p.featured ? '!text-[#0D47A1] !bg-[#EEF5FD]' : ''}`}>
                     {p.name}
                   </th>
                 ))}
@@ -865,10 +435,10 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
             </thead>
             <tbody>
               {COMPARISON_ROWS.map(([label, ...vals]) => (
-                <tr key={label}>
-                  <td>{label}</td>
+                <tr key={label} className="group">
+                  <td className="px-5 py-3.5 text-center text-[#475569] border-b border-[#f1f5f9] last:border-b-0 group-hover:bg-[#f8fafc] text-left !text-[#0f172a] font-semibold">{label}</td>
                   {vals.map((v, i) => (
-                    <td key={i} className={v === '—' ? 'pg-td-dash' : ''}>
+                    <td key={i} className={`px-5 py-3.5 text-center border-b border-[#f1f5f9] last:border-b-0 group-hover:bg-[#f8fafc] ${v === '—' ? 'text-[#cbd5e1]' : 'text-[#475569]'}`}>
                       {v}
                     </td>
                   ))}
@@ -879,7 +449,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
         </div>
       </div>
 
-      {/* ── Paid checkout modal ── */}
+      {/* Paid checkout modal */}
       {checkoutPlan && (
         <CheckoutModal
           plan={checkoutPlan}
@@ -888,7 +458,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
         />
       )}
 
-      {/* ── Starter free signup modal ── */}
+      {/* Starter free signup modal */}
       {showStarterModal && (
         <StarterSignupModal onClose={() => setShowStarterModal(false)} />
       )}

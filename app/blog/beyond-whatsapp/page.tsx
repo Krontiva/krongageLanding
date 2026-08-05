@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import OmnichannelScene from '../../../components/blog/OmnichannelScene';
 
 export const metadata: Metadata = {
   title: 'Beyond WhatsApp: Building a True Omnichannel Experience in 2025 – KronGage Blog',
@@ -9,272 +9,168 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <style>{`
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
-    a { text-decoration: none; color: inherit; }
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
-    .nav-logo img { height: 38px; width: auto; }
-    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; font-size: 14px; font-weight: 600; }
-    .nav-links li a { color: #475569; transition: color .2s; }
-    .nav-links li a:hover { color: #0D47A1; }
-    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
-    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
-    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
-    .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
-    .nav-links li { position: relative; }
-    .nav-links li > a { display: flex; align-items: center; gap: 4px; padding: 8px 0; }
-    .nav-links li.has-mega > a::after {
-      content: ''; display: inline-block; width: 0; height: 0;
-      border-left: 4px solid transparent; border-right: 4px solid transparent;
-      border-top: 5px solid currentColor; margin-left: 2px; transition: transform .2s;
-    }
-    .nav-links li.has-mega.is-open > a::after { transform: rotate(180deg); }
-    .mega-menu {
-      display: none; position: fixed; top: 68px; left: 0; width: 100vw;
-      background: #fff; border-top: 2px solid #0D47A1;
-      box-shadow: 0 20px 60px rgba(0,0,0,.12); z-index: 199; padding: 36px 60px 40px;
-    }
-    .nav-links li.has-mega.is-open .mega-menu { display: block; }
-    .mega-inner { display: grid; max-width: 1100px; margin: 0 auto; gap: 48px; }
-    .mega-inner.cols-3 { grid-template-columns: 1.6fr 1fr 1fr; }
-    .mega-inner.cols-2b { grid-template-columns: 1fr 1.4fr; }
-    .mega-col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 18px; }
-    .mega-brand-head { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-    .mega-brand-sub { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
-    .mega-brand-link { font-size: 13px; font-weight: 700; color: #0D47A1; }
-    .mega-feature-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: inherit; }
-    .mega-feature-row:last-child { border-bottom: none; }
-    .mega-feat-icon { width: 34px; height: 34px; background: #EEF5FD; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
-    .mega-feat-text strong { display: block; font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
-    .mega-feat-text span { font-size: 12px; color: #64748b; }
-    .mega-channel-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; text-decoration: none; }
-    .mega-channel-row:last-child { border-bottom: none; }
-    .mega-channel-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #0D47A1; }
-    .mega-view-all { font-size: 13px; font-weight: 700; color: #0D47A1; margin-top: 4px; display: inline-block; }
-    .mega-how-card { background: #EEF5FD; border-radius: 10px; padding: 14px; margin-top: 16px; display: flex; gap: 12px; align-items: flex-start; }
-    .mega-how-icon { width: 38px; height: 38px; background: #0D47A1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .mega-how-text strong { font-size: 13px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 4px; }
-    .mega-how-text span { font-size: 12px; color: #64748b; line-height: 1.5; }
-    .mega-industry-list { list-style: none; }
-    .mega-industry-list li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
-    .mega-industry-list li:last-child { border-bottom: none; }
-    .mega-ind-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #0D47A1; }
-    .mega-article-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
-    .mega-article-sub { font-size: 12px; color: #64748b; line-height: 1.6; }
-
-    .article-hero { background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%); padding: 72px 60px 80px; position: relative; overflow: hidden; }
-    .article-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; border: none; pointer-events: none; opacity: 0.38; }
-    .article-hero-inner { position: relative; z-index: 1; }
-    .breadcrumb { font-size: 13px; color: rgba(255,255,255,.5); font-weight: 500; margin-bottom: 24px; }
-    .breadcrumb a { color: #6ee7b7; }
-    .breadcrumb span { margin: 0 6px; }
-    .article-tag { display: inline-block; font-size: 11px; font-weight: 700; color: #6ee7b7; background: rgba(110,231,183,.1); border: 1px solid rgba(110,231,183,.25); padding: 4px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 20px; }
-    .article-hero h1 { font-size: 46px; font-weight: 800; color: #fff; line-height: 1.12; max-width: 780px; margin-bottom: 20px; }
-    .article-hero .lead { font-size: 19px; color: rgba(255,255,255,.75); max-width: 680px; line-height: 1.65; margin-bottom: 32px; }
-    .article-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .meta-author { display: flex; align-items: center; gap: 10px; }
-    .meta-av { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; }
-    .meta-name { font-size: 14px; font-weight: 700; color: #fff; }
-    .meta-role { font-size: 12px; color: rgba(255,255,255,.5); }
-    .meta-divider { width: 1px; height: 36px; background: rgba(255,255,255,.15); }
-    .meta-item { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 600; }
-
-    main { flex: 1; }
-    .article-layout { display: grid; grid-template-columns: 1fr 280px; gap: 64px; max-width: 1100px; margin: 0 auto; padding: 64px 24px 80px; }
-    .article-body h2 { font-size: 26px; font-weight: 800; color: #0f172a; margin: 44px 0 16px; line-height: 1.25; }
-    .article-body h3 { font-size: 19px; font-weight: 700; color: #0f172a; margin: 28px 0 12px; }
-    .article-body p { font-size: 16px; color: #374151; line-height: 1.85; margin-bottom: 20px; }
-    .article-body ul, .article-body ol { padding-left: 24px; margin-bottom: 20px; }
-    .article-body li { font-size: 16px; color: #374151; line-height: 1.8; margin-bottom: 10px; }
-    .pull-quote { border-left: 4px solid #059669; background: #ecfdf5; border-radius: 0 12px 12px 0; padding: 24px 28px; margin: 32px 0; }
-    .pull-quote p { font-size: 18px; font-weight: 700; color: #059669; line-height: 1.5; margin: 0; font-style: italic; }
-    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 32px 0; }
-    .stat-card { background: #fff; border-radius: 14px; padding: 24px; border: 1px solid #e2e8f0; text-align: center; }
-    .stat-num { font-size: 36px; font-weight: 900; color: #0D47A1; line-height: 1; margin-bottom: 8px; }
-    .stat-label { font-size: 13px; color: #64748b; font-weight: 600; line-height: 1.4; }
-    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 32px 0; }
-    .compare-card { border-radius: 14px; padding: 24px; }
-    .compare-card.bad { background: #fef2f2; border: 1px solid #fecaca; }
-    .compare-card.good { background: #f0fdf4; border: 1px solid #bbf7d0; }
-    .compare-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
-    .compare-card.bad .compare-label { color: #dc2626; }
-    .compare-card.good .compare-label { color: #16a34a; }
-    .compare-card h4 { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-    .compare-card p { font-size: 13px; color: #475569; line-height: 1.6; }
-    .cta-box { background: linear-gradient(135deg, #064e3b, #059669); border-radius: 20px; padding: 40px; text-align: center; margin-top: 48px; }
-    .cta-box h3 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-    .cta-box p { font-size: 15px; color: rgba(255,255,255,.75); margin-bottom: 24px; line-height: 1.6; }
-    .btn-cta { display: inline-block; background: #fff; color: #059669; padding: 14px 32px; border-radius: 50px; font-size: 15px; font-weight: 700; }
-
-    .article-sidebar { padding-top: 8px; }
-    .sidebar-card { background: #fff; border-radius: 14px; padding: 20px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
-    .sidebar-card h4 { font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; text-transform: uppercase; letter-spacing: .8px; }
-    .toc-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f8fafc; font-size: 13px; color: #475569; font-weight: 600; cursor: pointer; transition: color .2s; }
-    .toc-item:hover { color: #0D47A1; }
-    .toc-item:last-child { border-bottom: none; }
-    .toc-num { font-size: 10px; font-weight: 800; color: #0D47A1; background: #EEF5FD; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-    .related-post { padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
-    .related-post:last-child { border-bottom: none; }
-    .related-tag { font-size: 10px; font-weight: 700; color: #0D47A1; text-transform: uppercase; letter-spacing: .5px; }
-    .related-post h5 { font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 4px; line-height: 1.35; }
-
-    footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
-    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .footer-brand .logo { font-size: 22px; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
-    .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
-    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
-    .footer-col ul li a { color: #64748b; transition: color .2s; }
-    .footer-col ul li a:hover { color: #38bdf8; }
-    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-bottom p { font-size: 12px; color: #475569; }
-    .footer-legal { display: flex; gap: 20px; }
-    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
-    .footer-legal a:hover { color: #38bdf8; }
-    @media (max-width: 900px) { .article-layout { grid-template-columns: 1fr; } .stat-grid { grid-template-columns: 1fr 1fr; } .compare-grid { grid-template-columns: 1fr; } .footer-top { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 640px) { nav { padding: 0 20px; height: 56px; } .nav-links, .btn-nav { display: none; } .nav-toggle { display: flex; } .article-hero { padding: 48px 20px 56px; } .article-hero h1 { font-size: 30px; } footer { padding: 40px 20px 20px; } .footer-top { grid-template-columns: 1fr; } }
-  
-      `}</style>
-<section className="article-hero">
-  <iframe className="article-hero-bg" src="/assets/blog-omnichannel.html" title=""></iframe>
-  <div className="article-hero-inner">
-    <div className="breadcrumb"><a href="/blog/">Blog</a><span>›</span>Omnichannel</div>
-    <div className="article-tag">Omnichannel</div>
-    <h1>Beyond WhatsApp: Building a True Omnichannel Experience in 2025</h1>
-    <p className="lead">WhatsApp is the channel. But it isn't the strategy. Here's the distinction that separates brands customers stay loyal to from brands they leave without warning.</p>
-    <div className="article-meta">
-      <div className="meta-author">
-        <div className="meta-av">DB</div>
-        <div>
-          <div className="meta-name">KronGage Editorial</div>
-          <div className="meta-role">Customer Engagement Intelligence</div>
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#064e3b_100%)] px-[60px] pt-[140px] pb-20 max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-14">
+        <OmnichannelScene className="absolute inset-0 w-full h-full border-none pointer-events-none opacity-[0.38]" />
+        <div className="relative z-[1]">
+          <div className="text-[13px] text-white/50 font-medium mb-6">
+            <a href="/blog/" className="text-[#6ee7b7]">Blog</a><span className="mx-[6px]">›</span>Omnichannel
+          </div>
+          <div className="inline-block text-[11px] font-bold text-[#6ee7b7] bg-[#6ee7b7]/10 border border-[#6ee7b7]/25 px-[14px] py-1 rounded-full uppercase tracking-[0.8px] mb-5">
+            Omnichannel
+          </div>
+          <h1 className="text-[46px] font-extrabold text-white leading-[1.12] max-w-[780px] mb-5 max-[640px]:text-[30px]">
+            Beyond WhatsApp: Building a True Omnichannel Experience in 2025
+          </h1>
+          <p className="text-[19px] text-white/75 max-w-[680px] leading-[1.65] mb-8">
+            WhatsApp is the channel. But it isn&apos;t the strategy. Here&apos;s the distinction that separates brands customers stay loyal to from brands they leave without warning.
+          </p>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-[10px]">
+              <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-base font-extrabold text-white">DB</div>
+              <div>
+                <div className="text-sm font-bold text-white">KronGage Editorial</div>
+                <div className="text-xs text-white/50">Customer Engagement Intelligence</div>
+              </div>
+            </div>
+            <div className="w-px h-9 bg-white/15" />
+            <div className="text-[13px] text-white/55 font-semibold">May 2025</div>
+            <div className="w-px h-9 bg-white/15" />
+            <div className="text-[13px] text-white/55 font-semibold">6 min read</div>
+          </div>
         </div>
-      </div>
-      <div className="meta-divider"></div>
-      <div className="meta-item">May 2025</div>
-      <div className="meta-divider"></div>
-      <div className="meta-item">6 min read</div>
-    </div>
-  </div>
-</section>
+      </section>
 
-<main>
-<div className="article-layout">
-  <article className="article-body">
+      <main className="flex-1">
+        <div className="grid grid-cols-[1fr_280px] gap-16 max-w-[1100px] mx-auto px-6 py-16 pb-20 max-[900px]:grid-cols-1">
+          <article>
 
-    <p>Walk into any marketing team in West Africa today and ask them about their digital strategy. Nine times out of ten, WhatsApp will come up in the first sentence. And they're right to be on WhatsApp — the penetration numbers don't lie. But here's the thing most of them get wrong: they've confused presence on a channel with having an omnichannel strategy.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">Walk into any marketing team in West Africa today and ask them about their digital strategy. Nine times out of ten, WhatsApp will come up in the first sentence. And they&apos;re right to be on WhatsApp — the penetration numbers don&apos;t lie. But here&apos;s the thing most of them get wrong: they&apos;ve confused presence on a channel with having an omnichannel strategy.</p>
 
-    <p>These are not the same thing. Not even close.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">These are not the same thing. Not even close.</p>
 
-    <p>WhatsApp-first is a channel preference, shaped by where your customers already are. Omnichannel is an infrastructure decision — about how your data flows, how your team operates, and what a customer experiences when they switch from messaging you on WhatsApp to emailing your support team three days later.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">WhatsApp-first is a channel preference, shaped by where your customers already are. Omnichannel is an infrastructure decision — about how your data flows, how your team operates, and what a customer experiences when they switch from messaging you on WhatsApp to emailing your support team three days later.</p>
 
-    <p>Most brands fail at that last part. And that's where the loyalty dies.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">Most brands fail at that last part. And that&apos;s where the loyalty dies.</p>
 
-    <div className="stat-grid">
-      <div className="stat-card"><div className="stat-num">73%</div><div className="stat-label">of customers use multiple channels during a single purchase journey</div></div>
-      <div className="stat-card"><div className="stat-num">89%</div><div className="stat-label">of customers are retained by companies with strong omnichannel engagement</div></div>
-      <div className="stat-card"><div className="stat-num">33%</div><div className="stat-label">of customers will abandon a brand after a single instance of having to repeat themselves</div></div>
-    </div>
+            <div className="grid grid-cols-3 gap-5 my-8 max-[900px]:grid-cols-2">
+              <div className="bg-white rounded-2xl p-6 border border-[#e2e8f0] text-center">
+                <div className="text-4xl font-black text-[#0D47A1] leading-none mb-2">73%</div>
+                <div className="text-[13px] text-[#64748b] font-semibold leading-[1.4]">of customers use multiple channels during a single purchase journey</div>
+              </div>
+              <div className="bg-white rounded-2xl p-6 border border-[#e2e8f0] text-center">
+                <div className="text-4xl font-black text-[#0D47A1] leading-none mb-2">89%</div>
+                <div className="text-[13px] text-[#64748b] font-semibold leading-[1.4]">of customers are retained by companies with strong omnichannel engagement</div>
+              </div>
+              <div className="bg-white rounded-2xl p-6 border border-[#e2e8f0] text-center">
+                <div className="text-4xl font-black text-[#0D47A1] leading-none mb-2">33%</div>
+                <div className="text-[13px] text-[#64748b] font-semibold leading-[1.4]">of customers will abandon a brand after a single instance of having to repeat themselves</div>
+              </div>
+            </div>
 
-    <h2 id="multi-vs-omni">Multi-Channel vs. Omnichannel: The Distinction That Costs Companies Revenue</h2>
+            <h2 id="multi-vs-omni" className="text-[26px] font-extrabold text-[#0f172a] mt-11 mb-4 leading-[1.25]">Multi-Channel vs. Omnichannel: The Distinction That Costs Companies Revenue</h2>
 
-    <p>Multi-channel means you're present on multiple channels. Omnichannel means those channels share memory.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">Multi-channel means you&apos;re present on multiple channels. Omnichannel means those channels share memory.</p>
 
-    <p>It's a subtle difference that has enormous consequences. In a multi-channel setup, your WhatsApp team doesn't know what your email team told the customer last Tuesday. Your in-store rep doesn't know the customer raised a complaint on Instagram two weeks ago. Each interaction starts fresh. The customer has to re-explain their situation every single time.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">It&apos;s a subtle difference that has enormous consequences. In a multi-channel setup, your WhatsApp team doesn&apos;t know what your email team told the customer last Tuesday. Your in-store rep doesn&apos;t know the customer raised a complaint on Instagram two weeks ago. Each interaction starts fresh. The customer has to re-explain their situation every single time.</p>
 
-    <div className="compare-grid">
-      <div className="compare-card bad">
-        <div className="compare-label">❌ Multi-Channel</div>
-        <h4>Channels without memory</h4>
-        <p>Customer contacts WhatsApp on Monday. Calls on Wednesday. Emails on Friday. Three different teams. Three separate conversations. Same problem, no resolution.</p>
-      </div>
-      <div className="compare-card good">
-        <div className="compare-label">✅ Omnichannel</div>
-        <h4>One conversation, any channel</h4>
-        <p>Customer starts on WhatsApp. Escalates by email. Calls in. Every agent sees the full journey, picks up where the last left off. Problem resolved, loyalty intact.</p>
-      </div>
-    </div>
+            <div className="grid grid-cols-2 gap-5 my-8 max-[900px]:grid-cols-1">
+              <div className="rounded-2xl p-6 bg-[#fef2f2] border border-[#fecaca]">
+                <div className="text-[11px] font-extrabold uppercase tracking-[0.8px] mb-3 text-[#dc2626]">❌ Multi-Channel</div>
+                <h4 className="text-base font-extrabold text-[#0f172a] mb-2">Channels without memory</h4>
+                <p className="text-[13px] text-[#475569] leading-[1.6]">Customer contacts WhatsApp on Monday. Calls on Wednesday. Emails on Friday. Three different teams. Three separate conversations. Same problem, no resolution.</p>
+              </div>
+              <div className="rounded-2xl p-6 bg-[#f0fdf4] border border-[#bbf7d0]">
+                <div className="text-[11px] font-extrabold uppercase tracking-[0.8px] mb-3 text-[#16a34a]">✅ Omnichannel</div>
+                <h4 className="text-base font-extrabold text-[#0f172a] mb-2">One conversation, any channel</h4>
+                <p className="text-[13px] text-[#475569] leading-[1.6]">Customer starts on WhatsApp. Escalates by email. Calls in. Every agent sees the full journey, picks up where the last left off. Problem resolved, loyalty intact.</p>
+              </div>
+            </div>
 
-    <p>This isn't a technology problem anymore. It was, five years ago. Now the infrastructure exists to unify everything. The problem today is mostly organisational — teams that operate in silos, tools that don't talk to each other, and leadership that hasn't connected the dots between fragmented experience and churn.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">This isn&apos;t a technology problem anymore. It was, five years ago. Now the infrastructure exists to unify everything. The problem today is mostly organisational — teams that operate in silos, tools that don&apos;t talk to each other, and leadership that hasn&apos;t connected the dots between fragmented experience and churn.</p>
 
-    <div className="pull-quote">
-      <p>"Your customer doesn't care which department they're talking to. They have one relationship with your brand. The moment you make them feel otherwise, you've already started losing them."</p>
-    </div>
+            <div className="border-l-4 border-[#059669] bg-[#ecfdf5] rounded-r-xl px-7 py-6 my-8">
+              <p className="text-lg font-bold text-[#059669] leading-[1.5] italic">&quot;Your customer doesn&apos;t care which department they&apos;re talking to. They have one relationship with your brand. The moment you make them feel otherwise, you&apos;ve already started losing them.&quot;</p>
+            </div>
 
-    <h2 id="requirements">What True Omnichannel Requires</h2>
+            <h2 id="requirements" className="text-[26px] font-extrabold text-[#0f172a] mt-11 mb-4 leading-[1.25]">What True Omnichannel Requires</h2>
 
-    <p>Let me be specific about what this actually takes, because a lot of vendors will sell you "omnichannel" and deliver multi-channel with a dashboard.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">Let me be specific about what this actually takes, because a lot of vendors will sell you &quot;omnichannel&quot; and deliver multi-channel with a dashboard.</p>
 
-    <p><strong>A unified customer profile.</strong> Every interaction — regardless of channel — appends to a single record. When a customer contacts you, any agent on any channel sees the same timeline: previous queries, channel history, purchase records, open issues, sentiment trends. Not a summary. The full picture.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5"><strong>A unified customer profile.</strong> Every interaction — regardless of channel — appends to a single record. When a customer contacts you, any agent on any channel sees the same timeline: previous queries, channel history, purchase records, open issues, sentiment trends. Not a summary. The full picture.</p>
 
-    <p><strong>Context-carrying conversations.</strong> When a conversation moves from WhatsApp to email to a phone call, the context travels with it. The agent doesn't say "how can I help you?" — they say "I can see you've been waiting on your claim since last Tuesday. Let me look into this."</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5"><strong>Context-carrying conversations.</strong> When a conversation moves from WhatsApp to email to a phone call, the context travels with it. The agent doesn&apos;t say &quot;how can I help you?&quot; — they say &quot;I can see you&apos;ve been waiting on your claim since last Tuesday. Let me look into this.&quot;</p>
 
-    <p><strong>A single inbox for your team.</strong> Your agents shouldn't be logged into four different applications to handle WhatsApp, email, Instagram and SMS. One inbox, unified routing, AI-assisted prioritisation. This isn't a nice-to-have. Agent efficiency and customer experience are directly tied.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5"><strong>A single inbox for your team.</strong> Your agents shouldn&apos;t be logged into four different applications to handle WhatsApp, email, Instagram and SMS. One inbox, unified routing, AI-assisted prioritisation. This isn&apos;t a nice-to-have. Agent efficiency and customer experience are directly tied.</p>
 
-    <p><strong>Channel-agnostic escalation paths.</strong> A customer who starts on self-service and needs a human should reach a human regardless of which channel they're on — and that handoff should feel like a continuation, not a fresh start.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5"><strong>Channel-agnostic escalation paths.</strong> A customer who starts on self-service and needs a human should reach a human regardless of which channel they&apos;re on — and that handoff should feel like a continuation, not a fresh start.</p>
 
-    <h2 id="whatsapp-trap">The WhatsApp Trap</h2>
+            <h2 id="whatsapp-trap" className="text-[26px] font-extrabold text-[#0f172a] mt-11 mb-4 leading-[1.25]">The WhatsApp Trap</h2>
 
-    <p>Here's something I see constantly: a brand invests heavily in WhatsApp Business, builds beautiful automated flows, gets solid engagement numbers. Then a segment of their customers starts showing churn signals — but the data is all inside WhatsApp and nobody's connected it to the CRM. By the time the retention team knows someone is at-risk, they've already left.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">Here&apos;s something I see constantly: a brand invests heavily in WhatsApp Business, builds beautiful automated flows, gets solid engagement numbers. Then a segment of their customers starts showing churn signals — but the data is all inside WhatsApp and nobody&apos;s connected it to the CRM. By the time the retention team knows someone is at-risk, they&apos;ve already left.</p>
 
-    <p>WhatsApp is a brilliant channel. But it can become a data silo as easily as any other tool if you're not intentional about integration. Your engagement data needs to flow back into a central profile, trigger downstream actions, and inform campaigns on every other channel. Otherwise, you've just moved your silo to a green icon.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">WhatsApp is a brilliant channel. But it can become a data silo as easily as any other tool if you&apos;re not intentional about integration. Your engagement data needs to flow back into a central profile, trigger downstream actions, and inform campaigns on every other channel. Otherwise, you&apos;ve just moved your silo to a green icon.</p>
 
-    <h2 id="build-towards">What to Actually Build Towards</h2>
+            <h2 id="build-towards" className="text-[26px] font-extrabold text-[#0f172a] mt-11 mb-4 leading-[1.25]">What to Actually Build Towards</h2>
 
-    <p>The brands winning at this in 2025 have two things in common. First, they've standardised on a platform that provides the unified layer — not stitched together from six tools with a middleware nightmare, but genuinely unified from the ground up. Second, they've organised their customer-facing teams around the customer, not around the channel.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">The brands winning at this in 2025 have two things in common. First, they&apos;ve standardised on a platform that provides the unified layer — not stitched together from six tools with a middleware nightmare, but genuinely unified from the ground up. Second, they&apos;ve organised their customer-facing teams around the customer, not around the channel.</p>
 
-    <p>That second part is often harder than the technology. It requires breaking down the "WhatsApp team" and the "email team" and replacing them with a "customer team" that happens to handle multiple channels. It changes how you measure performance, how you assign ownership, and how you compensate people.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">That second part is often harder than the technology. It requires breaking down the &quot;WhatsApp team&quot; and the &quot;email team&quot; and replacing them with a &quot;customer team&quot; that happens to handle multiple channels. It changes how you measure performance, how you assign ownership, and how you compensate people.</p>
 
-    <p>But when you get it right — when a customer can start a conversation on your app, continue it on WhatsApp while commuting, and finish it with a phone call that picks up exactly where the message thread left off — that's when you stop competing on price and start competing on experience.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">But when you get it right — when a customer can start a conversation on your app, continue it on WhatsApp while commuting, and finish it with a phone call that picks up exactly where the message thread left off — that&apos;s when you stop competing on price and start competing on experience.</p>
 
-    <p>And experience, done well, is a moat.</p>
+            <p className="text-base text-[#374151] leading-[1.85] mb-5">And experience, done well, is a moat.</p>
 
-    <div className="cta-box">
-      <h3>See the Unified Inbox in Action</h3>
-      <p>WhatsApp, email, SMS, Instagram — one inbox, one customer record, zero context-switching. See how KronGage connects them.</p>
-      <a href="/contact/" className="btn-cta">Book a Demo</a>
-    </div>
+            <div className="bg-[linear-gradient(135deg,#064e3b,#059669)] rounded-[20px] p-10 text-center mt-12">
+              <h3 className="text-2xl font-extrabold text-white mb-3">See the Unified Inbox in Action</h3>
+              <p className="text-[15px] text-white/75 mb-6 leading-[1.6]">WhatsApp, email, SMS, Instagram — one inbox, one customer record, zero context-switching. See how KronGage connects them.</p>
+              <a href="/contact/" className="inline-block bg-white text-[#059669] px-8 py-[14px] rounded-full text-[15px] font-bold">Book a Demo</a>
+            </div>
 
-  </article>
+          </article>
 
-  <aside className="article-sidebar">
-    <div className="sidebar-card">
-      <h4>In This Article</h4>
-      <a href="#multi-vs-omni" className="toc-item"><div className="toc-num">1</div>Multi-Channel vs. Omnichannel</a>
-      <a href="#requirements" className="toc-item"><div className="toc-num">2</div>What True Omnichannel Requires</a>
-      <a href="#whatsapp-trap" className="toc-item"><div className="toc-num">3</div>The WhatsApp Trap</a>
-      <a href="#build-towards" className="toc-item"><div className="toc-num">4</div>What to Actually Build Towards</a>
-    </div>
-    <div className="sidebar-card">
-      <h4>Related Reading</h4>
-      <div className="related-post">
-        <div className="related-tag">Customer Success</div>
-        <h5><a href="/blog/retention-gap/">The Retention Gap: Why Success Teams Struggle</a></h5>
-      </div>
-      <div className="related-post">
-        <div className="related-tag">AI &amp; Automation</div>
-        <h5><a href="/blog/ai-support-tier-1/">How AI Agents Are Replacing Tier-1 Support</a></h5>
-      </div>
-      <div className="related-post">
-        <div className="related-tag">Analytics</div>
-        <h5><a href="/blog/vanity-metrics-to-value/">From Vanity Metrics to Value</a></h5>
-      </div>
-    </div>
-    <div className="sidebar-card" style={{background:"linear-gradient(135deg,#064e3b,#059669)",borderColor:"transparent"}}>
-      <h4 style={{color:"#6ee7b7",borderColor:"rgba(255,255,255,.1)"}}>See It Live</h4>
-      <p style={{fontSize:"13px",color:"rgba(255,255,255,.65)",lineHeight:"1.6",marginBottom:"16px"}}>Watch how KronGage unifies WhatsApp, email, SMS, and social into one intelligent inbox — with full customer context on every interaction.</p>
-      <a href="/contact/" style={{display:"block",background:"#fff",color:"#059669",textAlign:"center",padding:"11px",borderRadius:"50px",fontSize:"13px",fontWeight:"700"}}>Request Demo →</a>
-    </div>
-  </aside>
-</div>
-</main>
+          <aside className="pt-2">
+            <div className="bg-white rounded-2xl p-5 border border-[#e2e8f0] mb-5">
+              <h4 className="text-[13px] font-extrabold text-[#0f172a] mb-[14px] pb-3 border-b border-[#f1f5f9] uppercase tracking-[0.8px]">In This Article</h4>
+              <a href="#multi-vs-omni" className="flex gap-[10px] items-start py-2 border-b border-[#f8fafc] text-[13px] text-[#475569] font-semibold transition-colors hover:text-[#0D47A1]">
+                <div className="text-[10px] font-extrabold text-[#0D47A1] bg-[#EEF5FD] w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-px">1</div>
+                Multi-Channel vs. Omnichannel
+              </a>
+              <a href="#requirements" className="flex gap-[10px] items-start py-2 border-b border-[#f8fafc] text-[13px] text-[#475569] font-semibold transition-colors hover:text-[#0D47A1]">
+                <div className="text-[10px] font-extrabold text-[#0D47A1] bg-[#EEF5FD] w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-px">2</div>
+                What True Omnichannel Requires
+              </a>
+              <a href="#whatsapp-trap" className="flex gap-[10px] items-start py-2 border-b border-[#f8fafc] text-[13px] text-[#475569] font-semibold transition-colors hover:text-[#0D47A1]">
+                <div className="text-[10px] font-extrabold text-[#0D47A1] bg-[#EEF5FD] w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-px">3</div>
+                The WhatsApp Trap
+              </a>
+              <a href="#build-towards" className="flex gap-[10px] items-start py-2 text-[13px] text-[#475569] font-semibold transition-colors hover:text-[#0D47A1]">
+                <div className="text-[10px] font-extrabold text-[#0D47A1] bg-[#EEF5FD] w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-px">4</div>
+                What to Actually Build Towards
+              </a>
+            </div>
+            <div className="bg-white rounded-2xl p-5 border border-[#e2e8f0] mb-5">
+              <h4 className="text-[13px] font-extrabold text-[#0f172a] mb-[14px] pb-3 border-b border-[#f1f5f9] uppercase tracking-[0.8px]">Related Reading</h4>
+              <div className="py-3 border-b border-[#f1f5f9]">
+                <div className="text-[10px] font-bold text-[#0D47A1] uppercase tracking-[0.5px]">Customer Success</div>
+                <h5 className="text-[13px] font-bold text-[#0f172a] mt-1 leading-[1.35]"><a href="/blog/retention-gap/">The Retention Gap: Why Success Teams Struggle</a></h5>
+              </div>
+              <div className="py-3 border-b border-[#f1f5f9]">
+                <div className="text-[10px] font-bold text-[#0D47A1] uppercase tracking-[0.5px]">AI &amp; Automation</div>
+                <h5 className="text-[13px] font-bold text-[#0f172a] mt-1 leading-[1.35]"><a href="/blog/ai-support-tier-1/">How AI Agents Are Replacing Tier-1 Support</a></h5>
+              </div>
+              <div className="py-3">
+                <div className="text-[10px] font-bold text-[#0D47A1] uppercase tracking-[0.5px]">Analytics</div>
+                <h5 className="text-[13px] font-bold text-[#0f172a] mt-1 leading-[1.35]"><a href="/blog/vanity-metrics-to-value/">From Vanity Metrics to Value</a></h5>
+              </div>
+            </div>
+            <div className="rounded-2xl p-5 mb-5 bg-[linear-gradient(135deg,#064e3b,#059669)] border border-transparent">
+              <h4 className="text-[13px] font-extrabold text-[#6ee7b7] mb-[14px] pb-3 border-b border-white/10 uppercase tracking-[0.8px]">See It Live</h4>
+              <p className="text-[13px] text-white/65 leading-[1.6] mb-4">Watch how KronGage unifies WhatsApp, email, SMS, and social into one intelligent inbox — with full customer context on every interaction.</p>
+              <a href="/contact/" className="block bg-white text-[#059669] text-center py-[11px] rounded-full text-[13px] font-bold">Request Demo →</a>
+            </div>
+          </aside>
+        </div>
+      </main>
     </>
   );
 }

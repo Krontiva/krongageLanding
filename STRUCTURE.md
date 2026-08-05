@@ -1,31 +1,34 @@
 # KronGage Web — Site Structure
 
-Static multi-page marketing site for KronGage, an enterprise AI customer engagement platform by Krondiva. No framework, no build tool — pure HTML, CSS, and vanilla JS, deployed via Vercel.
+Marketing site and self-serve signup/billing flow for KronGage, an enterprise AI customer engagement platform by Krontiva. Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS v4**. Deployed on Vercel.
 
 ---
 
 ## Directory Layout
 
 ```
-kronGage web/
-├── index.html                    # Homepage
-├── about.html / about/           # About page (duplicate entry points)
-├── contact.html / contact/       # Contact page
-├── solutions.html / solutions/   # Solutions overview + industry sub-pages
-├── platform.html / platform/     # Platform overview + feature sub-pages
-├── blog/                         # Blog listing + articles
-├── assets/                       # Component library — all embedded widgets
-├── privacy-policy/               # Legal
-├── terms-of-service/             # Legal
-├── data-protection/              # Legal
-├── sitemap/                      # HTML sitemap
-├── Krongage-Logo.png             # Brand logo
-├── hero-video.mp4                # Homepage hero background video
-├── vercel.json                   # Vercel deployment config
-└── STRUCTURE.md                  # This file
+krongageLanding/
+├── app/                      # Next.js App Router — pages + API routes
+│   ├── layout.tsx            # Root layout — renders shared <Nav /> and <Footer />
+│   ├── page.tsx               # Homepage
+│   ├── (marketing pages)/     # about, contact, platform/*, solutions/*, blog/*, legal, sitemap
+│   ├── pricing/, checkout/, signup/   # Billing & signup flow
+│   └── api/                   # Route handlers (checkout, contact, pricing, signup)
+├── components/                # Shared React components
+│   ├── Nav.tsx, Footer.tsx, Hero.tsx, DashboardDemo.tsx
+│   ├── blog/                  # Animated graphics used on blog listing + articles
+│   ├── solutions/             # Industry hero + demo widgets used on homepage + /solutions/*
+│   └── platform/              # Feature demo widgets used on /platform/*
+├── src/lib/                    # Server-side helpers (pricing, checkout sessions, webhook security, mTLS fetch)
+├── public/
+│   ├── assets/                 # Static images only (logos, screenshots)
+│   └── Krongage-Logo.png, hero-video.mp4
+├── docs/                       # Integration handoff docs (Stripe, Paystack, provisioning API)
+├── vercel.json                 # Deployment config (clean URLs, no trailing slash)
+└── STRUCTURE.md                 # This file
 ```
 
-> **Note:** Several pages have both a root `.html` file and a matching `/directory/index.html`. The directory form is the canonical URL; the `.html` root files are legacy and may be removed.
+> There are no `.html` files anywhere in the source tree. Every page and every animated widget is a React component; nothing is embedded via `<iframe>`.
 
 ---
 
@@ -33,110 +36,123 @@ kronGage web/
 
 ### Top-Level Pages
 
-| URL | File | Description |
-|-----|------|-------------|
-| `/` | `index.html` | Homepage — hero video, orbit animation, features, stats, CTA |
-| `/about/` | `about/index.html` | Company overview, team, mission |
-| `/contact/` | `contact/index.html` | Contact form and office details |
+| URL | Description |
+|-----|-------------|
+| `/` | Homepage — hero (`components/Hero.tsx`), problem section, platform features, industry tabs, live dashboard demo (`components/DashboardDemo.tsx`) |
+| `/about` | Company overview, team, mission |
+| `/contact` | Contact form (`components/ContactForm.tsx`) |
+| `/sitemap` | HTML sitemap |
 
 ### Platform Pages
 
-| URL | File | Description |
-|-----|------|-------------|
-| `/platform/` | `platform/index.html` | Platform overview hub |
-| `/platform/customer-data/` | `platform/customer-data/index.html` | Customer 360 feature |
-| `/platform/omnichannel-inbox/` | `platform/omnichannel-inbox/index.html` | Omnichannel inbox — dark gradient hero |
-| `/platform/campaign-management/` | `platform/campaign-management/index.html` | Campaign management |
-| `/platform/ai-automation/` | `platform/ai-automation/index.html` | AI & automation — dark gradient hero |
-| `/platform/social-media/` | `platform/social-media/index.html` | Social media management |
-| `/platform/social-intelligence/` | `platform/social-intelligence/index.html` | Social listening & analytics |
-| `/platform/analytics/` | `platform/analytics/index.html` | Analytics & BI |
-| `/platform/security/` | `platform/security/index.html` | Security & compliance |
+| URL | Feature |
+|-----|---------|
+| `/platform` | Platform overview hub |
+| `/platform/customer-data` | Customer 360 |
+| `/platform/omnichannel-inbox` | Omnichannel inbox |
+| `/platform/campaign-management` | Campaign management |
+| `/platform/ai-automation` | AI & automation |
+| `/platform/social-media` | Social media publishing |
+| `/platform/social-intelligence` | Social listening & analytics |
+| `/platform/analytics` | Analytics & BI |
+| `/platform/security` | Security & compliance |
 
 ### Solutions Pages
 
-| URL | File | Description |
-|-----|------|-------------|
-| `/solutions/` | `solutions/index.html` | Solutions hub — dark hero, industry cards, tab previews |
-| `/solutions/banking/` | `solutions/banking/index.html` | Banking & Finance |
-| `/solutions/telecom/` | `solutions/telecom/index.html` | Telecommunications |
-| `/solutions/fmcg/` | `solutions/fmcg/index.html` | FMCG & Retail |
-| `/solutions/healthcare/` | `solutions/healthcare/index.html` | Healthcare |
-| `/solutions/insurance/` | `solutions/insurance/index.html` | Insurance — embeds `insurance-360.html` widget |
-| `/solutions/government/` | `solutions/government/index.html` | Government & Public Sector |
+| URL | Industry |
+|-----|----------|
+| `/solutions` | Solutions hub — industry cards, tab previews |
+| `/solutions/banking` | Banking & Finance |
+| `/solutions/telecom` | Telecommunications |
+| `/solutions/fmcg` | FMCG & Retail |
+| `/solutions/healthcare` | Healthcare |
+| `/solutions/insurance` | Insurance |
+| `/solutions/government` | Government & Public Sector |
 
 ### Blog
 
-| URL | File | Description |
-|-----|------|-------------|
-| `/blog/` | `blog/index.html` | Blog listing — featured article + sidebar posts |
-| `/blog/retention-gap/` | `blog/retention-gap/index.html` | Article: "The Retention Gap: Why Success Teams Struggle" |
+| URL | Article |
+|-----|---------|
+| `/blog` | Listing — featured article + sidebar posts |
+| `/blog/retention-gap` | "The Retention Gap: Why Success Teams Struggle" |
+| `/blog/ai-support-tier-1` | "How AI Agents Are Replacing Tier-1 Support" |
+| `/blog/beyond-whatsapp` | "Beyond WhatsApp: Building a True Omnichannel Experience" |
+| `/blog/vanity-metrics-to-value` | "From Vanity Metrics to Value" |
+
+### Billing & Signup
+
+| URL | Description |
+|-----|-------------|
+| `/pricing` | Plan comparison (`components/PricingPage.tsx`) |
+| `/checkout` | Embedded Stripe Checkout (`components/EmbeddedCheckoutClient.tsx`) |
+| `/signup/complete` | Post-signup landing |
+| `/signup/cancelled` | Checkout-cancelled landing |
 
 ### Legal & Utility
 
-| URL | File |
-|-----|------|
-| `/privacy-policy/` | `privacy-policy/index.html` |
-| `/terms-of-service/` | `terms-of-service/index.html` |
-| `/data-protection/` | `data-protection/index.html` |
-| `/sitemap/` | `sitemap/index.html` |
+`/privacy-policy`, `/terms-of-service`, `/data-protection`
+
+### API Routes
+
+| Route | Purpose |
+|-------|---------|
+| `POST /api/checkout` | Creates a Stripe Checkout session |
+| `POST /api/contact` | Handles the contact form submission |
+| `GET /api/pricing` | Serves pricing data |
+| `POST /api/signup/starter` | Free-starter plan signup (handles 409 on duplicate signup) |
 
 ---
 
-## Component Library — `/assets/`
+## Component Library
 
-All animated UI widgets live in `assets/`. They are self-contained HTML files (no external dependencies) designed to be embedded as `<iframe>` elements in page hero sections or feature blocks. Browse them all at `/assets/` (component library index).
+Every animated widget that used to be a standalone `.html` file embedded via `<iframe>` is now a self-contained React component (own scoped CSS in a `<style>` tag, own `useEffect`-driven animation logic). They accept an optional `className` prop and fill `100%` of their parent's width/height.
 
-### Dashboard Views
+### `components/blog/`
 
-| File | Description |
-|------|-------------|
-| `dashboard-demo.html` | Full platform dashboard — 9 switchable views (Inbox, Social Publishing, Campaigns, Social Intelligence, Customer 360, Knowledge, Settings, Usage) |
+| Component | Used In | Description |
+|-----------|---------|-------------|
+| `RetentionGapChart.tsx` | `/blog`, `/blog/retention-gap` | Animated SVG line chart — expected vs actual retention |
+| `AiHandoffScene.tsx` | `/blog`, `/blog/ai-support-tier-1` | AI → human support handoff chat sequence |
+| `OmnichannelScene.tsx` | `/blog`, `/blog/beyond-whatsapp` | Channels funneling into a unified inbox, with animated connector lines |
+| `VanityMetricsScene.tsx` | `/blog`, `/blog/vanity-metrics-to-value` | Vanity metrics vs value metrics comparison, animated sparkline |
 
-### Industry Heroes — embedded in solution page heroes
+### `components/solutions/`
 
-| File | Used In | Description |
-|------|---------|-------------|
-| `hero-banking.html` | `/solutions/banking/` | Transaction alerts, balance cards, notification feed |
-| `hero-telecom.html` | `/solutions/telecom/` | Subscriber portal, data bundle, recharge prompts |
-| `hero-fmcg.html` | `/solutions/fmcg/` | Loyalty points, promo campaigns, purchase journey |
-| `hero-healthcare.html` | `/solutions/healthcare/` | Appointment reminder chat, confirmation CTA |
-| `hero-insurance.html` | `/solutions/insurance/` | Policy onboarding card, shield animation, progress bar |
-| `hero-government.html` | `/solutions/government/` | CitizenConnect portal, permit status, tax deadline feed |
+| Component | Used In | Description |
+|-----------|---------|-------------|
+| `HeroBanking.tsx` | `/`, `/solutions/banking` | Shield/fraud-detection stat cards |
+| `HeroTelecom.tsx` | `/`, `/solutions/telecom` | Phone mockup with feature grid |
+| `HeroFmcg.tsx` | `/`, `/solutions/fmcg` | Customer profile → product recommendation → WhatsApp delivery sequence |
+| `HeroHealthcare.tsx` | `/`, `/solutions/healthcare` | Patient appointment journey timeline |
+| `HeroInsurance.tsx` | `/`, `/solutions/insurance` | Policy card + renewal reminder sequence |
+| `HeroGovernment.tsx` | `/`, `/solutions/government` | CitizenConnect portal, cycling notifications |
+| `AiTelecomSupport.tsx` | `/solutions/{banking,telecom,fmcg,healthcare,government}` | AI support resolution metrics, animated counters |
+| `Customer360.tsx` | `/solutions`, `/solutions/{banking,telecom,fmcg,healthcare,government}`, `/platform`, `/platform/customer-data` | Rotating customer profile card with animated score bars |
+| `InsuranceIdentity360.tsx` | `/solutions/insurance` | 360° Policyholder Identity — 5 orbit nodes around a center profile, cycles 3 policyholder profiles |
 
-### Industry Widgets — embedded in solution page feature sections
+### `components/platform/`
 
-| File | Used In | Description |
-|------|---------|-------------|
-| `insurance-360.html` | `/solutions/insurance/` | **360° Policyholder Identity** — interactive orbit widget. 5 nodes (Claims, Telematics, Support, Billing, Behavioral) orbit a center profile node. Cycles through 3 policyholder profiles (Sarah Chen / Marcus Webb / Aisha Okafor) with predictive health pills. Clickable nodes switch the live feed panel. Light mode. |
+| Component | Used In | Description |
+|-----------|---------|-------------|
+| `HeroChatbot.tsx` | `/`, `/solutions`, `/platform`, `/platform/ai-automation` | AI chatbot conversation with typing indicators |
+| `HeroChannels.tsx` | `/solutions`, `/platform/omnichannel-inbox` | Channel chips orbiting a hub, animated SVG connectors |
+| `InboxDemo.tsx` | `/platform` | Interactive multi-channel inbox — pick a conversation, send a message |
+| `SocialPublishing.tsx` | `/platform`, `/platform/social-media` | Content calendar grid |
+| `SocialMediaMgmt.tsx` | `/platform`, `/platform/social-intelligence` | Sentiment analysis tabs across channels |
+| `KnowledgeBase.tsx` | `/platform` | Knowledge center cards + semantic chunk browser |
+| `SecurityDemo.tsx` | `/platform`, `/platform/security` | Animated hex/security visual |
+| `CampaignManagement.tsx` | `/`, `/solutions`, `/platform`, `/platform/campaign-management` | Team chips, campaign progress, filterable activity timeline |
+| `AnalyticsBi.tsx` | `/platform/analytics` | Canvas-drawn engagement trend chart with range/segment selectors |
 
-### Platform Feature Heroes — embedded in platform page heroes
+### Other shared components
 
-| File | Used In | Description |
-|------|---------|-------------|
-| `hero-chatbot.html` | `/platform/ai-automation/` | AI chatbot conversation with typing indicators |
-| `hero-channels.html` | `/platform/omnichannel-inbox/` | 8 channel chips orbiting KronGage hub with SVG connectors |
-
-### Platform Feature Demos — embedded in platform feature sections
-
-| File | Used In | Description |
-|------|---------|-------------|
-| `inbox-demo.html` | `/platform/omnichannel-inbox/` | Live inbox with multi-channel conversations, agent routing |
-| `social-publishing.html` | `/platform/social-media/` | Content scheduler, channel selector, engagement preview |
-| `social-media-mgmt.html` | `/platform/social-intelligence/` | Brand monitoring, sentiment analysis, mention tracking |
-| `knowledge-base.html` | `/platform/` | RAG-powered knowledge base, doc management, self-service |
-| `security-demo.html` | `/platform/security/` | SSO, MFA, RBAC controls, audit log feed |
-| `analytics-bi.html` | `/platform/analytics/` | BI dashboard, KPI cards, custom report builder |
-| `campaign-management.html` | `/platform/campaign-management/` | Journey builder, audience targeting, A/B test results |
-| `customer-360.html` | `/platform/customer-data/` | Unified profiles, segmentation, timeline, intelligence scores |
-| `channel-orbit.html` | `index.html` | Channels orbiting KronGage logo — homepage hero |
-| `fragmented-tools.html` | `index.html` | Disconnected tools visualisation — problem section |
-
-### Blog Graphics
-
-| File | Used In | Description |
-|------|---------|-------------|
-| `blog-retention-gap.html` | `/blog/retention-gap/` | Abstract SVG line graph showing the "retention gap" — expected vs actual engagement paths with animated gap fill |
+| Component | Purpose |
+|-----------|---------|
+| `Nav.tsx` | Sticky top nav with Platform/Solutions mega-menus — rendered once in `app/layout.tsx` |
+| `Footer.tsx` | 4-column footer |
+| `Hero.tsx` | Homepage hero — orbiting channel icons |
+| `DashboardDemo.tsx` | Full platform dashboard — 9 switchable views (Dashboard, Inbox, Social Publishing, Campaigns, Social Intelligence, Customer 360, Knowledge, Settings, Usage). Used once, on the homepage. |
+| `PricingPage.tsx`, `CheckoutModal.tsx`, `EmbeddedCheckoutClient.tsx`, `StarterSignupModal.tsx`, `ContactForm.tsx` | Billing/signup and contact flows |
 
 ---
 
@@ -145,33 +161,33 @@ All animated UI widgets live in `assets/`. They are self-contained HTML files (n
 Every marketing page follows the same structure:
 
 ```
-<nav>          Sticky top nav — logo, links with mega-menus, "Get Started" CTA button
+<Nav />        Sticky top nav (from layout.tsx) — logo, links with mega-menus, "Start Free Trial" CTA
 <main>
-  <section.hero>            Dark gradient or light gradient hero with headline, subtext, CTA buttons
-  <section.*>               2–5 content sections (use-cases, feature blocks, stats strip, etc.)
-  <section.cta-section>     Dark CTA strip at the bottom
+  <section.hero>            Light or dark gradient hero, headline, subtext, CTA buttons — often with an embedded demo component
+  <section.*>                2–5 content sections (use-cases, feature blocks, stats strip, etc.)
+  <section.cta-section>      Dark CTA strip at the bottom
 </main>
-<footer>       4-column footer — brand + 3 link columns, legal strip
+<Footer />     4-column footer — brand + link columns, legal strip
 ```
 
 ### Hero Variants
 
 | Style | Background | Used On |
 |-------|-----------|---------|
-| Light | `linear-gradient(135deg, #EEF5FD, #f8fafc)` | Most solution/platform pages |
-| Dark | `linear-gradient(135deg, #0f172a, #0D47A1)` | `/platform/ai-automation/`, `/platform/omnichannel-inbox/`, `/solutions/` |
-| Video | `hero-video.mp4` background | Homepage |
+| Light | `#EEF5FD` / light gradient | Most solution/platform pages |
+| Dark | `linear-gradient(135deg, #0f172a, #0D47A1)` | `/platform/ai-automation`, `/platform/omnichannel-inbox`, `/solutions` |
+| Video/animated | `hero-video.mp4` or `<Hero />`'s orbit animation | Homepage |
 
-### Hero with Embedded Widget
+### Hero with an Embedded Demo Component
 
-Pages that embed a widget in the hero use a 2-column grid layout:
+Pages that show a widget in the hero use a 2-column grid, with the widget rendered directly as a component (no iframe):
 
-```html
-<section class="hero">
-  <div class="hero-layout">          <!-- grid: 1fr 1fr -->
-    <div class="hero-text">…</div>
-    <div class="hero-visual">
-      <iframe src="/assets/[component].html" loading="lazy"></iframe>
+```tsx
+<section className="hero">
+  <div className="hero-layout">
+    <div className="hero-text">…</div>
+    <div className="hero-visual">
+      <HeroBanking />
     </div>
   </div>
 </section>
@@ -179,30 +195,27 @@ Pages that embed a widget in the hero use a 2-column grid layout:
 
 ### Mega Menu
 
-Two mega menus — Platform (cols-3 layout) and Solutions (cols-3b layout):
+Two mega menus in `Nav.tsx` — Platform and Solutions:
 
-- **Platform** (`cols-3`): Brand intro + Customer 360 / Inbox links | Feature rows | Channel rows
-- **Solutions** (`cols-3b`): Industry list | Use cases | Blog article preview
-
-The blog article preview in the Solutions mega menu links to `/blog/retention-gap/` and is present across all pages.
+- **Platform**: Overview + Customer 360 / Inbox links | Featured Capabilities | Featured Channels
+- **Solutions**: Industry list | Featured highlight card
 
 ---
 
 ## Design Tokens
 
+Defined in `app/globals.css` as CSS custom properties:
+
 | Token | Value | Usage |
 |-------|-------|-------|
-| Primary blue | `#0D47A1` | Buttons, links, accents |
-| Dark navy | `#0f172a` | Dark hero backgrounds, footer |
-| Light blue bg | `#EEF5FD` | Light hero backgrounds, icon fills |
-| Sky accent | `#93c5fd` | Text on dark backgrounds |
-| Body text | `#475569` | Paragraph text |
-| Heading | `#0f172a` | Section headings |
-| Border | `#e2e8f0` | Card borders, dividers |
-| Font | Manrope (800/700/600/500) | All pages |
+| `--kg-blue` | `#0D47A1` | Buttons, links, accents |
+| `--kg-blue-dark` | `#0a3680` | Button hover state |
+| `--kg-navy` | `#0f172a` | Dark hero backgrounds, footer, body text color |
+| `--kg-bg` | `#EEF5FD` | Light hero backgrounds, icon fills |
+| Font | Manrope (500/600/700/800) | All pages |
 
 ---
 
 ## Deployment
 
-Deployed on Vercel. Config in `vercel.json` — static site, no rewrites required. Push to `main` triggers automatic deployment.
+Deployed on Vercel. Config in `vercel.json` (`cleanUrls: true`, `trailingSlash: false`). Push to `main` triggers automatic deployment. See `docs/` for the Stripe and Paystack billing integration handoffs and the provisioning-API signup endpoint spec.

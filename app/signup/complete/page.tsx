@@ -39,126 +39,13 @@ export default async function SignupCompletePage({
   const params = await searchParams;
 
   return (
-    <>
-      <style>{`
-        .sc-wrap {
-          min-height: 80vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 40px 24px;
-          background: #f0f7ff;
-        }
-        .sc-card {
-          background: #fff;
-          border-radius: 24px;
-          box-shadow: 0 24px 64px rgba(13,71,161,.12);
-          max-width: 520px;
-          width: 100%;
-          padding: 52px 48px 48px;
-          text-align: center;
-        }
-        .sc-icon-ring {
-          width: 72px;
-          height: 72px;
-          border-radius: 50%;
-          background: #EEF5FD;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 28px;
-        }
-        .sc-title {
-          font-size: 30px;
-          font-weight: 800;
-          color: #0f172a;
-          letter-spacing: -0.8px;
-          margin-bottom: 12px;
-          line-height: 1.2;
-        }
-        .sc-body {
-          font-size: 15px;
-          color: #64748b;
-          line-height: 1.7;
-          margin-bottom: 36px;
-        }
-        .sc-body strong {
-          color: #0f172a;
-          font-weight: 700;
-        }
-        .sc-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: #0D47A1;
-          color: #fff;
-          font-size: 16px;
-          font-weight: 800;
-          padding: 16px 40px;
-          border-radius: 50px;
-          text-decoration: none;
-          transition: background .15s, transform .15s;
-          letter-spacing: 0.01em;
-        }
-        .sc-btn:hover {
-          background: #0a3680;
-          transform: translateY(-1px);
-        }
-        .sc-hint {
-          font-size: 13px;
-          color: #94a3b8;
-          margin-top: 20px;
-          line-height: 1.6;
-        }
-        .sc-divider {
-          height: 1px;
-          background: #f1f5f9;
-          margin: 36px 0;
-        }
-        .sc-steps {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-          text-align: left;
-        }
-        .sc-step {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          font-size: 14px;
-          color: #475569;
-          line-height: 1.5;
-        }
-        .sc-step-num {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: #0D47A1;
-          color: #fff;
-          font-size: 12px;
-          font-weight: 800;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          margin-top: 1px;
-        }
-
-        @media (max-width: 560px) {
-          .sc-card { padding: 36px 24px 32px; }
-          .sc-title { font-size: 24px; }
-          .sc-btn { font-size: 15px; padding: 14px 32px; }
-        }
-      `}</style>
-
-      <div className="sc-wrap">
-        <div className="sc-card">
-          <CompleteContent
-            planName={params.plan || ''}
-            isFree={params.type === 'free'}
-          />
-        </div>
+    <div className="min-h-[80vh] flex items-center justify-center px-6 pt-[108px] pb-10 bg-[#f0f7ff]">
+      <div className="bg-white rounded-3xl shadow-[0_24px_64px_rgba(13,71,161,0.12)] max-w-[520px] w-full px-12 pt-[52px] pb-12 text-center max-[560px]:px-6 max-[560px]:pt-9 max-[560px]:pb-8">
+        <CompleteContent
+          planName={params.plan || ''}
+          isFree={params.type === 'free'}
+        />
       </div>
-    </>
+    </div>
   );
 }

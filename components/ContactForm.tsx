@@ -1,26 +1,43 @@
 'use client';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { contactSchema, type ContactFields } from '@/lib/schemas/contact';
 import { useState } from 'react';
 
-type Fields = {
-  firstName: string; lastName: string; email: string;
-  company: string; phone: string; jobTitle: string;
-  topic: string; message: string;
-};
+const TOPICS = ['Request a Demo', 'Pricing & Plans', 'Technical Question', 'Partnership', 'Other'];
 
-const EMPTY: Fields = { firstName: '', lastName: '', email: '', company: '', phone: '', jobTitle: '', topic: '', message: '' };
+const fieldClass =
+  'px-3 py-2.5 border-[1.5px] border-[#e2e8f0] rounded-lg text-sm font-[inherit] text-[#0f172a] outline-none transition-colors bg-white focus-visible:border-[#0D47A1] focus-visible:ring-[3px] focus-visible:ring-[#0D47A1]/10';
 
 export default function ContactForm() {
   const [step, setStep] = useState<1 | 2>(1);
-  const [fields, setFields] = useState<Fields>(EMPTY);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  function set(key: keyof Fields) {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-      setFields(f => ({ ...f, [key]: e.target.value }));
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    control,
+    getValues,
+    formState: { errors },
+  } = useForm<ContactFields>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      firstName: '', lastName: '', email: '', company: '', phone: '',
+      jobTitle: '', topic: '', message: '',
+    },
+  });
+
+  async function goToStep2() {
+    // Step 1 only hard-requires firstName + email, matching the original "Next" guard.
+    const ok = await trigger(['firstName', 'email']);
+    if (ok) setStep(2);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function onValid(fields: ContactFields) {
     setStatus('loading');
     try {
       const res = await fetch('/api/contact', {
@@ -36,50 +53,72 @@ export default function ContactForm() {
   }
 
   if (status === 'success') {
+    const values = getValues();
     return (
-      <div className="form-card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-        <div style={{ fontSize: '48px', marginBottom: '16px' }}>✓</div>
-        <h2 style={{ marginBottom: '12px' }}>Message sent!</h2>
-        <p style={{ color: '#64748b', fontSize: '14px', lineHeight: '1.7' }}>
-          Thanks {fields.firstName} — our team will get back to you at <strong>{fields.email}</strong> within 24 hours.
+      <div className="bg-white rounded-[20px] shadow-[0_24px_80px_rgba(0,0,0,0.18)] p-10 w-full max-w-[480px] text-center py-[60px] px-10">
+        <div className="text-5xl mb-4">✓</div>
+        <h2 className="text-[22px] font-extrabold text-[#0f172a] mb-3">Message sent!</h2>
+        <p className="text-[#64748b] text-sm leading-[1.7]">
+          Thanks {values.firstName} — our team will get back to you at <strong>{values.email}</strong> within 24 hours.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="form-card">
-      <div className="form-progress-wrap">
-        <div className="form-progress-track">
-          <div className="form-progress-fill" style={{ width: step === 1 ? '50%' : '100%', transition: 'width 0.3s' }} />
+    <div className="bg-white rounded-[20px] shadow-[0_24px_80px_rgba(0,0,0,0.18)] p-10 w-full max-w-[480px]">
+      <div className="mb-1.5">
+        <div className="h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden mb-2">
+          <div
+            className="h-full bg-[linear-gradient(90deg,#0D47A1,#3730a3)] rounded-full transition-[width] duration-300"
+            style={{ width: step === 1 ? '50%' : '100%' }}
+          />
         </div>
-        <span className="form-step-label">Fill out form: Step {step} of 2</span>
+        <span className="text-xs text-[#94a3b8] font-medium">Fill out form: Step {step} of 2</span>
       </div>
-      <h2>Connect with sales</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className="text-[22px] font-extrabold text-[#0f172a] mb-6">Connect with sales</h2>
+      <form onSubmit={handleSubmit(onValid)}>
 
         {/* Step 1 */}
         {step === 1 && (
           <div>
-            <div className="form-row">
-              <div className="form-group"><label>First Name</label><input type="text" placeholder="e.g. Anderson" value={fields.firstName} onChange={set('firstName')} required /></div>
-              <div className="form-group"><label>Last Name</label><input type="text" placeholder="e.g. Mensah" value={fields.lastName} onChange={set('lastName')} /></div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="flex flex-col gap-[5px]">
+                <label className="text-[13px] font-semibold text-[#374151]">First Name</label>
+                <Input className={fieldClass} placeholder="e.g. Anderson" {...register('firstName')} />
+                {errors.firstName && <p className="text-[11px] text-[#ef4444]">{errors.firstName.message}</p>}
+              </div>
+              <div className="flex flex-col gap-[5px]">
+                <label className="text-[13px] font-semibold text-[#374151]">Last Name</label>
+                <Input className={fieldClass} placeholder="e.g. Mensah" {...register('lastName')} />
+              </div>
             </div>
-            <div className="form-row">
-              <div className="form-group"><label>Email Address</label><input type="email" placeholder="you@company.com" value={fields.email} onChange={set('email')} required /></div>
-              <div className="form-group"><label>Company</label><input type="text" placeholder="Your organisation" value={fields.company} onChange={set('company')} /></div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="flex flex-col gap-[5px]">
+                <label className="text-[13px] font-semibold text-[#374151]">Email Address</label>
+                <Input className={fieldClass} type="email" placeholder="you@company.com" {...register('email')} />
+                {errors.email && <p className="text-[11px] text-[#ef4444]">{errors.email.message}</p>}
+              </div>
+              <div className="flex flex-col gap-[5px]">
+                <label className="text-[13px] font-semibold text-[#374151]">Company</label>
+                <Input className={fieldClass} placeholder="Your organisation" {...register('company')} />
+              </div>
             </div>
-            <div className="form-row">
-              <div className="form-group"><label>Phone Number</label><input type="tel" placeholder="+233 20 000 0000" value={fields.phone} onChange={set('phone')} /></div>
-              <div className="form-group"><label>Job Title</label><input type="text" placeholder="e.g. Head of CX" value={fields.jobTitle} onChange={set('jobTitle')} /></div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="flex flex-col gap-[5px]">
+                <label className="text-[13px] font-semibold text-[#374151]">Phone Number</label>
+                <Input className={fieldClass} type="tel" placeholder="+233 20 000 0000" {...register('phone')} />
+              </div>
+              <div className="flex flex-col gap-[5px]">
+                <label className="text-[13px] font-semibold text-[#374151]">Job Title</label>
+                <Input className={fieldClass} placeholder="e.g. Head of CX" {...register('jobTitle')} />
+              </div>
             </div>
             <button
               type="button"
-              className="btn-submit"
-              onClick={() => {
-                if (!fields.firstName || !fields.email) return;
-                setStep(2);
-              }}>
+              className="w-full bg-[#3730a3] text-white p-[14px] rounded-[10px] text-base font-bold border-none cursor-pointer mt-2 transition-colors hover:bg-[#0D47A1]"
+              onClick={goToStep2}
+            >
               Next
             </button>
           </div>
@@ -88,41 +127,50 @@ export default function ContactForm() {
         {/* Step 2 */}
         {step === 2 && (
           <div>
-            <div className="form-group" style={{ marginBottom: '16px' }}>
-              <label>How can we help?</label>
-              <select value={fields.topic} onChange={set('topic')} style={{ padding: '10px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '14px', fontFamily: 'inherit', color: '#0f172a', outline: 'none', background: '#fff' }}>
-                <option value="">Select a topic…</option>
-                <option>Request a Demo</option>
-                <option>Pricing &amp; Plans</option>
-                <option>Technical Question</option>
-                <option>Partnership</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div className="form-group" style={{ marginBottom: '16px' }}>
-              <label>Message</label>
-              <textarea
-                placeholder="Tell us about your goals or questions…"
-                value={fields.message}
-                onChange={set('message')}
-                required
-                style={{ padding: '10px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '14px', fontFamily: 'inherit', color: '#0f172a', outline: 'none', resize: 'vertical', minHeight: '120px', width: '100%', background: '#fff' }}
+            <div className="flex flex-col gap-[5px] mb-4">
+              <label className="text-[13px] font-semibold text-[#374151]">How can we help?</label>
+              <Controller
+                name="topic"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className={`${fieldClass} w-full`}>
+                      <SelectValue placeholder="Select a topic…" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TOPICS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                )}
               />
             </div>
+            <div className="flex flex-col gap-[5px] mb-4">
+              <label className="text-[13px] font-semibold text-[#374151]">Message</label>
+              <Textarea
+                className={`${fieldClass} resize-y min-h-[120px] w-full`}
+                placeholder="Tell us about your goals or questions…"
+                {...register('message')}
+              />
+              {errors.message && <p className="text-[11px] text-[#ef4444]">{errors.message.message}</p>}
+            </div>
             {status === 'error' && (
-              <p style={{ color: '#dc2626', fontSize: '13px', marginBottom: '12px' }}>
+              <p className="text-[#dc2626] text-[13px] mb-3">
                 Something went wrong. Please try again or email us directly at support@krontiva.africa
               </p>
             )}
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div className="flex gap-3">
               <button
                 type="button"
-                className="btn-submit"
-                style={{ background: '#e2e8f0', color: '#0f172a', flex: '0 0 auto', width: 'auto', padding: '14px 24px' }}
-                onClick={() => setStep(1)}>
+                className="p-[14px] rounded-[10px] text-base font-bold border-none cursor-pointer transition-colors bg-[#e2e8f0] text-[#0f172a] flex-none w-auto px-6"
+                onClick={() => setStep(1)}
+              >
                 ← Back
               </button>
-              <button type="submit" className="btn-submit" style={{ flex: '1' }} disabled={status === 'loading'}>
+              <button
+                type="submit"
+                className="p-[14px] rounded-[10px] text-base font-bold border-none cursor-pointer transition-colors bg-[#3730a3] text-white hover:bg-[#0D47A1] flex-1"
+                disabled={status === 'loading'}
+              >
                 {status === 'loading' ? 'Sending…' : 'Submit'}
               </button>
             </div>

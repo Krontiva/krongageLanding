@@ -76,173 +76,77 @@ export default function EmbeddedCheckoutClient() {
   );
 
   return (
-    <>
-      <style>{`
-        .ec-wrap {
-          min-height: 70vh;
-          background: #f0f7ff;
-          padding: 40px 24px 64px;
-        }
-        .ec-inner {
-          /* Stripe picks one-column vs two-column from the width we hand its
-             iframe — we cannot reach inside it. At the old 760px it rendered
-             the narrow variant, which buries the order summary behind "View
-             details". Wide enough here that it lays out side-by-side like
-             checkout.stripe.com does. */
-          max-width: 1100px;
-          margin: 0 auto;
-        }
-        .ec-head {
-          text-align: center;
-          margin-bottom: 28px;
-        }
-        .ec-title {
-          font-size: 28px;
-          font-weight: 800;
-          color: #0f172a;
-          letter-spacing: -0.6px;
-          margin-bottom: 8px;
-        }
-        .ec-sub {
-          font-size: 14px;
-          color: #64748b;
-          line-height: 1.6;
-        }
-        .ec-card {
-          background: #fff;
-          border-radius: 20px;
-          box-shadow: 0 24px 64px rgba(13,71,161,.12);
-          /* No padding: every pixel we take here is a pixel Stripe's iframe
-             doesn't get, and the iframe brings its own internal gutters.
-             overflow:hidden keeps the rounded corners over the frame. */
-          overflow: hidden;
-        }
-        .ec-state {
-          text-align: center;
-          padding: 48px 24px;
-        }
-        .ec-state h2 {
-          font-size: 20px;
-          font-weight: 800;
-          color: #0f172a;
-          margin-bottom: 8px;
-        }
-        .ec-state p {
-          font-size: 14px;
-          color: #64748b;
-          line-height: 1.6;
-          margin-bottom: 24px;
-        }
-        .ec-btn {
-          display: inline-block;
-          background: #0D47A1;
-          color: #fff;
-          font-weight: 800;
-          font-size: 15px;
-          padding: 14px 32px;
-          border-radius: 50px;
-          text-decoration: none;
-        }
-        .ec-back {
-          display: block;
-          text-align: center;
-          margin-top: 20px;
-          font-size: 13px;
-          color: #64748b;
-          background: none;
-          border: none;
-          cursor: pointer;
-          text-decoration: underline;
-          font-family: inherit;
-          width: 100%;
-        }
-        .ec-skel {
-          /* Sized to the two-column frame it is standing in for, so the card
-             doesn't jump height when Stripe mounts. */
-          height: 560px;
-          background: #eef2f7;
-          animation: ec-pulse 1.4s ease-in-out infinite;
-        }
-        @keyframes ec-pulse {
-          0%, 100% { opacity: 1; }
-          50%      { opacity: .55; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ec-skel { animation: none; }
-        }
-        /* Below Stripe's two-column threshold it falls back to the stacked
-           layout on its own; all we do is stop wasting side margin on it. */
-        @media (max-width: 900px) {
-          .ec-wrap { padding: 28px 12px 48px; }
-        }
-        @media (max-width: 560px) {
-          .ec-title { font-size: 22px; }
-          .ec-skel  { height: 460px; }
-        }
-      `}</style>
+    <div className="min-h-[70vh] bg-[#f0f7ff] px-6 pt-[108px] pb-16 max-[900px]:px-3 max-[900px]:pt-24 max-[900px]:pb-12">
+      {/* Stripe picks one-column vs two-column from the width we hand its
+          iframe — we cannot reach inside it. At the old 760px it rendered
+          the narrow variant, which buries the order summary behind "View
+          details". Wide enough here that it lays out side-by-side like
+          checkout.stripe.com does. */}
+      <div className="max-w-[1100px] mx-auto">
 
-      <div className="ec-wrap">
-        <div className="ec-inner">
-
-          {status === 'ready' && session && (
-            <>
-              <div className="ec-head">
-                <h1 className="ec-title">Complete your signup</h1>
-                <p className="ec-sub">
-                  {session.planName ? <><strong>{session.planName}</strong>, billed {session.billing}. </> : null}
-                  You won&apos;t be charged today — your card starts the free trial.
-                </p>
-              </div>
-
-              <div className="ec-card">
-                <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
-                  <EmbeddedCheckout />
-                </EmbeddedCheckoutProvider>
-              </div>
-
-              {/* Embedded mode has no cancel_url; this is the cancelled path. */}
-              <button
-                type="button"
-                className="ec-back"
-                onClick={() => {
-                  clearEmbeddedSession();
-                  window.location.href = '/pricing';
-                }}
-              >
-                Cancel and go back to pricing — nothing has been charged
-              </button>
-            </>
-          )}
-
-          {status === 'loading' && (
-            <div className="ec-card"><div className="ec-skel" /></div>
-          )}
-
-          {status === 'missing' && (
-            <div className="ec-card">
-              <div className="ec-state">
-                <h2>Start from the pricing page</h2>
-                <p>
-                  This page needs a checkout session, which is created when you choose a plan.
-                  Nothing has been charged.
-                </p>
-                <a href="/pricing" className="ec-btn">Choose a plan →</a>
-              </div>
+        {status === 'ready' && session && (
+          <>
+            <div className="text-center mb-7">
+              <h1 className="text-[28px] font-extrabold text-[#0f172a] tracking-[-0.6px] mb-2 max-[560px]:text-[22px]">Complete your signup</h1>
+              <p className="text-sm text-[#64748b] leading-[1.6]">
+                {session.planName ? <><strong>{session.planName}</strong>, billed {session.billing}. </> : null}
+                You won&apos;t be charged today — your card starts the free trial.
+              </p>
             </div>
-          )}
 
-          {status === 'error' && (
-            <div className="ec-card">
-              <div className="ec-state">
-                <h2>We couldn&apos;t load checkout</h2>
-                <p>Please try again — nothing has been charged.</p>
-                <a href="/pricing" className="ec-btn">Back to pricing</a>
-              </div>
+            {/* No padding: every pixel we take here is a pixel Stripe's iframe
+                doesn't get, and the iframe brings its own internal gutters.
+                overflow:hidden keeps the rounded corners over the frame. */}
+            <div className="bg-white rounded-[20px] shadow-[0_24px_64px_rgba(13,71,161,0.12)] overflow-hidden">
+              <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
+                <EmbeddedCheckout />
+              </EmbeddedCheckoutProvider>
             </div>
-          )}
 
-        </div>
+            {/* Embedded mode has no cancel_url; this is the cancelled path. */}
+            <button
+              type="button"
+              className="block text-center mt-5 text-[13px] text-[#64748b] bg-transparent border-none cursor-pointer underline font-[inherit] w-full"
+              onClick={() => {
+                clearEmbeddedSession();
+                window.location.href = '/pricing';
+              }}
+            >
+              Cancel and go back to pricing — nothing has been charged
+            </button>
+          </>
+        )}
+
+        {status === 'loading' && (
+          <div className="bg-white rounded-[20px] shadow-[0_24px_64px_rgba(13,71,161,0.12)] overflow-hidden">
+            <div className="h-[560px] bg-[#eef2f7] animate-[ec-pulse_1.4s_ease-in-out_infinite] motion-reduce:animate-none max-[560px]:h-[460px]" />
+          </div>
+        )}
+
+        {status === 'missing' && (
+          <div className="bg-white rounded-[20px] shadow-[0_24px_64px_rgba(13,71,161,0.12)] overflow-hidden">
+            <div className="text-center px-6 py-12">
+              <h2 className="text-xl font-extrabold text-[#0f172a] mb-2">Start from the pricing page</h2>
+              <p className="text-sm text-[#64748b] leading-[1.6] mb-6">
+                This page needs a checkout session, which is created when you choose a plan.
+                Nothing has been charged.
+              </p>
+              <a href="/pricing" className="inline-block bg-[#0D47A1] text-white font-extrabold text-[15px] px-8 py-[14px] rounded-full no-underline">Choose a plan →</a>
+            </div>
+          </div>
+        )}
+
+        {status === 'error' && (
+          <div className="bg-white rounded-[20px] shadow-[0_24px_64px_rgba(13,71,161,0.12)] overflow-hidden">
+            <div className="text-center px-6 py-12">
+              <h2 className="text-xl font-extrabold text-[#0f172a] mb-2">We couldn&apos;t load checkout</h2>
+              <p className="text-sm text-[#64748b] leading-[1.6] mb-6">Please try again — nothing has been charged.</p>
+              <a href="/pricing" className="inline-block bg-[#0D47A1] text-white font-extrabold text-[15px] px-8 py-[14px] rounded-full no-underline">Back to pricing</a>
+            </div>
+          </div>
+        )}
+
       </div>
-    </>
+    </div>
   );
 }

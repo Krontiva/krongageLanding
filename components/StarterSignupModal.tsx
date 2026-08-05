@@ -1,13 +1,11 @@
 'use client';
 import { useState } from 'react';
-
-interface UserForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  company: string;
-  phone: string;
-}
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { userDetailsSchema, type UserDetails } from '@/lib/schemas/user-details';
 
 type Step = 'form' | 'submitting' | 'exists' | 'error';
 
@@ -24,28 +22,30 @@ interface Props {
   onClose: () => void;
 }
 
+const fieldBase = "w-full border-[1.5px] border-[#e2e8f0] rounded-[10px] px-3 py-[10px] text-sm outline-none text-[#0f172a] bg-white box-border transition-colors focus-visible:border-[#0D47A1]";
+const fieldError = "w-full border-[1.5px] border-[#f87171] rounded-[10px] px-3 py-[10px] text-sm outline-none text-[#0f172a] bg-white box-border transition-colors focus-visible:border-[#0D47A1]";
+const labelClass = "text-xs font-bold text-[#475569] block mb-[5px]";
+const primaryButtonClass = "bg-[#0D47A1] text-white font-extrabold text-[15px] px-8 py-[14px] rounded-full no-underline inline-block";
+
 export default function StarterSignupModal({ onClose }: Props) {
-  const [step, setStep]               = useState<Step>('form');
-  const [form, setForm]               = useState<UserForm>({ firstName: '', lastName: '', email: '', company: '', phone: '' });
-  const [errors, setErrors]           = useState<Partial<UserForm>>({});
+  const [step, setStep] = useState<Step>('form');
   const [serverError, setServerError] = useState('');
-  const [loginUrl, setLoginUrl]       = useState('https://web.krongage.io');
+  const [loginUrl, setLoginUrl] = useState('https://web.krongage.io');
   const [conflictReason, setConflictReason] = useState<ConflictReason>('active_account');
+  const [submittedEmail, setSubmittedEmail] = useState('');
 
-  function validate(): boolean {
-    const e: Partial<UserForm> = {};
-    if (!form.firstName.trim()) e.firstName = 'Required';
-    if (!form.lastName.trim())  e.lastName  = 'Required';
-    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = 'Valid email required';
-    if (!form.company.trim())   e.company   = 'Required';
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserDetails>({
+    resolver: zodResolver(userDetailsSchema),
+    defaultValues: { firstName: '', lastName: '', email: '', company: '', phone: '' },
+  });
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!validate()) return;
+  async function onValid(form: UserDetails) {
     setStep('submitting');
+    setSubmittedEmail(form.email.trim().toLowerCase());
 
     try {
       const res = await fetch('/api/signup/starter', {
@@ -82,237 +82,175 @@ export default function StarterSignupModal({ onClose }: Props) {
     }
   }
 
-  const inputBase: React.CSSProperties = {
-    width: '100%',
-    border: '1.5px solid #e2e8f0',
-    borderRadius: '10px',
-    padding: '10px 12px',
-    fontSize: '14px',
-    fontFamily: 'Manrope, system-ui, sans-serif',
-    outline: 'none',
-    color: '#0f172a',
-    background: '#fff',
-    boxSizing: 'border-box',
-    transition: 'border-color 0.15s',
-  };
-  const inputErr: React.CSSProperties = { ...inputBase, borderColor: '#f87171' };
-
   return (
-    <>
-      <style>{`
-        .ss-input:focus { border-color: #0D47A1 !important; }
-        .ss-overlay { animation: ss-fade 0.15s ease; }
-        .ss-card   { animation: ss-up   0.2s  ease; }
-        @keyframes ss-fade { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes ss-up   { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
-      `}</style>
-
-      {/* Backdrop */}
-      <div
-        className="ss-overlay"
-        style={{
-          position: 'fixed', inset: 0, zIndex: 50,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '16px',
-          background: 'rgba(15,23,42,0.6)',
-          backdropFilter: 'blur(4px)',
-        }}
-        onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent
+        showCloseButton={false}
+        aria-describedby={undefined}
+        className="p-0 gap-0 max-w-[440px] rounded-[20px] overflow-hidden"
       >
-        <div
-          className="ss-card"
-          style={{
-            background: '#fff',
-            borderRadius: '20px',
-            boxShadow: '0 24px 64px rgba(0,0,0,0.18)',
-            width: '100%',
-            maxWidth: '440px',
-            overflow: 'hidden',
-            fontFamily: 'Manrope, system-ui, sans-serif',
-          }}
-        >
-          {/* Header */}
-          <div style={{
-            background: '#0D47A1',
-            padding: '24px 28px',
-            color: '#fff',
-            position: 'relative',
-          }}>
+        {/* Header */}
+        <div className="bg-[#0D47A1] px-7 py-6 text-white relative">
+          <DialogClose asChild>
             <button
-              onClick={onClose}
               aria-label="Close"
-              style={{
-                position: 'absolute', top: '16px', right: '20px',
-                background: 'rgba(255,255,255,0.15)', border: 'none',
-                borderRadius: '50%', width: '28px', height: '28px',
-                cursor: 'pointer', color: '#fff', fontSize: '16px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
+              className="absolute top-4 right-5 bg-white/15 border-none rounded-full w-7 h-7 cursor-pointer text-white text-base flex items-center justify-center"
             >×</button>
+          </DialogClose>
 
-            <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.65, marginBottom: '6px' }}>
-              Free Plan
-            </div>
-            <div style={{ fontSize: '22px', fontWeight: 800, lineHeight: 1.2, marginBottom: '4px' }}>
-              Get Started Free
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-              <span style={{ fontSize: '28px', fontWeight: 800 }}>$0</span>
-              <span style={{ fontSize: '14px', opacity: 0.7 }}>/mo — no credit card needed</span>
-            </div>
+          <div className="text-[11px] font-bold tracking-[0.1em] uppercase opacity-65 mb-1.5">
+            Free Plan
           </div>
-
-          {/* Body */}
-          <div style={{ padding: '24px 28px 28px' }}>
-            {step === 'exists' ? (
-              <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                <div style={{ fontSize: '40px', marginBottom: '12px' }}>
-                  {conflictReason === 'subscription_inactive' ? '🔑' : '👋'}
-                </div>
-                {conflictReason === 'subscription_inactive' ? (
-                  <>
-                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                      Your plan isn&apos;t active
-                    </h3>
-                    <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '20px' }}>
-                      You already have a KronGage account for{' '}
-                      <strong style={{ color: '#0f172a' }}>{form.email.trim().toLowerCase()}</strong>, but your
-                      plan isn&apos;t active. Sign in to reactivate it yourself — no need to talk to us.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                      You already have a KronGage account
-                    </h3>
-                    <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '20px' }}>
-                      <strong style={{ color: '#0f172a' }}>{form.email.trim().toLowerCase()}</strong> is already
-                      registered. Sign in instead — nothing has been created twice.
-                    </p>
-                  </>
-                )}
-                <a
-                  href={loginUrl}
-                  style={{
-                    background: '#0D47A1', color: '#fff', fontWeight: 800, fontSize: '15px',
-                    padding: '14px 32px', borderRadius: '50px', textDecoration: 'none',
-                    display: 'inline-block', fontFamily: 'Manrope, system-ui, sans-serif',
-                  }}
-                >
-                  {conflictReason === 'subscription_inactive' ? 'Sign in to reactivate →' : 'Sign in →'}
-                </a>
-                <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '18px', lineHeight: 1.6 }}>
-                  Wrong email?{' '}
-                  <button
-                    type="button"
-                    onClick={() => setStep('form')}
-                    style={{
-                      color: '#0D47A1', fontWeight: 700, background: 'none', border: 'none',
-                      cursor: 'pointer', textDecoration: 'underline', fontSize: '13px', padding: 0,
-                      fontFamily: 'Manrope, system-ui, sans-serif',
-                    }}
-                  >
-                    Go back and edit it
-                  </button>
-                </p>
-              </div>
-            ) : step === 'error' ? (
-              <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                <div style={{ fontSize: '40px', marginBottom: '12px' }}>⚠️</div>
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                  Something went wrong
-                </h3>
-                <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '20px' }}>{serverError}</p>
-                <button
-                  onClick={() => setStep('form')}
-                  style={{
-                    color: '#0D47A1', fontWeight: 700, fontSize: '14px',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    textDecoration: 'underline', fontFamily: 'Manrope, system-ui, sans-serif',
-                  }}
-                >Try again</button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '2px' }}>
-                  Create your free workspace — no payment required.
-                </p>
-
-                {/* Name row */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  {(['firstName', 'lastName'] as const).map(key => (
-                    <div key={key}>
-                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '5px' }}>
-                        {key === 'firstName' ? 'First Name' : 'Last Name'}
-                      </label>
-                      <input
-                        className="ss-input"
-                        style={errors[key] ? inputErr : inputBase}
-                        value={form[key]}
-                        onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                        placeholder={key === 'firstName' ? 'Jane' : 'Smith'}
-                      />
-                      {errors[key] && <p style={{ fontSize: '11px', color: '#ef4444', marginTop: '3px' }}>{errors[key]}</p>}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Other fields */}
-                {([
-                  ['email',   'Work Email',       'email', 'jane@company.com'],
-                  ['company', 'Company Name',      'text',  'Acme Corp'],
-                  ['phone',   'Phone (optional)',  'tel',   '+1 234 567 8900'],
-                ] as const).map(([key, label, type, placeholder]) => (
-                  <div key={key}>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '5px' }}>
-                      {label}
-                    </label>
-                    <input
-                      className="ss-input"
-                      type={type}
-                      style={errors[key as keyof UserForm] ? inputErr : inputBase}
-                      value={form[key]}
-                      onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                      placeholder={placeholder}
-                    />
-                    {errors[key as keyof UserForm] && (
-                      <p style={{ fontSize: '11px', color: '#ef4444', marginTop: '3px' }}>
-                        {errors[key as keyof UserForm]}
-                      </p>
-                    )}
-                  </div>
-                ))}
-
-                <button
-                  type="submit"
-                  disabled={step === 'submitting'}
-                  style={{
-                    width: '100%',
-                    background: step === 'submitting' ? '#94a3b8' : '#0D47A1',
-                    color: '#fff',
-                    fontFamily: 'Manrope, system-ui, sans-serif',
-                    fontWeight: 800,
-                    fontSize: '15px',
-                    border: 'none',
-                    cursor: step === 'submitting' ? 'not-allowed' : 'pointer',
-                    padding: '14px 20px',
-                    borderRadius: '50px',
-                    marginTop: '4px',
-                    transition: 'background 0.15s',
-                    letterSpacing: '0.01em',
-                  }}
-                >
-                  {step === 'submitting' ? 'Creating your workspace…' : 'Create Free Account →'}
-                </button>
-
-                <p style={{ fontSize: '12px', color: '#94a3b8', textAlign: 'center' }}>
-                  No credit card required · Cancel anytime
-                </p>
-              </form>
-            )}
+          <DialogTitle className="text-[22px] font-extrabold leading-[1.2] mb-1 text-white">
+            Get Started Free
+          </DialogTitle>
+          <div className="flex items-baseline gap-1">
+            <span className="text-[28px] font-extrabold">$0</span>
+            <span className="text-sm opacity-70">/mo — no credit card needed</span>
           </div>
         </div>
-      </div>
-    </>
+
+        {/* Body */}
+        <div className="px-7 pt-6 pb-7">
+          {step === 'exists' ? (
+            <div className="text-center py-4">
+              <div className="text-4xl mb-3">
+                {conflictReason === 'subscription_inactive' ? '🔑' : '👋'}
+              </div>
+              {conflictReason === 'subscription_inactive' ? (
+                <>
+                  <h3 className="text-lg font-extrabold text-[#0f172a] mb-2">
+                    Your plan isn&apos;t active
+                  </h3>
+                  <p className="text-[#64748b] text-sm leading-[1.6] mb-5">
+                    You already have a KronGage account for{' '}
+                    <strong className="text-[#0f172a]">{submittedEmail}</strong>, but your
+                    plan isn&apos;t active. Sign in to reactivate it yourself — no need to talk to us.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-lg font-extrabold text-[#0f172a] mb-2">
+                    You already have a KronGage account
+                  </h3>
+                  <p className="text-[#64748b] text-sm leading-[1.6] mb-5">
+                    <strong className="text-[#0f172a]">{submittedEmail}</strong> is already
+                    registered. Sign in instead — nothing has been created twice.
+                  </p>
+                </>
+              )}
+              <a
+                href={loginUrl}
+                className={primaryButtonClass}
+              >
+                {conflictReason === 'subscription_inactive' ? 'Sign in to reactivate →' : 'Sign in →'}
+              </a>
+              <p className="text-[13px] text-[#94a3b8] mt-[18px] leading-[1.6]">
+                Wrong email?{' '}
+                <button
+                  type="button"
+                  onClick={() => setStep('form')}
+                  className="text-[#0D47A1] font-bold bg-transparent border-none cursor-pointer underline text-[13px] p-0"
+                >
+                  Go back and edit it
+                </button>
+              </p>
+            </div>
+          ) : step === 'error' ? (
+            <div className="text-center py-4">
+              <div className="text-4xl mb-3">⚠️</div>
+              <h3 className="text-lg font-extrabold text-[#0f172a] mb-2">
+                Something went wrong
+              </h3>
+              <p className="text-[#64748b] text-sm mb-5">{serverError}</p>
+              <button
+                onClick={() => setStep('form')}
+                className="text-[#0D47A1] font-bold text-sm bg-transparent border-none cursor-pointer underline"
+              >Try again</button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onValid)} className="flex flex-col gap-4">
+              <p className="text-sm text-[#64748b] mb-0.5">
+                Create your free workspace — no payment required.
+              </p>
+
+              {/* Name row */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className={labelClass}>
+                    First Name
+                  </Label>
+                  <Input
+                    className={errors.firstName ? fieldError : fieldBase}
+                    placeholder="Jane"
+                    {...register('firstName')}
+                  />
+                  {errors.firstName && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.firstName.message}</p>}
+                </div>
+                <div>
+                  <Label className={labelClass}>
+                    Last Name
+                  </Label>
+                  <Input
+                    className={errors.lastName ? fieldError : fieldBase}
+                    placeholder="Smith"
+                    {...register('lastName')}
+                  />
+                  {errors.lastName && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.lastName.message}</p>}
+                </div>
+              </div>
+
+              {/* Other fields */}
+              <div>
+                <Label className={labelClass}>
+                  Work Email
+                </Label>
+                <Input
+                  type="email"
+                  className={errors.email ? fieldError : fieldBase}
+                  placeholder="jane@company.com"
+                  {...register('email')}
+                />
+                {errors.email && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.email.message}</p>}
+              </div>
+              <div>
+                <Label className={labelClass}>
+                  Company Name
+                </Label>
+                <Input
+                  className={errors.company ? fieldError : fieldBase}
+                  placeholder="Acme Corp"
+                  {...register('company')}
+                />
+                {errors.company && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.company.message}</p>}
+              </div>
+              <div>
+                <Label className={labelClass}>
+                  Phone (optional)
+                </Label>
+                <Input
+                  type="tel"
+                  className={fieldBase}
+                  placeholder="+1 234 567 8900"
+                  {...register('phone')}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={step === 'submitting'}
+                className={`w-full text-white font-extrabold text-[15px] border-none px-5 py-[14px] rounded-full mt-1 transition-colors tracking-[0.01em] ${step === 'submitting' ? 'bg-[#94a3b8] cursor-not-allowed' : 'bg-[#0D47A1] cursor-pointer'}`}
+              >
+                {step === 'submitting' ? 'Creating your workspace…' : 'Create Free Account →'}
+              </button>
+
+              <p className="text-xs text-[#94a3b8] text-center">
+                No credit card required · Cancel anytime
+              </p>
+            </form>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

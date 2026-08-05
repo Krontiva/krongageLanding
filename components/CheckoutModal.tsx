@@ -1,7 +1,13 @@
 'use client';
 import { useState, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { formatUsd } from '@/src/lib/format-price';
 import { storeEmbeddedSession } from '@/src/lib/checkout-session';
+import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { userDetailsSchema, type UserDetails } from '@/lib/schemas/user-details';
 
 /**
  * Paid-plan signup: collect details, then hand off to Stripe Checkout.
@@ -57,25 +63,28 @@ interface Props {
  */
 type ConflictReason = 'active_account' | 'subscription_inactive';
 
-interface UserForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  company: string;
-  phone: string;
-}
-
 type Step = 'details' | 'redirecting' | 'exists' | 'error';
+
+const fieldBase = "w-full border-[1.5px] border-[#e2e8f0] rounded-[10px] px-3 py-[10px] text-sm outline-none text-[#0f172a] bg-white box-border transition-colors focus-visible:border-[#0D47A1]";
+const fieldError = "w-full border-[1.5px] border-[#f87171] rounded-[10px] px-3 py-[10px] text-sm outline-none text-[#0f172a] bg-white box-border transition-colors focus-visible:border-[#0D47A1]";
+const labelClass = "text-xs font-bold text-[#475569] block mb-[5px]";
+const primaryButtonClass = "bg-[#0D47A1] text-white font-extrabold text-[15px] border-none cursor-pointer px-8 py-[14px] rounded-full no-underline inline-block";
 
 export default function CheckoutModal({ plan, annual, onClose }: Props) {
   const [step, setStep] = useState<Step>('details');
-  const [form, setForm] = useState<UserForm>({
-    firstName: '', lastName: '', email: '', company: '', phone: '',
-  });
-  const [errors, setErrors] = useState<Partial<UserForm>>({});
   const [serverError, setServerError] = useState('');
   const [loginUrl, setLoginUrl] = useState('https://web.krongage.io');
   const [conflictReason, setConflictReason] = useState<ConflictReason>('active_account');
+  const [submittedEmail, setSubmittedEmail] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserDetails>({
+    resolver: zodResolver(userDetailsSchema),
+    defaultValues: { firstName: '', lastName: '', email: '', company: '', phone: '' },
+  });
 
   const billing = annual ? 'annual' : 'monthly';
   const price   = annual ? plan.annualPrice! : plan.monthlyPrice!;
@@ -94,20 +103,9 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
     [trialDays],
   );
 
-  function validate(): boolean {
-    const e: Partial<UserForm> = {};
-    if (!form.firstName.trim()) e.firstName = 'Required';
-    if (!form.lastName.trim()) e.lastName = 'Required';
-    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = 'Valid email required';
-    if (!form.company.trim()) e.company = 'Required';
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!validate()) return;
+  async function onValid(form: UserDetails) {
     setStep('redirecting');
+    setSubmittedEmail(form.email.trim().toLowerCase());
 
     try {
       const res = await fetch('/api/checkout', {
@@ -183,264 +181,211 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
     }
   }
 
-  const inputBase: React.CSSProperties = {
-    width: '100%',
-    border: '1.5px solid #e2e8f0',
-    borderRadius: '10px',
-    paddingLeft: '12px',
-    paddingRight: '12px',
-    paddingTop: '10px',
-    paddingBottom: '10px',
-    fontSize: '14px',
-    fontFamily: 'Manrope, system-ui, sans-serif',
-    outline: 'none',
-    color: '#0f172a',
-    background: '#fff',
-    boxSizing: 'border-box',
-    transition: 'border-color 0.15s',
-  };
-
-  const inputError: React.CSSProperties = { ...inputBase, borderColor: '#f87171' };
-
-  const primaryButton: React.CSSProperties = {
-    background: '#0D47A1', color: '#fff', fontFamily: 'Manrope, system-ui, sans-serif',
-    fontWeight: 800, fontSize: '15px', border: 'none', cursor: 'pointer',
-    paddingLeft: '32px', paddingRight: '32px', paddingTop: '14px', paddingBottom: '14px',
-    borderRadius: '50px', textDecoration: 'none', display: 'inline-block',
-  };
-
   return (
-    <>
-      <style>{`
-        .pc-input:focus { border-color: #0D47A1 !important; }
-        .pc-overlay { animation: pc-fade-in 0.15s ease; }
-        .pc-card { animation: pc-slide-up 0.2s ease; }
-        @keyframes pc-fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes pc-slide-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-      `}</style>
-      <div
-        className="pc-overlay"
-        style={{
-          position: 'fixed', inset: 0, zIndex: 50,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '16px',
-          background: 'rgba(15,23,42,0.6)',
-          backdropFilter: 'blur(4px)',
-        }}
-        onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent
+        showCloseButton={false}
+        aria-describedby={undefined}
+        className="p-0 gap-0 max-w-[440px] rounded-[20px] overflow-hidden"
       >
-        <div
-          className="pc-card"
-          style={{
-            background: '#fff',
-            borderRadius: '20px',
-            boxShadow: '0 24px 64px rgba(0,0,0,0.18)',
-            width: '100%',
-            maxWidth: '440px',
-            overflow: 'hidden',
-            fontFamily: 'Manrope, system-ui, sans-serif',
-          }}
-        >
-          {/* Header */}
-          <div style={{ background: '#0D47A1', paddingLeft: '28px', paddingRight: '28px', paddingTop: '24px', paddingBottom: '24px', color: '#fff', position: 'relative' }}>
+        {/* Header */}
+        <div className="bg-[#0D47A1] px-7 py-6 text-white relative">
+          <DialogClose asChild>
             <button
               type="button"
-              onClick={onClose}
-              style={{
-                position: 'absolute', top: '16px', right: '20px',
-                background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '50%',
-                width: '28px', height: '28px', cursor: 'pointer',
-                color: '#fff', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                lineHeight: 1,
-              }}
+              className="absolute top-4 right-5 bg-white/15 border-none rounded-full w-7 h-7 cursor-pointer text-white text-base flex items-center justify-center leading-none"
               aria-label="Close"
             >
               ×
             </button>
-            <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.65, marginBottom: '6px' }}>
-              {annual ? 'Annual Plan' : 'Monthly Plan'}
-            </div>
-            <div style={{ fontSize: '22px', fontWeight: 800, lineHeight: 1.2, marginBottom: '4px' }}>
-              {plan.name}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-              <span style={{ fontSize: '28px', fontWeight: 800 }}>${formatUsd(price)}</span>
-              <span style={{ fontSize: '14px', opacity: 0.7 }}>/mo</span>
-              {annual && (
-                <span style={{ fontSize: '12px', opacity: 0.7, marginLeft: '4px' }}>
-                  · <span style={{ color: '#86efac', fontWeight: 700 }}>Save 12%</span>
-                </span>
-              )}
-            </div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '10px', background: 'rgba(134,239,172,0.18)', color: '#bbf7d0', fontWeight: 700, fontSize: '12px', padding: '4px 10px', borderRadius: '50px' }}>
-              🎁 {trialDays}-day free trial
-            </div>
-            {/* The full deal in one sentence — what starts, what it costs, when, and
-                how to avoid it. On annual the charge is the whole year, not the "/mo"
-                figure above, so name the exact amount: a customer who thinks they're
-                trialling $51.92 and sees $623.04 leave their account will dispute it. */}
-            <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '10px', lineHeight: 1.6 }}>
-              <strong style={{ fontWeight: 800 }}>
-                Start your {trialDays}-day free trial ($0 today).
-              </strong>{' '}
-              {EMBEDDED
-                ? 'Enter your card details on the next step — Stripe handles them securely and we never see them'
-                : 'Enter your card details on Stripe’s secure checkout page'} — cancel any time before{' '}
-              <strong style={{ fontWeight: 800 }}>{firstChargeLabel}</strong>{' '}
-              and you won&apos;t be charged. Otherwise, it&apos;s{' '}
-              <strong style={{ fontWeight: 800 }}>
-                ${formatUsd(chargeAmount)}{annual ? ' for the full year' : '/month'}
-              </strong>{' '}
-              starting then.
-            </div>
+          </DialogClose>
+          <div className="text-[11px] font-bold tracking-[0.1em] uppercase opacity-65 mb-1.5">
+            {annual ? 'Annual Plan' : 'Monthly Plan'}
           </div>
-
-          {/* Body */}
-          <div style={{ paddingLeft: '28px', paddingRight: '28px', paddingTop: '24px', paddingBottom: '28px' }}>
-            {step === 'exists' ? (
-              <div style={{ textAlign: 'center', paddingTop: '16px', paddingBottom: '16px' }}>
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>
-                  {conflictReason === 'subscription_inactive' ? '🔑' : '👋'}
-                </div>
-                {conflictReason === 'subscription_inactive' ? (
-                  <>
-                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                      Your plan isn&apos;t active
-                    </h3>
-                    <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
-                      You already have a KronGage account for{' '}
-                      <strong style={{ color: '#0f172a' }}>{form.email.trim().toLowerCase()}</strong>, but your
-                      plan isn&apos;t active. Sign in to reactivate it — you can add a card and restart your
-                      plan yourself, no need to talk to us.
-                    </p>
-                    <a href={loginUrl} style={primaryButton}>Sign in to reactivate →</a>
-                  </>
-                ) : (
-                  <>
-                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                      You already have a KronGage account
-                    </h3>
-                    <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
-                      <strong style={{ color: '#0f172a' }}>{form.email.trim().toLowerCase()}</strong> is already
-                      registered, so there&apos;s nothing to pay for. Sign in instead — you can change your plan
-                      from inside the app.
-                    </p>
-                    <a href={loginUrl} style={primaryButton}>Sign in →</a>
-                  </>
-                )}
-                <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '18px', lineHeight: 1.6 }}>
-                  Wrong email?{' '}
-                  <button
-                    type="button"
-                    onClick={() => setStep('details')}
-                    style={{ color: '#0D47A1', fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'Manrope, system-ui, sans-serif', fontSize: '13px', padding: 0 }}
-                  >
-                    Go back and edit it
-                  </button>
-                </p>
-              </div>
-            ) : step === 'error' ? (
-              <div style={{ textAlign: 'center', paddingTop: '16px', paddingBottom: '16px' }}>
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>Something went wrong</h3>
-                <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '16px' }}>{serverError}</p>
-                <button
-                  onClick={() => setStep('details')}
-                  style={{ color: '#0D47A1', fontWeight: 700, fontSize: '14px', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'Manrope, system-ui, sans-serif' }}
-                >
-                  Try again
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {/* No intro paragraph here — the header above already states the trial,
-                    the card requirement, the amount and the date. */}
-
-                {/* Name row */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  {(['firstName', 'lastName'] as const).map((key) => (
-                    <div key={key}>
-                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '5px' }}>
-                        {key === 'firstName' ? 'First Name' : 'Last Name'}
-                      </label>
-                      <input
-                        className="pc-input"
-                        style={errors[key] ? inputError : inputBase}
-                        value={form[key]}
-                        onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                        placeholder={key === 'firstName' ? 'Jane' : 'Smith'}
-                      />
-                      {errors[key] && <p style={{ fontSize: '11px', color: '#ef4444', marginTop: '3px' }}>{errors[key]}</p>}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Other fields */}
-                {([
-                  ['email',   'Work Email',        'email', 'jane@company.com'],
-                  ['company', 'Company Name',       'text',  'Acme Corp'],
-                  ['phone',   'Phone (optional)',   'tel',   '+1 234 567 8900'],
-                ] as const).map(([key, label, type, placeholder]) => (
-                  <div key={key}>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '5px' }}>
-                      {label}
-                    </label>
-                    <input
-                      className="pc-input"
-                      type={type}
-                      style={errors[key as keyof UserForm] ? inputError : inputBase}
-                      value={form[key]}
-                      onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                      placeholder={placeholder}
-                    />
-                    {errors[key as keyof UserForm] && (
-                      <p style={{ fontSize: '11px', color: '#ef4444', marginTop: '3px' }}>{errors[key as keyof UserForm]}</p>
-                    )}
-                  </div>
-                ))}
-
-                {/* This email becomes the login identity and the Stripe customer email */}
-                <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5, marginTop: '-4px' }}>
-                  Your login details will be sent to this email address.
-                </p>
-
-                <button
-                  type="submit"
-                  disabled={step === 'redirecting'}
-                  style={{
-                    width: '100%',
-                    background: step === 'redirecting' ? '#94a3b8' : '#0D47A1',
-                    color: '#fff',
-                    fontFamily: 'Manrope, system-ui, sans-serif',
-                    fontWeight: 800,
-                    fontSize: '15px',
-                    border: 'none',
-                    cursor: step === 'redirecting' ? 'not-allowed' : 'pointer',
-                    paddingTop: '14px',
-                    paddingBottom: '14px',
-                    borderRadius: '50px',
-                    marginTop: '4px',
-                    transition: 'background 0.15s',
-                    letterSpacing: '0.01em',
-                  }}
-                >
-                  {step === 'redirecting' ? 'Opening secure checkout…' : 'Start free trial →'}
-                </button>
-
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                  <svg width="12" height="14" viewBox="0 0 12 14" fill="none" style={{ flexShrink: 0 }}>
-                    <rect x="1" y="5.5" width="10" height="8" rx="1.5" stroke="#94a3b8" strokeWidth="1.2" fill="none"/>
-                    <path d="M3.5 5.5V4a2.5 2.5 0 015 0v1.5" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round"/>
-                  </svg>
-                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>
-                    Secured by Stripe · We never see your card details
-                  </p>
-                </div>
-              </form>
+          <DialogTitle className="text-[22px] font-extrabold leading-[1.2] mb-1 text-white">
+            {plan.name}
+          </DialogTitle>
+          <div className="flex items-baseline gap-1">
+            <span className="text-[28px] font-extrabold">${formatUsd(price)}</span>
+            <span className="text-sm opacity-70">/mo</span>
+            {annual && (
+              <span className="text-xs opacity-70 ml-1">
+                · <span className="text-[#86efac] font-bold">Save 12%</span>
+              </span>
             )}
           </div>
+          <div className="inline-flex items-center gap-1.5 mt-2.5 bg-[#86efac]/[0.18] text-[#bbf7d0] font-bold text-xs px-2.5 py-1 rounded-full">
+            🎁 {trialDays}-day free trial
+          </div>
+          {/* The full deal in one sentence — what starts, what it costs, when, and
+              how to avoid it. On annual the charge is the whole year, not the "/mo"
+              figure above, so name the exact amount: a customer who thinks they're
+              trialling $51.92 and sees $623.04 leave their account will dispute it. */}
+          <div className="text-xs opacity-80 mt-2.5 leading-[1.6]">
+            <strong className="font-extrabold">
+              Start your {trialDays}-day free trial ($0 today).
+            </strong>{' '}
+            {EMBEDDED
+              ? 'Enter your card details on the next step — Stripe handles them securely and we never see them'
+              : 'Enter your card details on Stripe’s secure checkout page'} — cancel any time before{' '}
+            <strong className="font-extrabold">{firstChargeLabel}</strong>{' '}
+            and you won&apos;t be charged. Otherwise, it&apos;s{' '}
+            <strong className="font-extrabold">
+              ${formatUsd(chargeAmount)}{annual ? ' for the full year' : '/month'}
+            </strong>{' '}
+            starting then.
+          </div>
         </div>
-      </div>
-    </>
+
+        {/* Body */}
+        <div className="px-7 pt-6 pb-7">
+          {step === 'exists' ? (
+            <div className="text-center pt-4 pb-4">
+              <div className="text-5xl mb-4">
+                {conflictReason === 'subscription_inactive' ? '🔑' : '👋'}
+              </div>
+              {conflictReason === 'subscription_inactive' ? (
+                <>
+                  <h3 className="text-xl font-extrabold text-[#0f172a] mb-2">
+                    Your plan isn&apos;t active
+                  </h3>
+                  <p className="text-[#64748b] text-sm leading-[1.6] mb-6">
+                    You already have a KronGage account for{' '}
+                    <strong className="text-[#0f172a]">{submittedEmail}</strong>, but your
+                    plan isn&apos;t active. Sign in to reactivate it — you can add a card and restart your
+                    plan yourself, no need to talk to us.
+                  </p>
+                  <a href={loginUrl} className={primaryButtonClass}>Sign in to reactivate →</a>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-xl font-extrabold text-[#0f172a] mb-2">
+                    You already have a KronGage account
+                  </h3>
+                  <p className="text-[#64748b] text-sm leading-[1.6] mb-6">
+                    <strong className="text-[#0f172a]">{submittedEmail}</strong> is already
+                    registered, so there&apos;s nothing to pay for. Sign in instead — you can change your plan
+                    from inside the app.
+                  </p>
+                  <a href={loginUrl} className={primaryButtonClass}>Sign in →</a>
+                </>
+              )}
+              <p className="text-[13px] text-[#94a3b8] mt-[18px] leading-[1.6]">
+                Wrong email?{' '}
+                <button
+                  type="button"
+                  onClick={() => setStep('details')}
+                  className="text-[#0D47A1] font-bold bg-transparent border-none cursor-pointer underline text-[13px] p-0"
+                >
+                  Go back and edit it
+                </button>
+              </p>
+            </div>
+          ) : step === 'error' ? (
+            <div className="text-center pt-4 pb-4">
+              <div className="text-5xl mb-4">⚠️</div>
+              <h3 className="text-xl font-extrabold text-[#0f172a] mb-2">Something went wrong</h3>
+              <p className="text-[#64748b] text-sm mb-4">{serverError}</p>
+              <button
+                onClick={() => setStep('details')}
+                className="text-[#0D47A1] font-bold text-sm bg-transparent border-none cursor-pointer underline"
+              >
+                Try again
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onValid)} className="flex flex-col gap-4">
+              {/* No intro paragraph here — the header above already states the trial,
+                  the card requirement, the amount and the date. */}
+
+              {/* Name row */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className={labelClass}>
+                    First Name
+                  </Label>
+                  <Input
+                    className={errors.firstName ? fieldError : fieldBase}
+                    placeholder="Jane"
+                    {...register('firstName')}
+                  />
+                  {errors.firstName && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.firstName.message}</p>}
+                </div>
+                <div>
+                  <Label className={labelClass}>
+                    Last Name
+                  </Label>
+                  <Input
+                    className={errors.lastName ? fieldError : fieldBase}
+                    placeholder="Smith"
+                    {...register('lastName')}
+                  />
+                  {errors.lastName && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.lastName.message}</p>}
+                </div>
+              </div>
+
+              {/* Other fields */}
+              <div>
+                <Label className={labelClass}>
+                  Work Email
+                </Label>
+                <Input
+                  type="email"
+                  className={errors.email ? fieldError : fieldBase}
+                  placeholder="jane@company.com"
+                  {...register('email')}
+                />
+                {errors.email && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.email.message}</p>}
+              </div>
+              <div>
+                <Label className={labelClass}>
+                  Company Name
+                </Label>
+                <Input
+                  className={errors.company ? fieldError : fieldBase}
+                  placeholder="Acme Corp"
+                  {...register('company')}
+                />
+                {errors.company && <p className="text-[11px] text-[#ef4444] mt-[3px]">{errors.company.message}</p>}
+              </div>
+              <div>
+                <Label className={labelClass}>
+                  Phone (optional)
+                </Label>
+                <Input
+                  type="tel"
+                  className={fieldBase}
+                  placeholder="+1 234 567 8900"
+                  {...register('phone')}
+                />
+              </div>
+
+              {/* This email becomes the login identity and the Stripe customer email */}
+              <p className="text-xs text-[#94a3b8] leading-[1.5] -mt-1">
+                Your login details will be sent to this email address.
+              </p>
+
+              <button
+                type="submit"
+                disabled={step === 'redirecting'}
+                className={`w-full text-white font-extrabold text-[15px] border-none py-[14px] rounded-full mt-1 transition-colors tracking-[0.01em] ${step === 'redirecting' ? 'bg-[#94a3b8] cursor-not-allowed' : 'bg-[#0D47A1] cursor-pointer'}`}
+              >
+                {step === 'redirecting' ? 'Opening secure checkout…' : 'Start free trial →'}
+              </button>
+
+              <div className="flex items-center justify-center gap-1.5">
+                <svg width="12" height="14" viewBox="0 0 12 14" fill="none" className="shrink-0">
+                  <rect x="1" y="5.5" width="10" height="8" rx="1.5" stroke="#94a3b8" strokeWidth="1.2" fill="none"/>
+                  <path d="M3.5 5.5V4a2.5 2.5 0 015 0v1.5" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round"/>
+                </svg>
+                <p className="text-xs text-[#94a3b8]">
+                  Secured by Stripe · We never see your card details
+                </p>
+              </div>
+            </form>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

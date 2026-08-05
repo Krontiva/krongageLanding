@@ -32,7 +32,7 @@ export default function CompleteContent({ planName = '', isFree = false }: Props
   return (
     <>
       {/* Icon */}
-      <div className="sc-icon-ring">
+      <div className="w-[72px] h-[72px] rounded-full bg-[#EEF5FD] flex items-center justify-center mx-auto mb-7">
         <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
           <circle cx="17" cy="17" r="17" fill="#0D47A1" opacity=".12"/>
           <polyline
@@ -46,10 +46,10 @@ export default function CompleteContent({ planName = '', isFree = false }: Props
       </div>
 
       {/* Heading — never claims payment or ready-to-use access */}
-      <h1 className="sc-title">
+      <h1 className="text-[30px] font-extrabold text-[#0f172a] tracking-[-0.8px] mb-3 leading-[1.2] max-[560px]:text-2xl">
         {isFree ? 'You\'re all set!' : 'Check your email'}
       </h1>
-      <p className="sc-body">
+      <p className="text-[15px] text-[#64748b] leading-[1.7] mb-9 [&_strong]:text-[#0f172a] [&_strong]:font-bold">
         {isFree ? (
           <>Your free <strong>{planName || 'Starter'}</strong> workspace is being created. We&apos;re setting things up — this takes about a minute.</>
         ) : (
@@ -62,36 +62,39 @@ export default function CompleteContent({ planName = '', isFree = false }: Props
       </p>
 
       {/* Steps */}
-      <div className="sc-steps">
-        <div className="sc-step">
-          <span className="sc-step-num">1</span>
+      <div className="flex flex-col gap-[14px] text-left">
+        <div className="flex items-start gap-3 text-sm text-[#475569] leading-[1.5]">
+          <span className="w-6 h-6 rounded-full bg-[#0D47A1] text-white text-xs font-extrabold flex items-center justify-center shrink-0 mt-px">1</span>
           <span>Check your inbox — you&apos;ll receive an email from <strong>info@krontiva.com</strong> with your login link and a temporary password.</span>
         </div>
-        <div className="sc-step">
-          <span className="sc-step-num">2</span>
+        <div className="flex items-start gap-3 text-sm text-[#475569] leading-[1.5]">
+          <span className="w-6 h-6 rounded-full bg-[#0D47A1] text-white text-xs font-extrabold flex items-center justify-center shrink-0 mt-px">2</span>
           <span>Sign in with your temporary password. KronGage will prompt you to set a new one on your first login.</span>
         </div>
         {!isFree && (
-          <div className="sc-step">
-            <span className="sc-step-num">3</span>
+          <div className="flex items-start gap-3 text-sm text-[#475569] leading-[1.5]">
+            <span className="w-6 h-6 rounded-full bg-[#0D47A1] text-white text-xs font-extrabold flex items-center justify-center shrink-0 mt-px">3</span>
             <span>Nothing has been charged today. Your first payment is taken at the end of your <strong>14-day free trial</strong>, and you can cancel before then.</span>
           </div>
         )}
       </div>
 
-      <div className="sc-divider" />
+      <div className="h-px bg-[#f1f5f9] my-9" />
 
       {/* CTA */}
-      <a href={process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'} className="sc-btn">
+      <a
+        href={process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'}
+        className="inline-flex items-center gap-2 bg-[#0D47A1] text-white text-base font-extrabold px-10 py-4 rounded-full transition-[background,transform] hover:bg-[#0a3680] hover:-translate-y-px tracking-[0.01em] max-[560px]:text-[15px] max-[560px]:px-8 max-[560px]:py-[14px]"
+      >
         Log in to KronGage
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </a>
 
-      <p className="sc-hint">
+      <p className="text-[13px] text-[#94a3b8] mt-5 leading-[1.6]">
         Can&apos;t find the email? Check your spam folder (sender: <strong>info@krontiva.com</strong>)
-        or contact <a href="mailto:support@krontiva.africa" style={{ color: '#0D47A1', fontWeight: 600 }}>support@krontiva.africa</a>.
+        or contact <a href="mailto:support@krontiva.africa" className="text-[#0D47A1] font-semibold">support@krontiva.africa</a>.
       </p>
     </>
   );

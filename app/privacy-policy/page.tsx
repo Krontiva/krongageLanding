@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy – KronGage',
@@ -8,112 +7,45 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <>
-      <style>{`
+    <main className="flex-1 max-w-[800px] mx-auto px-6 pt-32 pb-20 w-full">
+      <div className="mb-12">
+        <h1 className="text-[42px] font-extrabold text-[#0D47A1] mb-[10px] max-[640px]:text-[30px]">Privacy Policy</h1>
+        <p className="text-sm text-[#94a3b8]">Last updated: May 2025</p>
+      </div>
+      <div>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">Krontiva Ltd (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the KronGage platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.</p>
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
-    a { text-decoration: none; color: inherit; }
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
-    .nav-logo img { height: 38px; width: auto; }
-    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
-    .nav-links li a { color: #475569; transition: color .2s; }
-    .nav-links li a:hover { color: #0D47A1; }
-    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
-    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
-    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
-    .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">1. Information We Collect</h2>
+        <h3 className="text-[17px] font-bold text-[#0D47A1] mt-6 mb-2">Information you provide directly</h3>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">We collect information that you provide when you register for an account, fill out a form, or communicate with us. This may include:</p>
+        <ul className="pl-6 mb-4 list-disc">
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Name, email address, phone number, and job title</li>
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Company name and billing information</li>
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Content you submit through the platform</li>
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Customer data you upload or sync to KronGage</li>
+        </ul>
 
-    main { flex: 1; max-width: 800px; margin: 0 auto; padding: 60px 24px 80px; width: 100%; }
-    .page-header { margin-bottom: 48px; }
-    .page-header h1 { font-size: 42px; font-weight: 800; color: #0D47A1; margin-bottom: 10px; }
-    .page-header p { font-size: 14px; color: #94a3b8; }
-    .content h2 { font-size: 22px; font-weight: 800; color: #0D47A1; margin: 36px 0 12px; }
-    .content h3 { font-size: 17px; font-weight: 700; color: #0D47A1; margin: 24px 0 8px; }
-    .content p { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 16px; }
-    .content ul { padding-left: 24px; margin-bottom: 16px; }
-    .content ul li { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 6px; }
+        <h3 className="text-[17px] font-bold text-[#0D47A1] mt-6 mb-2">Information collected automatically</h3>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">When you use our platform, we automatically collect certain technical information including IP address, browser type, device identifiers, pages visited, and usage patterns.</p>
 
-    footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
-    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .footer-brand .logo { font-size: 22px; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
-    .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
-    .footer-brand .dev-credit { font-size: 12px; color: #475569; margin-bottom: 20px; }
-    .badge-meta { display: inline-flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: 600; color: #94a3b8; }
-    .badge-meta .meta-icon { width: 28px; height: 28px; background: #0D47A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
-    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
-    .footer-col ul li a { color: #64748b; transition: color .2s; }
-    .footer-col ul li a:hover { color: #38bdf8; }
-    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-bottom p { font-size: 12px; color: #475569; }
-    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
-    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
-    .footer-legal a:hover { color: #38bdf8; }
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">2. How We Use Your Information</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">We use the information we collect to provide, maintain, and improve our services, process transactions, send transactional and promotional communications, and comply with legal obligations.</p>
 
-    @media (max-width: 1024px) {
-      footer { padding: 48px 32px 24px; }
-      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
-      .footer-brand { grid-column: 1 / -1; }
-    }
-    @media (max-width: 640px) {
-      nav { padding: 0 20px; height: 56px; }
-      .nav-links { display: none; }
-      .btn-nav { display: none; }
-      .nav-toggle { display: flex; }
-      .page-header h1 { font-size: 30px; }
-      footer { padding: 40px 20px 20px; }
-      .footer-top { grid-template-columns: 1fr; gap: 28px; }
-      .footer-brand { grid-column: auto; }
-      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
-    }
-  
-      `}</style>
-<main>
-  <div className="page-header">
-    <h1>Privacy Policy</h1>
-    <p>Last updated: May 2025</p>
-  </div>
-  <div className="content">
-    <p>Krontiva Ltd ("we", "our", or "us") operates the KronGage platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">3. Data Sharing</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">We do not sell your personal data. We may share information with trusted third-party service providers who assist us in operating our platform, subject to confidentiality agreements. We may also disclose information when required by law or to protect our rights.</p>
 
-    <h2>1. Information We Collect</h2>
-    <h3>Information you provide directly</h3>
-    <p>We collect information that you provide when you register for an account, fill out a form, or communicate with us. This may include:</p>
-    <ul>
-      <li>Name, email address, phone number, and job title</li>
-      <li>Company name and billing information</li>
-      <li>Content you submit through the platform</li>
-      <li>Customer data you upload or sync to KronGage</li>
-    </ul>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">4. Data Retention</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">We retain your personal data for as long as your account is active or as needed to provide our services. You may request deletion of your data at any time by contacting us.</p>
 
-    <h3>Information collected automatically</h3>
-    <p>When you use our platform, we automatically collect certain technical information including IP address, browser type, device identifiers, pages visited, and usage patterns.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">5. Security</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">We implement industry-standard security measures including encryption in transit and at rest, access controls, and regular security audits. KronGage maintains SOC 2 compliance and HIPAA-compliant data handling practices.</p>
 
-    <h2>2. How We Use Your Information</h2>
-    <p>We use the information we collect to provide, maintain, and improve our services, process transactions, send transactional and promotional communications, and comply with legal obligations.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">6. Your Rights</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">Depending on your jurisdiction, you may have the right to access, correct, delete, or port your personal data. To exercise these rights, contact us at <strong>privacy@krontiva.africa</strong>.</p>
 
-    <h2>3. Data Sharing</h2>
-    <p>We do not sell your personal data. We may share information with trusted third-party service providers who assist us in operating our platform, subject to confidentiality agreements. We may also disclose information when required by law or to protect our rights.</p>
-
-    <h2>4. Data Retention</h2>
-    <p>We retain your personal data for as long as your account is active or as needed to provide our services. You may request deletion of your data at any time by contacting us.</p>
-
-    <h2>5. Security</h2>
-    <p>We implement industry-standard security measures including encryption in transit and at rest, access controls, and regular security audits. KronGage maintains SOC 2 compliance and HIPAA-compliant data handling practices.</p>
-
-    <h2>6. Your Rights</h2>
-    <p>Depending on your jurisdiction, you may have the right to access, correct, delete, or port your personal data. To exercise these rights, contact us at <strong>privacy@krontiva.africa</strong>.</p>
-
-    <h2>7. Contact Us</h2>
-    <p>If you have questions about this Privacy Policy, please contact Krontiva Ltd at <strong>privacy@krontiva.africa</strong> or via our <a href="/contact/" style={{color:"#0D47A1",fontWeight:"700"}}>Contact page</a>.</p>
-  </div>
-</main>
-    </>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">7. Contact Us</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">If you have questions about this Privacy Policy, please contact Krontiva Ltd at <strong>privacy@krontiva.africa</strong> or via our <a href="/contact/" className="text-[#0D47A1] font-bold">Contact page</a>.</p>
+      </div>
+    </main>
   );
 }

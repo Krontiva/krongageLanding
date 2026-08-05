@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Terms of Service – KronGage',
@@ -8,111 +7,50 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <>
-      <style>{`
+    <main className="flex-1 max-w-[800px] mx-auto px-6 pt-32 pb-20 w-full">
+      <div className="mb-12">
+        <h1 className="text-[42px] font-extrabold text-[#0D47A1] mb-[10px] max-[640px]:text-[30px]">Terms of Service</h1>
+        <p className="text-sm text-[#94a3b8]">Last updated: May 2025</p>
+      </div>
+      <div>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">These Terms of Service (&quot;Terms&quot;) govern your access to and use of the KronGage platform provided by Krontiva Ltd (&quot;Krontiva&quot;, &quot;we&quot;, &quot;our&quot;, or &quot;us&quot;). By using KronGage, you agree to be bound by these Terms.</p>
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
-    a { text-decoration: none; color: inherit; }
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 100; }
-    .nav-logo img { height: 38px; width: auto; }
-    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
-    .nav-links li a { color: #475569; transition: color .2s; }
-    .nav-links li a:hover { color: #0D47A1; }
-    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
-    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
-    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
-    .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
-    main { flex: 1; max-width: 800px; margin: 0 auto; padding: 60px 24px 80px; width: 100%; }
-    .page-header { margin-bottom: 48px; }
-    .page-header h1 { font-size: 42px; font-weight: 800; color: #0D47A1; margin-bottom: 10px; }
-    .page-header p { font-size: 14px; color: #94a3b8; }
-    .content h2 { font-size: 22px; font-weight: 800; color: #0D47A1; margin: 36px 0 12px; }
-    .content p { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 16px; }
-    .content ul { padding-left: 24px; margin-bottom: 16px; }
-    .content ul li { font-size: 15px; line-height: 1.8; color: #475569; margin-bottom: 6px; }
-    footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
-    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .footer-brand .logo { font-size: 22px; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
-    .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
-    .footer-brand .dev-credit { font-size: 12px; color: #475569; margin-bottom: 20px; }
-    .badge-meta { display: inline-flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: 600; color: #94a3b8; }
-    .badge-meta .meta-icon { width: 28px; height: 28px; background: #0D47A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
-    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
-    .footer-col ul li a { color: #64748b; transition: color .2s; }
-    .footer-col ul li a:hover { color: #38bdf8; }
-    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-bottom p { font-size: 12px; color: #475569; }
-    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
-    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
-    .footer-legal a:hover { color: #38bdf8; }
-    @media (max-width: 1024px) {
-      footer { padding: 48px 32px 24px; }
-      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
-      .footer-brand { grid-column: 1 / -1; }
-    }
-    @media (max-width: 640px) {
-      nav { padding: 0 20px; height: 56px; }
-      .nav-links { display: none; } .btn-nav { display: none; } .nav-toggle { display: flex; }
-      .page-header h1 { font-size: 30px; }
-      footer { padding: 40px 20px 20px; }
-      .footer-top { grid-template-columns: 1fr; gap: 28px; }
-      .footer-brand { grid-column: auto; }
-      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
-    }
-  
-      `}</style>
-<main>
-  <div className="page-header">
-    <h1>Terms of Service</h1>
-    <p>Last updated: May 2025</p>
-  </div>
-  <div className="content">
-    <p>These Terms of Service ("Terms") govern your access to and use of the KronGage platform provided by Krontiva Ltd ("Krontiva", "we", "our", or "us"). By using KronGage, you agree to be bound by these Terms.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">1. Acceptance of Terms</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">By creating an account or accessing any part of the KronGage platform, you confirm that you are at least 18 years of age, have the authority to enter into these Terms on behalf of your organisation, and agree to comply with all applicable laws and regulations.</p>
 
-    <h2>1. Acceptance of Terms</h2>
-    <p>By creating an account or accessing any part of the KronGage platform, you confirm that you are at least 18 years of age, have the authority to enter into these Terms on behalf of your organisation, and agree to comply with all applicable laws and regulations.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">2. Licence and Permitted Use</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">Subject to these Terms, Krontiva grants you a limited, non-exclusive, non-transferable licence to access and use the KronGage platform for your internal business purposes. You may not:</p>
+        <ul className="pl-6 mb-4 list-disc">
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Sub-licence, sell, resell, or commercially exploit the platform without written consent</li>
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Reverse engineer, decompile, or attempt to extract source code</li>
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Use the platform to send unsolicited communications or spam</li>
+          <li className="text-[15px] leading-[1.8] text-[#475569] mb-[6px]">Violate any applicable laws or third-party rights</li>
+        </ul>
 
-    <h2>2. Licence and Permitted Use</h2>
-    <p>Subject to these Terms, Krontiva grants you a limited, non-exclusive, non-transferable licence to access and use the KronGage platform for your internal business purposes. You may not:</p>
-    <ul>
-      <li>Sub-licence, sell, resell, or commercially exploit the platform without written consent</li>
-      <li>Reverse engineer, decompile, or attempt to extract source code</li>
-      <li>Use the platform to send unsolicited communications or spam</li>
-      <li>Violate any applicable laws or third-party rights</li>
-    </ul>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">3. Account Responsibilities</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You must notify us immediately of any unauthorised access.</p>
 
-    <h2>3. Account Responsibilities</h2>
-    <p>You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You must notify us immediately of any unauthorised access.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">4. Service Availability</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">We strive to provide 99.9% uptime. We reserve the right to perform scheduled maintenance, which we will communicate in advance wherever possible. We are not liable for any downtime beyond our reasonable control.</p>
 
-    <h2>4. Service Availability</h2>
-    <p>We strive to provide 99.9% uptime. We reserve the right to perform scheduled maintenance, which we will communicate in advance wherever possible. We are not liable for any downtime beyond our reasonable control.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">5. Payment and Billing</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">Subscription fees are billed in advance. All fees are non-refundable unless otherwise stated. Krontiva reserves the right to update pricing with 30 days&apos; notice.</p>
 
-    <h2>5. Payment and Billing</h2>
-    <p>Subscription fees are billed in advance. All fees are non-refundable unless otherwise stated. Krontiva reserves the right to update pricing with 30 days' notice.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">6. Intellectual Property</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">All intellectual property rights in the KronGage platform remain the exclusive property of Krontiva Ltd. Your data remains your property; you grant us a limited licence to process it solely to deliver the service.</p>
 
-    <h2>6. Intellectual Property</h2>
-    <p>All intellectual property rights in the KronGage platform remain the exclusive property of Krontiva Ltd. Your data remains your property; you grant us a limited licence to process it solely to deliver the service.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">7. Limitation of Liability</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">To the maximum extent permitted by law, Krontiva&apos;s aggregate liability shall not exceed the fees paid by you in the 12 months preceding the claim. We are not liable for indirect, incidental, or consequential damages.</p>
 
-    <h2>7. Limitation of Liability</h2>
-    <p>To the maximum extent permitted by law, Krontiva's aggregate liability shall not exceed the fees paid by you in the 12 months preceding the claim. We are not liable for indirect, incidental, or consequential damages.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">8. Termination</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">Either party may terminate the agreement with 30 days&apos; written notice. Krontiva may suspend or terminate your access immediately if you breach these Terms.</p>
 
-    <h2>8. Termination</h2>
-    <p>Either party may terminate the agreement with 30 days' written notice. Krontiva may suspend or terminate your access immediately if you breach these Terms.</p>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">9. Governing Law</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">These Terms are governed by the laws of England and Wales. Any disputes shall be resolved in the courts of England and Wales.</p>
 
-    <h2>9. Governing Law</h2>
-    <p>These Terms are governed by the laws of England and Wales. Any disputes shall be resolved in the courts of England and Wales.</p>
-
-    <h2>10. Contact</h2>
-    <p>Questions about these Terms? Contact us at <strong>legal@krontiva.africa</strong> or via our <a href="/contact/" style={{color:"#0D47A1",fontWeight:"700"}}>Contact page</a>.</p>
-  </div>
-</main>
-    </>
+        <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">10. Contact</h2>
+        <p className="text-[15px] leading-[1.8] text-[#475569] mb-4">Questions about these Terms? Contact us at <strong>legal@krontiva.africa</strong> or via our <a href="/contact/" className="text-[#0D47A1] font-bold">Contact page</a>.</p>
+      </div>
+    </main>
   );
 }

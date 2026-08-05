@@ -1,557 +1,262 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Customer360 from '../../components/solutions/Customer360';
+import HeroChannels from '../../components/platform/HeroChannels';
+import CampaignManagement from '../../components/platform/CampaignManagement';
+import HeroChatbot from '../../components/platform/HeroChatbot';
 
 export const metadata: Metadata = {
   title: 'Solutions – KronGage',
   description: 'KronGage – Unified Customer Engagement Platform',
 };
 
+const industries = [
+  { href: '/solutions/banking/', bg: '#EEF5FD', icon: '🏦', title: 'Banking & Finance', desc: 'Unify customer relationships across retail, SME, and corporate banking with compliant, contextual engagement at every touchpoint.', stat: '↑ 34% retention improvement', cta: 'Explore Banking' },
+  { href: '/solutions/telecom/', bg: '#f0fdf4', icon: '📡', title: 'Telecommunications', desc: 'Reduce churn, drive upsell, and manage high-volume customer interactions across prepaid, postpaid, and enterprise segments.', stat: '↓ 70% response time', cta: 'Explore Telecom' },
+  { href: '/solutions/fmcg/', bg: '#fef9c3', icon: '🛒', title: 'FMCG & Retail', desc: 'Drive loyalty, personalise promotions, and close the loop between digital campaigns and in-store or e-commerce purchases.', stat: '3× campaign ROI', cta: 'Explore FMCG' },
+  { href: '/solutions/healthcare/', bg: '#fdf2f8', icon: '🏥', title: 'Healthcare', desc: 'Improve patient outcomes with secure, HIPAA-aware communication across appointment reminders, care follow-ups, and chronic disease management.', stat: '↑ 28% patient engagement', cta: 'Explore Healthcare' },
+  { href: '/solutions/insurance/', bg: '#f0f9ff', icon: '🛡️', title: 'Insurance', desc: 'Accelerate claims resolution, reduce policyholder churn, and personalise renewal campaigns with AI-driven engagement workflows.', stat: '↑ 22% renewal rate', cta: 'Explore Insurance' },
+  { href: '/solutions/government/', bg: '#faf5ff', icon: '🏛️', title: 'Government & Public Sector', desc: 'Deliver citizen services at scale across WhatsApp, SMS, and digital portals — with full audit trails and compliance built in.', stat: '5× citizen reach', cta: 'Explore Government' },
+];
+
+const industryPills = [
+  { icon: '🏦', label: 'Banking', active: true },
+  { icon: '📡', label: 'Telecom', active: false },
+  { icon: '🛒', label: 'FMCG & Retail', active: false },
+  { icon: '🏥', label: 'Healthcare', active: false },
+  { icon: '🛡️', label: 'Insurance', active: false },
+  { icon: '🏛️', label: 'Government', active: false },
+];
+
+const impactStats = [
+  { num: '3', suffix: '×', desc: 'More conversations handled per agent with AI Copilot' },
+  { num: '25', suffix: '%', desc: 'Increase in customer satisfaction scores' },
+  { num: '70', suffix: '%', desc: 'Reduction in average response time' },
+  { num: '5', suffix: '×', desc: 'More channels served from a single platform' },
+];
+
+const featureBullets = {
+  customer360: [
+    'Unified customer timeline across all channels',
+    'AI-powered engagement & loyalty scoring',
+    'Preferred channel detection & enforcement',
+    'Next Best Action recommendations',
+  ],
+  inbox: [
+    '8+ channels in a unified agent workspace',
+    'Smart routing by skill, language, and priority',
+    'AI-suggested replies with customer context',
+    'SLA tracking and escalation workflows',
+  ],
+  campaigns: [
+    'Visual journey builder with branching logic',
+    'Behavioural and event-based triggers',
+    'A/B testing across message variants',
+    'Real-time delivery and conversion tracking',
+  ],
+  ai: [
+    'AI agents for 24/7 tier-1 resolution',
+    'Contextual reply suggestions for human agents',
+    'Intent detection and smart escalation',
+    'Multilingual support across all channels',
+  ],
+};
+
+const platformTabs = [
+  { key: 'customer360', icon: '👥', label: 'Customer 360' },
+  { key: 'inbox', icon: '📥', label: 'Omnichannel Inbox' },
+  { key: 'campaigns', icon: '📣', label: 'Campaign Management' },
+  { key: 'ai', icon: '🤖', label: 'AI & Automation' },
+];
+
 export default function Page() {
   return (
     <>
-      <style>{`
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Manrope', sans-serif; color: #1e293b; background: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
-    a { text-decoration: none; color: inherit; }
-
-    /* ── NAV ── */
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 60px; height: 68px; background: #fff; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; z-index: 200; }
-    .nav-logo img { height: 38px; width: auto; }
-    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; font-size: 14px; font-weight: 600; }
-    .nav-links li a { color: #475569; transition: color .2s; }
-    .nav-links li a:hover { color: #0D47A1; }
-    .nav-links .active a { color: #0D47A1; }
-    .btn-nav { background: #0D47A1; color: #fff; padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 700; }
-    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .nav-toggle span { display: block; width: 22px; height: 2px; background: #0f172a; border-radius: 2px; }
-    .mobile-menu { display: none; flex-direction: column; background: #fff; border-top: 1px solid #f1f5f9; padding: 16px 24px 24px; gap: 4px; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { padding: 11px 0; font-size: 16px; font-weight: 600; color: #475569; border-bottom: 1px solid #f1f5f9; }
-    .mobile-menu a:last-child { border-bottom: none; }
-    .mobile-menu .btn-nav-mobile { margin-top: 12px; background: #0D47A1; color: #fff; padding: 13px 20px; border-radius: 50px; font-weight: 700; text-align: center; border-bottom: none; }
-
-    /* ── MEGA MENU ── */
-    .nav-links li { position: relative; }
-    .nav-links li > a { display: flex; align-items: center; gap: 4px; padding: 8px 0; }
-    .nav-links li.has-mega > a::after { content: ''; display: inline-block; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid currentColor; margin-left: 2px; transition: transform .2s; }
-    .nav-links li.has-mega.is-open > a::after { transform: rotate(180deg); }
-    .mega-menu { display: none; position: fixed; top: 68px; left: 0; width: 100vw; background: #fff; border-top: 2px solid #0D47A1; box-shadow: 0 20px 60px rgba(0,0,0,.12); z-index: 199; padding: 36px 60px 40px; }
-    .nav-links li.has-mega.is-open .mega-menu { display: block; }
-    .mega-inner { display: grid; max-width: 1100px; margin: 0 auto; gap: 48px; }
-    .mega-inner.cols-3 { grid-template-columns: 1.6fr 1fr 1fr; }
-    .mega-inner.cols-2b { grid-template-columns: 1fr 1.4fr; }
-    .mega-col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 18px; }
-    .mega-brand-head { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-    .mega-brand-sub { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
-    .mega-brand-link { font-size: 13px; font-weight: 700; color: #0D47A1; }
-    .mega-feature-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-    .mega-feature-row:last-child { border-bottom: none; }
-    .mega-feat-icon { width: 34px; height: 34px; background: #EEF5FD; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
-    .mega-feat-text strong { display: block; font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
-    .mega-feat-text span { font-size: 12px; color: #64748b; }
-    .mega-channel-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
-    .mega-channel-row:last-child { border-bottom: none; }
-    .mega-channel-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #0D47A1; }
-    .mega-view-all { font-size: 13px; font-weight: 700; color: #0D47A1; margin-top: 4px; display: inline-block; }
-    .mega-how-card { background: #EEF5FD; border-radius: 10px; padding: 14px; margin-top: 16px; display: flex; gap: 12px; align-items: flex-start; }
-    .mega-how-icon { width: 38px; height: 38px; background: #0D47A1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .mega-how-text strong { font-size: 13px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 4px; }
-    .mega-how-text span { font-size: 12px; color: #64748b; line-height: 1.5; }
-    .mega-industry-list { list-style: none; }
-    .mega-industry-list li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
-    .mega-industry-list li:last-child { border-bottom: none; }
-    .mega-ind-icon { width: 28px; height: 28px; background: #EEF5FD; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #0D47A1; }
-    .mega-use-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 13px; font-weight: 600; color: #374151; border-bottom: 1px solid #f8fafc; }
-    .mega-use-row:last-child { border-bottom: none; }
-    .mega-article-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
-    .mega-article-sub { font-size: 12px; color: #64748b; line-height: 1.6; }
-
-    /* ── HERO ── */
-    .hero {
-      background: linear-gradient(135deg, #0f172a 0%, #0D47A1 60%, #1565C0 100%);
-      padding: 80px 60px 100px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 0h40v40H0zM40 40h40v40H40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-    }
-    .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
-    .hero-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px; }
-    .hero h1 { font-size: 56px; font-weight: 800; color: #fff; line-height: 1.08; max-width: 680px; margin-bottom: 20px; letter-spacing: -1px; }
-    .hero h1 em { font-style: normal; color: #93c5fd; }
-    .hero-sub { font-size: 18px; color: rgba(255,255,255,.7); max-width: 540px; line-height: 1.65; margin-bottom: 40px; }
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 60px; }
-    .btn-white { background: #fff; color: #0D47A1; padding: 13px 28px; border-radius: 50px; font-size: 15px; font-weight: 700; transition: opacity .2s; }
-    .btn-white:hover { opacity: .9; }
-    .btn-ghost { border: 2px solid rgba(255,255,255,.35); color: #fff; padding: 11px 26px; border-radius: 50px; font-size: 15px; font-weight: 700; transition: background .2s; }
-    .btn-ghost:hover { background: rgba(255,255,255,.1); }
-
-    /* Industry pill selector in hero */
-    .hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
-    .hero-pill {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
-      color: rgba(255,255,255,.8);
-      padding: 8px 16px; border-radius: 50px;
-      font-size: 13px; font-weight: 700;
-      cursor: pointer; transition: all .2s;
-    }
-    .hero-pill:hover, .hero-pill.active {
-      background: #fff; color: #0D47A1; border-color: #fff;
-    }
-    .hero-pill-icon { font-size: 15px; }
-
-    /* ── INDUSTRY CARDS GRID ── */
-    .industries { padding: 80px 60px; background: #fff; }
-    .industries-inner { max-width: 1100px; margin: 0 auto; }
-    .section-label { font-size: 12px; font-weight: 700; color: #0D47A1; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
-    .section-heading { font-size: 36px; font-weight: 800; color: #0f172a; max-width: 560px; line-height: 1.2; margin-bottom: 48px; }
-    .ind-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .ind-card {
-      position: relative; border-radius: 20px; overflow: hidden;
-      border: 1px solid #e2e8f0; background: #f8fafc;
-      transition: transform .25s, box-shadow .25s;
-      cursor: pointer;
-    }
-    .ind-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(13,71,161,.12); }
-    .ind-card-body { padding: 32px 28px 28px; }
-    .ind-icon-wrap {
-      width: 56px; height: 56px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px; margin-bottom: 20px;
-    }
-    .ind-card h3 { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
-    .ind-card p { font-size: 14px; color: #64748b; line-height: 1.65; margin-bottom: 20px; }
-    .ind-stat {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 12px; font-weight: 700; color: #0D47A1;
-      background: #EEF5FD; padding: 4px 12px; border-radius: 20px;
-    }
-    .ind-card-footer {
-      border-top: 1px solid #e2e8f0; padding: 14px 28px;
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: 13px; font-weight: 700; color: #0D47A1;
-      background: #fff;
-    }
-    .ind-card:hover .ind-card-footer { background: #0D47A1; color: #fff; }
-    .ind-card:hover .ind-card-footer .ind-arrow { transform: translateX(4px); }
-    .ind-arrow { transition: transform .2s; }
-
-    /* ── STATS STRIP ── */
-    .stats-strip {
-      background: linear-gradient(135deg, #0f172a 0%, #0D47A1 100%);
-      padding: 64px 60px;
-    }
-    .stats-strip-inner { max-width: 1100px; margin: 0 auto; }
-    .stats-strip-head { text-align: center; margin-bottom: 48px; }
-    .stats-strip-head h2 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 10px; }
-    .stats-strip-head p { font-size: 15px; color: rgba(255,255,255,.6); }
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-    .stat-item {
-      text-align: center; padding: 32px 24px;
-      background: rgba(255,255,255,.06);
-      border-right: 1px solid rgba(255,255,255,.08);
-    }
-    .stat-item:last-child { border-right: none; }
-    .stat-num {
-      font-size: 52px; font-weight: 900; color: #fff;
-      line-height: 1; margin-bottom: 8px;
-      font-variant-numeric: tabular-nums;
-    }
-    .stat-num span { font-size: 32px; color: #93c5fd; }
-    .stat-desc { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 600; line-height: 1.5; max-width: 160px; margin: 0 auto; }
-
-    /* ── PLATFORM TABS ── */
-    .platform-tabs { padding: 80px 60px; background: #f8fafc; }
-    .platform-tabs-inner { max-width: 1100px; margin: 0 auto; }
-    .pt-layout { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: start; }
-    .pt-nav { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 88px; }
-    .pt-tab {
-      display: flex; align-items: center; gap: 14px;
-      padding: 14px 16px; border-radius: 12px;
-      font-size: 14px; font-weight: 700; color: #64748b;
-      cursor: pointer; transition: all .2s; border: 1px solid transparent;
-    }
-    .pt-tab:hover { background: #fff; color: #0f172a; }
-    .pt-tab.active {
-      background: #fff; color: #0D47A1;
-      border-color: #e2e8f0;
-      box-shadow: 0 2px 12px rgba(13,71,161,.08);
-    }
-    .pt-tab-icon {
-      width: 36px; height: 36px; border-radius: 9px; background: #EEF5FD;
-      display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
-    }
-    .pt-tab.active .pt-tab-icon { background: #0D47A1; }
-    .pt-panel { display: none; }
-    .pt-panel.active { display: block; }
-    .pt-panel-head { margin-bottom: 28px; }
-    .pt-panel-head h3 { font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
-    .pt-panel-head p { font-size: 15px; color: #64748b; line-height: 1.7; }
-    .pt-iframe-wrap {
-      border-radius: 20px; overflow: hidden;
-      height: 420px; box-shadow: 0 16px 48px rgba(13,71,161,.12);
-      border: 1px solid #e2e8f0; margin-bottom: 24px;
-    }
-    .pt-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
-    .pt-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .pt-feat {
-      display: flex; align-items: flex-start; gap: 10px;
-      background: #fff; border-radius: 12px; padding: 14px 16px;
-      border: 1px solid #e2e8f0;
-    }
-    .pt-feat-dot { width: 8px; height: 8px; border-radius: 50%; background: #0D47A1; margin-top: 5px; flex-shrink: 0; }
-    .pt-feat span { font-size: 13px; font-weight: 600; color: #374151; line-height: 1.45; }
-
-    /* ── CTA ── */
-    .cta { padding: 100px 60px; background: #fff; }
-    .cta-inner {
-      max-width: 1100px; margin: 0 auto;
-      background: linear-gradient(135deg, #0f172a 0%, #0D47A1 60%, #1565C0 100%);
-      border-radius: 28px; padding: 72px 80px;
-      display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center;
-      position: relative; overflow: hidden;
-    }
-    .cta-inner::before {
-      content: '';
-      position: absolute; right: -60px; top: -60px;
-      width: 300px; height: 300px; border-radius: 50%;
-      background: rgba(255,255,255,.04);
-      pointer-events: none;
-    }
-    .cta-inner::after {
-      content: '';
-      position: absolute; right: 60px; bottom: -80px;
-      width: 200px; height: 200px; border-radius: 50%;
-      background: rgba(255,255,255,.03);
-      pointer-events: none;
-    }
-    .cta-text h2 { font-size: 36px; font-weight: 800; color: #fff; margin-bottom: 14px; line-height: 1.2; }
-    .cta-text p { font-size: 16px; color: rgba(255,255,255,.7); line-height: 1.65; max-width: 500px; }
-    .cta-actions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
-    .btn-cta-primary { background: #fff; color: #0D47A1; padding: 14px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; text-align: center; white-space: nowrap; transition: opacity .2s; }
-    .btn-cta-primary:hover { opacity: .9; }
-    .btn-cta-ghost { border: 2px solid rgba(255,255,255,.35); color: #fff; padding: 12px 28px; border-radius: 50px; font-size: 15px; font-weight: 700; text-align: center; white-space: nowrap; transition: background .2s; }
-    .btn-cta-ghost:hover { background: rgba(255,255,255,.1); }
-
-    /* ── FOOTER ── */
-    footer { background: #0f172a; color: #94a3b8; padding: 60px 60px 30px; }
-    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .footer-brand .logo { font-size: 22px; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
-    .footer-brand p { font-size: 13px; line-height: 1.7; color: #64748b; margin-bottom: 16px; }
-    .footer-brand .dev-credit { font-size: 12px; color: #475569; margin-bottom: 20px; }
-    .badge-meta { display: inline-flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: 600; color: #94a3b8; }
-    .badge-meta .meta-icon { width: 28px; height: 28px; background: #0D47A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
-    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e2e8f0; margin-bottom: 18px; }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 10px; font-size: 13px; }
-    .footer-col ul li a { color: #64748b; transition: color .2s; }
-    .footer-col ul li a:hover { color: #38bdf8; }
-    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-bottom p { font-size: 12px; color: #475569; }
-    .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
-    .footer-legal a { font-size: 12px; color: #475569; transition: color .2s; }
-    .footer-legal a:hover { color: #38bdf8; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1024px) {
-      nav { padding: 0 32px; }
-      .hero { padding: 64px 32px 80px; }
-      .hero h1 { font-size: 42px; }
-      .industries { padding: 64px 32px; }
-      .ind-grid { grid-template-columns: 1fr 1fr; }
-      .stats-strip { padding: 56px 32px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); }
-      .stat-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.08); }
-      .stat-item:nth-last-child(-n+2) { border-bottom: none; }
-      .platform-tabs { padding: 64px 32px; }
-      .pt-layout { grid-template-columns: 1fr; }
-      .pt-nav { flex-direction: row; flex-wrap: wrap; position: static; }
-      .cta { padding: 64px 32px; }
-      .cta-inner { padding: 48px; grid-template-columns: 1fr; }
-      .cta-actions { flex-direction: row; }
-      footer { padding: 48px 32px 24px; }
-      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
-      .footer-brand { grid-column: 1 / -1; }
-    }
-    @media (max-width: 640px) {
-      nav { padding: 0 20px; height: 56px; }
-      .nav-links, .btn-nav { display: none; }
-      .nav-toggle { display: flex; }
-      .hero { padding: 48px 20px 64px; }
-      .hero h1 { font-size: 30px; }
-      .hero-sub { font-size: 15px; }
-      .industries { padding: 48px 20px; }
-      .ind-grid { grid-template-columns: 1fr; }
-      .stats-strip { padding: 48px 20px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .platform-tabs { padding: 48px 20px; }
-      .pt-features { grid-template-columns: 1fr; }
-      .cta { padding: 40px 20px; }
-      .cta-inner { padding: 36px 28px; }
-      .cta-actions { flex-direction: column; }
-      .cta-text h2 { font-size: 26px; }
-      footer { padding: 40px 20px 20px; }
-      .footer-top { grid-template-columns: 1fr; gap: 28px; }
-      .footer-brand { grid-column: auto; }
-      .footer-bottom { flex-direction: column; align-items: flex-start; }
-    }
-  
-      `}</style>
-{/* ── HERO ── */}
-<section className="hero">
-  <div className="hero-inner">
-    <div className="hero-label">Industry Solutions</div>
-    <h1>Built for the Industries<br />That <em>Run the World</em></h1>
-    <p className="hero-sub">KronGage delivers tailored customer engagement for every major vertical — from regulated banking environments to high-volume telecoms and public sector services.</p>
-    <div className="hero-btns">
-      <a href="/contact/" className="btn-white">Talk to a Specialist</a>
-      <a href="#industries" className="btn-ghost">Explore Industries</a>
-    </div>
-    <div className="hero-pills">
-      <div className="hero-pill active"><span className="hero-pill-icon">🏦</span>Banking</div>
-      <div className="hero-pill"><span className="hero-pill-icon">📡</span>Telecom</div>
-      <div className="hero-pill"><span className="hero-pill-icon">🛒</span>FMCG &amp; Retail</div>
-      <div className="hero-pill"><span className="hero-pill-icon">🏥</span>Healthcare</div>
-      <div className="hero-pill"><span className="hero-pill-icon">🛡️</span>Insurance</div>
-      <div className="hero-pill"><span className="hero-pill-icon">🏛️</span>Government</div>
-    </div>
-  </div>
-</section>
-
-{/* ── INDUSTRY CARDS ── */}
-<section className="industries" id="industries">
-  <div className="industries-inner">
-    <div className="section-label">Verticals We Serve</div>
-    <h2 className="section-heading">Deep expertise across six industries</h2>
-    <div className="ind-grid">
-
-      <a href="/solutions/banking/" className="ind-card">
-        <div className="ind-card-body">
-          <div className="ind-icon-wrap" style={{background:"#EEF5FD"}}>🏦</div>
-          <h3>Banking &amp; Finance</h3>
-          <p>Unify customer relationships across retail, SME, and corporate banking with compliant, contextual engagement at every touchpoint.</p>
-          <span className="ind-stat">↑ 34% retention improvement</span>
-        </div>
-        <div className="ind-card-footer">
-          Explore Banking <span className="ind-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="/solutions/telecom/" className="ind-card">
-        <div className="ind-card-body">
-          <div className="ind-icon-wrap" style={{background:"#f0fdf4"}}>📡</div>
-          <h3>Telecommunications</h3>
-          <p>Reduce churn, drive upsell, and manage high-volume customer interactions across prepaid, postpaid, and enterprise segments.</p>
-          <span className="ind-stat">↓ 70% response time</span>
-        </div>
-        <div className="ind-card-footer">
-          Explore Telecom <span className="ind-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="/solutions/fmcg/" className="ind-card">
-        <div className="ind-card-body">
-          <div className="ind-icon-wrap" style={{background:"#fef9c3"}}>🛒</div>
-          <h3>FMCG &amp; Retail</h3>
-          <p>Drive loyalty, personalise promotions, and close the loop between digital campaigns and in-store or e-commerce purchases.</p>
-          <span className="ind-stat">3× campaign ROI</span>
-        </div>
-        <div className="ind-card-footer">
-          Explore FMCG <span className="ind-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="/solutions/healthcare/" className="ind-card">
-        <div className="ind-card-body">
-          <div className="ind-icon-wrap" style={{background:"#fdf2f8"}}>🏥</div>
-          <h3>Healthcare</h3>
-          <p>Improve patient outcomes with secure, HIPAA-aware communication across appointment reminders, care follow-ups, and chronic disease management.</p>
-          <span className="ind-stat">↑ 28% patient engagement</span>
-        </div>
-        <div className="ind-card-footer">
-          Explore Healthcare <span className="ind-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="/solutions/insurance/" className="ind-card">
-        <div className="ind-card-body">
-          <div className="ind-icon-wrap" style={{background:"#f0f9ff"}}>🛡️</div>
-          <h3>Insurance</h3>
-          <p>Accelerate claims resolution, reduce policyholder churn, and personalise renewal campaigns with AI-driven engagement workflows.</p>
-          <span className="ind-stat">↑ 22% renewal rate</span>
-        </div>
-        <div className="ind-card-footer">
-          Explore Insurance <span className="ind-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="/solutions/government/" className="ind-card">
-        <div className="ind-card-body">
-          <div className="ind-icon-wrap" style={{background:"#faf5ff"}}>🏛️</div>
-          <h3>Government &amp; Public Sector</h3>
-          <p>Deliver citizen services at scale across WhatsApp, SMS, and digital portals — with full audit trails and compliance built in.</p>
-          <span className="ind-stat">5× citizen reach</span>
-        </div>
-        <div className="ind-card-footer">
-          Explore Government <span className="ind-arrow">→</span>
-        </div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-{/* ── STATS STRIP ── */}
-<section className="stats-strip">
-  <div className="stats-strip-inner">
-    <div className="stats-strip-head">
-      <h2>Measurable impact across every industry</h2>
-      <p>Average outcomes reported by KronGage customers in the first 12 months</p>
-    </div>
-    <div className="stats-row">
-      <div className="stat-item">
-        <div className="stat-num" data-target="3" data-suffix="×">0<span>×</span></div>
-        <div className="stat-desc">More conversations handled per agent with AI Copilot</div>
-      </div>
-      <div className="stat-item">
-        <div className="stat-num" data-target="25" data-suffix="%">0<span>%</span></div>
-        <div className="stat-desc">Increase in customer satisfaction scores</div>
-      </div>
-      <div className="stat-item">
-        <div className="stat-num" data-target="70" data-suffix="%">0<span>%</span></div>
-        <div className="stat-desc">Reduction in average response time</div>
-      </div>
-      <div className="stat-item">
-        <div className="stat-num" data-target="5" data-suffix="×">0<span>×</span></div>
-        <div className="stat-desc">More channels served from a single platform</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-{/* ── PLATFORM PREVIEW TABS ── */}
-<section className="platform-tabs">
-  <div className="platform-tabs-inner">
-    <div className="section-label">One Platform</div>
-    <h2 className="section-heading" style={{marginBottom:"40px"}}>The same platform.<br />Tuned for your industry.</h2>
-    <div className="pt-layout">
-
-      {/* Tab nav */}
-      <div className="pt-nav">
-        <div className="pt-tab active" data-tab="customer360">
-          <div className="pt-tab-icon">👥</div>
-          Customer 360
-        </div>
-        <div className="pt-tab" data-tab="inbox">
-          <div className="pt-tab-icon">📥</div>
-          Omnichannel Inbox
-        </div>
-        <div className="pt-tab" data-tab="campaigns">
-          <div className="pt-tab-icon">📣</div>
-          Campaign Management
-        </div>
-        <div className="pt-tab" data-tab="ai">
-          <div className="pt-tab-icon">🤖</div>
-          AI &amp; Automation
-        </div>
-      </div>
-
-      {/* Panels */}
-      <div>
-
-        <div className="pt-panel active" id="panel-customer360">
-          <div className="pt-panel-head">
-            <h3>A complete picture of every customer</h3>
-            <p>Regardless of which industry you operate in, KronGage gives your teams a single, continuously updated profile for every customer — combining transactional, behavioural, and communication data in one place.</p>
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#0D47A1_60%,#1565C0_100%)] px-[60px] pt-[148px] pb-[100px] max-[1024px]:px-8 max-[1024px]:pt-[132px] max-[1024px]:pb-20 max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-16">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 0h40v40H0zM40 40h40v40H40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }}
+        />
+        <div className="max-w-[1100px] mx-auto relative">
+          <div className="text-xs font-bold text-white/50 uppercase tracking-[1.5px] mb-[18px]">Industry Solutions</div>
+          <h1 className="text-[56px] font-extrabold text-white leading-[1.08] max-w-[680px] mb-5 tracking-[-1px] max-[1024px]:text-[42px] max-[640px]:text-[30px]">
+            Built for the Industries<br />That <span className="not-italic text-[#93c5fd]">Run the World</span>
+          </h1>
+          <p className="text-lg text-white/70 max-w-[540px] leading-[1.65] mb-10 max-[640px]:text-[15px]">KronGage delivers tailored customer engagement for every major vertical — from regulated banking environments to high-volume telecoms and public sector services.</p>
+          <div className="flex gap-[14px] flex-wrap mb-[60px]">
+            <a href="/contact/" className="bg-white text-[#0D47A1] px-7 py-[13px] rounded-full text-[15px] font-bold transition-opacity hover:opacity-90">Talk to a Specialist</a>
+            <a href="#industries" className="border-2 border-white/35 text-white px-[26px] py-[11px] rounded-full text-[15px] font-bold transition-colors hover:bg-white/10">Explore Industries</a>
           </div>
-          <div className="pt-iframe-wrap">
-            <iframe src="/assets/customer-360.html" title="Customer 360"></iframe>
-          </div>
-          <div className="pt-features">
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Unified customer timeline across all channels</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>AI-powered engagement &amp; loyalty scoring</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Preferred channel detection &amp; enforcement</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Next Best Action recommendations</span></div>
+          <div className="flex gap-[10px] flex-wrap">
+            {industryPills.map(pill => (
+              <div
+                key={pill.label}
+                className={`flex items-center gap-2 border rounded-full px-4 py-2 text-[13px] font-bold cursor-pointer transition-all ${pill.active ? 'bg-white text-[#0D47A1] border-white' : 'bg-white/[0.08] border-white/[0.18] text-white/80'}`}
+              >
+                <span className="text-[15px]">{pill.icon}</span>{pill.label}
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        <div className="pt-panel" id="panel-inbox">
-          <div className="pt-panel-head">
-            <h3>Every channel. One inbox.</h3>
-            <p>WhatsApp, Email, SMS, Instagram, Facebook, X — all routed into a single intelligent inbox with full customer context. Your agents never switch tools. Your customers never repeat themselves.</p>
-          </div>
-          <div className="pt-iframe-wrap">
-            <iframe src="/assets/hero-channels.html" title="Omnichannel Inbox"></iframe>
-          </div>
-          <div className="pt-features">
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>8+ channels in a unified agent workspace</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Smart routing by skill, language, and priority</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>AI-suggested replies with customer context</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>SLA tracking and escalation workflows</span></div>
+      {/* INDUSTRY CARDS */}
+      <section className="px-[60px] py-20 bg-white max-[1024px]:px-8 max-[1024px]:py-16 max-[640px]:px-5 max-[640px]:py-12" id="industries">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="text-xs font-bold text-[#0D47A1] tracking-[1.5px] uppercase mb-3">Verticals We Serve</div>
+          <h2 className="text-[36px] font-extrabold text-[#0f172a] max-w-[560px] leading-[1.2] mb-12">Deep expertise across six industries</h2>
+          <div className="grid grid-cols-3 gap-6 max-[1024px]:grid-cols-2 max-[640px]:grid-cols-1">
+            {industries.map(ind => (
+              <a
+                key={ind.href}
+                href={ind.href}
+                className="group relative rounded-[20px] overflow-hidden border border-[#e2e8f0] bg-[#f8fafc] transition-[transform,box-shadow] duration-[250ms] cursor-pointer hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(13,71,161,0.12)]"
+              >
+                <div className="px-7 pt-8 pb-7">
+                  <div className="w-14 h-14 rounded-[14px] flex items-center justify-center text-[26px] mb-5" style={{ background: ind.bg }}>{ind.icon}</div>
+                  <h3 className="text-lg font-extrabold text-[#0f172a] mb-[10px]">{ind.title}</h3>
+                  <p className="text-sm text-[#64748b] leading-[1.65] mb-5">{ind.desc}</p>
+                  <span className="inline-flex items-center gap-[6px] text-xs font-bold text-[#0D47A1] bg-[#EEF5FD] px-3 py-1 rounded-full">{ind.stat}</span>
+                </div>
+                <div className="border-t border-[#e2e8f0] px-7 py-[14px] flex items-center justify-between text-[13px] font-bold text-[#0D47A1] bg-white transition-colors group-hover:bg-[#0D47A1] group-hover:text-white">
+                  {ind.cta} <span className="transition-transform group-hover:translate-x-1">→</span>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
+      </section>
 
-        <div className="pt-panel" id="panel-campaigns">
-          <div className="pt-panel-head">
-            <h3>Campaigns that reach, convert, and retain</h3>
-            <p>Build multi-step journeys across SMS, WhatsApp, and email. Trigger based on behaviour, lifecycle stage, or custom events — and measure every outcome in real time.</p>
+      {/* STATS STRIP */}
+      <section className="bg-[linear-gradient(135deg,#0f172a_0%,#0D47A1_100%)] px-[60px] py-16 max-[1024px]:px-8 max-[1024px]:py-14 max-[640px]:px-5 max-[640px]:py-12">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-[32px] font-extrabold text-white mb-[10px]">Measurable impact across every industry</h2>
+            <p className="text-[15px] text-white/60">Average outcomes reported by KronGage customers in the first 12 months</p>
           </div>
-          <div className="pt-iframe-wrap">
-            <iframe src="/assets/campaign-management.html" title="Campaign Management"></iframe>
-          </div>
-          <div className="pt-features">
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Visual journey builder with branching logic</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Behavioural and event-based triggers</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>A/B testing across message variants</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Real-time delivery and conversion tracking</span></div>
+          <div className="grid grid-cols-4 gap-[2px] max-[1024px]:grid-cols-2 max-[640px]:grid-cols-2">
+            {impactStats.map((stat, i) => (
+              <div
+                key={stat.desc}
+                className={`text-center px-6 py-8 bg-white/[0.06] border-r border-white/[0.08] last:border-r-0 max-[1024px]:border-b max-[1024px]:odd:border-r max-[1024px]:[&:nth-last-child(-n+2)]:border-b-0`}
+              >
+                <div className="text-[52px] font-black text-white leading-none mb-2 [font-variant-numeric:tabular-nums]">0<span className="text-[32px] text-[#93c5fd]">{stat.suffix}</span></div>
+                <div className="text-[13px] text-white/55 font-semibold leading-[1.5] max-w-[160px] mx-auto">{stat.desc}</div>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        <div className="pt-panel" id="panel-ai">
-          <div className="pt-panel-head">
-            <h3>AI that works around the clock</h3>
-            <p>Automate tier-1 queries, draft contextual replies, detect intent, and escalate complex cases — all without losing the human touch your customers expect.</p>
-          </div>
-          <div className="pt-iframe-wrap">
-            <iframe src="/assets/hero-chatbot.html" title="AI Automation"></iframe>
-          </div>
-          <div className="pt-features">
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>AI agents for 24/7 tier-1 resolution</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Contextual reply suggestions for human agents</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Intent detection and smart escalation</span></div>
-            <div className="pt-feat"><div className="pt-feat-dot"></div><span>Multilingual support across all channels</span></div>
+      {/* PLATFORM PREVIEW TABS */}
+      <section className="px-[60px] py-20 bg-[#f8fafc] max-[1024px]:px-8 max-[1024px]:py-16 max-[640px]:px-5 max-[640px]:py-12">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="text-xs font-bold text-[#0D47A1] tracking-[1.5px] uppercase mb-3">One Platform</div>
+          <h2 className="text-[36px] font-extrabold text-[#0f172a] max-w-[560px] leading-[1.2] mb-10">The same platform.<br />Tuned for your industry.</h2>
+          <div className="grid grid-cols-[280px_1fr] gap-12 items-start max-[1024px]:grid-cols-1">
+
+            {/* Tab nav */}
+            <div className="flex flex-col gap-1 sticky top-[88px] max-[1024px]:flex-row max-[1024px]:flex-wrap max-[1024px]:static">
+              {platformTabs.map((tab, i) => (
+                <div
+                  key={tab.key}
+                  className={`flex items-center gap-[14px] px-4 py-[14px] rounded-xl text-sm font-bold cursor-pointer transition-all border ${i === 0 ? 'bg-white text-[#0D47A1] border-[#e2e8f0] shadow-[0_2px_12px_rgba(13,71,161,0.08)]' : 'text-[#64748b] border-transparent hover:bg-white hover:text-[#0f172a]'}`}
+                >
+                  <div className={`w-9 h-9 rounded-[9px] flex items-center justify-center text-lg shrink-0 ${i === 0 ? 'bg-[#0D47A1]' : 'bg-[#EEF5FD]'}`}>{tab.icon}</div>
+                  {tab.label}
+                </div>
+              ))}
+            </div>
+
+            {/* Panels */}
+            <div>
+              <div>
+                <div className="mb-7">
+                  <h3 className="text-[28px] font-extrabold text-[#0f172a] mb-[10px]">A complete picture of every customer</h3>
+                  <p className="text-[15px] text-[#64748b] leading-[1.7]">Regardless of which industry you operate in, KronGage gives your teams a single, continuously updated profile for every customer — combining transactional, behavioural, and communication data in one place.</p>
+                </div>
+                <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_16px_48px_rgba(13,71,161,0.12)] border border-[#e2e8f0] mb-6">
+                  <Customer360 />
+                </div>
+                <div className="grid grid-cols-2 gap-[14px] max-[640px]:grid-cols-1">
+                  {featureBullets.customer360.map(f => (
+                    <div key={f} className="flex items-start gap-[10px] bg-white rounded-xl px-4 py-[14px] border border-[#e2e8f0]">
+                      <div className="w-2 h-2 rounded-full bg-[#0D47A1] mt-[5px] shrink-0" /><span className="text-[13px] font-semibold text-[#374151] leading-[1.45]">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden">
+                <div className="mb-7">
+                  <h3 className="text-[28px] font-extrabold text-[#0f172a] mb-[10px]">Every channel. One inbox.</h3>
+                  <p className="text-[15px] text-[#64748b] leading-[1.7]">WhatsApp, Email, SMS, Instagram, Facebook, X — all routed into a single intelligent inbox with full customer context. Your agents never switch tools. Your customers never repeat themselves.</p>
+                </div>
+                <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_16px_48px_rgba(13,71,161,0.12)] border border-[#e2e8f0] mb-6">
+                  <HeroChannels />
+                </div>
+                <div className="grid grid-cols-2 gap-[14px] max-[640px]:grid-cols-1">
+                  {featureBullets.inbox.map(f => (
+                    <div key={f} className="flex items-start gap-[10px] bg-white rounded-xl px-4 py-[14px] border border-[#e2e8f0]">
+                      <div className="w-2 h-2 rounded-full bg-[#0D47A1] mt-[5px] shrink-0" /><span className="text-[13px] font-semibold text-[#374151] leading-[1.45]">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden">
+                <div className="mb-7">
+                  <h3 className="text-[28px] font-extrabold text-[#0f172a] mb-[10px]">Campaigns that reach, convert, and retain</h3>
+                  <p className="text-[15px] text-[#64748b] leading-[1.7]">Build multi-step journeys across SMS, WhatsApp, and email. Trigger based on behaviour, lifecycle stage, or custom events — and measure every outcome in real time.</p>
+                </div>
+                <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_16px_48px_rgba(13,71,161,0.12)] border border-[#e2e8f0] mb-6">
+                  <CampaignManagement />
+                </div>
+                <div className="grid grid-cols-2 gap-[14px] max-[640px]:grid-cols-1">
+                  {featureBullets.campaigns.map(f => (
+                    <div key={f} className="flex items-start gap-[10px] bg-white rounded-xl px-4 py-[14px] border border-[#e2e8f0]">
+                      <div className="w-2 h-2 rounded-full bg-[#0D47A1] mt-[5px] shrink-0" /><span className="text-[13px] font-semibold text-[#374151] leading-[1.45]">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden">
+                <div className="mb-7">
+                  <h3 className="text-[28px] font-extrabold text-[#0f172a] mb-[10px]">AI that works around the clock</h3>
+                  <p className="text-[15px] text-[#64748b] leading-[1.7]">Automate tier-1 queries, draft contextual replies, detect intent, and escalate complex cases — all without losing the human touch your customers expect.</p>
+                </div>
+                <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_16px_48px_rgba(13,71,161,0.12)] border border-[#e2e8f0] mb-6">
+                  <HeroChatbot />
+                </div>
+                <div className="grid grid-cols-2 gap-[14px] max-[640px]:grid-cols-1">
+                  {featureBullets.ai.map(f => (
+                    <div key={f} className="flex items-start gap-[10px] bg-white rounded-xl px-4 py-[14px] border border-[#e2e8f0]">
+                      <div className="w-2 h-2 rounded-full bg-[#0D47A1] mt-[5px] shrink-0" /><span className="text-[13px] font-semibold text-[#374151] leading-[1.45]">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-      </div>
-    </div>
-  </div>
-</section>
-
-{/* ── CTA ── */}
-<section className="cta">
-  <div className="cta-inner">
-    <div className="cta-text">
-      <h2>Ready to see KronGage in your industry?</h2>
-      <p>Talk to one of our industry specialists and see how KronGage is already transforming customer engagement for organisations like yours across Africa, the Middle East, and beyond.</p>
-    </div>
-    <div className="cta-actions">
-      <a href="/contact/" className="btn-cta-primary">Book a Demo</a>
-      <a href="/platform/" className="btn-cta-ghost">Explore Platform</a>
-    </div>
-  </div>
-</section>
-
-{/* ── FOOTER ── */}
+      {/* CTA */}
+      <section className="px-[60px] py-[100px] bg-white max-[1024px]:px-8 max-[1024px]:py-16 max-[640px]:px-5 max-[640px]:py-10">
+        <div className="max-w-[1100px] mx-auto bg-[linear-gradient(135deg,#0f172a_0%,#0D47A1_60%,#1565C0_100%)] rounded-[28px] px-20 py-[72px] grid grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden max-[1024px]:grid-cols-1 max-[1024px]:px-12 max-[1024px]:py-12 max-[640px]:px-7 max-[640px]:py-9">
+          <div className="absolute right-[-60px] top-[-60px] w-[300px] h-[300px] rounded-full bg-white/[0.04] pointer-events-none" />
+          <div className="absolute right-[60px] bottom-[-80px] w-[200px] h-[200px] rounded-full bg-white/[0.03] pointer-events-none" />
+          <div className="relative">
+            <h2 className="text-4xl font-extrabold text-white mb-[14px] leading-[1.2] max-[640px]:text-[26px]">Ready to see KronGage in your industry?</h2>
+            <p className="text-base text-white/70 leading-[1.65] max-w-[500px]">Talk to one of our industry specialists and see how KronGage is already transforming customer engagement for organisations like yours across Africa, the Middle East, and beyond.</p>
+          </div>
+          <div className="flex flex-col gap-3 shrink-0 relative max-[1024px]:flex-row max-[640px]:flex-col">
+            <a href="/contact/" className="bg-white text-[#0D47A1] px-[30px] py-[14px] rounded-full text-[15px] font-bold text-center whitespace-nowrap transition-opacity hover:opacity-90">Book a Demo</a>
+            <a href="/platform/" className="border-2 border-white/35 text-white px-7 py-3 rounded-full text-[15px] font-bold text-center whitespace-nowrap transition-colors hover:bg-white/10">Explore Platform</a>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

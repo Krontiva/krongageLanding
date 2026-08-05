@@ -28,91 +28,86 @@ const COMPANY_LINKS = [
   ['Sitemap', '/sitemap'],
 ];
 
+const footerLinkClass = "text-[#94a3b8] no-underline text-sm transition-colors hover:text-white";
+const bottomLinkClass = "text-[#475569] no-underline text-[13px] transition-colors hover:text-[#94a3b8]";
+
 export default function Footer() {
   return (
-    <footer style={{ fontFamily: 'Manrope, system-ui, sans-serif', background: '#0f172a', color: '#fff' }}>
-      <style>{`
-        .ft-link { color: #94a3b8; text-decoration: none; font-size: 14px; transition: color 0.15s; }
-        .ft-link:hover { color: #fff; }
-        .ft-bottom-link { color: #475569; text-decoration: none; font-size: 13px; transition: color 0.15s; }
-        .ft-bottom-link:hover { color: #94a3b8; }
-        @media (max-width: 768px) { .ft-grid { grid-template-columns: 1fr 1fr !important; } .ft-brand { grid-column: span 2 !important; } }
-        @media (max-width: 480px) { .ft-grid { grid-template-columns: 1fr !important; } .ft-brand { grid-column: span 1 !important; } }
-      `}</style>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', paddingLeft: '32px', paddingRight: '32px', paddingTop: '64px', paddingBottom: '40px' }}>
+    <footer className="bg-[#0f172a] text-white">
+      <div className="max-w-[1200px] mx-auto px-8 pt-16 pb-10">
 
         {/* Main grid */}
-        <div className="ft-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '40px', marginBottom: '56px' }}>
+        <div className="grid grid-cols-4 gap-10 mb-14 max-[768px]:grid-cols-2 max-[480px]:grid-cols-1">
 
           {/* Brand column */}
-          <div className="ft-brand">
-            <div style={{ fontSize: '24px', fontWeight: 800, color: '#60a5fa', marginBottom: '12px', letterSpacing: '-0.02em' }}>
+          <div className="max-[768px]:col-span-2 max-[480px]:col-span-1">
+            <div className="text-2xl font-extrabold text-[#60a5fa] mb-3 tracking-[-0.02em]">
               KronGage
             </div>
-            <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.6, marginBottom: '6px' }}>
+            <p className="text-[13px] text-[#64748b] leading-[1.6] mb-[6px]">
               Enterprise AI Customer Engagement — World-Class Platform
             </p>
-            <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.7 }}>
+            <p className="text-xs text-[#475569] leading-[1.7]">
               Developed by Krontiva.<br />
               Delivering world-class enterprise solutions globally.<br />
               Certified Meta WhatsApp Technology Provider.
             </p>
 
             {/* Meta badge */}
-            <div style={{ marginTop: '20px', display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#1e293b', borderRadius: '10px', paddingLeft: '14px', paddingRight: '14px', paddingTop: '10px', paddingBottom: '10px' }}>
-              <div style={{ background: '#1877F2', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div className="mt-5 inline-flex items-center gap-[10px] bg-[#1e293b] rounded-[10px] px-[14px] py-[10px]">
+              <div className="bg-[#1877F2] rounded-full w-7 h-7 flex items-center justify-center shrink-0">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
               </div>
               <div>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: '#fff' }}>Certified Meta</div>
-                <div style={{ fontSize: '10px', color: '#94a3b8' }}>WhatsApp Business Partner</div>
+                <div className="text-[11px] font-bold text-white">Certified Meta</div>
+                <div className="text-[10px] text-[#94a3b8]">WhatsApp Business Partner</div>
               </div>
             </div>
           </div>
 
           {/* Platform */}
           <div>
-            <h4 style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#64748b', marginBottom: '20px' }}>Platform</h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h4 className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#64748b] mb-5">Platform</h4>
+            <ul className="list-none flex flex-col gap-3">
               {PLATFORM_LINKS.map(([label, href]) => (
-                <li key={href}><Link href={href} className="ft-link">{label}</Link></li>
+                <li key={href}><Link href={href} className={footerLinkClass}>{label}</Link></li>
               ))}
             </ul>
           </div>
 
           {/* Solutions */}
           <div>
-            <h4 style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#64748b', marginBottom: '20px' }}>Solutions</h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h4 className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#64748b] mb-5">Solutions</h4>
+            <ul className="list-none flex flex-col gap-3">
               {SOLUTIONS_LINKS.map(([label, href]) => (
-                <li key={href}><Link href={href} className="ft-link">{label}</Link></li>
+                <li key={href}><Link href={href} className={footerLinkClass}>{label}</Link></li>
               ))}
             </ul>
           </div>
 
           {/* Company */}
           <div>
-            <h4 style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#64748b', marginBottom: '20px' }}>Company</h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h4 className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#64748b] mb-5">Company</h4>
+            <ul className="list-none flex flex-col gap-3">
               {COMPANY_LINKS.map(([label, href]) => (
-                <li key={href}><Link href={href} className="ft-link">{label}</Link></li>
+                <li key={href}><Link href={href} className={footerLinkClass}>{label}</Link></li>
               ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div style={{ borderTop: '1px solid #1e293b', paddingTop: '28px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-          <span style={{ fontSize: '13px', color: '#475569' }}>
+        <div className="border-t border-[#1e293b] pt-7 flex flex-wrap items-center justify-between gap-3">
+          <span className="text-[13px] text-[#475569]">
             © {new Date().getFullYear()} Krontiva. KronGage is a product of Krontiva Ltd. All Rights Reserved.
           </span>
-          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-            <Link href="/privacy-policy" className="ft-bottom-link">Privacy Policy</Link>
-            <Link href="/terms-of-service" className="ft-bottom-link">Terms of Service</Link>
-            <Link href="/data-protection" className="ft-bottom-link">Data Protection</Link>
-            <Link href="/sitemap" className="ft-bottom-link">Sitemap</Link>
+          <div className="flex gap-6 flex-wrap">
+            <Link href="/privacy-policy" className={bottomLinkClass}>Privacy Policy</Link>
+            <Link href="/terms-of-service" className={bottomLinkClass}>Terms of Service</Link>
+            <Link href="/data-protection" className={bottomLinkClass}>Data Protection</Link>
+            <Link href="/sitemap" className={bottomLinkClass}>Sitemap</Link>
           </div>
         </div>
       </div>

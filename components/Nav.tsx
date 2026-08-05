@@ -1,51 +1,49 @@
-'use client';
-import { useState } from 'react';
+﻿'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { AnimatePresence, motion } from 'motion/react';
+import {
+  ArrowRightIcon,
+  CaretDownIcon,
+  UsersThreeIcon,
+  ChatsCircleIcon,
+  MegaphoneIcon,
+  SparkleIcon,
+  DeviceMobileIcon,
+  WaveformIcon,
+  EnvelopeSimpleIcon,
+  GlobeIcon,
+  ChatCircleTextIcon,
+  WhatsappLogoIcon,
+  LockSimpleIcon,
+  ChartBarIcon,
+  SquaresFourIcon,
+} from '@phosphor-icons/react';
+import { Menu, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
-// Inline Material Design SVG icon
-function Icon({ path, size = 18, color = '#0D47A1' }: { path: string; size?: number; color?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} style={{ flexShrink: 0 }}>
-      <path d={path} />
-    </svg>
-  );
-}
-
-// Material icon paths
-const ICONS = {
-  peopleAlt:  'M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z',
-  forum:      'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z',
-  campaign:   'M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.61-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.62zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z',
-  autoAwesome:'M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z',
-  phoneIphone:'M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5S10.67 19 11.5 19s1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z',
-  graphicEq:  'M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V6h-2v12zm4-8v4h2v-4h-2z',
-  email:      'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
-  language:   'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.91-4.33-3.56zm2.95-8H5.08c.96-1.65 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z',
-  sms:        'M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z',
-  chat:       'M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z',
-  lock:       'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z',
-  barChart:   'M4 9h4v11H4zm6-5h4v16h-4zm6 8h4v8h-4z',
-  apps:       'M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z',
-};
+const MotionLink = motion.create(Link);
+const MotionAnchor = motion.create('a');
 
 const PLATFORM_OVERVIEW = [
-  { label: 'Customer 360',     href: '/platform/customer-data',      desc: 'Know who your customer is regardless of the touch point or channel.', icon: 'peopleAlt' as const },
-  { label: 'Omnichannel Inbox',href: '/platform/omnichannel-inbox',   desc: 'Send all messages from one place.',                                   icon: 'forum' as const },
+  { label: 'Customer 360',     href: '/platform/customer-data',      desc: 'Know who your customer is regardless of the touch point or channel.', Icon: UsersThreeIcon },
+  { label: 'Omnichannel Inbox',href: '/platform/omnichannel-inbox',   desc: 'Send all messages from one place.',                                   Icon: ChatsCircleIcon },
 ];
 
 const PLATFORM_CAPABILITIES = [
-  { label: 'Campaign Management',     href: '/platform/campaign-management', desc: 'Manage the customer journey for SMS, WhatsApp and email', icon: 'campaign' as const },
-  { label: 'AI Automation',           href: '/platform/ai-automation',       desc: 'Automate the mundane communication flows',              icon: 'autoAwesome' as const },
-  { label: 'Social Media Management', href: '/platform/social-media',        desc: 'All your social media channels in one place.',          icon: 'phoneIphone' as const },
-  { label: 'Social Listening',        href: '/platform/social-intelligence',  desc: 'Monitor conversations across all social channels.',     icon: 'graphicEq' as const },
+  { label: 'Campaign Management',     href: '/platform/campaign-management', desc: 'Manage the customer journey for SMS, WhatsApp and email', Icon: MegaphoneIcon },
+  { label: 'AI Automation',           href: '/platform/ai-automation',       desc: 'Automate the mundane communication flows',              Icon: SparkleIcon },
+  { label: 'Social Media Management', href: '/platform/social-media',        desc: 'All your social media channels in one place.',          Icon: DeviceMobileIcon },
+  { label: 'Social Listening',        href: '/platform/social-intelligence',  desc: 'Monitor conversations across all social channels.',     Icon: WaveformIcon },
 ];
 
 const PLATFORM_CHANNELS = [
-  { label: 'Email',      icon: 'email' as const,    href: '/platform/channels/email' },
-  { label: 'Web Messaging', icon: 'language' as const, href: '/platform/channels/web' },
-  { label: 'SMS / RCS',  icon: 'sms' as const,      href: '/platform/channels/sms' },
-  { label: 'WhatsApp',   icon: 'chat' as const,     href: '/platform/channels/whatsapp' },
+  { label: 'Email',      Icon: EnvelopeSimpleIcon,   href: '/platform/channels/email' },
+  { label: 'Web Messaging', Icon: GlobeIcon,          href: '/platform/channels/web' },
+  { label: 'SMS / RCS',  Icon: ChatCircleTextIcon,    href: '/platform/channels/sms' },
+  { label: 'WhatsApp',   Icon: WhatsappLogoIcon,      href: '/platform/channels/whatsapp' },
 ];
 
 const SOLUTIONS_INDUSTRIES = [
@@ -57,215 +55,341 @@ const SOLUTIONS_INDUSTRIES = [
   { label: 'Government & Public Sector',href: '/solutions/government' },
 ];
 
+const MOBILE_NAV_ITEMS = [
+  { href: '/', label: 'Home' },
+  { href: '/platform', label: 'Platform' },
+  { href: '/solutions', label: 'Solutions' },
+];
+
+const megaItemClass = "flex items-start gap-[10px] p-[10px] rounded-[10px] no-underline transition-colors hover:bg-[#f8fafc]";
+const channelItemClass = "flex items-center gap-2 px-[10px] py-[7px] rounded-lg no-underline text-[#334155] text-[13px] font-medium transition-colors hover:bg-[#f8fafc]";
+const solutionsItemClass = "block px-3 py-2 rounded-lg no-underline text-[#334155] text-sm font-medium transition-colors hover:bg-[#f8fafc] hover:text-[#0D47A1]";
+
+const dropdownTransition = { duration: 0.18, ease: 'easeOut' as const };
+
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <MotionLink
+      href={href}
+      className="relative pb-1 text-sm font-semibold text-[#475569] transition-colors hover:text-[#0f172a] focus-visible:outline-none focus-visible:text-[#0f172a]"
+      initial="initial"
+      whileHover="hover"
+    >
+      {children}
+      <motion.span
+        className="absolute bottom-0 left-0 right-0 h-[2px] origin-left rounded-full bg-[#0D47A1]"
+        variants={{ initial: { scaleX: 0 }, hover: { scaleX: 1 } }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      />
+    </MotionLink>
+  );
+}
+
+function MegaTrigger({
+  label,
+  active,
+  onEnter,
+  onLeave,
+}: {
+  label: string;
+  active: boolean;
+  onEnter: () => void;
+  onLeave: () => void;
+}) {
+  return (
+    <button
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      className="bg-none border-none cursor-pointer [font-family:Manrope,system-ui,sans-serif] text-sm font-semibold text-[#475569] flex items-center gap-1 transition-colors p-0 hover:text-[#0f172a]"
+    >
+      {label} <CaretDownIcon size={12} weight="bold" className={cn('transition-transform duration-150', active && 'rotate-180')} />
+    </button>
+  );
+}
+
+function MobileNavLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="flex min-h-12 items-center justify-between rounded-xl border border-[#f1f5f9] bg-white/70 px-4 text-[15px] font-semibold text-[#334155] no-underline transition-colors hover:bg-[#f8fafc] hover:text-[#0D47A1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0D47A1]/40"
+    >
+      <span>{label}</span>
+    </Link>
+  );
+}
+
 export default function Nav() {
   const [open, setOpen] = useState<'platform' | 'solutions' | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
 
   return (
     <>
-      <style>{`
-        .nav-link { color: #475569; text-decoration: none; font-size: 14px; font-weight: 600; transition: color 0.15s; }
-        .nav-link:hover { color: #0f172a; }
-        .nav-dropdown-btn { background: none; border: none; cursor: pointer; font-family: Manrope, system-ui, sans-serif; font-size: 14px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 4px; transition: color 0.15s; padding: 0; }
-        .nav-dropdown-btn:hover { color: #0f172a; }
-        .mega-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 10px; text-decoration: none; transition: background 0.12s; }
-        .mega-item:hover { background: #f8fafc; }
-        .channel-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 8px; text-decoration: none; color: #334155; font-size: 13px; font-weight: 500; transition: background 0.12s; }
-        .channel-item:hover { background: #f8fafc; }
-        .solutions-item { display: block; padding: 8px 12px; border-radius: 8px; text-decoration: none; color: #334155; font-size: 14px; font-weight: 500; transition: background 0.12s; }
-        .solutions-item:hover { background: #f8fafc; color: #0D47A1; }
-        @media (min-width: 768px) { .nav-desktop { display: flex !important; } .nav-mobile-btn { display: none !important; } }
-      `}</style>
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-3 md:px-6 lg:px-8 lg:pt-4 [font-family:Manrope,system-ui,sans-serif]">
+        <nav
+          className={cn(
+            'pointer-events-auto mx-auto w-full max-w-[1200px] rounded-2xl border transition-all duration-300 ease-in-out',
+            scrolled
+              ? 'border-[#0D47A1]/12 bg-white/85 shadow-[0_12px_40px_rgba(13,71,161,0.10)] backdrop-blur-xl'
+              : 'border-transparent bg-white/70 shadow-none backdrop-blur-md'
+          )}
+        >
+          <div className="flex items-center justify-between h-16 px-5 lg:h-[68px] lg:px-8">
 
-      {/* display:block + padding:0 override page-level `nav { display:flex; padding:... }` CSS on inner pages */}
-      <nav style={{ fontFamily: 'Manrope, system-ui, sans-serif', display: 'block', position: 'sticky', top: 0, zIndex: 50, background: '#fff', borderBottom: '1px solid #f1f5f9', padding: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px', maxWidth: '1200px', margin: '0 auto', paddingLeft: '32px', paddingRight: '32px' }}>
-
-          {/* Logo */}
-          <Link href="/" style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-            <Image src="/Krongage-Logo.png" alt="KronGage" width={38} height={38} style={{ height: '38px', width: 'auto' }} />
-          </Link>
-
-          {/* Desktop nav links */}
-          <ul className="nav-desktop" style={{ display: 'none', alignItems: 'center', gap: '32px', listStyle: 'none', margin: 0, padding: 0 }}>
-            <li><Link href="/" className="nav-link">Home</Link></li>
-            <li><Link href="/platform" className="nav-link">Why KronGage?</Link></li>
-
-            {/* Platform mega */}
-            <li style={{ position: 'relative' }}
-              onMouseEnter={() => setOpen('platform')}
-              onMouseLeave={() => setOpen(null)}>
-              <button className="nav-dropdown-btn">
-                Platform <span style={{ fontSize: '10px' }}>{open === 'platform' ? '▲' : '▾'}</span>
-              </button>
-              {open === 'platform' && (
-                <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', paddingTop: '8px', zIndex: 100 }}>
-                <div style={{
-                  width: '760px', background: '#fff', borderRadius: '16px',
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9',
-                  display: 'grid', gridTemplateColumns: '240px 1fr 190px',
-                }}>
-                  {/* Left: Overview */}
-                  <div style={{ padding: '24px', borderRight: '1px solid #f1f5f9' }}>
-                    <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>The KronGage Platform</div>
-                    <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.6, marginBottom: '14px' }}>All your customer data, channels and engagement orchestration in one place.</p>
-                    <Link href="/platform" style={{ fontSize: '13px', fontWeight: 700, color: '#0D47A1', textDecoration: 'none' }}>View the platform →</Link>
-                    <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {PLATFORM_OVERVIEW.map(item => (
-                        <a key={item.href} href={item.href} className="mega-item">
-                          <div style={{ width: 32, height: 32, background: '#EEF5FD', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <Icon path={ICONS[item.icon]} size={17} />
-                          </div>
-                          <div>
-                            <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{item.label}</div>
-                            <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>{item.desc}</div>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Middle: Featured Capabilities */}
-                  <div style={{ padding: '24px', borderRight: '1px solid #f1f5f9' }}>
-                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', marginBottom: '14px' }}>Featured Capabilities</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {PLATFORM_CAPABILITIES.map(item => (
-                        <a key={item.href} href={item.href} className="mega-item">
-                          <div style={{ width: 32, height: 32, background: '#EEF5FD', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <Icon path={ICONS[item.icon]} size={17} />
-                          </div>
-                          <div>
-                            <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{item.label}</div>
-                            <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>{item.desc}</div>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Right: Featured Channels */}
-                  <div style={{ padding: '24px 16px' }}>
-                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', marginBottom: '14px' }}>Featured Channels</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      {PLATFORM_CHANNELS.map(ch => (
-                        <a key={ch.href} href={ch.href} className="channel-item">
-                          <Icon path={ICONS[ch.icon]} size={16} color="#475569" />
-                          <span>{ch.label}</span>
-                        </a>
-                      ))}
-                      <a href="/platform/channels" style={{ fontSize: '12px', fontWeight: 700, color: '#0D47A1', textDecoration: 'none', paddingLeft: '10px', paddingTop: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Icon path={ICONS.apps} size={14} /> View All Channels
-                      </a>
-                    </div>
-                    <div style={{ marginTop: '14px', background: '#EEF5FD', borderRadius: '10px', padding: '12px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                      <div style={{ background: '#0D47A1', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <Icon path={ICONS.lock} size={16} color="#fff" />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '12px', fontWeight: 700, color: '#0f172a' }}>How it works?</div>
-                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>Understand how our omnichannel inbox works to keep message clutter at bay.</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-              )}
-            </li>
-
-            {/* Solutions mega */}
-            <li style={{ position: 'relative' }}
-              onMouseEnter={() => setOpen('solutions')}
-              onMouseLeave={() => setOpen(null)}>
-              <button className="nav-dropdown-btn">
-                Solutions <span style={{ fontSize: '10px' }}>{open === 'solutions' ? '▲' : '▾'}</span>
-              </button>
-              {open === 'solutions' && (
-                <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', paddingTop: '8px', zIndex: 100 }}>
-                <div style={{
-                  width: '520px', background: '#fff', borderRadius: '16px',
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9',
-                  display: 'grid', gridTemplateColumns: '210px 1fr',
-                }}>
-                  {/* Left: Industries */}
-                  <div style={{ padding: '20px', borderRight: '1px solid #f1f5f9' }}>
-                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', marginBottom: '12px' }}>Industries</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      {SOLUTIONS_INDUSTRIES.map(item => (
-                        <a key={item.href} href={item.href} className="solutions-item">{item.label}</a>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Right: Feature highlight */}
-                  <div style={{ padding: '20px' }}>
-                    <div style={{ background: 'linear-gradient(135deg, #EEF5FD 0%, #dbeafe 100%)', borderRadius: '10px', height: '90px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
-                      <Icon path={ICONS.barChart} size={48} color="#0D47A1" />
-                    </div>
-                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', lineHeight: 1.4, marginBottom: '6px' }}>
-                      The Retention Gap: Why Success Teams Struggle
-                    </div>
-                    <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.5 }}>
-                      In an era of endless options, &ldquo;customer success&rdquo; has become more than just a department — it&apos;s a survival strategy.
-                    </p>
-                  </div>
-                </div>
-                </div>
-              )}
-            </li>
-          </ul>
-
-          {/* Desktop CTA */}
-          <div className="nav-desktop" style={{ display: 'none', alignItems: 'center', gap: '20px' }}>
-            <a
-              href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'}/`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ fontSize: '14px', fontWeight: 600, color: '#0D47A1', textDecoration: 'none' }}
-            >
-              Log in
-            </a>
-            <Link
-              href="/pricing"
-              style={{
-                background: '#0D47A1', color: '#fff', textDecoration: 'none',
-                padding: '10px 20px', borderRadius: '50px', fontSize: '14px', fontWeight: 700,
-              }}
-            >
-              Get Started
+            {/* Logo */}
+            <Link href="/" className="shrink-0 flex items-center">
+              <Image src="/Krongage-Logo.png" alt="KronGage" width={38} height={38} className="h-8 w-auto lg:h-[38px]" />
             </Link>
+
+            {/* Desktop nav links */}
+            <ul className="hidden md:flex items-center gap-8 list-none m-0 p-0">
+              <li><NavLink href="/">Home</NavLink></li>
+
+              {/* Platform mega */}
+              <li className="relative"
+                onMouseEnter={() => setOpen('platform')}
+                onMouseLeave={() => setOpen(null)}>
+                <MegaTrigger
+                  label="Platform"
+                  active={open === 'platform'}
+                  onEnter={() => setOpen('platform')}
+                  onLeave={() => setOpen(null)}
+                />
+                <AnimatePresence>
+                  {open === 'platform' && (
+                    <motion.div
+                      className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-[100]"
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={dropdownTransition}
+                    >
+                      <div className="w-[760px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-[#f1f5f9] grid grid-cols-[240px_1fr_190px]">
+                        {/* Left: Overview */}
+                        <div className="p-6 border-r border-[#f1f5f9]">
+                          <div className="text-[15px] font-extrabold text-[#0f172a] mb-[6px]">The KronGage Platform</div>
+                          <p className="text-xs text-[#64748b] leading-[1.6] mb-[14px]">All your customer data, channels and engagement orchestration in one place.</p>
+                          <Link href="/platform" className="text-[13px] font-bold text-[#0D47A1] no-underline inline-flex items-center gap-1">
+                            View the platform <ArrowRightIcon size={13} weight="bold" />
+                          </Link>
+                          <div className="mt-5 flex flex-col gap-1">
+                            {PLATFORM_OVERVIEW.map(item => (
+                              <a key={item.href} href={item.href} className={megaItemClass}>
+                                <div className="w-8 h-8 bg-[#EEF5FD] rounded-lg flex items-center justify-center shrink-0">
+                                  <item.Icon size={17} weight="duotone" color="#0D47A1" />
+                                </div>
+                                <div>
+                                  <div className="text-[13px] font-bold text-[#0f172a]">{item.label}</div>
+                                  <div className="text-[11px] text-[#64748b] mt-0.5 leading-[1.4]">{item.desc}</div>
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Middle: Featured Capabilities */}
+                        <div className="p-6 border-r border-[#f1f5f9]">
+                          <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#94a3b8] mb-[14px]">Featured Capabilities</div>
+                          <div className="flex flex-col gap-1">
+                            {PLATFORM_CAPABILITIES.map(item => (
+                              <a key={item.href} href={item.href} className={megaItemClass}>
+                                <div className="w-8 h-8 bg-[#EEF5FD] rounded-lg flex items-center justify-center shrink-0">
+                                  <item.Icon size={17} weight="duotone" color="#0D47A1" />
+                                </div>
+                                <div>
+                                  <div className="text-[13px] font-bold text-[#0f172a]">{item.label}</div>
+                                  <div className="text-[11px] text-[#64748b] mt-0.5 leading-[1.4]">{item.desc}</div>
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Right: Featured Channels */}
+                        <div className="px-4 py-6">
+                          <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#94a3b8] mb-[14px]">Featured Channels</div>
+                          <div className="flex flex-col gap-0.5">
+                            {PLATFORM_CHANNELS.map(ch => (
+                              <a key={ch.href} href={ch.href} className={channelItemClass}>
+                                <ch.Icon size={16} weight="duotone" color="#475569" />
+                                <span>{ch.label}</span>
+                              </a>
+                            ))}
+                            <a href="/platform/channels" className="text-xs font-bold text-[#0D47A1] no-underline pl-[10px] pt-2 flex items-center gap-[6px]">
+                              <SquaresFourIcon size={14} weight="duotone" color="#0D47A1" /> View All Channels
+                            </a>
+                          </div>
+                          <div className="mt-[14px] bg-[#EEF5FD] rounded-[10px] p-3 flex items-start gap-[10px]">
+                            <div className="bg-[#0D47A1] rounded-lg w-8 h-8 flex items-center justify-center shrink-0">
+                              <LockSimpleIcon size={16} weight="duotone" color="#fff" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-[#0f172a]">How it works?</div>
+                              <div className="text-[11px] text-[#64748b] mt-0.5 leading-[1.4]">Understand how our omnichannel inbox works to keep message clutter at bay.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </li>
+
+              {/* Solutions mega */}
+              <li className="relative"
+                onMouseEnter={() => setOpen('solutions')}
+                onMouseLeave={() => setOpen(null)}>
+                <MegaTrigger
+                  label="Solutions"
+                  active={open === 'solutions'}
+                  onEnter={() => setOpen('solutions')}
+                  onLeave={() => setOpen(null)}
+                />
+                <AnimatePresence>
+                  {open === 'solutions' && (
+                    <motion.div
+                      className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-[100]"
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={dropdownTransition}
+                    >
+                      <div className="w-[520px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-[#f1f5f9] grid grid-cols-[210px_1fr]">
+                        {/* Left: Industries */}
+                        <div className="p-5 border-r border-[#f1f5f9]">
+                          <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#94a3b8] mb-3">Industries</div>
+                          <div className="flex flex-col gap-0.5">
+                            {SOLUTIONS_INDUSTRIES.map(item => (
+                              <a key={item.href} href={item.href} className={solutionsItemClass}>{item.label}</a>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Right: Feature highlight */}
+                        <div className="p-5">
+                          <div className="bg-[linear-gradient(135deg,#EEF5FD_0%,#dbeafe_100%)] rounded-[10px] h-[90px] flex items-center justify-center mb-[14px]">
+                            <ChartBarIcon size={48} weight="duotone" color="#0D47A1" />
+                          </div>
+                          <div className="text-[13px] font-bold text-[#0f172a] leading-[1.4] mb-[6px]">
+                            The Retention Gap: Why Success Teams Struggle
+                          </div>
+                          <p className="text-xs text-[#64748b] leading-[1.5]">
+                            In an era of endless options, &ldquo;customer success&rdquo; has become more than just a department — it&apos;s a survival strategy.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </li>
+
+              <li><NavLink href="/pricing">Pricing</NavLink></li>
+            </ul>
+
+            {/* Desktop CTA */}
+            <div className="hidden md:flex items-center gap-5">
+              <MotionAnchor
+                href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-muted-foreground no-underline transition-colors hover:text-foreground"
+                whileTap={{ scale: 0.97 }}
+              >
+                Log in
+              </MotionAnchor>
+              <Button asChild className="rounded-full px-5 text-sm font-bold">
+                <MotionLink
+                  href="/pricing"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                >
+                  Start Free Trial
+                </MotionLink>
+              </Button>
+            </div>
+
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(current => !current)}
+              className="flex md:hidden h-10 w-10 items-center justify-center rounded-full border border-[#f1f5f9] bg-white/80 text-[#475569] transition-colors hover:text-[#0f172a]"
+            >
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
+        </nav>
+      </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className="nav-mobile-btn"
-            style={{ display: 'flex', flexDirection: 'column', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            <span style={{ width: '20px', height: '2px', background: '#475569', display: 'block' }} />
-            <span style={{ width: '20px', height: '2px', background: '#475569', display: 'block' }} />
-            <span style={{ width: '20px', height: '2px', background: '#475569', display: 'block' }} />
-          </button>
-        </div>
-
-        {/* Mobile menu */}
+      {/* Mobile menu */}
+      <AnimatePresence>
         {mobileOpen && (
-          <div style={{ background: '#fff', borderTop: '1px solid #f1f5f9', padding: '16px 24px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <Link href="/" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Home</Link>
-            <Link href="/platform" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Why KronGage?</Link>
-            <Link href="/platform" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Platform</Link>
-            <Link href="/solutions" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Solutions</Link>
-            <Link href="/pricing" style={{ fontSize: '15px', fontWeight: 600, color: '#334155', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Pricing</Link>
-            <a href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'}/`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '15px', fontWeight: 600, color: '#0D47A1', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Log in</a>
-            <Link
-              href="/pricing"
-              style={{ background: '#0D47A1', color: '#fff', textDecoration: 'none', padding: '12px', borderRadius: '50px', textAlign: 'center', fontSize: '15px', fontWeight: 700, display: 'block' }}
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close mobile menu"
               onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 z-40 bg-black/25 backdrop-blur-sm md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            <motion.div
+              className="fixed inset-x-4 top-20 z-50 rounded-2xl border border-[#f1f5f9] bg-white/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.15)] backdrop-blur-xl md:hidden [font-family:Manrope,system-ui,sans-serif]"
+              initial={{ opacity: 0, y: -12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
             >
-              Get Started
-            </Link>
-          </div>
+              <div className="flex flex-col gap-2">
+                {MOBILE_NAV_ITEMS.map(item => (
+                  <MobileNavLink
+                    key={item.label}
+                    href={item.href}
+                    label={item.label}
+                    onClick={() => setMobileOpen(false)}
+                  />
+                ))}
+                <MobileNavLink href="/pricing" label="Pricing" onClick={() => setMobileOpen(false)} />
+              </div>
+
+              <div className="mt-4 border-t border-[#f1f5f9] pt-4 flex flex-col gap-3">
+                <a
+                  href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://web.krongage.io'}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-center text-[15px] font-semibold text-muted-foreground no-underline transition-colors hover:text-foreground"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Log in
+                </a>
+                <Button asChild className="h-12 w-full rounded-full text-[15px] font-bold">
+                  <Link href="/pricing" onClick={() => setMobileOpen(false)}>
+                    Start Free Trial
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+          </>
         )}
-      </nav>
+      </AnimatePresence>
     </>
   );
 }

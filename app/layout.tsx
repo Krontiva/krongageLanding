@@ -3,11 +3,12 @@ import { Manrope } from 'next/font/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { cn } from "@/lib/utils";
 
 const manrope = Manrope({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-manrope',
+  variable: '--font-sans',
 });
 
 export const metadata: Metadata = {
@@ -18,8 +19,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={manrope.variable}>
-      <body style={{ fontFamily: 'var(--font-manrope), system-ui, sans-serif' }}>
+    <html lang="en" className={cn("font-sans", manrope.variable)}>
+      <body className="[font-family:var(--font-sans),system-ui,sans-serif]">
         <Nav />
         <main>{children}</main>
         <Footer />
