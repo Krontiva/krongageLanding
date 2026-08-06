@@ -64,9 +64,15 @@ const STATS = [
   { label: 'Avg Response Time',    value: '2m',  change: '-18%', trend: 'down', color: '#6d28d9', bg: '#F3F0FF', barWidth: '60%' },
 ];
 
+const RECENT_CONVERSATIONS = [
+  { initials: 'JM', name: 'Jane Mensah',   message: 'Can you confirm the delivery date for order #4821?', channel: 'WhatsApp',  time: '2m ago',  color: '#22c55e' },
+  { initials: 'KA', name: 'Kwame Asante',  message: 'Thanks for the quick response, really appreciate it!', channel: 'Instagram', time: '14m ago', color: '#db2777' },
+  { initials: 'RA', name: 'Ruth Addo',     message: 'I need help resetting my account password.',          channel: 'Email',      time: '1h ago',   color: '#0D47A1' },
+];
+
 export default function UnifiedHero() {
   return (
-    <section className="relative overflow-hidden bg-[#f0f7ff] pt-40 pb-24">
+    <section className="relative overflow-hidden bg-[#f0f7ff] pt-40">
       {/* Animated scan-field backdrop — sits behind the orbit rings and content */}
       <div className="absolute inset-0 pointer-events-auto" aria-hidden="true">
         <Scanner
@@ -185,11 +191,7 @@ export default function UnifiedHero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.25 }}
-          className="relative rounded-2xl border border-[#e2e8f0] bg-white overflow-hidden text-left min-h-[360px]"
-          style={{
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 58%, transparent 96%)',
-            maskImage: 'linear-gradient(to bottom, black 0%, black 58%, transparent 96%)',
-          }}
+          className="relative rounded-t-2xl border border-[#e2e8f0] bg-white overflow-hidden text-left min-h-[360px]"
         >
           {/* Mockup top bar */}
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#f1f5f9]">
@@ -257,19 +259,37 @@ export default function UnifiedHero() {
                   </div>
                 ))}
               </div>
+
+              <div className="mt-5">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[13px] font-bold text-[#0f172a]">Recent Conversations</span>
+                  <span className="text-[11px] font-bold text-[#0D47A1]">View all →</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {RECENT_CONVERSATIONS.map(item => (
+                    <div key={item.name} className="flex items-center gap-3 rounded-xl border border-[#f1f5f9] p-3">
+                      <span
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
+                        style={{ background: item.color }}
+                      >
+                        {item.initials}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[12px] font-bold text-[#0f172a] truncate">{item.name}</span>
+                          <span className="text-[10px] text-[#94a3b8] shrink-0">{item.time}</span>
+                        </div>
+                        <p className="text-[11px] text-[#64748b] truncate">{item.message}</p>
+                      </div>
+                      <span className="text-[10px] font-semibold text-[#0D47A1] bg-[#EEF5FD] rounded-full px-2 py-1 shrink-0">
+                        {item.channel}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Progressive blur — blur strength ramps up toward the bottom via a masked backdrop-blur layer */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-40 backdrop-blur-lg"
-            style={{
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 100%)',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 100%)',
-            }}
-          />
-          {/* Color blend — eases the mockup's own bottom edge into the page background */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-[#f0f7ff]/70 to-[#f0f7ff]" />
         </motion.div>
       </div>
     </section>
