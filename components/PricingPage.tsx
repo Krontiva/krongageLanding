@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { CheckCircle } from '@phosphor-icons/react';
 import { formatUsd } from '@/src/lib/format-price';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 
 const CheckoutModal      = dynamic(() => import('./CheckoutModal'),       { ssr: false });
 const StarterSignupModal = dynamic(() => import('./StarterSignupModal'),  { ssr: false });
@@ -196,12 +196,6 @@ function mergeLivePlans(livePlans: LivePlan[] | null | undefined) {
 
 type MergedPlan = ReturnType<typeof mergeLivePlans>[number];
 
-const ctaBaseClass = "block text-center px-5 py-[13px] rounded-full text-sm font-bold cursor-pointer transition-all duration-200 border-2 border-transparent w-full no-underline";
-const ctaGhost = "bg-transparent text-[#0D47A1] border-[#cbd5e1] hover:border-[#0D47A1] hover:bg-[#EEF5FD]";
-const ctaBlue = "bg-white text-[#0D47A1] border-white hover:bg-transparent hover:text-white";
-const ctaDark = "bg-transparent text-white border-white/30 hover:bg-white/10 hover:border-white/60";
-const ctaOutline = "bg-[#0D47A1] text-white border-[#0D47A1] hover:bg-[#0a3680] hover:border-[#0a3680]";
-
 export default function PricingPage({ initialLivePlans }: { initialLivePlans?: LivePlan[] | null }) {
   const [annual, setAnnual]               = useState(false);
   const [plans, setPlans]                 = useState(() => mergeLivePlans(initialLivePlans));
@@ -224,42 +218,35 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
   return (
     <>
       {/* Hero */}
-      <section className="bg-[#f0f7ff] text-center px-6 pt-[148px] pb-14 max-[640px]:px-5 max-[640px]:pt-[124px] max-[640px]:pb-10">
+      <section className="bg-[#eef0ee] text-center px-6 pt-[148px] pb-14 max-[640px]:px-5 max-[640px]:pt-[124px] max-[640px]:pb-10">
         <div className="inline-flex items-center gap-2 bg-[#0D47A1] text-white text-[11px] font-bold tracking-[0.12em] uppercase px-[18px] py-1.5 rounded-full mb-6">Simple, Transparent Pricing</div>
-        <h1 className="text-[52px] font-extrabold text-[#0D47A1] leading-[1.08] tracking-[-1.5px] mb-4 max-[1024px]:text-[40px] max-[640px]:text-[34px] max-[640px]:tracking-[-0.5px]">Plans that grow<br />with your team</h1>
-        <p className="text-[17px] text-[#475569] leading-[1.75] max-w-[480px] mx-auto mb-10 max-[640px]:text-[15px]">Start free. Scale as you grow. All prices in USD — no hidden fees.</p>
+        <h1 className="text-[44px] font-normal text-[#0f172a] leading-[1.15] tracking-[-1px] mb-3 max-[1024px]:text-[34px] max-[640px]:text-[28px]">Plans that grow<br />with your team</h1>
+        <p className="text-base text-[#64748b] leading-[1.75] max-w-[480px] mx-auto mb-10 max-[640px]:text-[15px]">Start free. Scale as you grow. All prices in USD — no hidden fees.</p>
 
-        {/* Toggle */}
-        <Tabs value={annual ? 'annual' : 'monthly'} onValueChange={v => setAnnual(v === 'annual')}>
-          <TabsList className="!bg-white !border-[1.5px] !border-[#e2e8f0] !rounded-full !p-1 !h-auto !shadow-[0_2px_8px_rgba(13,71,161,0.07)] !gap-0">
-            <TabsTrigger
-              value="monthly"
-              className="!rounded-full !px-7 !py-2.5 !text-sm !font-bold !text-[#64748b] max-sm:!px-[18px] max-sm:!text-[13px] data-[state=active]:!bg-[#0D47A1] data-[state=active]:!text-white data-[state=active]:!shadow-[0_2px_10px_rgba(13,71,161,0.25)]"
-            >
-              Monthly
-            </TabsTrigger>
-            <TabsTrigger
-              value="annual"
-              className="!rounded-full !px-7 !py-2.5 !text-sm !font-bold !text-[#64748b] !gap-2 max-sm:!px-[18px] max-sm:!text-[13px] data-[state=active]:!bg-[#0D47A1] data-[state=active]:!text-white data-[state=active]:!shadow-[0_2px_10px_rgba(13,71,161,0.25)]"
-            >
-              Annual
-              <span
-                className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                style={{
-                  background: annual ? 'rgba(255,255,255,.2)' : '#dcfce7',
-                  color: annual ? '#fff' : '#16a34a',
-                }}
-              >
-                Save 12%
-              </span>
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {/* Toggle switch */}
+        <div className="inline-flex items-center gap-3 mb-14">
+          <button
+            type="button"
+            onClick={() => setAnnual(false)}
+            className={`text-sm font-bold transition-colors ${!annual ? 'text-[#0f172a]' : 'text-[#94958f]'}`}
+          >
+            Monthly
+          </button>
+          <Switch checked={annual} onCheckedChange={setAnnual} />
+          <button
+            type="button"
+            onClick={() => setAnnual(true)}
+            className={`text-sm font-bold transition-colors ${annual ? 'text-[#0f172a]' : 'text-[#94958f]'}`}
+          >
+            Annual
+          </button>
+          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#dcfce7] text-[#16a34a]">Save 12%</span>
+        </div>
       </section>
 
       {/* Cards */}
-      <div className="pt-12 px-6 max-w-[1240px] mx-auto max-[640px]:pt-8 max-[640px]:px-4">
-        <div className="grid grid-cols-4 gap-4 items-start max-[1024px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-3">
+      <div className="bg-[#eef0ee] pb-12 px-6">
+        <div className="max-w-[1240px] mx-auto grid grid-cols-4 gap-4 items-start max-[1024px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:gap-3 max-[640px]:px-0">
           {plans.map(plan => {
             const price = annual ? plan.annualPrice : plan.monthlyPrice;
             const hasPrice = price != null;
@@ -269,50 +256,53 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
             const trialDays = plan.trialDays ?? FALLBACK_TRIAL_DAYS;
             const isFeatured = plan.featured;
             const isEnterprise = plan.enterprise;
-            const isDark = isFeatured || isEnterprise;
 
             const cardClass = [
-              "bg-white border-[1.5px] border-[#e8edf5] rounded-[20px] overflow-hidden flex flex-col transition-[box-shadow,transform] duration-200 hover:shadow-[0_12px_40px_rgba(13,71,161,0.1)] hover:-translate-y-0.5",
-              isFeatured && "!bg-[#0D47A1] !border-[#0D47A1] shadow-[0_16px_56px_rgba(13,71,161,0.28)] -translate-y-2 hover:-translate-y-3 hover:shadow-[0_24px_64px_rgba(13,71,161,0.35)] max-[1024px]:translate-y-0 max-[1024px]:hover:-translate-y-0.5",
-              isEnterprise && "!bg-[#0f172a] !border-[#0f172a]",
-            ].filter(Boolean).join(' ');
+              "rounded-[20px] overflow-hidden flex flex-col transition-transform duration-200 hover:-translate-y-0.5",
+              isFeatured
+                ? "bg-[#0f172a] shadow-[0_16px_40px_rgba(0,0,0,0.25)] -translate-y-1 hover:-translate-y-1.5 max-[1024px]:translate-y-0 max-[1024px]:hover:-translate-y-0.5"
+                : "bg-white border border-[#e5e5e0] shadow-[0_2px_10px_rgba(15,23,42,0.04)]",
+            ].join(' ');
 
-            const nameClass = `text-[11px] font-extrabold tracking-[0.1em] uppercase mb-1 ${isDark ? 'text-white/65' : 'text-[#0D47A1]'}`;
-            const taglineClass = `text-[13px] mb-5 leading-[1.5] ${isDark ? 'text-white/55' : 'text-[#64748b]'}`;
-            const dividerClass = `h-px mb-5 ${isDark ? 'bg-white/[0.12]' : 'bg-[#f1f5f9]'}`;
-            const featureItemClass = `flex items-start gap-2.5 text-[13px] leading-[1.5] ${isDark ? 'text-white/80' : 'text-[#475569]'}`;
-            const checkClass = `w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-px ${isFeatured ? 'bg-white/[0.18]' : isEnterprise ? 'bg-white/10' : 'bg-[#EEF5FD]'}`;
-            const checkStroke = isFeatured ? '#fff' : isEnterprise ? 'rgba(255,255,255,.7)' : '#0D47A1';
+            const nameClass = `text-base font-bold mb-1 ${isFeatured ? 'text-white' : 'text-[#0f172a]'}`;
+            const taglineClass = `text-sm mb-4 leading-[1.5] ${isFeatured ? 'text-white/55' : 'text-[#64748b]'}`;
+            const priceClass = `text-[32px] font-extrabold tracking-[-1px] ${isFeatured ? 'text-white' : 'text-[#0f172a]'}`;
+            // The featured card flips its footer to white so the checklist stays
+            // legible against the dark top zone, matching the reference layout.
+            const footerClass = `p-6 pt-5 ${isFeatured ? 'bg-white' : 'bg-[#f4f4f2]'}`;
+            const featureItemClass = "flex items-start gap-2.5 text-sm leading-[1.5] text-[#334155]";
+            const checkClass = "w-4 h-4 flex items-center justify-center shrink-0 mt-0.5";
+            const checkStroke = '#0f172a';
+            const cardCtaClass = "block text-center px-5 py-[13px] rounded-full text-sm font-bold cursor-pointer transition-all duration-200 w-full no-underline bg-[#0D47A1] text-white hover:bg-[#0a3680]";
 
             return (
               <div key={plan.id} className={cardClass}>
                 {/* Badge */}
                 {plan.badge && (
-                  <div className={`text-[10px] font-extrabold tracking-[0.1em] uppercase text-center px-3 py-2 ${isFeatured ? 'bg-white text-[#0D47A1]' : 'bg-white/15 text-white'}`}>
+                  <div className="text-[10px] font-extrabold tracking-[0.1em] uppercase text-center px-3 py-2 bg-black text-white">
                     {plan.badge}
                   </div>
                 )}
 
-                <div className="pt-6 px-[22px] pb-[22px] flex-1 flex flex-col">
-                  {/* Plan name + tagline */}
+                <div className="p-6 pb-6">
                   <div className={nameClass}>{plan.name}</div>
                   <div className={taglineClass}>{plan.tagline}</div>
 
                   {/* Price */}
                   {plan.free ? (
-                    <div className="text-[44px] font-extrabold text-[#0f172a] tracking-[-2px] mb-6">Free</div>
+                    <div className={`${priceClass} mb-4`}>Free</div>
                   ) : isEnterprise ? (
-                    <div className="text-[44px] font-extrabold text-white tracking-[-2px] mb-6">Custom</div>
+                    <div className={`${priceClass} mb-4`}>Custom</div>
                   ) : !hasPrice ? (
-                    <div className="text-[44px] font-extrabold text-[#0f172a] tracking-[-2px] mb-6">—</div>
+                    <div className={`${priceClass} mb-4`}>—</div>
                   ) : (
                     <>
-                      <div className="flex items-end gap-1 mb-1 leading-none">
-                        <span className={`text-xl font-extrabold pb-1 ${isDark ? 'text-white' : 'text-[#0f172a]'}`}>$</span>
-                        <span className={`text-[44px] font-extrabold tracking-[-2px] ${isDark ? 'text-white' : 'text-[#0f172a]'}`}>{formatUsd(price)}</span>
-                        <span className={`text-sm pb-1.5 ${isDark ? 'text-white/50' : 'text-[#94a3b8]'}`}>/mo</span>
+                      <div className="flex items-end gap-0.5 leading-none">
+                        <span className={`text-sm font-bold pb-1.5 ${isFeatured ? 'text-white/70' : 'text-[#0D47A1]'}`}>$</span>
+                        <span className={priceClass}>{formatUsd(price)}</span>
+                        <span className={`text-xs pb-1.5 ml-1 ${isFeatured ? 'text-white/50' : 'text-[#94a3b8]'}`}>/monthly</span>
                       </div>
-                      <div className={`text-xs font-semibold mb-5 min-h-[18px] ${isFeatured ? 'text-[#86efac]' : 'text-[#16a34a]'}`}>
+                      <div className="text-xs font-semibold text-[#16a34a] mt-1 mb-4 min-h-[16px]">
                         {annual
                           ? `$${formatUsd(chargeAmount ?? price * 12)} billed annually`
                           : ' '}
@@ -320,10 +310,51 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                     </>
                   )}
 
-                  <div className={dividerClass} />
+                  {/* CTA */}
+                  {plan.id === 'starter' ? (
+                    <button
+                      onClick={() => setShowStarterModal(true)}
+                      className={cardCtaClass}>
+                      {plan.cta}
+                    </button>
+                  ) : plan.ctaHref ? (
+                    <a href={plan.ctaHref} className={cardCtaClass}>
+                      {plan.cta}
+                    </a>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setCheckoutPlan(plan)}
+                        disabled={!hasPrice}
+                        className={`${cardCtaClass} ${!hasPrice ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                        {hasPrice ? plan.cta : 'Pricing unavailable'}
+                      </button>
+                      {/* Stripe's trial takes a card but charges $0 today, so never
+                          say "no credit card required" for a paid plan.
+                          On annual we must name the FULL-YEAR amount: someone who
+                          thinks they're trialling a $51.92 plan and then sees
+                          $623.04 leave their account will dispute the charge. */}
+                      {hasPrice && (
+                        <p className={`text-xs text-center mt-2.5 leading-[1.5] ${isFeatured ? 'text-white/40' : 'text-[#94a3b8]'}`}>
+                          {trialDays}-day free trial · card required · $0 today
+                          {chargeAmount != null && (
+                            <>
+                              <br />
+                              then <strong className={`font-bold ${isFeatured ? 'text-white/70' : 'text-[#64748b]'}`}>
+                                ${formatUsd(chargeAmount)}
+                              </strong>{annual ? ' for the full year' : '/mo'}
+                              {firstChargeDate ? ` on ${firstChargeDate}` : ` on day ${trialDays}`}
+                            </>
+                          )}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
 
-                  {/* Features */}
-                  <ul className="list-none flex flex-col gap-2.5 mb-6 flex-1">
+                {/* Features */}
+                <div className={footerClass}>
+                  <ul className="list-none flex flex-col gap-2.5">
                     {plan.features.map(f => (
                       <li key={f} className={featureItemClass}>
                         <span className={checkClass}>
@@ -341,53 +372,6 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                       </li>
                     ))}
                   </ul>
-
-                  {/* CTA */}
-                  {plan.id === 'starter' ? (
-                    <button
-                      onClick={() => setShowStarterModal(true)}
-                      className={`${ctaBaseClass} ${ctaGhost}`}>
-                      {plan.cta}
-                    </button>
-                  ) : plan.ctaHref ? (
-                    <a
-                      href={plan.ctaHref}
-                      className={`${ctaBaseClass} ${
-                        isFeatured ? ctaBlue :
-                        isEnterprise ? ctaDark :
-                        ctaGhost
-                      }`}>
-                      {plan.cta}
-                    </a>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => setCheckoutPlan(plan)}
-                        disabled={!hasPrice}
-                        className={`${ctaBaseClass} ${isFeatured ? ctaBlue : ctaOutline} ${!hasPrice ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                        {hasPrice ? plan.cta : 'Pricing unavailable'}
-                      </button>
-                      {/* Stripe's trial takes a card but charges $0 today, so never
-                          say "no credit card required" for a paid plan.
-                          On annual we must name the FULL-YEAR amount: someone who
-                          thinks they're trialling a $51.92 plan and then sees
-                          $623.04 leave their account will dispute the charge. */}
-                      {hasPrice && (
-                        <p className="text-xs text-[#94a3b8] text-center mt-2.5 leading-[1.5]">
-                          {trialDays}-day free trial · card required · $0 today
-                          {chargeAmount != null && (
-                            <>
-                              <br />
-                              then <strong className="text-[#64748b] font-bold">
-                                ${formatUsd(chargeAmount)}
-                              </strong>{annual ? ' for the full year' : '/mo'}
-                              {firstChargeDate ? ` on ${firstChargeDate}` : ` on day ${trialDays}`}
-                            </>
-                          )}
-                        </p>
-                      )}
-                    </>
-                  )}
                 </div>
               </div>
             );
