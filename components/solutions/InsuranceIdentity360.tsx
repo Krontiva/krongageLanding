@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { Stethoscope, Broadcast, ChatCircle, CreditCard, ChartBar } from '@phosphor-icons/react';
 
 export default function InsuranceIdentity360({ className }: { className?: string }) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -228,19 +229,19 @@ export default function InsuranceIdentity360({ className }: { className?: string
         </div>
 
         <div className={nodeClass} id="n0" data-i="0" style={{ left: '303px', top: '98px', animation: 'i360-nodeFloat 4.4s ease-in-out infinite 0s' }}>
-          <div className={nodeIconClass}>🩺</div>Claims
+          <div className={nodeIconClass}><Stethoscope size={14} weight="duotone" color="#0D47A1" /></div>Claims
         </div>
         <div className={nodeClass} id="n1" data-i="1" style={{ left: '303px', top: '206px', animation: 'i360-nodeFloat 3.9s ease-in-out infinite 0.6s' }}>
-          <div className={nodeIconClass}>📡</div>Telematics
+          <div className={nodeIconClass}><Broadcast size={14} weight="duotone" color="#0D47A1" /></div>Telematics
         </div>
         <div className={nodeClass} id="n2" data-i="2" style={{ left: '210px', top: '258px', animation: 'i360-nodeFloat 4.2s ease-in-out infinite 1.2s' }}>
-          <div className={nodeIconClass}>💬</div>Support
+          <div className={nodeIconClass}><ChatCircle size={14} weight="duotone" color="#0D47A1" /></div>Support
         </div>
         <div className={nodeClass} id="n3" data-i="3" style={{ left: '117px', top: '206px', animation: 'i360-nodeFloat 4.6s ease-in-out infinite 1.8s' }}>
-          <div className={nodeIconClass}>💳</div>Billing
+          <div className={nodeIconClass}><CreditCard size={14} weight="duotone" color="#0D47A1" /></div>Billing
         </div>
         <div className={nodeClass} id="n4" data-i="4" style={{ left: '117px', top: '98px', animation: 'i360-nodeFloat 4.3s ease-in-out infinite 2.4s' }}>
-          <div className={nodeIconClass}>📊</div>Behavioral
+          <div className={nodeIconClass}><ChartBar size={14} weight="duotone" color="#0D47A1" /></div>Behavioral
         </div>
       </div>
     </div>

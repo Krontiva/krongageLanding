@@ -1,10 +1,13 @@
+'use client';
+import { FileText, Cloud, LinkSimple, SquaresFour } from '@phosphor-icons/react';
+
 const CARDS = [
-  { icon: '📄', title: 'PDFs', desc: 'Search chunks for documentation data…', prog: 62 },
-  { icon: '☁️', title: 'Cloud Docs', desc: 'Search chunks for cloud new data…', prog: 45 },
-  { icon: '☁️', title: 'Cloud Docs', desc: 'Search chunks for cloud new data…', prog: 78 },
-  { icon: '🔗', title: 'Web Links', desc: 'Search chunks for data front data…', prog: 34 },
-  { icon: '🔗', title: 'Web Links', desc: 'Search chunks for data front data…', prog: 55 },
-  { icon: '🔗', title: 'Web Links', desc: 'Search chunks for data front data…', prog: 89 },
+  { icon: FileText, title: 'PDFs', desc: 'Search chunks for documentation data…', prog: 62 },
+  { icon: Cloud, title: 'Cloud Docs', desc: 'Search chunks for cloud new data…', prog: 45 },
+  { icon: Cloud, title: 'Cloud Docs', desc: 'Search chunks for cloud new data…', prog: 78 },
+  { icon: LinkSimple, title: 'Web Links', desc: 'Search chunks for data front data…', prog: 34 },
+  { icon: LinkSimple, title: 'Web Links', desc: 'Search chunks for data front data…', prog: 55 },
+  { icon: LinkSimple, title: 'Web Links', desc: 'Search chunks for data front data…', prog: 89 },
 ];
 
 const CHUNKS = [
@@ -26,7 +29,7 @@ export default function KnowledgeBase({ className }: { className?: string }) {
           <div className="flex items-center justify-between mb-[14px]">
             <span className="text-[15px] font-extrabold text-[#0f172a]">Knowledge Center</span>
             <div className="flex gap-2">
-              <button className={hbtnClass}>⊞ Tiny chunk</button>
+              <button className={`${hbtnClass} !gap-1`}><SquaresFour size={12} weight="duotone" />Tiny chunk</button>
               <button className="px-[11px] py-[5px] rounded-md text-[11px] font-bold cursor-pointer border border-[#0D47A1] bg-[#0D47A1] text-white flex items-center gap-[5px] transition-colors hover:bg-[#0a3a84]">+ Create chunk</button>
             </div>
           </div>
@@ -37,7 +40,7 @@ export default function KnowledgeBase({ className }: { className?: string }) {
               return (
                 <div key={i} className="border border-[#f1f5f9] rounded-[10px] px-3 pt-3 pb-[10px] bg-white cursor-pointer transition-all relative overflow-hidden hover:border-[#93c5fd] hover:shadow-[0_4px_16px_rgba(13,71,161,0.08)] hover:-translate-y-px">
                   <div className="flex items-start justify-between mb-2">
-                    <div className="w-9 h-9 bg-[#EEF5FD] rounded-lg flex items-center justify-center text-lg">{c.icon}</div>
+                    <div className="w-9 h-9 bg-[#EEF5FD] rounded-lg flex items-center justify-center"><c.icon size={18} weight="duotone" color="#0D47A1" /></div>
                     <div className="relative w-9 h-9">
                       <svg width="36" height="36" viewBox="0 0 36 36" className="-rotate-90">
                         <circle className="fill-none stroke-[#f1f5f9] stroke-[3]" cx="18" cy="18" r="15" />

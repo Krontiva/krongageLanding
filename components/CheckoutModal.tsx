@@ -2,6 +2,7 @@
 import { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Key, HandWaving, Warning, Gift } from '@phosphor-icons/react';
 import { formatUsd } from '@/src/lib/format-price';
 import { storeEmbeddedSession } from '@/src/lib/checkout-session';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -215,7 +216,8 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
             )}
           </div>
           <div className="inline-flex items-center gap-1.5 mt-2.5 bg-[#86efac]/[0.18] text-[#bbf7d0] font-bold text-xs px-2.5 py-1 rounded-full">
-            🎁 {trialDays}-day free trial
+            <Gift size={16} weight="duotone" />
+            {trialDays}-day free trial
           </div>
           {/* The full deal in one sentence — what starts, what it costs, when, and
               how to avoid it. On annual the charge is the whole year, not the "/mo"
@@ -241,8 +243,10 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
         <div className="px-7 pt-6 pb-7">
           {step === 'exists' ? (
             <div className="text-center pt-4 pb-4">
-              <div className="text-5xl mb-4">
-                {conflictReason === 'subscription_inactive' ? '🔑' : '👋'}
+              <div className="flex items-center justify-center mb-4">
+                {conflictReason === 'subscription_inactive'
+                  ? <Key size={48} weight="duotone" />
+                  : <HandWaving size={48} weight="duotone" />}
               </div>
               {conflictReason === 'subscription_inactive' ? (
                 <>
@@ -283,7 +287,9 @@ export default function CheckoutModal({ plan, annual, onClose }: Props) {
             </div>
           ) : step === 'error' ? (
             <div className="text-center pt-4 pb-4">
-              <div className="text-5xl mb-4">⚠️</div>
+              <div className="flex items-center justify-center mb-4">
+                <Warning size={48} weight="duotone" color="#f59e0b" />
+              </div>
               <h3 className="text-xl font-extrabold text-[#0f172a] mb-2">Something went wrong</h3>
               <p className="text-[#64748b] text-sm mb-4">{serverError}</p>
               <button

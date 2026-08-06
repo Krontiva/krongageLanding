@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import PhosphorIcon from '@/components/PhosphorIcon';
 
 export const metadata: Metadata = {
   title: 'Data Protection – KronGage',
@@ -18,17 +19,17 @@ export default function Page() {
         <h2 className="text-[22px] font-extrabold text-[#0D47A1] mt-9 mb-3">Our Certifications</h2>
         <div className="grid grid-cols-3 gap-4 my-6 max-[640px]:grid-cols-2">
           <div className="bg-[#EEF5FD] rounded-xl p-5 text-center">
-            <div className="text-[28px] mb-2">🛡️</div>
+            <div className="flex items-center justify-center mb-2"><PhosphorIcon name="ShieldCheck" size={28} weight="duotone" color="#0D47A1" /></div>
             <strong className="block text-sm font-extrabold text-[#0D47A1] mb-1">SOC 2 Type II</strong>
             <span className="text-xs text-[#64748b]">Audited security controls</span>
           </div>
           <div className="bg-[#EEF5FD] rounded-xl p-5 text-center">
-            <div className="text-[28px] mb-2">🏥</div>
+            <div className="flex items-center justify-center mb-2"><PhosphorIcon name="Heartbeat" size={28} weight="duotone" color="#0D47A1" /></div>
             <strong className="block text-sm font-extrabold text-[#0D47A1] mb-1">HIPAA Compatible</strong>
             <span className="text-xs text-[#64748b]">Healthcare data ready</span>
           </div>
           <div className="bg-[#EEF5FD] rounded-xl p-5 text-center">
-            <div className="text-[28px] mb-2">🔐</div>
+            <div className="flex items-center justify-center mb-2"><PhosphorIcon name="Lock" size={28} weight="duotone" color="#0D47A1" /></div>
             <strong className="block text-sm font-extrabold text-[#0D47A1] mb-1">AES-256 Encryption</strong>
             <span className="text-xs text-[#64748b]">Data at rest and in transit</span>
           </div>

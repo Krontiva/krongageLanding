@@ -1,5 +1,10 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ChatCircle, ChartBar, BellRinging, CheckCircle, Globe, Lightning, HandWaving,
+  FileText, Trash, PencilSimple, Gear, DeviceMobile, Lightbulb, Brain, Megaphone,
+  Warning, Circle, FacebookLogo, type Icon,
+} from '@phosphor-icons/react';
 
 const COUNTER_TARGETS: Record<string, number> = {
   profiles: 14, ai: 3, workflows: 0, docs: 2, team: 3, tokens: 0,
@@ -9,16 +14,16 @@ const FLASH_KEYS = ['profiles', 'ai', 'workflows', 'docs', 'team', 'tokens'];
 const MENTION_BAR_DATA = [40, 55, 38, 62, 70, 48, 80, 90, 75, 85, 95, 88];
 const AUTO_VIEWS = ['dash', 'inbox', 'social-pub', 'campaigns', 'social', 'customers', 'knowledge', 'settings', 'usage'];
 const HOURS = ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
-const TOASTS = [
-  { icon: '💬', title: 'New conversation', sub: '@customer_42 started a chat on WhatsApp' },
-  { icon: '📊', title: 'Sentiment updated', sub: 'Brand health rose to 81% (+2%)' },
-  { icon: '🔔', title: '3 new mentions', sub: 'Twitter · just now' },
-  { icon: '✅', title: 'Workflow complete', sub: 'Email welcome sequence finished' },
-  { icon: '🌍', title: 'Follower spike', sub: '+48 new followers this hour' },
-  { icon: '⚡', title: 'AI response sent', sub: 'Agent handled query automatically' },
+const TOASTS: { icon: Icon; title: string; sub: string }[] = [
+  { icon: ChatCircle, title: 'New conversation', sub: '@customer_42 started a chat on WhatsApp' },
+  { icon: ChartBar, title: 'Sentiment updated', sub: 'Brand health rose to 81% (+2%)' },
+  { icon: BellRinging, title: '3 new mentions', sub: 'Twitter · just now' },
+  { icon: CheckCircle, title: 'Workflow complete', sub: 'Email welcome sequence finished' },
+  { icon: Globe, title: 'Follower spike', sub: '+48 new followers this hour' },
+  { icon: Lightning, title: 'AI response sent', sub: 'Agent handled query automatically' },
 ];
 
-interface ToastItem { id: number; icon: string; title: string; sub: string; shown: boolean; leaving: boolean; }
+interface ToastItem { id: number; icon: Icon; title: string; sub: string; shown: boolean; leaving: boolean; }
 
 // ── shared Tailwind class fragments (mirror the former CSS classes) ──
 const kdViewBase = "absolute inset-0 overflow-y-auto overflow-x-hidden px-[18px] pt-[18px] pb-3.5 transition-[opacity,transform] duration-[280ms] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-[#e2e8f0] [&::-webkit-scrollbar-thumb]:rounded-sm";
@@ -282,7 +287,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
 
             <div className="flex items-start justify-between mb-3.5">
               <div>
-                <h1 className="text-[17px] font-extrabold">Good afternoon, Platform 👋</h1>
+                <h1 className="text-[17px] font-extrabold flex items-center gap-1.5">Good afternoon, Platform <HandWaving size={17} weight="duotone" /></h1>
                 <div className="text-[11px] text-[#64748b] mt-0.5">Here&apos;s your <span className="text-[#0D47A1] font-bold">KronGage</span> overview for Krontiva Internal</div>
               </div>
               <div className="flex gap-1.5 items-center mt-[3px]">
@@ -290,7 +295,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>
                   Professional
                 </div>
-                <div className="flex items-center gap-1 px-[9px] py-[3px] rounded-full text-[10px] font-bold bg-[#fff7ed] text-[#ea580c]">⚠ 5/6 services up</div>
+                <div className="flex items-center gap-1 px-[9px] py-[3px] rounded-full text-[10px] font-bold bg-[#fff7ed] text-[#ea580c]"><Warning size={11} weight="duotone" />5/6 services up</div>
               </div>
             </div>
 
@@ -589,16 +594,16 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#059669]">DL</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🟢 Krongage whatsapp</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Circle size={7} weight="fill" color="#22c55e" />Krongage whatsapp</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">Dibe Laba</span><span className="text-[9px] text-[#94a3b8] shrink-0">11d · 9d</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">↩ oh sorry i didnt see this early</div>
-                      <div className="text-[9px] font-bold text-[#ef4444] mt-0.5">🔴 11d 3h</div>
+                      <div className="text-[9px] font-bold text-[#ef4444] mt-0.5 flex items-center gap-[3px]"><Circle size={7} weight="fill" color="#ef4444" />11d 3h</div>
                     </div>
                   </div>
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#f59e0b]">D</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🌐 krongage web</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Globe size={9} weight="duotone" />krongage web</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">Dry-Paper-223</span><span className="text-[9px] text-[#94a3b8] shrink-0">11d · 11d</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">↩ Got it — I&apos;ve handed your request over to our hu…</div>
                     </div>
@@ -606,7 +611,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#7c3aed]">RR</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">📘 Delika Facebook</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><FacebookLogo size={9} weight="duotone" />Delika Facebook</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">Ronald Reigns</span><span className="text-[9px] text-[#94a3b8] shrink-0">2mo · 20d</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">I&apos;m good</div>
                       <div className="inline-block text-[8px] font-bold px-[5px] py-px rounded-[3px] bg-[#fee2e2] text-[#dc2626] mt-0.5">support-case</div>
@@ -615,7 +620,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#0D47A1]">D</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🌐 krongage web</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Globe size={9} weight="duotone" />krongage web</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">Divine-Bird-176</span><span className="text-[9px] text-[#94a3b8] shrink-0">2mo · 2mo</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">↩ Test message from KronGage</div>
                     </div>
@@ -623,16 +628,16 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#64748b]">N</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🟢 Krongage whatsapp</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Circle size={7} weight="fill" color="#22c55e" />Krongage whatsapp</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">NY</span><span className="text-[9px] text-[#94a3b8] shrink-0">2mo · 2mo</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">↩ hi</div>
-                      <div className="text-[9px] font-bold text-[#ef4444] mt-0.5">🔴 4d 2h</div>
+                      <div className="text-[9px] font-bold text-[#ef4444] mt-0.5 flex items-center gap-[3px]"><Circle size={7} weight="fill" color="#ef4444" />4d 2h</div>
                     </div>
                   </div>
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#10b981]">C</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🌐 krongage web</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Globe size={9} weight="duotone" />krongage web</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">Cold-Forest-180</span><span className="text-[9px] text-[#94a3b8] shrink-0">2mo · 2mo</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">yes sit</div>
                     </div>
@@ -640,7 +645,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#e11d48]">F</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🌐 krongage web</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Globe size={9} weight="duotone" />krongage web</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">Floral-Cloud-18</span><span className="text-[9px] text-[#94a3b8] shrink-0">2mo · 2mo</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">Get notified by email</div>
                     </div>
@@ -648,7 +653,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#6366f1]">D</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🌐 krongage web</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Globe size={9} weight="duotone" />krongage web</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">Divine-Violet-566</span><span className="text-[9px] text-[#94a3b8] shrink-0">2mo · 2mo</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">Get notified by email</div>
                     </div>
@@ -656,7 +661,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-2 px-2.5 py-[9px] border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white shrink-0 mt-px bg-[#0891b2]">W</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]">🌐 krongage web</div>
+                      <div className="text-[9px] text-[#64748b] mb-px flex items-center gap-[3px]"><Globe size={9} weight="duotone" />krongage web</div>
                       <div className="flex justify-between items-baseline gap-1"><span className="text-[11px] font-bold text-[#0f172a]">White-Darkness-922</span><span className="text-[9px] text-[#94a3b8] shrink-0">2mo · 2mo</span></div>
                       <div className="text-[10px] text-[#64748b] whitespace-nowrap overflow-hidden text-ellipsis mt-px">Get notified by email</div>
                     </div>
@@ -697,7 +702,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <span>Launches</span>
                   <button className="bg-[#0D47A1] text-white border-none rounded-md px-2.5 py-[5px] text-[10px] font-bold cursor-pointer">+ Create Post</button>
                 </div>
-                <div className="bg-[#fef2f2] border border-[#fecaca] rounded-md px-2.5 py-1.5 text-[10px] text-[#dc2626] flex items-center gap-1.5 mx-3 mt-2 shrink-0">⚠ 1 channel needs attention</div>
+                <div className="bg-[#fef2f2] border border-[#fecaca] rounded-md px-2.5 py-1.5 text-[10px] text-[#dc2626] flex items-center gap-1.5 mx-3 mt-2 shrink-0"><Warning size={12} weight="duotone" />1 channel needs attention</div>
                 <div className="text-[#374151] text-[10px] mt-[3px] pl-4 pr-2.5">kofi_amoah <span className="ml-auto text-[9px] text-[#94a3b8] float-right">Token expired <span className="bg-white border border-[#e2e8f0] rounded-[4px] px-1.5 py-0.5 text-[#374151] font-bold ml-1">Reconnect</span></span></div>
                 <div className="flex items-center gap-1.5 px-3 py-2 border-b border-[#f1f5f9] shrink-0">
                   <span className="w-[22px] h-[22px] border border-[#e2e8f0] rounded-[5px] bg-white flex items-center justify-center cursor-pointer text-[11px] text-[#374151]">‹</span>
@@ -899,7 +904,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <button className="text-[10px] font-semibold border border-[#e2e8f0] bg-white rounded-md px-[9px] py-1 cursor-pointer text-[#374151]">✏ Edit</button>
+                    <button className="text-[10px] font-semibold border border-[#e2e8f0] bg-white rounded-md px-[9px] py-1 cursor-pointer text-[#374151] inline-flex items-center gap-1"><PencilSimple size={11} weight="duotone" />Edit</button>
                     <button className="text-[10px] font-semibold border border-[#e2e8f0] bg-white rounded-md px-[9px] py-1 cursor-pointer text-[#374151]">⊕ Merge</button>
                     <button className="text-[10px] font-semibold border border-[#e2e8f0] bg-white rounded-md px-[9px] py-1 cursor-pointer text-[#374151]">↓ Export ∨</button>
                   </div>
@@ -928,7 +933,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                     <div className="h-1 rounded-sm overflow-hidden bg-[#f1f5f9]"><div className="h-full rounded-sm transition-[width] duration-1000 ease-linear w-[73%] bg-[#0D47A1]" /></div>
                   </div>
                   <div className="bg-white border border-[#f1f5f9] rounded-lg p-2">
-                    <div className="text-[9px] text-[#64748b] mb-1 flex items-center gap-[3px]">⚠ Churn Risk</div>
+                    <div className="text-[9px] text-[#64748b] mb-1 flex items-center gap-[3px]"><Warning size={9} weight="duotone" />Churn Risk</div>
                     <div className="text-base font-extrabold text-[#0f172a] mb-1">27</div>
                     <div className="h-1 rounded-sm overflow-hidden bg-[#f1f5f9]"><div className="h-full rounded-sm transition-[width] duration-1000 ease-linear w-[27%] bg-[#f59e0b]" /></div>
                   </div>
@@ -936,9 +941,9 @@ export default function DashboardDemo({ className }: { className?: string }) {
 
                 <div className="text-[9px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mt-3 mb-1.5">CHANNEL PRESENCE</div>
                 <div className="flex gap-1.5 mb-3">
-                  <span className="text-[10px] font-semibold px-[11px] py-1 rounded-md border border-[#e2e8f0] bg-white text-[#374151] flex items-center gap-[5px]">🟢 Whatsapp</span>
-                  <span className="text-[10px] font-semibold px-[11px] py-1 rounded-md border border-[#e2e8f0] bg-white text-[#374151] flex items-center gap-[5px]">🌐 Web</span>
-                  <span className="text-[10px] font-semibold px-[11px] py-1 rounded-md border border-[#e2e8f0] bg-white text-[#374151] flex items-center gap-[5px]">⚙ Api</span>
+                  <span className="text-[10px] font-semibold px-[11px] py-1 rounded-md border border-[#e2e8f0] bg-white text-[#374151] flex items-center gap-[5px]"><Circle size={8} weight="fill" color="#22c55e" />Whatsapp</span>
+                  <span className="text-[10px] font-semibold px-[11px] py-1 rounded-md border border-[#e2e8f0] bg-white text-[#374151] flex items-center gap-[5px]"><Globe size={10} weight="duotone" />Web</span>
+                  <span className="text-[10px] font-semibold px-[11px] py-1 rounded-md border border-[#e2e8f0] bg-white text-[#374151] flex items-center gap-[5px]"><Gear size={10} weight="duotone" />Api</span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-1.5 mb-3">
@@ -1011,11 +1016,11 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <button className="bg-[#0D47A1] text-white border-none rounded-md px-2.5 py-1 text-[9px] font-bold cursor-pointer flex items-center gap-[3px]">↑ Upload</button>
                 </div>
                 <div className="px-2.5 py-1.5 border-b border-[#f1f5f9]">
-                  <select className="w-full border border-[#e2e8f0] rounded-md px-1.5 py-1 text-[10px] bg-white text-[#374151]"><option>📄 Fidelity Bank (2)</option></select>
+                  <select className="w-full border border-[#e2e8f0] rounded-md px-1.5 py-1 text-[10px] bg-white text-[#374151]"><option>Fidelity Bank (2)</option></select>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                   <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc] bg-[#f0f7ff]">
-                    <div className="text-xl shrink-0">📄</div>
+                    <div className="text-xl shrink-0 text-[#2563eb]"><FileText size={20} weight="duotone" /></div>
                     <div className="flex-1 min-w-0">
                       <div className="text-[11px] font-bold text-[#0f172a]">FAQ.pdf</div>
                       <div className="text-[9px] text-[#94a3b8] mt-0.5">34.2 MB · 36d ago</div>
@@ -1023,7 +1028,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[#f8fafc] cursor-pointer transition-colors duration-150 hover:bg-[#f8fafc]">
-                    <div className="text-xl shrink-0">📄</div>
+                    <div className="text-xl shrink-0 text-[#2563eb]"><FileText size={20} weight="duotone" /></div>
                     <div className="flex-1 min-w-0">
                       <div className="text-[11px] font-bold text-[#0f172a]">prb-report.pdf</div>
                       <div className="text-[9px] text-[#94a3b8] mt-0.5">620.9 KB · 36d ago</div>
@@ -1035,7 +1040,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
               <div className="flex-1 overflow-y-auto px-3.5 py-3 [&::-webkit-scrollbar]:w-[3px]">
                 <div className="flex items-start justify-between mb-1.5">
                   <div className="flex items-center gap-2">
-                    <div className="text-[28px]">📄</div>
+                    <div className="text-[28px] text-[#2563eb]"><FileText size={28} weight="duotone" /></div>
                     <div>
                       <div className="text-sm font-extrabold text-[#0f172a]">FAQ.pdf</div>
                       <div className="text-[10px] text-[#64748b] mt-0.5">34.2 MB · application/pdf · Apr 9, 2026, 11:57 AM</div>
@@ -1044,7 +1049,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                   <div className="flex gap-[5px]">
                     <button className="text-[9px] font-semibold border border-[#e2e8f0] bg-white rounded-[5px] px-2 py-1 cursor-pointer text-[#374151] flex items-center gap-[3px]">↓ Download</button>
                     <button className="text-[9px] font-semibold border border-[#e2e8f0] bg-white rounded-[5px] px-2 py-1 cursor-pointer text-[#374151] flex items-center gap-[3px]">↻ Re-extract entities</button>
-                    <button className="text-[9px] font-semibold border rounded-[5px] px-2 py-1 cursor-pointer flex items-center gap-[3px] text-[#dc2626] border-[#fecaca] bg-white">🗑 Delete</button>
+                    <button className="text-[9px] font-semibold border rounded-[5px] px-2 py-1 cursor-pointer flex items-center gap-[3px] text-[#dc2626] border-[#fecaca] bg-white"><Trash size={11} weight="duotone" />Delete</button>
                   </div>
                 </div>
                 <div className="flex items-center justify-between text-[10px] text-[#94a3b8] my-2.5 py-1.5 border-t border-b border-[#f1f5f9]">
@@ -1211,7 +1216,7 @@ Customer submit their green business funding proposal for the GLF through the Re
                 <div className="grid grid-cols-2 gap-2 mb-2.5">
                   <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-4 py-3.5">
                     <div className="flex items-center gap-2 mb-2.5">
-                      <span className="text-lg">💬</span>
+                      <span className="text-lg text-[#0D47A1]"><ChatCircle size={19} weight="duotone" /></span>
                       <div><div className="text-xs font-extrabold text-[#0f172a]">KronChat</div><div className="text-[10px] text-[#64748b]">AI-powered customer conversations</div></div>
                     </div>
                     <div className="flex justify-between text-[10px] text-[#64748b] mb-1"><span>Month</span><span className="font-semibold text-[#0f172a]">13 / 50.0K</span></div>
@@ -1220,7 +1225,7 @@ Customer submit their green business funding proposal for the GLF through the Re
                   </div>
                   <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-4 py-3.5">
                     <div className="flex items-center gap-2 mb-2.5">
-                      <span className="text-lg">📱</span>
+                      <span className="text-lg text-[#0D47A1]"><DeviceMobile size={19} weight="duotone" /></span>
                       <div><div className="text-xs font-extrabold text-[#0f172a]">Socials</div><div className="text-[10px] text-[#64748b]">AI content generation &amp; copilot</div></div>
                     </div>
                     <div className="flex justify-between text-[10px] text-[#64748b] mb-1"><span>Month</span><span className="font-semibold text-[#0f172a]">62 / 20.0K</span></div>
@@ -1229,7 +1234,7 @@ Customer submit their green business funding proposal for the GLF through the Re
                   </div>
                   <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-4 py-3.5">
                     <div className="flex items-center gap-2 mb-2.5">
-                      <span className="text-lg">💡</span>
+                      <span className="text-lg text-[#0D47A1]"><Lightbulb size={19} weight="duotone" /></span>
                       <div><div className="text-xs font-extrabold text-[#0f172a]">Listening</div><div className="text-[10px] text-[#64748b]">Brand monitoring &amp; sentiment AI</div></div>
                     </div>
                     <div className="flex justify-between text-[10px] text-[#64748b] mb-1"><span>Month</span><span className="font-semibold text-[#0f172a]">13 / 50.0K</span></div>
@@ -1238,7 +1243,7 @@ Customer submit their green business funding proposal for the GLF through the Re
                   </div>
                   <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-4 py-3.5">
                     <div className="flex items-center gap-2 mb-2.5">
-                      <span className="text-lg">🧠</span>
+                      <span className="text-lg text-[#0D47A1]"><Brain size={19} weight="duotone" /></span>
                       <div><div className="text-xs font-extrabold text-[#0f172a]">Knowledge</div><div className="text-[10px] text-[#64748b]">RAG chat &amp; knowledge queries</div></div>
                     </div>
                     <div className="flex justify-between text-[10px] text-[#64748b] mb-1"><span>Day</span><span className="font-semibold text-[#0f172a]">4 / 5.0K</span></div>
@@ -1249,7 +1254,7 @@ Customer submit their green business funding proposal for the GLF through the Re
 
                 <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-4 py-3.5 mb-3">
                   <div className="flex items-center gap-2 mb-2.5">
-                    <span className="text-lg">📣</span>
+                    <span className="text-lg text-[#0D47A1]"><Megaphone size={19} weight="duotone" /></span>
                     <div><div className="text-xs font-extrabold text-[#0f172a]">Campaigns</div><div className="text-[10px] text-[#64748b]">AI campaign content &amp; scheduling</div></div>
                   </div>
                   <div className="flex justify-between text-[10px] text-[#64748b] mb-1"><span>Month</span><span className="font-semibold text-[#0f172a]">0 / 10.0K</span></div>
@@ -1261,13 +1266,13 @@ Customer submit their green business funding proposal for the GLF through the Re
                   <div className="text-[9px] font-bold uppercase tracking-[1px] text-[#94a3b8] mb-3">Platform AI Totals</div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="border border-[#f1f5f9] rounded-lg px-3 py-2.5">
-                      <div className="flex items-center gap-1.5 mb-1"><span className="text-[11px]">⚡</span><span className="text-[10px] font-bold text-[#374151]">AI Requests (Daily Rate)</span><span className="text-[9px] text-[#94a3b8] ml-auto">Day</span></div>
+                      <div className="flex items-center gap-1.5 mb-1"><span className="text-[11px] text-[#0D47A1]"><Lightning size={11} weight="duotone" /></span><span className="text-[10px] font-bold text-[#374151]">AI Requests (Daily Rate)</span><span className="text-[9px] text-[#94a3b8] ml-auto">Day</span></div>
                       <div className="text-lg font-extrabold text-[#0f172a]">53</div>
                       <div className="text-[9px] text-[#64748b] mb-1">of 10.0K</div>
                       <div className="h-[3px] bg-[#f1f5f9] rounded-sm overflow-hidden"><div className="h-full w-[0.5%] bg-[#0D47A1] rounded-sm" /></div>
                     </div>
                     <div className="border border-[#f1f5f9] rounded-lg px-3 py-2.5">
-                      <div className="flex items-center gap-1.5 mb-1"><span className="text-[11px]">⚡</span><span className="text-[10px] font-bold text-[#374151]">AI Requests</span><span className="text-[9px] text-[#94a3b8] ml-auto">Month</span></div>
+                      <div className="flex items-center gap-1.5 mb-1"><span className="text-[11px] text-[#0D47A1]"><Lightning size={11} weight="duotone" /></span><span className="text-[10px] font-bold text-[#374151]">AI Requests</span><span className="text-[9px] text-[#94a3b8] ml-auto">Month</span></div>
                       <div className="text-lg font-extrabold text-[#0f172a]">194</div>
                       <div className="text-[9px] text-[#64748b] mb-1">of 100.0K</div>
                       <div className="h-[3px] bg-[#f1f5f9] rounded-sm overflow-hidden"><div className="h-full w-[0.2%] bg-[#0D47A1] rounded-sm" /></div>
@@ -1298,7 +1303,7 @@ Customer submit their green business funding proposal for the GLF through the Re
             onClick={() => dismissToast(t.id)}
             className={`absolute bottom-[18px] right-[18px] bg-white border border-[#e2e8f0] border-l-[3px] border-l-[#0D47A1] rounded-[10px] px-3.5 py-2.5 flex items-center gap-2.5 shadow-[0_8px_32px_rgba(13,71,161,.15),0_2px_8px_rgba(0,0,0,.06)] z-[999] min-w-[210px] max-w-[270px] cursor-pointer transition-[transform,opacity] duration-[360ms] ease-[cubic-bezier(.34,1.56,.64,1)] ${t.leaving || !t.shown ? 'translate-x-[calc(100%+24px)] opacity-0' : 'translate-x-0 opacity-100'}`}
           >
-            <span className="text-[18px] shrink-0">{t.icon}</span>
+            <span className="shrink-0 text-[#0D47A1]"><t.icon size={18} weight="duotone" /></span>
             <div className="flex-1">
               <div className="text-[11px] font-extrabold text-[#0f172a] mb-0.5">{t.title}</div>
               <div className="text-[10px] text-[#64748b] leading-[1.4]">{t.sub}</div>

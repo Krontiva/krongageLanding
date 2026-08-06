@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { CheckCircle } from '@phosphor-icons/react';
 import { formatUsd } from '@/src/lib/format-price';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -397,12 +398,12 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
       {/* Trust row */}
       <div className="flex flex-wrap justify-center gap-6 px-6 py-9 max-w-[900px] mx-auto max-[640px]:gap-4 max-[640px]:px-5 max-[640px]:py-7">
         {[
-          ['✓', 'No credit card for free plan'],
-          ['✓', '14-day free trial — cancel anytime'],
-          ['✓', 'Enterprise-grade security'],
-          ['✓', 'Single-tenant hosted'],
-          ['✓', 'Stripe-secured checkout'],
-        ].map(([icon, text]) => (
+          'No credit card for free plan',
+          '14-day free trial — cancel anytime',
+          'Enterprise-grade security',
+          'Single-tenant hosted',
+          'Stripe-secured checkout',
+        ].map(text => (
           <div key={text} className="flex items-center gap-2 text-[13px] text-[#64748b] font-medium">
             <span className="w-5 h-5 rounded-full bg-[#EEF5FD] flex items-center justify-center shrink-0">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -439,7 +440,7 @@ export default function PricingPage({ initialLivePlans }: { initialLivePlans?: L
                   <td className="px-5 py-3.5 text-center text-[#475569] border-b border-[#f1f5f9] last:border-b-0 group-hover:bg-[#f8fafc] text-left !text-[#0f172a] font-semibold">{label}</td>
                   {vals.map((v, i) => (
                     <td key={i} className={`px-5 py-3.5 text-center border-b border-[#f1f5f9] last:border-b-0 group-hover:bg-[#f8fafc] ${v === '—' ? 'text-[#cbd5e1]' : 'text-[#475569]'}`}>
-                      {v}
+                      {v === '✓' ? <CheckCircle size={18} weight="duotone" color="#16a34a" className="inline-block" /> : v}
                     </td>
                   ))}
                 </tr>

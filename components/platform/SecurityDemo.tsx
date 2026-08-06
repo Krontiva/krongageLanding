@@ -1,3 +1,6 @@
+'use client';
+import { User, Lock } from '@phosphor-icons/react';
+
 const FACETS = [
   { cls: 'w-[90px] h-[90px] top-[10px] left-[30px] [clip-path:polygon(50%_0%,100%_50%,50%_100%,0%_50%)]', delay: '0s' },
   { cls: 'w-[70px] h-[70px] top-5 right-10 [clip-path:polygon(50%_0%,100%_50%,50%_100%,0%_50%)]', delay: '.5s' },
@@ -47,7 +50,7 @@ export default function SecurityDemo({ className }: { className?: string }) {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(13,71,161,0.3),transparent_70%)] pointer-events-none"></div>
                 <div className="flex flex-col items-center relative z-[2]">
                   <div className="w-[72px] h-[72px] rounded-full bg-[linear-gradient(135deg,#42a5f5,#1565C0)] flex items-center justify-center shadow-[0_8px_32px_rgba(13,71,161,0.5)] mb-[6px]">
-                    <span className="text-4xl">👤</span>
+                    <User size={36} weight="duotone" color="#fff" />
                   </div>
                   <div className="text-[11px] font-bold text-white/80 mt-[6px]">Secure Session</div>
                   <div className="text-[10px] text-white/40">MFA · Active</div>
@@ -55,7 +58,7 @@ export default function SecurityDemo({ className }: { className?: string }) {
               </div>
             </div>
 
-            <div className="absolute bottom-4 right-4 z-20 w-[52px] h-[52px] bg-[#0D47A1] rounded-2xl shadow-[0_8px_24px_rgba(13,71,161,0.6),0_2px_8px_rgba(0,0,0,0.3)] flex items-center justify-center text-2xl animate-[sd-lockBounce_2s_ease-in-out_infinite]">🔒</div>
+            <div className="absolute bottom-4 right-4 z-20 w-[52px] h-[52px] bg-[#0D47A1] rounded-2xl shadow-[0_8px_24px_rgba(13,71,161,0.6),0_2px_8px_rgba(0,0,0,0.3)] flex items-center justify-center animate-[sd-lockBounce_2s_ease-in-out_infinite]"><Lock size={24} weight="duotone" color="#fff" /></div>
           </div>
         </div>
       </div>

@@ -11,17 +11,24 @@ import {
   MagnifyingGlass,
   ShieldCheck,
 } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import LottieIcon from '@/components/LottieIcon';
+import customer360Animation from '@/public/lottie/customer-360-ai-users.json';
+import campaignManagementAnimation from '@/public/lottie/campaign-management.json';
+import securityComplianceAnimation from '@/public/lottie/security-compliance.json';
 import { revealSection, staggerGrid, staggerItem } from './variants';
 
+const MotionLink = motion.create(Link);
+
 const FEATURES = [
-  { icon: Tray,            title: 'Omnichannel Inbox',      desc: 'All channels, AI routing, one unified view' },
-  { icon: Megaphone,        title: 'Social Publishing',      desc: 'Multi-platform, bulk scheduling' },
-  { icon: Robot,            title: 'AI Automation',          desc: 'Agents, RAG knowledge, smart flows' },
-  { icon: UsersThree,       title: 'Customer 360',           desc: 'Unified profiles, segmentation' },
-  { icon: ChartLineUp,      title: 'Campaign Management',    desc: 'Journey builder, A/B testing' },
-  { icon: ChartBar,         title: 'Analytics & BI',         desc: 'Dashboards, white-label reports' },
-  { icon: MagnifyingGlass,  title: 'Social Intelligence',    desc: 'Sentiment tracking, brand monitoring' },
-  { icon: ShieldCheck,      title: 'Security & Compliance', desc: 'SOC 2, HIPAA, encryption, audit logs' },
+  { icon: Tray,            title: 'Omnichannel Inbox' },
+  { icon: Megaphone,       title: 'Social Publishing' },
+  { icon: Robot,           title: 'AI Automation' },
+  { icon: UsersThree,      title: 'Customer 360', lottie: customer360Animation },
+  { icon: ChartLineUp,     title: 'Campaign Management', lottie: campaignManagementAnimation },
+  { icon: ChartBar,        title: 'Analytics & BI' },
+  { icon: MagnifyingGlass, title: 'Social Intelligence' },
+  { icon: ShieldCheck,     title: 'Security & Compliance', lottie: securityComplianceAnimation },
 ];
 
 export default function PlatformFeaturesSection() {
@@ -32,46 +39,80 @@ export default function PlatformFeaturesSection() {
       viewport={{ once: true, amount: 0.2 }}
       variants={revealSection}
     >
-      <div className="px-[60px] py-[90px] max-w-[1200px] mx-auto flex items-start gap-20 max-[900px]:flex-col max-[900px]:px-6 max-[900px]:py-14 max-[900px]:gap-9">
-        <div className="max-w-[360px] shrink-0 max-[900px]:max-w-full">
-          <h2 className="text-[42px] font-extrabold leading-[1.15] text-[#0D47A1] mb-5 tracking-[-0.5px]">
-            One platform that thinks in systems, not silos.
-          </h2>
-          <p className="text-[15px] leading-[1.7] text-[#475569] mb-8">
-            KronGage was engineered to excel in demanding environments, where infrastructure varies, regulations shift, and customer behaviour is diverse. It&apos;s robust because it had to be.
-          </p>
-          <Link
-            href="/platform"
-            className="inline-block bg-transparent text-[#0D47A1] px-6 py-3 rounded-full text-sm font-bold border-2 border-[#0D47A1] hover:bg-[#0D47A1] hover:text-white transition-colors"
+      <div className="pb-[90px]">
+        <div className="border-y border-[#e2e8f0] flex flex-col md:flex-row">
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.4 }}
+            variants={staggerGrid}
+            className="md:w-[300px] shrink-0 p-8 border-b md:border-b-0 md:border-r border-[#e2e8f0] flex flex-col justify-center"
           >
-            View Full Platform
-          </Link>
-        </div>
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={staggerGrid}
-          className="grid grid-cols-2 gap-[14px] flex-1"
-        >
-          {FEATURES.map(f => (
-            <motion.div
-              key={f.title}
+            <motion.span
               variants={staggerItem}
-              whileHover={{ y: -4, boxShadow: '0 6px 24px rgba(13,71,161,0.12)' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="bg-[#EEF5FD] rounded-[14px] px-4 py-[18px] flex items-start gap-[14px]"
+              className="font-mono text-[11px] tracking-[0.15em] text-[#0D47A1]/70 uppercase mb-4"
             >
-              <div className="w-10 h-10 rounded-[10px] bg-[#0D47A1] flex items-center justify-center shrink-0">
-                <f.icon size={20} weight="bold" color="#fff" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-[#0D47A1] mb-1">{f.title}</h4>
-                <p className="text-xs text-[#64748b] leading-[1.5]">{f.desc}</p>
-              </div>
+              Platform Capabilities
+            </motion.span>
+            <motion.h2
+              variants={staggerItem}
+              className="text-[26px] font-extrabold leading-[1.2] text-[#0D47A1] mb-4 tracking-[-0.5px]"
+            >
+              One platform that thinks in systems, not silos.
+            </motion.h2>
+            <motion.p
+              variants={staggerItem}
+              className="text-sm leading-[1.7] text-[#475569] mb-6"
+            >
+              KronGage was engineered to excel in demanding environments, where infrastructure varies, regulations shift, and customer behaviour is diverse. It&apos;s robust because it had to be.
+            </motion.p>
+            <motion.div variants={staggerItem} className="self-start">
+              <Button asChild className="text-sm font-bold">
+                <MotionLink
+                  href="/platform"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                >
+                  View Full Platform
+                </MotionLink>
+              </Button>
             </motion.div>
-          ))}
-        </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={staggerGrid}
+            className="flex-1 grid grid-cols-2 sm:grid-cols-4"
+          >
+            {FEATURES.map(f => (
+              <motion.div
+                key={f.title}
+                variants={staggerItem}
+                whileHover={{ backgroundColor: '#EEF5FD' }}
+                transition={{ duration: 0.2 }}
+                className="group border-r border-b border-[#e2e8f0] min-h-[200px] flex flex-col items-center justify-center gap-3"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.12 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 16 }}
+                >
+                  {f.lottie ? (
+                    <LottieIcon animationData={f.lottie} size={72} />
+                  ) : (
+                    <f.icon size={72} weight="duotone" color="#0D47A1" />
+                  )}
+                </motion.div>
+                <span className="text-base font-bold text-[#0D47A1]">
+                  {f.title}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </motion.section>
   );

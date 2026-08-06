@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { ChartLineUp, CurrencyDollar, Lightning } from '@phosphor-icons/react';
 
 export default function VanityMetricsScene({ className }: { className?: string }) {
   const sparkLineRef = useRef<SVGPathElement>(null);
@@ -76,7 +77,7 @@ export default function VanityMetricsScene({ className }: { className?: string }
             <div className="text-[10px] font-extrabold tracking-[1px] uppercase mb-1 text-[#0D47A1] relative">What actually matters</div>
 
             <div className="flex items-center gap-3 relative">
-              <div className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center text-base shrink-0" style={{ background: '#dcfce7' }}>📈</div>
+              <div className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center text-base shrink-0" style={{ background: '#dcfce7' }}><ChartLineUp size={16} weight="duotone" color="#15803d" /></div>
               <div className="flex-1">
                 <div className="text-[10px] font-bold text-[#64748b] mb-0.5">Net Revenue Retention</div>
                 <div className="text-xl font-black leading-none" style={{ color: '#15803d' }}>112%</div>
@@ -85,7 +86,7 @@ export default function VanityMetricsScene({ className }: { className?: string }
             </div>
 
             <div className="flex items-center gap-3 relative">
-              <div className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center text-base shrink-0" style={{ background: '#dbeafe' }}>💰</div>
+              <div className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center text-base shrink-0" style={{ background: '#dbeafe' }}><CurrencyDollar size={16} weight="duotone" color="#0D47A1" /></div>
               <div className="flex-1">
                 <div className="text-[10px] font-bold text-[#64748b] mb-0.5">Customer Lifetime Value</div>
                 <div className="text-xl font-black leading-none" style={{ color: '#0D47A1' }}>$840</div>
@@ -94,7 +95,7 @@ export default function VanityMetricsScene({ className }: { className?: string }
             </div>
 
             <div className="flex items-center gap-3 relative">
-              <div className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center text-base shrink-0" style={{ background: '#fef9c3' }}>⚡</div>
+              <div className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center text-base shrink-0" style={{ background: '#fef9c3' }}><Lightning size={16} weight="duotone" color="#d97706" /></div>
               <div className="flex-1">
                 <div className="text-[10px] font-bold text-[#64748b] mb-0.5">Churn Rate</div>
                 <div className="text-xl font-black leading-none" style={{ color: '#d97706' }}>2.1%</div>

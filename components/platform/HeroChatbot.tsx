@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { CheckCircle } from '@phosphor-icons/react';
 
 export default function HeroChatbot({ className }: { className?: string }) {
   const [state, setState] = useState({ cb1: false, cu1: false, ct1: false, cb2: false, cs1: false });
@@ -47,7 +48,7 @@ export default function HeroChatbot({ className }: { className?: string }) {
           <div className="w-7 h-7 rounded-lg shrink-0 bg-[#0D47A1] flex items-center justify-center mt-px">
             <svg viewBox="0 0 24 24" className="w-[15px] h-[15px] fill-none stroke-white [stroke-width:1.8] [stroke-linecap:round] [stroke-linejoin:round]"><rect x="3" y="8" width="18" height="12" rx="3" /><path d="M8 8V6a4 4 0 018 0v2" /><circle cx="9" cy="14" r="1.5" fill="#fff" stroke="none" /><circle cx="15" cy="14" r="1.5" fill="#fff" stroke="none" /></svg>
           </div>
-          <span className="text-xs text-white/85 leading-[1.6] font-medium">Got it! ✅ Appointment confirmed for <strong className="text-white">Friday 3:00 PM</strong>. You&apos;ll receive a reminder 24h before.</span>
+          <span className="text-xs text-white/85 leading-[1.6] font-medium">Got it! <CheckCircle size={14} weight="duotone" color="#4ade80" className="inline -mt-0.5 mx-0.5" /> Appointment confirmed for <strong className="text-white">Friday 3:00 PM</strong>. You&apos;ll receive a reminder 24h before.</span>
         </div>
 
         <div className={`w-full max-w-[340px] bg-white/[0.06] border border-white/[0.09] rounded-[10px] px-[14px] py-[10px] flex items-center gap-[10px] transition-[opacity,transform] duration-500 ${state.cs1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>

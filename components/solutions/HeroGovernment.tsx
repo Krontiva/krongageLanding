@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Buildings, ClipboardText, CreditCard, Check } from '@phosphor-icons/react';
 
 const MESSAGES = [
   'Your permit is being reviewed. Expected: 2 business days.',
@@ -8,8 +9,8 @@ const MESSAGES = [
 ];
 
 const SERVICES = [
-  { icon: '📋', title: 'Permit Application', sub: 'Business license renewal', badge: 'In Review', badgeClass: 'bg-[#0D47A1]' },
-  { icon: '💳', title: 'Tax Filing', sub: 'Annual return 2024', badge: 'Due Soon', badgeClass: 'bg-[#ef4444]' },
+  { icon: ClipboardText, title: 'Permit Application', sub: 'Business license renewal', badge: 'In Review', badgeClass: 'bg-[#0D47A1]' },
+  { icon: CreditCard, title: 'Tax Filing', sub: 'Annual return 2024', badge: 'Due Soon', badgeClass: 'bg-[#ef4444]' },
 ];
 
 export default function HeroGovernment({ className }: { className?: string }) {
@@ -34,7 +35,7 @@ export default function HeroGovernment({ className }: { className?: string }) {
       <div className="flex items-center justify-center w-full h-full p-6">
         <div className="w-full max-w-[340px] bg-white rounded-[18px] overflow-hidden shadow-[0_12px_48px_rgba(13,71,161,0.1),0_2px_8px_rgba(0,0,0,0.05)]">
           <div className="bg-[linear-gradient(135deg,#0D47A1,#0a3680)] px-[18px] py-4 flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-lg">🏛️</div>
+            <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center"><Buildings size={20} weight="duotone" color="#fff" /></div>
             <div>
               <div className="text-white text-[13px] font-extrabold">CitizenConnect</div>
               <div className="text-white/60 text-[10px] mt-px">Powered by KronGage</div>
@@ -47,7 +48,7 @@ export default function HeroGovernment({ className }: { className?: string }) {
               <div className="text-xs font-extrabold text-[#0f172a]">John Owusu</div>
               <div className="text-[10px] text-[#64748b]">ID: GH-2024-00847</div>
             </div>
-            <div className="text-[10px] font-bold bg-[#dcfce7] text-[#16a34a] px-[7px] py-0.5 rounded-[5px] ml-auto flex items-center gap-[3px]">✓ Verified</div>
+            <div className="text-[10px] font-bold bg-[#dcfce7] text-[#16a34a] px-[7px] py-0.5 rounded-[5px] ml-auto flex items-center gap-[3px]"><Check size={10} weight="duotone" />Verified</div>
           </div>
 
           <div className="p-3">
@@ -58,7 +59,7 @@ export default function HeroGovernment({ className }: { className?: string }) {
                 className={`flex items-center gap-2.5 px-[11px] py-2.5 rounded-[10px] bg-[#f8fafc] border mb-[7px] last:mb-0 cursor-pointer transition-all hover:border-[#0D47A1] hover:bg-[#EEF5FD] ${activeSvc === i ? 'border-[#0D47A1] bg-[#EEF5FD]' : 'border-[#f1f5f9]'}`}
                 onClick={() => setActiveSvc(i)}
               >
-                <div className="w-8 h-8 rounded-lg bg-[#EEF5FD] flex items-center justify-center text-base shrink-0">{s.icon}</div>
+                <div className="w-8 h-8 rounded-lg bg-[#EEF5FD] flex items-center justify-center shrink-0"><s.icon size={16} weight="duotone" color="#0D47A1" /></div>
                 <div className="flex-1">
                   <div className="text-xs font-bold text-[#0f172a]">{s.title}</div>
                   <div className="text-[10px] text-[#64748b] mt-px">{s.sub}</div>

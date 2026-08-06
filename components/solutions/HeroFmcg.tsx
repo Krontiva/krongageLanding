@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { ShoppingCart, ShoppingBag, Checks } from '@phosphor-icons/react';
 
 const cardClass = "w-full max-w-[340px] bg-white rounded-2xl shadow-[0_8px_32px_rgba(13,71,161,0.1),0_2px_8px_rgba(0,0,0,0.05)] transition-[opacity,transform] duration-500 ease-in-out";
 
@@ -30,7 +31,7 @@ export default function HeroFmcg({ className }: { className?: string }) {
               <div className="text-sm font-extrabold text-[#0f172a]">Akosua Koomson</div>
               <div className="text-[11px] text-[#64748b] mt-0.5">Loyal customer · 3 years</div>
               <div className="flex gap-1.5 mt-1.5 flex-wrap">
-                <span className="text-[10px] font-bold px-[9px] py-[3px] rounded-full bg-[#EEF5FD] text-[#0D47A1] border border-[#dbeafe]">🛒 Groceries</span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-[9px] py-[3px] rounded-full bg-[#EEF5FD] text-[#0D47A1] border border-[#dbeafe]"><ShoppingCart size={11} weight="duotone" />Groceries</span>
                 <span className="text-[10px] font-bold px-[9px] py-[3px] rounded-full bg-[#EEF5FD] text-[#0D47A1] border border-[#dbeafe]">🥑 Fresh Produce</span>
                 <span className="text-[10px] font-bold px-[9px] py-[3px] rounded-full bg-[#EEF5FD] text-[#0D47A1] border border-[#dbeafe]">Weekly Shopper</span>
               </div>
@@ -41,7 +42,7 @@ export default function HeroFmcg({ className }: { className?: string }) {
         <div className={`${cardClass} ${shown[1] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
           <div className="px-4 pt-3 pb-2 border-b border-[#f1f5f9]">
             <div className="text-[10px] font-bold uppercase tracking-[0.8px] text-[#94a3b8]">Recommended for you</div>
-            <div className="text-[13px] font-extrabold text-[#0f172a] mt-0.5">Complete your weekly list, Akosua 🛍️</div>
+            <div className="text-[13px] font-extrabold text-[#0f172a] mt-0.5 inline-flex items-center gap-1.5">Complete your weekly list, Akosua<ShoppingBag size={14} weight="duotone" /></div>
           </div>
           <div className="grid grid-cols-2 gap-2 px-3 pt-2.5 pb-3">
             <div className="bg-[#f8fafc] rounded-[10px] p-2.5 flex flex-col items-center gap-1.5 border border-[#f1f5f9] cursor-pointer transition-colors hover:border-[#0D47A1] hover:bg-[#EEF5FD]">
@@ -65,7 +66,7 @@ export default function HeroFmcg({ className }: { className?: string }) {
             </div>
             <div className="flex-1">
               <div className="text-xs font-extrabold text-[#0f172a]">Message delivered via WhatsApp</div>
-              <div className="text-[10px] text-[#64748b] mt-0.5">Akosua Koomson · Just now · ✓✓ Read</div>
+              <div className="text-[10px] text-[#64748b] mt-0.5 inline-flex items-center gap-1">Akosua Koomson · Just now ·<Checks size={11} weight="duotone" />Read</div>
             </div>
             <div className="w-2 h-2 rounded-full bg-[#22c55e] shrink-0 animate-[hf-blink_1.5s_ease-in-out_infinite]"></div>
           </div>

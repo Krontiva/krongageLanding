@@ -1,13 +1,12 @@
 'use client';
 import { useState } from 'react';
-
-const iconClass = "w-[18px] h-[18px] fill-none stroke-[#0D47A1] [stroke-width:1.8] [stroke-linecap:round] [stroke-linejoin:round]";
+import { ChatCircle, ChartLineUp, Broadcast, Gear } from '@phosphor-icons/react';
 
 const FEATURES = [
-  { icon: <svg viewBox="0 0 24 24" className={iconClass}><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></svg>, name: 'Personalised Offerings' },
-  { icon: <svg viewBox="0 0 24 24" className={iconClass}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>, name: 'Predictive Analytics' },
-  { icon: <svg viewBox="0 0 24 24" className={iconClass}><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>, name: 'Omnichannel Engagement' },
-  { icon: <svg viewBox="0 0 24 24" className={iconClass}><circle cx="12" cy="12" r="3" /><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83" /></svg>, name: 'Improved Efficiency' },
+  { icon: <ChatCircle size={18} weight="duotone" color="#0D47A1" />, name: 'Personalised Offerings' },
+  { icon: <ChartLineUp size={18} weight="duotone" color="#0D47A1" />, name: 'Predictive Analytics' },
+  { icon: <Broadcast size={18} weight="duotone" color="#0D47A1" />, name: 'Omnichannel Engagement' },
+  { icon: <Gear size={18} weight="duotone" color="#0D47A1" />, name: 'Improved Efficiency' },
 ];
 
 export default function HeroTelecom({ className }: { className?: string }) {

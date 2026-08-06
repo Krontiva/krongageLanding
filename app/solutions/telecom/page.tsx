@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import AiTelecomSupport from '../../../components/solutions/AiTelecomSupport';
 import Customer360 from '../../../components/solutions/Customer360';
 import HeroTelecom from '../../../components/solutions/HeroTelecom';
+import PhosphorIcon from '@/components/PhosphorIcon';
 
 export const metadata: Metadata = {
   title: 'Telecommunications — KronGage',
@@ -67,15 +68,15 @@ export default function Page() {
           <div>
             <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(13,71,161,0.14)] overflow-hidden max-w-[280px]">
               <div className="bg-[#0D47A1] px-4 py-3 flex items-center gap-[10px]">
-                <div className="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center text-xs text-white">⚡</div>
+                <div className="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center text-white"><PhosphorIcon name="Lightning" size={14} weight="duotone" color="#fff" /></div>
                 <span className="text-xs font-bold text-white">Multichannel messaging</span>
               </div>
               <div className="flex gap-[6px] px-4 py-3 border-b border-[#f1f5f9]">
-                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center text-sm">💬</div>
-                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center text-sm">📧</div>
-                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center text-sm">📱</div>
-                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center text-sm">🌐</div>
-                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center text-sm">📲</div>
+                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center"><PhosphorIcon name="ChatCircle" size={16} weight="duotone" color="#0D47A1" /></div>
+                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center"><PhosphorIcon name="EnvelopeSimple" size={16} weight="duotone" color="#0D47A1" /></div>
+                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center"><PhosphorIcon name="DeviceMobile" size={16} weight="duotone" color="#0D47A1" /></div>
+                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center"><PhosphorIcon name="Globe" size={16} weight="duotone" color="#0D47A1" /></div>
+                <div className="w-7 h-7 rounded-[7px] bg-[#EEF5FD] flex items-center justify-center"><PhosphorIcon name="DeviceMobile" size={16} weight="duotone" color="#0D47A1" /></div>
               </div>
               <div className="px-[14px] py-[10px]">
                 <div className="flex items-center gap-[9px] py-[7px] border-b border-[#f8fafc]">
@@ -127,18 +128,18 @@ export default function Page() {
       </section>
 
       <section className="bg-[#0f1f3d] px-[60px] py-[100px] text-center max-[900px]:px-5 max-[900px]:py-[72px]">
-        <div className="inline-flex items-center gap-[6px] bg-white/[0.07] border border-white/[0.12] rounded-full px-4 py-[6px] text-[11px] font-bold text-white/50 mb-7 tracking-[0.8px] uppercase">⊕ Enterprise Demo</div>
+        <div className="inline-flex items-center gap-[6px] bg-white/[0.07] border border-white/[0.12] rounded-full px-4 py-[6px] text-[11px] font-bold text-white/50 mb-7 tracking-[0.8px] uppercase"><PhosphorIcon name="PlusCircle" size={12} weight="duotone" color="currentColor" />Enterprise Demo</div>
         <h2 className="text-[44px] font-extrabold text-white mb-[18px] leading-[1.15] max-w-[760px] mx-auto max-[900px]:text-[30px]">Transform Customer Engagement In Your Network Today</h2>
         <p className="text-[17px] text-white/55 max-w-[580px] mx-auto mb-11 leading-[1.65]">Request an enterprise demo and see how KronGage can replace 5-7 tools with a single, unified platform built for modern organisations.</p>
         <div className="flex gap-4 justify-center flex-wrap mb-[52px]">
           <a href="/contact/" className="inline-flex items-center gap-2 border-2 border-white/35 text-white px-[30px] py-[14px] rounded-full text-[15px] font-bold transition-colors hover:border-white hover:bg-white/[0.07]">Request a Demo →</a>
-          <a href="/platform/" className="inline-flex items-center gap-2 border-2 border-white/15 text-white/60 px-[30px] py-[14px] rounded-full text-[15px] font-bold transition-colors hover:border-white/30">⊕ Explore the Platform</a>
+          <a href="/platform/" className="inline-flex items-center gap-2 border-2 border-white/15 text-white/60 px-[30px] py-[14px] rounded-full text-[15px] font-bold transition-colors hover:border-white/30"><PhosphorIcon name="PlusCircle" size={15} weight="duotone" color="currentColor" />Explore the Platform</a>
         </div>
         <div className="flex gap-8 justify-center flex-wrap max-[900px]:gap-4">
-          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold">⊘ No commitment required</div>
-          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold">🛡 Enterprise-grade security</div>
-          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold">★ World-Class Platform</div>
-          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold">⚡ Live demo in 24 hours</div>
+          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold"><PhosphorIcon name="Prohibit" size={14} weight="duotone" color="currentColor" />No commitment required</div>
+          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold"><PhosphorIcon name="ShieldCheck" size={14} weight="duotone" color="currentColor" />Enterprise-grade security</div>
+          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold"><PhosphorIcon name="Star" size={14} weight="fill" color="currentColor" />World-Class Platform</div>
+          <div className="flex items-center gap-[7px] text-xs text-white/35 font-semibold"><PhosphorIcon name="Lightning" size={14} weight="duotone" color="currentColor" />Live demo in 24 hours</div>
         </div>
       </section>
     </main>

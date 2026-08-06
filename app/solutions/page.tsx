@@ -3,6 +3,7 @@ import Customer360 from '../../components/solutions/Customer360';
 import HeroChannels from '../../components/platform/HeroChannels';
 import CampaignManagement from '../../components/platform/CampaignManagement';
 import HeroChatbot from '../../components/platform/HeroChatbot';
+import PhosphorIcon from '@/components/PhosphorIcon';
 
 export const metadata: Metadata = {
   title: 'Solutions – KronGage',
@@ -10,21 +11,21 @@ export const metadata: Metadata = {
 };
 
 const industries = [
-  { href: '/solutions/banking/', bg: '#EEF5FD', icon: '🏦', title: 'Banking & Finance', desc: 'Unify customer relationships across retail, SME, and corporate banking with compliant, contextual engagement at every touchpoint.', stat: '↑ 34% retention improvement', cta: 'Explore Banking' },
-  { href: '/solutions/telecom/', bg: '#f0fdf4', icon: '📡', title: 'Telecommunications', desc: 'Reduce churn, drive upsell, and manage high-volume customer interactions across prepaid, postpaid, and enterprise segments.', stat: '↓ 70% response time', cta: 'Explore Telecom' },
-  { href: '/solutions/fmcg/', bg: '#fef9c3', icon: '🛒', title: 'FMCG & Retail', desc: 'Drive loyalty, personalise promotions, and close the loop between digital campaigns and in-store or e-commerce purchases.', stat: '3× campaign ROI', cta: 'Explore FMCG' },
-  { href: '/solutions/healthcare/', bg: '#fdf2f8', icon: '🏥', title: 'Healthcare', desc: 'Improve patient outcomes with secure, HIPAA-aware communication across appointment reminders, care follow-ups, and chronic disease management.', stat: '↑ 28% patient engagement', cta: 'Explore Healthcare' },
-  { href: '/solutions/insurance/', bg: '#f0f9ff', icon: '🛡️', title: 'Insurance', desc: 'Accelerate claims resolution, reduce policyholder churn, and personalise renewal campaigns with AI-driven engagement workflows.', stat: '↑ 22% renewal rate', cta: 'Explore Insurance' },
-  { href: '/solutions/government/', bg: '#faf5ff', icon: '🏛️', title: 'Government & Public Sector', desc: 'Deliver citizen services at scale across WhatsApp, SMS, and digital portals — with full audit trails and compliance built in.', stat: '5× citizen reach', cta: 'Explore Government' },
+  { href: '/solutions/banking/', bg: '#EEF5FD', icon: 'Bank' as const, title: 'Banking & Finance', desc: 'Unify customer relationships across retail, SME, and corporate banking with compliant, contextual engagement at every touchpoint.', stat: '↑ 34% retention improvement', cta: 'Explore Banking' },
+  { href: '/solutions/telecom/', bg: '#f0fdf4', icon: 'Broadcast' as const, title: 'Telecommunications', desc: 'Reduce churn, drive upsell, and manage high-volume customer interactions across prepaid, postpaid, and enterprise segments.', stat: '↓ 70% response time', cta: 'Explore Telecom' },
+  { href: '/solutions/fmcg/', bg: '#fef9c3', icon: 'ShoppingCart' as const, title: 'FMCG & Retail', desc: 'Drive loyalty, personalise promotions, and close the loop between digital campaigns and in-store or e-commerce purchases.', stat: '3× campaign ROI', cta: 'Explore FMCG' },
+  { href: '/solutions/healthcare/', bg: '#fdf2f8', icon: 'Heartbeat' as const, title: 'Healthcare', desc: 'Improve patient outcomes with secure, HIPAA-aware communication across appointment reminders, care follow-ups, and chronic disease management.', stat: '↑ 28% patient engagement', cta: 'Explore Healthcare' },
+  { href: '/solutions/insurance/', bg: '#f0f9ff', icon: 'ShieldCheck' as const, title: 'Insurance', desc: 'Accelerate claims resolution, reduce policyholder churn, and personalise renewal campaigns with AI-driven engagement workflows.', stat: '↑ 22% renewal rate', cta: 'Explore Insurance' },
+  { href: '/solutions/government/', bg: '#faf5ff', icon: 'Buildings' as const, title: 'Government & Public Sector', desc: 'Deliver citizen services at scale across WhatsApp, SMS, and digital portals — with full audit trails and compliance built in.', stat: '5× citizen reach', cta: 'Explore Government' },
 ];
 
 const industryPills = [
-  { icon: '🏦', label: 'Banking', active: true },
-  { icon: '📡', label: 'Telecom', active: false },
-  { icon: '🛒', label: 'FMCG & Retail', active: false },
-  { icon: '🏥', label: 'Healthcare', active: false },
-  { icon: '🛡️', label: 'Insurance', active: false },
-  { icon: '🏛️', label: 'Government', active: false },
+  { icon: 'Bank' as const, label: 'Banking', active: true },
+  { icon: 'Broadcast' as const, label: 'Telecom', active: false },
+  { icon: 'ShoppingCart' as const, label: 'FMCG & Retail', active: false },
+  { icon: 'Heartbeat' as const, label: 'Healthcare', active: false },
+  { icon: 'ShieldCheck' as const, label: 'Insurance', active: false },
+  { icon: 'Buildings' as const, label: 'Government', active: false },
 ];
 
 const impactStats = [
@@ -62,10 +63,10 @@ const featureBullets = {
 };
 
 const platformTabs = [
-  { key: 'customer360', icon: '👥', label: 'Customer 360' },
-  { key: 'inbox', icon: '📥', label: 'Omnichannel Inbox' },
-  { key: 'campaigns', icon: '📣', label: 'Campaign Management' },
-  { key: 'ai', icon: '🤖', label: 'AI & Automation' },
+  { key: 'customer360', icon: 'UsersThree' as const, label: 'Customer 360' },
+  { key: 'inbox', icon: 'Tray' as const, label: 'Omnichannel Inbox' },
+  { key: 'campaigns', icon: 'Megaphone' as const, label: 'Campaign Management' },
+  { key: 'ai', icon: 'Robot' as const, label: 'AI & Automation' },
 ];
 
 export default function Page() {
@@ -93,7 +94,7 @@ export default function Page() {
                 key={pill.label}
                 className={`flex items-center gap-2 border rounded-full px-4 py-2 text-[13px] font-bold cursor-pointer transition-all ${pill.active ? 'bg-white text-[#0D47A1] border-white' : 'bg-white/[0.08] border-white/[0.18] text-white/80'}`}
               >
-                <span className="text-[15px]">{pill.icon}</span>{pill.label}
+                <PhosphorIcon name={pill.icon} size={15} weight="duotone" color="currentColor" />{pill.label}
               </div>
             ))}
           </div>
@@ -113,7 +114,7 @@ export default function Page() {
                 className="group relative rounded-[20px] overflow-hidden border border-[#e2e8f0] bg-[#f8fafc] transition-[transform,box-shadow] duration-[250ms] cursor-pointer hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(13,71,161,0.12)]"
               >
                 <div className="px-7 pt-8 pb-7">
-                  <div className="w-14 h-14 rounded-[14px] flex items-center justify-center text-[26px] mb-5" style={{ background: ind.bg }}>{ind.icon}</div>
+                  <div className="w-14 h-14 rounded-[14px] flex items-center justify-center mb-5" style={{ background: ind.bg }}><PhosphorIcon name={ind.icon} size={26} weight="duotone" color="#0D47A1" /></div>
                   <h3 className="text-lg font-extrabold text-[#0f172a] mb-[10px]">{ind.title}</h3>
                   <p className="text-sm text-[#64748b] leading-[1.65] mb-5">{ind.desc}</p>
                   <span className="inline-flex items-center gap-[6px] text-xs font-bold text-[#0D47A1] bg-[#EEF5FD] px-3 py-1 rounded-full">{ind.stat}</span>
@@ -162,7 +163,7 @@ export default function Page() {
                   key={tab.key}
                   className={`flex items-center gap-[14px] px-4 py-[14px] rounded-xl text-sm font-bold cursor-pointer transition-all border ${i === 0 ? 'bg-white text-[#0D47A1] border-[#e2e8f0] shadow-[0_2px_12px_rgba(13,71,161,0.08)]' : 'text-[#64748b] border-transparent hover:bg-white hover:text-[#0f172a]'}`}
                 >
-                  <div className={`w-9 h-9 rounded-[9px] flex items-center justify-center text-lg shrink-0 ${i === 0 ? 'bg-[#0D47A1]' : 'bg-[#EEF5FD]'}`}>{tab.icon}</div>
+                  <div className={`w-9 h-9 rounded-[9px] flex items-center justify-center shrink-0 ${i === 0 ? 'bg-[#0D47A1]' : 'bg-[#EEF5FD]'}`}><PhosphorIcon name={tab.icon} size={18} weight="duotone" color={i === 0 ? '#fff' : '#0D47A1'} /></div>
                   {tab.label}
                 </div>
               ))}

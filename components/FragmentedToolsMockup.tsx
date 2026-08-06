@@ -1,3 +1,6 @@
+'use client';
+import { Circle, ChatCircle, PaperPlaneRight, Lightning } from '@phosphor-icons/react';
+
 const FLOATS = [
   { anim: 'animate-[float-y_3.6s_ease-in-out_0s_infinite]' },
   { anim: 'animate-[float-y_4.1s_ease-in-out_0.7s_infinite]' },
@@ -101,11 +104,11 @@ export default function FragmentedToolsMockup() {
         <div className={FLOATS[2].anim}>
           <div className="relative bg-white rounded-[10px] shadow-[0_4px_18px_rgba(0,0,0,0.1)] overflow-hidden">
             <div className="inline-flex items-center gap-1 bg-white border border-[#e2e8f0] rounded-[20px] pl-1 pr-[7px] py-[3px] text-[8.5px] font-bold text-[#374151] mx-[9px] mt-[7px]">
-              <div className="w-[14px] h-[14px] rounded-full flex items-center justify-center text-[8px] bg-[#25D366]">🟢</div>
+              <div className="w-[14px] h-[14px] rounded-full flex items-center justify-center bg-[#25D366]"><Circle size={8} weight="fill" color="#22c55e" /></div>
               A Meta Service
             </div>
             <div className="bg-[#075E54] px-[9px] py-[7px] flex items-center gap-[6px]">
-              <div className="w-5 h-5 rounded-full bg-[#25D366] flex items-center justify-center text-[10px]">💬</div>
+              <div className="w-5 h-5 rounded-full bg-[#25D366] flex items-center justify-center"><ChatCircle size={12} weight="duotone" color="#fff" /></div>
               <div>
                 <div className="text-[9.5px] font-bold text-white">Customer Support</div>
                 <div className="text-[7.5px] text-white/70">online</div>
@@ -121,7 +124,7 @@ export default function FragmentedToolsMockup() {
             </div>
             <div className="bg-[#f0f0f0] px-[7px] py-1 flex gap-1 items-center">
               <div className="flex-1 bg-white rounded-[20px] h-[18px] text-[8.5px] px-[6px] text-[#94a3b8] flex items-center">Message</div>
-              <div className="w-[18px] h-[18px] rounded-full bg-[#075E54] flex items-center justify-center text-[8px] text-white">➤</div>
+              <div className="w-[18px] h-[18px] rounded-full bg-[#075E54] flex items-center justify-center text-white"><PaperPlaneRight size={10} weight="duotone" color="#fff" /></div>
             </div>
             <div className="px-[9px] pt-[6px] pb-[9px]">
               <div className="text-[9.5px] font-extrabold text-[#0f172a]">Connected WhatsApp</div>
@@ -138,7 +141,7 @@ export default function FragmentedToolsMockup() {
                 <div className="w-6 h-6 rounded-full bg-black shrink-0 flex items-center justify-center text-white text-[10px] font-extrabold">R</div>
                 <div>
                   <div className="text-[9px] font-extrabold text-[#0f172a]">Reku</div>
-                  <div className="text-[8.5px] text-[#0f172a] leading-[1.5] mt-0.5">Flash sale ends tonight ⚡ Don&apos;t miss out!</div>
+                  <div className="text-[8.5px] text-[#0f172a] leading-[1.5] mt-0.5 inline-flex items-center gap-1">Flash sale ends tonight <Lightning size={10} weight="duotone" /> Don&apos;t miss out!</div>
                 </div>
               </div>
             </div>

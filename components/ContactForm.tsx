@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { contactSchema, type ContactFields } from '@/lib/schemas/contact';
 import { useState } from 'react';
+import { CheckCircle } from '@phosphor-icons/react';
 
 const TOPICS = ['Request a Demo', 'Pricing & Plans', 'Technical Question', 'Partnership', 'Other'];
 
@@ -56,7 +57,7 @@ export default function ContactForm() {
     const values = getValues();
     return (
       <div className="bg-white rounded-[20px] shadow-[0_24px_80px_rgba(0,0,0,0.18)] p-10 w-full max-w-[480px] text-center py-[60px] px-10">
-        <div className="text-5xl mb-4">✓</div>
+        <div className="flex items-center justify-center mb-4"><CheckCircle size={48} weight="duotone" color="#16a34a" /></div>
         <h2 className="text-[22px] font-extrabold text-[#0f172a] mb-3">Message sent!</h2>
         <p className="text-[#64748b] text-sm leading-[1.7]">
           Thanks {values.firstName} — our team will get back to you at <strong>{values.email}</strong> within 24 hours.

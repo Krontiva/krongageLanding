@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Heartbeat, CalendarCheck, BellRinging, CheckCircle, ClipboardText, Check, Checks } from '@phosphor-icons/react';
 
 const STEPS = [
-  { icon: '📅', title: 'Appointment Booked', sub: 'Friday, 3:00 PM · City Clinic' },
-  { icon: '🔔', title: 'Reminder Sent', sub: '24h notice via WhatsApp · Delivered ✓✓' },
-  { icon: '✅', title: 'Patient Confirmed', sub: 'Replied "Yes" · 2h before appointment' },
-  { icon: '📋', title: 'Follow-up Scheduled', sub: 'Post-visit check-in · 7 days later' },
+  { icon: CalendarCheck, title: 'Appointment Booked', sub: 'Friday, 3:00 PM · City Clinic' },
+  { icon: BellRinging, title: 'Reminder Sent', sub: '24h notice via WhatsApp · Delivered', readReceipt: true },
+  { icon: CheckCircle, title: 'Patient Confirmed', sub: 'Replied "Yes" · 2h before appointment' },
+  { icon: ClipboardText, title: 'Follow-up Scheduled', sub: 'Post-visit check-in · 7 days later' },
 ];
 
 export default function HeroHealthcare({ className }: { className?: string }) {
@@ -30,7 +31,7 @@ export default function HeroHealthcare({ className }: { className?: string }) {
       <div className="flex items-center justify-center w-full h-full p-8">
         <div className="w-full max-w-[340px] bg-white rounded-[20px] shadow-[0_12px_40px_rgba(13,71,161,0.1),0_2px_8px_rgba(0,0,0,0.05)] overflow-hidden">
           <div className="bg-[linear-gradient(135deg,#0D47A1,#1565C0)] px-5 py-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[10px] bg-white/[0.18] flex items-center justify-center text-lg shrink-0">🏥</div>
+            <div className="w-9 h-9 rounded-[10px] bg-white/[0.18] flex items-center justify-center shrink-0"><Heartbeat size={20} weight="duotone" color="#fff" /></div>
             <div>
               <div className="text-sm font-extrabold text-white">Patient Engagement Journey</div>
               <div className="text-[11px] text-white/65 mt-0.5">Powered by KronGage</div>
@@ -58,15 +59,20 @@ export default function HeroHealthcare({ className }: { className?: string }) {
                   {!isLast && (
                     <div className={`absolute left-[15px] top-[34px] w-0.5 h-[calc(100%-34px)] transition-colors duration-[400ms] ease-in-out ${isLit ? 'bg-[#bbf7d0]' : 'bg-[#e2e8f0]'}`}></div>
                   )}
-                  <div className={`w-8 h-8 rounded-full shrink-0 border-2 flex items-center justify-center text-[15px] transition-colors duration-[400ms] ease-in-out relative z-[1] ${isLit ? 'bg-[#f0fdf4] border-[#86efac]' : 'bg-[#f1f5f9] border-[#e2e8f0]'}`}>{s.icon}</div>
+                  <div className={`w-8 h-8 rounded-full shrink-0 border-2 flex items-center justify-center transition-colors duration-[400ms] ease-in-out relative z-[1] ${isLit ? 'bg-[#f0fdf4] border-[#86efac]' : 'bg-[#f1f5f9] border-[#e2e8f0]'}`}>
+                    <s.icon size={16} weight="duotone" color={isLit ? '#16a34a' : '#94a3b8'} />
+                  </div>
                   <div className="flex-1 pt-1">
                     <div className="text-[13px] font-extrabold text-[#0f172a] flex items-center gap-1.5">
                       {s.title}
                       <div className={`w-[18px] h-[18px] rounded-full bg-[#22c55e] shrink-0 flex items-center justify-center transition-[opacity,transform] duration-300 [transition-delay:150ms] ${isLit ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-                        <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 stroke-white fill-none [stroke-width:2.5] [stroke-linecap:round] [stroke-linejoin:round]"><polyline points="3 8 7 12 13 5" /></svg>
+                        <Check size={10} weight="duotone" color="#fff" />
                       </div>
                     </div>
-                    <div className="text-[11px] text-[#64748b] mt-[3px] leading-[1.5]">{s.sub}</div>
+                    <div className="text-[11px] text-[#64748b] mt-[3px] leading-[1.5] inline-flex items-center gap-1">
+                      {s.sub}
+                      {'readReceipt' in s && s.readReceipt && <Checks size={12} weight="duotone" />}
+                    </div>
                   </div>
                 </div>
               );

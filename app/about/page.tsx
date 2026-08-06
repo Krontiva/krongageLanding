@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import PhosphorIcon from '@/components/PhosphorIcon';
 
 export const metadata: Metadata = {
   title: 'About – KronGage',
@@ -87,16 +88,20 @@ export default function Page() {
           <div>
             <h2 className="text-[26px] font-extrabold text-[#0D47A1] mb-6">KronGage At A Glance</h2>
             <ul className="list-none flex flex-col gap-4">
-              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5] before:content-['✓'] before:text-[#0D47A1] before:font-bold before:mt-px before:shrink-0">
+              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5]">
+                <PhosphorIcon name="Check" size={16} weight="duotone" color="#0D47A1" className="shrink-0 mt-0.5" />
                 10 fully integrated modules on a single microservices backbone
               </li>
-              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5] before:content-['✓'] before:text-[#0D47A1] before:font-bold before:mt-px before:shrink-0">
+              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5]">
+                <PhosphorIcon name="Check" size={16} weight="duotone" color="#0D47A1" className="shrink-0 mt-0.5" />
                 15+ communication channels in one omnichannel inbox
               </li>
-              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5] before:content-['✓'] before:text-[#0D47A1] before:font-bold before:mt-px before:shrink-0">
+              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5]">
+                <PhosphorIcon name="Check" size={16} weight="duotone" color="#0D47A1" className="shrink-0 mt-0.5" />
                 9+ platforms supported for publishing, scheduling, and analytics
               </li>
-              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5] before:content-['✓'] before:text-[#0D47A1] before:font-bold before:mt-px before:shrink-0">
+              <li className="flex items-start gap-3 text-[15px] text-[#334155] leading-[1.5]">
+                <PhosphorIcon name="Check" size={16} weight="duotone" color="#0D47A1" className="shrink-0 mt-0.5" />
                 40-60% lower total cost of ownership vs. assembling equivalent separate tools
               </li>
             </ul>
@@ -113,42 +118,42 @@ export default function Page() {
           </div>
           <div className="grid grid-cols-3 gap-x-10 gap-y-8 max-[640px]:grid-cols-2 max-[640px]:gap-6">
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">📥</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="Tray" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">Omnichannel Inbox</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">AI-powered view across 15+ channels with AI routing and SLA tracking.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">📣</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="Megaphone" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">Social Media Publishing</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">Enterprise scheduling, calendar planning, bulk uploads, and performance analytics.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">✨</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="Sparkle" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">AI Content Creation</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">Generate, optimise, and repurpose content using globally-optimised AI models.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">🔍</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="MagnifyingGlass" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">Social Listening</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">Monitor numerous platforms with sentiment analysis and crisis detection.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">🗃️</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="Archive" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">Customer 360</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">Unified identity resolution and predictive engagement intelligence.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">📊</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="ChartBar" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">Campaign Management</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">Multi-channel orchestration with drag-and-drop journey builder.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">🤖</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="Robot" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">Knowledge Management (RAG)</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">AI-powered contextual knowledge retrieval for agents and self-service.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1">📈</div>
+              <div className="w-10 h-10 bg-[#eff6ff] rounded-[10px] flex items-center justify-center text-lg mb-1"><PhosphorIcon name="ChartLineUp" size={20} weight="duotone" color="#0D47A1" /></div>
               <h4 className="text-[15px] font-bold text-[#0D47A1]">Analytics &amp; BI</h4>
               <p className="text-[13px] text-[#64748b] leading-[1.6]">Executive dashboards and cross-module reporting.</p>
             </div>

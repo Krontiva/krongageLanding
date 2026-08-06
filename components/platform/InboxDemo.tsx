@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { ArrowClockwise, Phone, ArrowRight } from '@phosphor-icons/react';
 
 const CONVS = [
   { id: 1, name: 'Sarah J.', ch: 'WhatsApp', prev: 'Hey was you can thing tom…', color: '#0D47A1', init: 'SJ', unread: 1 },
@@ -71,7 +72,7 @@ export default function InboxDemo({ className }: { className?: string }) {
           <div className="px-3 pt-[13px] pb-[10px] border-b border-[#f1f5f9] flex items-center justify-between">
             <span className="text-[15px] font-extrabold text-[#0f172a]">Inbox</span>
             <div className="flex gap-[5px]">
-              <button className="w-[26px] h-[26px] rounded-md bg-[#f1f5f9] border-none cursor-pointer flex items-center justify-center text-[#64748b] text-[13px] transition-colors hover:bg-[#e2e8f0]" title="Refresh">↻</button>
+              <button className="w-[26px] h-[26px] rounded-md bg-[#f1f5f9] border-none cursor-pointer flex items-center justify-center text-[#64748b] text-[13px] transition-colors hover:bg-[#e2e8f0]" title="Refresh"><ArrowClockwise size={14} weight="duotone" /></button>
               <button className="w-[26px] h-[26px] rounded-md bg-[#f1f5f9] border-none cursor-pointer flex items-center justify-center text-[#64748b] text-[13px] transition-colors hover:bg-[#e2e8f0]" title="New conversation">+</button>
             </div>
           </div>
@@ -105,7 +106,7 @@ export default function InboxDemo({ className }: { className?: string }) {
               <span className="text-[11px] text-[#64748b]">Webchat / {conv.ch}</span>
             </div>
             <div className="flex gap-[6px] items-center">
-              <button className="w-7 h-7 p-0 rounded-md text-[11px] font-semibold border border-[#e2e8f0] bg-white text-[#475569] cursor-pointer transition-all flex items-center justify-center" title="Call">📞</button>
+              <button className="w-7 h-7 p-0 rounded-md text-[11px] font-semibold border border-[#e2e8f0] bg-white text-[#475569] cursor-pointer transition-all flex items-center justify-center" title="Call"><Phone size={14} weight="duotone" /></button>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto px-4 py-[14px] flex flex-col gap-[10px] bg-[#f8fafc]" ref={areaRef}>
@@ -140,7 +141,7 @@ export default function InboxDemo({ className }: { className?: string }) {
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') sendMsg(); }}
             />
-            <button className="w-[30px] h-[30px] rounded-full bg-[#0D47A1] border-none cursor-pointer flex items-center justify-center text-white text-xs shrink-0 transition-colors hover:bg-[#0a3a84]" onClick={sendMsg}>➤</button>
+            <button className="w-[30px] h-[30px] rounded-full bg-[#0D47A1] border-none cursor-pointer flex items-center justify-center text-white shrink-0 transition-colors hover:bg-[#0a3a84]" onClick={sendMsg}><ArrowRight size={14} weight="duotone" color="#fff" /></button>
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ import {
   PlusIcon,
 } from '@phosphor-icons/react';
 import { WipeButton } from '@/components/WipeButton';
-import { TrustedBy } from '@/components/TrustedBy';
+import Scanner from '@/components/Scanner';
 
 // Four badge slots per ring, spaced ~20° off the horizontal so they stay
 // clear of the nav (above) and the dashboard mockup (below).
@@ -67,6 +67,38 @@ const STATS = [
 export default function UnifiedHero() {
   return (
     <section className="relative overflow-hidden bg-[#f0f7ff] pt-40 pb-24">
+      {/* Animated scan-field backdrop — sits behind the orbit rings and content */}
+      <div className="absolute inset-0 pointer-events-auto" aria-hidden="true">
+        <Scanner
+          color1="#0D47A1"
+          color2="#0a3680"
+          color3="#FFFFFF"
+          speed={0.5}
+          sweepSpeed={0.25}
+          sweepWidth={1.15}
+          sweepFalloff={6}
+          scale={1.5}
+          frequency={2}
+          ripple={0.22}
+          bandDensity={12.5}
+          lineSharpness={5.5}
+          glow={0.22}
+          scanDirection="vertical"
+          colorSpread={0.7}
+          brightness={0.55}
+          contrast={1.15}
+          softness={1.4}
+          vignette={0.45}
+          scanline={true}
+          grain={true}
+          grainIntensity={0.05}
+          opacity={1.0}
+          mouseInteraction={true}
+          mouseRadius={0.5}
+          mouseStrength={0.5}
+        />
+      </div>
+
       {/* Decorative background glow — purely visual, sits behind everything */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         {ORBIT_RINGS.map((ring, i) => (
@@ -115,7 +147,7 @@ export default function UnifiedHero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="text-[40px] sm:text-[56px] font-normal leading-[1.1] text-[#0D47A1] tracking-[-1.5px] mb-5"
+          className="text-[40px] sm:text-[56px] font-normal leading-[1.1] tracking-[-1.5px] mb-5"
         >
           All your customer data.<br /> Finally unified.
         </motion.h1>
@@ -240,8 +272,6 @@ export default function UnifiedHero() {
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-[#f0f7ff]/70 to-[#f0f7ff]" />
         </motion.div>
       </div>
-
-      <TrustedBy delay={0.4} className="mt-16" />
     </section>
   );
 }

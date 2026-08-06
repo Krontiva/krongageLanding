@@ -1,18 +1,48 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import {
+  WhatsappLogo,
+  ChatCircle,
+  EnvelopeSimple,
+  Camera,
+  Circle,
+  Lightning,
+  type Icon,
+} from '@phosphor-icons/react';
 
-const pills = [
-  { key: 'wa', icon: '🟢', label: 'WhatsApp', stat: '847 msgs', dur: '3.8s', del: '0s', iconBg: '#dcfce7', statBg: '#dcfce7', statColor: '#15803d' },
-  { key: 'sms', icon: '💬', label: 'SMS / RCS', stat: '412 msgs', dur: '3.2s', del: '.5s', iconBg: '#dbeafe', statBg: '#dbeafe', statColor: '#1d4ed8' },
-  { key: 'em', icon: '✉️', label: 'Email', stat: '1.2K msgs', dur: '4.1s', del: '1s', iconBg: '#f3f4f6', statBg: '#f3f4f6', statColor: '#374151' },
-  { key: 'ig', icon: '📸', label: 'Instagram', stat: '238 msgs', dur: '3.6s', del: '1.5s', iconBg: '#fae8ff', statBg: '#fae8ff', statColor: '#7e22ce' },
-  { key: 'fb', icon: '🔵', label: 'Facebook', stat: '193 msgs', dur: '3.9s', del: '2s', iconBg: '#dbeafe', statBg: '#dbeafe', statColor: '#1e40af' },
+const pills: Array<{
+  key: string;
+  icon: Icon;
+  iconWeight: 'duotone' | 'fill';
+  iconColor: string;
+  label: string;
+  stat: string;
+  dur: string;
+  del: string;
+  iconBg: string;
+  statBg: string;
+  statColor: string;
+}> = [
+  { key: 'wa', icon: WhatsappLogo, iconWeight: 'fill', iconColor: '#22c55e', label: 'WhatsApp', stat: '847 msgs', dur: '3.8s', del: '0s', iconBg: '#dcfce7', statBg: '#dcfce7', statColor: '#15803d' },
+  { key: 'sms', icon: ChatCircle, iconWeight: 'duotone', iconColor: '#1d4ed8', label: 'SMS / RCS', stat: '412 msgs', dur: '3.2s', del: '.5s', iconBg: '#dbeafe', statBg: '#dbeafe', statColor: '#1d4ed8' },
+  { key: 'em', icon: EnvelopeSimple, iconWeight: 'duotone', iconColor: '#374151', label: 'Email', stat: '1.2K msgs', dur: '4.1s', del: '1s', iconBg: '#f3f4f6', statBg: '#f3f4f6', statColor: '#374151' },
+  { key: 'ig', icon: Camera, iconWeight: 'duotone', iconColor: '#7e22ce', label: 'Instagram', stat: '238 msgs', dur: '3.6s', del: '1.5s', iconBg: '#fae8ff', statBg: '#fae8ff', statColor: '#7e22ce' },
+  { key: 'fb', icon: Circle, iconWeight: 'fill', iconColor: '#1e40af', label: 'Facebook', stat: '193 msgs', dur: '3.9s', del: '2s', iconBg: '#dbeafe', statBg: '#dbeafe', statColor: '#1e40af' },
 ];
 
-const conversations = [
-  { name: 'Ama Kwansa', text: "My renewal notice didn't come through", ch: '🟢', av: 'AK', avBg: '#15803d', delay: '.1s' },
-  { name: 'Kofi Owusu', text: 'Can I change my payment date?', ch: '✉️', av: 'KO', avBg: '#0D47A1', delay: '.25s' },
-  { name: 'Priya Nair', text: 'When will my claim be processed?', ch: '💬', av: 'PN', avBg: '#7c3aed', delay: '.4s' },
+const conversations: Array<{
+  name: string;
+  text: string;
+  ch: Icon;
+  chWeight: 'duotone' | 'fill';
+  chColor: string;
+  av: string;
+  avBg: string;
+  delay: string;
+}> = [
+  { name: 'Ama Kwansa', text: "My renewal notice didn't come through", ch: WhatsappLogo, chWeight: 'fill', chColor: '#22c55e', av: 'AK', avBg: '#15803d', delay: '.1s' },
+  { name: 'Kofi Owusu', text: 'Can I change my payment date?', ch: EnvelopeSimple, chWeight: 'duotone', chColor: '#0D47A1', av: 'KO', avBg: '#0D47A1', delay: '.25s' },
+  { name: 'Priya Nair', text: 'When will my claim be processed?', ch: ChatCircle, chWeight: 'duotone', chColor: '#7c3aed', av: 'PN', avBg: '#7c3aed', delay: '.4s' },
 ];
 
 export default function OmnichannelScene({ className }: { className?: string }) {
@@ -93,7 +123,7 @@ export default function OmnichannelScene({ className }: { className?: string }) 
                 style={{ animation: `oc-floatPill ${p.dur} ease-in-out infinite ${p.del}` }}
                 ref={el => { if (el) pillRefs.current[i] = el; }}
               >
-                <div className="w-[26px] h-[26px] rounded-full flex items-center justify-center text-sm shrink-0" style={{ background: p.iconBg }}>{p.icon}</div>
+                <div className="w-[26px] h-[26px] rounded-full flex items-center justify-center text-sm shrink-0" style={{ background: p.iconBg }}><p.icon size={14} weight={p.iconWeight} color={p.iconColor} /></div>
                 {p.label}
                 <span className="ml-auto text-[10px] font-bold px-[7px] py-0.5 rounded-full" style={{ background: p.statBg, color: p.statColor }}>{p.stat}</span>
               </div>
@@ -111,7 +141,7 @@ export default function OmnichannelScene({ className }: { className?: string }) 
 
           <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_8px_32px_rgba(13,71,161,0.1)] overflow-hidden">
             <div className="bg-[#0D47A1] px-[14px] py-[10px] flex items-center gap-2">
-              <div className="w-[22px] h-[22px] bg-white/20 rounded-md flex items-center justify-center text-[11px] text-white">⚡</div>
+              <div className="w-[22px] h-[22px] bg-white/20 rounded-md flex items-center justify-center text-[11px] text-white"><Lightning size={11} weight="duotone" color="#fff" /></div>
               <span className="text-[11px] font-bold text-white">Unified Inbox</span>
             </div>
             <div className="flex border-b border-[#f1f5f9] px-3">
@@ -131,7 +161,7 @@ export default function OmnichannelScene({ className }: { className?: string }) 
                     <div className="text-[11px] font-bold text-[#0f172a]">{c.name}</div>
                     <div className="text-[9.5px] text-[#94a3b8] mt-px whitespace-nowrap overflow-hidden text-ellipsis">{c.text}</div>
                   </div>
-                  <div className="text-[10px] w-5 h-5 rounded-full flex items-center justify-center bg-[#f8fafc] shrink-0">{c.ch}</div>
+                  <div className="text-[10px] w-5 h-5 rounded-full flex items-center justify-center bg-[#f8fafc] shrink-0"><c.ch size={11} weight={c.chWeight} color={c.chColor} /></div>
                 </div>
               ))}
             </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import PhosphorIcon from '@/components/PhosphorIcon';
 import OmnichannelScene from '../../../components/blog/OmnichannelScene';
 
 export const metadata: Metadata = {
@@ -75,12 +76,12 @@ export default function Page() {
 
             <div className="grid grid-cols-2 gap-5 my-8 max-[900px]:grid-cols-1">
               <div className="rounded-2xl p-6 bg-[#fef2f2] border border-[#fecaca]">
-                <div className="text-[11px] font-extrabold uppercase tracking-[0.8px] mb-3 text-[#dc2626]">❌ Multi-Channel</div>
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.8px] mb-3 text-[#dc2626]"><PhosphorIcon name="XCircle" size={14} weight="duotone" />Multi-Channel</div>
                 <h4 className="text-base font-extrabold text-[#0f172a] mb-2">Channels without memory</h4>
                 <p className="text-[13px] text-[#475569] leading-[1.6]">Customer contacts WhatsApp on Monday. Calls on Wednesday. Emails on Friday. Three different teams. Three separate conversations. Same problem, no resolution.</p>
               </div>
               <div className="rounded-2xl p-6 bg-[#f0fdf4] border border-[#bbf7d0]">
-                <div className="text-[11px] font-extrabold uppercase tracking-[0.8px] mb-3 text-[#16a34a]">✅ Omnichannel</div>
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.8px] mb-3 text-[#16a34a]"><PhosphorIcon name="CheckCircle" size={14} weight="duotone" />Omnichannel</div>
                 <h4 className="text-base font-extrabold text-[#0f172a] mb-2">One conversation, any channel</h4>
                 <p className="text-[13px] text-[#475569] leading-[1.6]">Customer starts on WhatsApp. Escalates by email. Calls in. Every agent sees the full journey, picks up where the last left off. Problem resolved, loyalty intact.</p>
               </div>

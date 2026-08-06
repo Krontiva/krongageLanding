@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Key, HandWaving, Warning } from '@phosphor-icons/react';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -114,8 +115,10 @@ export default function StarterSignupModal({ onClose }: Props) {
         <div className="px-7 pt-6 pb-7">
           {step === 'exists' ? (
             <div className="text-center py-4">
-              <div className="text-4xl mb-3">
-                {conflictReason === 'subscription_inactive' ? '🔑' : '👋'}
+              <div className="flex items-center justify-center mb-3">
+                {conflictReason === 'subscription_inactive'
+                  ? <Key size={40} weight="duotone" />
+                  : <HandWaving size={40} weight="duotone" />}
               </div>
               {conflictReason === 'subscription_inactive' ? (
                 <>
@@ -158,7 +161,9 @@ export default function StarterSignupModal({ onClose }: Props) {
             </div>
           ) : step === 'error' ? (
             <div className="text-center py-4">
-              <div className="text-4xl mb-3">⚠️</div>
+              <div className="flex items-center justify-center mb-3">
+                <Warning size={40} weight="duotone" color="#f59e0b" />
+              </div>
               <h3 className="text-lg font-extrabold text-[#0f172a] mb-2">
                 Something went wrong
               </h3>

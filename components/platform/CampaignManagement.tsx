@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { CheckCircle, WarningCircle, Circle } from '@phosphor-icons/react';
 
 const ACTIVITIES = [
   { id: 4, time: '1d ago', status: 'done', title: 'Ad set optimization complete', sub: 'ROAS: 4.5x · CPA: $8.40', metrics: [{ lbl: 'ROAS', val: '4.5x' }, { lbl: 'Daily Spend', val: '$2,000' }, { lbl: 'CPA', val: '$8.40' }] },
@@ -7,7 +8,7 @@ const ACTIVITIES = [
 ];
 
 function iconCls(s: string) { return s === 'done' ? 'bg-[#0D47A1] text-white' : s === 'warn' ? 'bg-[#b45309] text-white' : 'bg-white/[0.12] text-white/40'; }
-function iconChar(s: string) { return s === 'done' ? '✓' : s === 'warn' ? '!' : '◯'; }
+function iconChar(s: string) { return s === 'done' ? CheckCircle : s === 'warn' ? WarningCircle : Circle; }
 
 const chipTagClass = "text-[10px] font-bold px-2 py-[3px] rounded-[5px] text-white";
 const filterBtnBase = "px-[9px] py-1 rounded-[5px] text-[10px] font-bold cursor-pointer border-none transition-all";
@@ -77,7 +78,9 @@ export default function CampaignManagement({ className }: { className?: string }
             </div>
           </div>
           <div>
-            {items.map((a, i) => (
+            {items.map((a, i) => {
+              const StatusIcon = iconChar(a.status);
+              return (
               <div
                 key={a.id}
                 className={`flex gap-[10px] py-[9px] border-b border-white/5 last:border-b-0 cursor-pointer transition-colors rounded-[5px] hover:bg-white/[0.03] ${expandedId === a.id ? 'bg-[#0D47A1]/[0.15] pl-1' : ''}`}
@@ -85,7 +88,7 @@ export default function CampaignManagement({ className }: { className?: string }
               >
                 <span className="text-[10px] text-white/30 font-semibold min-w-[44px] text-right shrink-0 pt-0.5">{a.time}</span>
                 <div className="flex flex-col items-center shrink-0">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] shrink-0 ${iconCls(a.status)}`}>{iconChar(a.status)}</div>
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${iconCls(a.status)}`}><StatusIcon size={14} weight={a.status === 'warn' ? 'fill' : 'duotone'} /></div>
                   {i !== items.length - 1 && <div className="w-px flex-1 bg-white/[0.07] mt-1 min-h-[16px]"></div>}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -100,7 +103,8 @@ export default function CampaignManagement({ className }: { className?: string }
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

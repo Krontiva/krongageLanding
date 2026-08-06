@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { Tray, ChatCircle } from '@phosphor-icons/react';
 
 const chipClass = "absolute flex items-center gap-2 bg-white/[0.07] border border-white/[0.13] rounded-full py-[7px] pr-3 pl-[7px] cursor-default whitespace-nowrap transition-colors hover:bg-white/[0.14] hover:border-white/[0.28]";
 const chipIconClass = "w-7 h-7 rounded-full flex items-center justify-center shrink-0";
@@ -95,7 +96,7 @@ export default function HeroChannels({ className }: { className?: string }) {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[linear-gradient(135deg,#0D47A1,#1565C0)] rounded-2xl px-[22px] py-[18px] text-center shadow-[0_12px_48px_rgba(13,71,161,0.55),0_0_0_1px_rgba(255,255,255,0.12)] z-10 w-[138px]"
           ref={hubRef}
         >
-          <div className="text-2xl mb-[5px]">📬</div>
+          <div className="mb-[5px] flex justify-center"><Tray size={24} weight="duotone" color="#fff" /></div>
           <div className="text-[9px] font-extrabold text-white/75 uppercase tracking-[1px] leading-[1.3]">Unified<br />Inbox</div>
           <div className="text-2xl font-black text-white mt-[3px] leading-none">2,847</div>
           <div className="text-[8.5px] text-white/45 mt-[3px]">active conversations</div>
@@ -148,7 +149,7 @@ export default function HeroChannels({ className }: { className?: string }) {
         </div>
 
         <div className={`hc-chip ${chipClass} bottom-4 left-[22px]`} style={{ animation: 'hc-chipFloat 4.2s ease-in-out infinite 2.4s' }}>
-          <div className={chipIconClass} style={{ background: '#7c3aed', fontSize: '14px', color: '#fff' }}>💬</div>
+          <div className={chipIconClass} style={{ background: '#7c3aed' }}><ChatCircle size={14} weight="duotone" color="#fff" /></div>
           <div><div className={chipNameClass}>SMS</div><div className={chipStatClass}>156 texts</div></div>
           <div className={chipBadgeClass}>2</div>
         </div>

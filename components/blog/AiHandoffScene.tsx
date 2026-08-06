@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Robot, User, ArrowUp, Star } from '@phosphor-icons/react';
 
 const bubble = 'px-[13px] py-[9px] rounded-xl text-[11px] font-semibold leading-[1.45] transition-[opacity,transform] duration-300 ease-in-out';
 const hidden = 'opacity-0 translate-y-1';
@@ -47,7 +48,7 @@ export default function AiHandoffScene({ className }: { className?: string }) {
 
           <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-4 flex flex-col gap-[10px] relative z-[1]">
             <div className="flex items-center gap-[10px] mb-1">
-              <div className="w-[34px] h-[34px] rounded-full shrink-0 flex items-center justify-center text-[17px] font-black bg-[linear-gradient(135deg,#0D47A1,#1e88e5)] text-white">🤖</div>
+              <div className="w-[34px] h-[34px] rounded-full shrink-0 flex items-center justify-center text-[17px] font-black bg-[linear-gradient(135deg,#0D47A1,#1e88e5)] text-white"><Robot size={17} weight="duotone" color="#fff" /></div>
               <div>
                 <div className="text-[11px] font-extrabold uppercase tracking-[1px] text-[#60a5fa]">KronGage AI</div>
                 <div className="text-[9px] text-white/35 font-semibold">Autonomous Support Agent</div>
@@ -60,7 +61,7 @@ export default function AiHandoffScene({ className }: { className?: string }) {
               <span className="w-[5px] h-[5px] rounded-full bg-[#60a5fa] animate-[aihs-dot_1.2s_ease-in-out_infinite] [animation-delay:0.4s]" />
             </div>
             <div className={`${bubble} bg-[#1d4ed8]/35 border border-[#60a5fa]/20 text-white/85 self-start ${state.b2 ? shown : hidden}`}>Your Premium Gold policy expires Jun 30. Would you like to renew with the same coverage?</div>
-            <div className={`${bubble} bg-[#14b8a6]/15 border border-[#14b8a6]/30 text-[#5eead4] text-[10px] text-center ${state.b3 ? shown : hidden}`}>⬆ Escalating — billing dispute detected</div>
+            <div className={`${bubble} bg-[#14b8a6]/15 border border-[#14b8a6]/30 text-[#5eead4] text-[10px] text-center ${state.b3 ? shown : hidden}`}><span className="inline-flex items-center gap-1.5"><ArrowUp size={12} weight="duotone" />Escalating — billing dispute detected</span></div>
           </div>
 
           <div className="flex flex-col items-center gap-2 relative z-[1]">
@@ -73,7 +74,7 @@ export default function AiHandoffScene({ className }: { className?: string }) {
 
           <div className={`bg-white/[0.04] border border-white/[0.08] rounded-2xl p-4 flex flex-col gap-[10px] relative z-[1] transition-opacity duration-[800ms] ease-in-out ${state.human ? 'opacity-100' : 'opacity-0'}`}>
             <div className="flex items-center gap-[10px] mb-1">
-              <div className="w-[34px] h-[34px] rounded-full shrink-0 flex items-center justify-center text-[17px] font-black bg-[linear-gradient(135deg,#d97706,#f59e0b)] text-white">👤</div>
+              <div className="w-[34px] h-[34px] rounded-full shrink-0 flex items-center justify-center text-[17px] font-black bg-[linear-gradient(135deg,#d97706,#f59e0b)] text-white"><User size={17} weight="duotone" color="#fff" /></div>
               <div>
                 <div className="text-[11px] font-extrabold uppercase tracking-[1px] text-[#fbbf24]">Abena Asante</div>
                 <div className="text-[9px] text-white/35 font-semibold">Senior Account Manager</div>
@@ -84,7 +85,11 @@ export default function AiHandoffScene({ className }: { className?: string }) {
             </div>
             <div className="bg-[#f59e0b]/[0.12] border border-[#f59e0b]/25 rounded-xl px-[13px] py-[9px] text-[11px] font-semibold text-white/85 leading-[1.45]">Hi Kwame! I&apos;ve reviewed your account. I&apos;d like to offer you our loyalty discount — 15% off for renewing today.</div>
             <div className="flex items-center gap-[6px] mt-0.5">
-              <span className="text-xs text-[#fbbf24]">★★★★★</span>
+              <span className="flex items-center gap-0.5 text-[#fbbf24]">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={12} weight="fill" color="#fbbf24" />
+                ))}
+              </span>
               <span className="text-[9px] text-white/40 font-semibold">4.9 · 2,847 interactions this month</span>
             </div>
           </div>

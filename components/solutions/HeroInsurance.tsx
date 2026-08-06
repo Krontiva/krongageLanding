@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Warning, Car, CreditCard, Checks } from '@phosphor-icons/react';
 
 const cardClass = "w-full max-w-[340px] bg-white rounded-2xl shadow-[0_8px_32px_rgba(13,71,161,0.1),0_2px_8px_rgba(0,0,0,0.05)] transition-[opacity,transform] duration-500 ease-in-out";
 
@@ -31,19 +32,19 @@ export default function HeroInsurance({ className }: { className?: string }) {
                 <div className="text-[15px] font-extrabold text-[#0f172a]">Kwame Asante</div>
                 <div className="text-[11px] text-[#64748b] mt-0.5">Policy #GH-2025-00412</div>
               </div>
-              <span className="ml-auto text-[10px] font-bold bg-[#fff7ed] text-[#c2410c] border border-[#fed7aa] px-[9px] py-1 rounded-full whitespace-nowrap shrink-0">⚠ Expires 1 Jun</span>
+              <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-bold bg-[#fff7ed] text-[#c2410c] border border-[#fed7aa] px-[9px] py-1 rounded-full whitespace-nowrap shrink-0"><Warning size={11} weight="duotone" />Expires 1 Jun</span>
             </div>
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between px-3 py-2.5 bg-[#f8fafc] rounded-[10px] border border-[#f1f5f9]">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">🚗</span>
+                  <Car size={16} weight="duotone" color="#0D47A1" />
                   <span className="text-[11px] font-bold text-[#64748b]">Coverage</span>
                 </div>
                 <span className="text-xs font-extrabold text-[#0f172a]">Comprehensive Motor</span>
               </div>
               <div className="flex items-center justify-between px-3 py-2.5 bg-[#f8fafc] rounded-[10px] border border-[#f1f5f9]">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">💳</span>
+                  <CreditCard size={16} weight="duotone" color="#0D47A1" />
                   <span className="text-[11px] font-bold text-[#64748b]">Premium</span>
                 </div>
                 <span className="text-xs font-extrabold text-[#0f172a]">GH₵ 420 / yr</span>
@@ -59,7 +60,7 @@ export default function HeroInsurance({ className }: { className?: string }) {
             </div>
             <div className="flex-1">
               <div className="text-xs font-extrabold text-[#0f172a]">Your motor policy renews in 14 days</div>
-              <div className="text-[10px] text-[#64748b] mt-[3px] leading-[1.4]">Reply YES to renew · Sent via WhatsApp · ✓✓ Read</div>
+              <div className="text-[10px] text-[#64748b] mt-[3px] leading-[1.4]">Reply YES to renew · Sent via WhatsApp · <span className="inline-flex items-center gap-1 align-middle"><Checks size={11} weight="duotone" />Read</span></div>
             </div>
             <div className="w-2 h-2 rounded-full bg-[#22c55e] shrink-0 animate-[hi-blink_1.5s_ease-in-out_infinite]"></div>
           </div>
