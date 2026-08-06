@@ -21,14 +21,14 @@ import { revealSection, staggerGrid, staggerItem } from './variants';
 const MotionLink = motion.create(Link);
 
 const FEATURES = [
-  { icon: Tray,            title: 'Omnichannel Inbox' },
-  { icon: Megaphone,       title: 'Social Publishing' },
-  { icon: Robot,           title: 'AI Automation' },
-  { icon: UsersThree,      title: 'Customer 360', lottie: customer360Animation },
-  { icon: ChartLineUp,     title: 'Campaign Management', lottie: campaignManagementAnimation },
-  { icon: ChartBar,        title: 'Analytics & BI' },
-  { icon: MagnifyingGlass, title: 'Social Intelligence' },
-  { icon: ShieldCheck,     title: 'Security & Compliance', lottie: securityComplianceAnimation },
+  { icon: Tray,            title: 'Omnichannel Inbox',      href: '/platform/omnichannel-inbox' },
+  { icon: Megaphone,       title: 'Social Publishing',      href: '/platform/social-media' },
+  { icon: Robot,           title: 'AI Automation',          href: '/platform/ai-automation' },
+  { icon: UsersThree,      title: 'Customer 360',           href: '/platform/customer-data', lottie: customer360Animation },
+  { icon: ChartLineUp,     title: 'Campaign Management',    href: '/platform/campaign-management', lottie: campaignManagementAnimation },
+  { icon: ChartBar,        title: 'Analytics & BI',         href: '/platform/analytics' },
+  { icon: MagnifyingGlass, title: 'Social Intelligence',    href: '/platform/social-intelligence' },
+  { icon: ShieldCheck,     title: 'Security & Compliance',  href: '/platform/security', lottie: securityComplianceAnimation },
 ];
 
 export default function PlatformFeaturesSection() {
@@ -88,8 +88,9 @@ export default function PlatformFeaturesSection() {
             className="flex-1 grid grid-cols-2 sm:grid-cols-4"
           >
             {FEATURES.map(f => (
-              <motion.div
+              <MotionLink
                 key={f.title}
+                href={f.href}
                 variants={staggerItem}
                 whileHover={{ backgroundColor: '#EEF5FD' }}
                 transition={{ duration: 0.2 }}
@@ -109,7 +110,7 @@ export default function PlatformFeaturesSection() {
                 <span className="text-base font-bold text-[#0D47A1]">
                   {f.title}
                 </span>
-              </motion.div>
+              </MotionLink>
             ))}
           </motion.div>
         </div>

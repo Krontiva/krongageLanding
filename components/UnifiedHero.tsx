@@ -155,7 +155,7 @@ export default function UnifiedHero() {
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="text-[40px] sm:text-[56px] font-normal leading-[1.1] tracking-[-1.5px] mb-5"
         >
-          All your customer data.<br /> Finally unified.
+          All your customer data.<br /> <span className="text-[#0D47A1]">Finally unified.</span>
         </motion.h1>
 
         {/* Subcopy */}
