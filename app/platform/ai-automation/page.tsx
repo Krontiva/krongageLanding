@@ -1,55 +1,87 @@
 import type { Metadata } from 'next';
-import HeroChatbot from '../../../components/platform/HeroChatbot';
+import PhosphorIcon from '@/components/PhosphorIcon';
+import FeaturePageTemplate from '@/components/platform/FeaturePageTemplate';
+import HeroChatbot from '@/components/platform/HeroChatbot';
 
 export const metadata: Metadata = {
-  title: 'AI &amp; Automation — KronGage',
+  title: 'AI & Automation — KronGage',
   description: 'KronGage – Unified Customer Engagement Platform',
 };
 
+const WorkflowVisual = (
+  <div className="w-full h-full bg-[#f8fafc] flex items-center justify-center p-8">
+    <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_8px_32px_rgba(13,71,161,0.08)] p-6 w-full max-w-[360px]">
+      <div className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#94a3b8] mb-4">Workflow Builder</div>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-3 bg-[#EEF5FD] rounded-xl px-4 py-3">
+          <div className="w-8 h-8 rounded-lg bg-[#0D47A1] flex items-center justify-center shrink-0">
+            <PhosphorIcon name="Lightning" size={16} weight="duotone" color="#fff" />
+          </div>
+          <div><div className="text-xs font-bold text-[#0f172a]">Trigger</div><div className="text-[11px] text-[#64748b]">Customer sends a message</div></div>
+        </div>
+        <div className="pl-[19px]"><div className="w-px h-4 bg-[#cbd5e1]" /></div>
+        <div className="flex items-center gap-3 bg-[#f8fafc] border border-[#e2e8f0] rounded-xl px-4 py-3">
+          <div className="w-8 h-8 rounded-lg bg-[#7c3aed] flex items-center justify-center shrink-0">
+            <PhosphorIcon name="GitBranch" size={16} weight="duotone" color="#fff" />
+          </div>
+          <div><div className="text-xs font-bold text-[#0f172a]">Condition</div><div className="text-[11px] text-[#64748b]">If intent = billing enquiry</div></div>
+        </div>
+        <div className="pl-[19px]"><div className="w-px h-4 bg-[#cbd5e1]" /></div>
+        <div className="flex items-center gap-3 bg-[#f0fdf4] border border-[#bbf7d0] rounded-xl px-4 py-3">
+          <div className="w-8 h-8 rounded-lg bg-[#16a34a] flex items-center justify-center shrink-0">
+            <PhosphorIcon name="CheckCircle" size={16} weight="duotone" color="#fff" />
+          </div>
+          <div><div className="text-xs font-bold text-[#0f172a]">Action</div><div className="text-[11px] text-[#64748b]">Route to Billing team</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 export default function Page() {
   return (
-    <main>
-      <section className="bg-[linear-gradient(135deg,#0f172a_0%,#0D47A1_100%)] px-[60px] pt-32 pb-[60px] max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-14">
-        <div className="grid grid-cols-2 gap-12 items-center max-w-[1200px] mx-auto max-[900px]:grid-cols-1">
-          <div>
-            <div className="text-[13px] text-white/50 font-medium mb-5">
-              <a href="/platform/" className="text-[#93c5fd]">Platform</a><span className="mx-[6px]">›</span>AI &amp; Automation
-            </div>
-            <h1 className="text-[48px] font-extrabold text-white leading-[1.15] max-w-[720px] mb-5 max-[640px]:text-[32px]">KronGage AI &amp; Automation</h1>
-            <p className="text-lg text-white/75 max-w-[600px] leading-[1.7] mb-9">Artificial intelligence is woven into every layer of KronGage, from customer interaction handling and content creation to predictive analytics and workflow automation. The platform&apos;s AI-first architecture ensures that every customer engagement is enriched with intelligent insights while maintaining human oversight and control.</p>
-            <div className="flex gap-4 flex-wrap">
-              <a href="/contact/" className="bg-white text-[#0D47A1] px-[30px] py-[14px] rounded-full text-[15px] font-bold transition-colors hover:bg-[#e2e8f0]">Contact Us</a>
-            </div>
-          </div>
-          <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_20px_60px_rgba(0,0,0,0.4)] shrink-0 max-[900px]:h-[320px]">
-            <HeroChatbot />
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-[60px] pt-[72px] pb-20 max-[640px]:px-5 max-[640px]:pb-12">
-        <div className="max-w-[1200px] mx-auto">
-          <h2 className="text-[38px] font-extrabold text-[#0D47A1] mb-10 max-[900px]:text-[28px]">Business Impact</h2>
-          <div className="grid grid-cols-4 gap-5 max-[900px]:grid-cols-2 max-[640px]:grid-cols-1">
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Customer Support Agent</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">The Support Agent handles incoming customer enquiries across all channels. It searches the knowledge base, looks up customer history and account information, and provides accurate, contextual responses.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Content Creation Agent</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">The Content Agent assists marketing teams in generating, optimising, and repurposing content for social media and campaigns.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Routing Agent</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">The Routing Agent serves as the intelligent traffic controller, classifying every incoming interaction by intent, sentiment, language, and urgency to determine the optimal routing destination.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Workflow Automation</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">Beyond AI agents, KronGage provides a visual workflow automation engine that enables businesses to design and deploy complex, multi-step processes without coding.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+    <FeaturePageTemplate
+      breadcrumbLabel="AI & Automation"
+      eyebrow="Artificial Intelligence"
+      title="KronGage AI & Automation"
+      description="Artificial intelligence is woven into every layer of KronGage, from customer interaction handling and content creation to predictive analytics and workflow automation. The platform's AI-first architecture ensures that every customer engagement is enriched with intelligent insights while maintaining human oversight and control."
+      hideHero
+      impactStats={[
+        { title: 'Customer Support Agent', description: 'The Support Agent handles incoming customer enquiries across all channels. It searches the knowledge base, looks up customer history and account information, and provides accurate, contextual responses.' },
+        { title: 'Content Creation Agent', description: 'The Content Agent assists marketing teams in generating, optimising, and repurposing content for social media and campaigns.' },
+        { title: 'Routing Agent', description: 'The Routing Agent serves as the intelligent traffic controller, classifying every incoming interaction by intent, sentiment, language, and urgency to determine the optimal routing destination.' },
+        { title: 'Workflow Automation', description: 'Beyond AI agents, KronGage provides a visual workflow automation engine that enables businesses to design and deploy complex, multi-step processes without coding.' },
+      ]}
+      capabilities={[
+        {
+          eyebrow: 'AI Agents',
+          headline: 'AI Agents',
+          title: 'Purpose-Built Agents For Every Job',
+          description: 'KronGage runs a team of specialised AI agents behind the scenes — each trained for a specific job, working together to handle customer conversations end-to-end.',
+          visual: <HeroChatbot />,
+        },
+        {
+          eyebrow: 'Workflow Automation',
+          headline: 'No Code',
+          title: 'No-Code Automation For Complex Journeys',
+          description: 'Beyond AI agents, KronGage provides a visual workflow automation engine that lets teams design and deploy multi-step processes — no engineering required.',
+          visual: WorkflowVisual,
+        },
+      ]}
+      supportingFeatures={[
+        { icon: 'Brain', title: 'Natural Language Understanding', description: "Every agent understands intent, sentiment, and context in the customer's own words." },
+        { icon: 'ShieldCheck', title: 'Human-in-the-Loop Controls', description: 'Set exactly which actions AI can take automatically, and which need human approval.' },
+        { icon: 'Translate', title: 'Multilingual by Default', description: 'AI agents converse fluently across languages without extra configuration.' },
+        { icon: 'ChartLineUp', title: 'Continuous Learning', description: 'Agents improve over time using feedback from resolved conversations.' },
+        { icon: 'PlugsConnected', title: 'Works With Your Knowledge Base', description: 'Agents pull answers from your existing docs, FAQs, and policies — always up to date.' },
+        { icon: 'GearSix', title: 'Configurable Guardrails', description: 'Define tone, scope, and escalation rules so AI stays on-brand and in-bounds.' },
+      ]}
+      faqs={[
+        { question: 'Can I control which conversations AI handles automatically?', answer: 'Yes. You define which intents and channels AI Agents can resolve on their own, and which get routed to a human — with full visibility either way.' },
+        { question: 'Does the AI need to be trained separately for our business?', answer: 'AI Agents connect to your existing knowledge base, FAQs, and customer data — no separate model training required to get started.' },
+        { question: "What happens if the AI can't resolve a query?", answer: 'Unresolved or low-confidence conversations are automatically escalated to the right team, with full context carried over.' },
+        { question: 'Can we build automations without engineering support?', answer: 'Yes. The visual workflow builder is designed for marketing and support teams — no code required.' },
+      ]}
+    />
   );
 }

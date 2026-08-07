@@ -37,7 +37,7 @@ const bottomLinkClass = "text-[#64748b] no-underline text-[13px] transition-colo
 export default function Footer() {
   return (
     <footer className="bg-white text-[#0f172a] border-t border-[#e2e8f0]">
-      <div className="max-w-[1200px] mx-auto px-8 pt-16 pb-10">
+      <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
 
         {/* Top row: headline + brand lockup */}
         <div className="grid grid-cols-[1.3fr_1fr] gap-10 pb-12 max-[768px]:grid-cols-1 max-[768px]:gap-8">

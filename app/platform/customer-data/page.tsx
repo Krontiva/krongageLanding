@@ -1,55 +1,73 @@
 import type { Metadata } from 'next';
-import Customer360 from '../../../components/solutions/Customer360';
+import FeaturePageTemplate from '@/components/platform/FeaturePageTemplate';
+import Customer360 from '@/components/solutions/Customer360';
 
 export const metadata: Metadata = {
   title: 'Customer 360 — KronGage',
   description: 'KronGage – Unified Customer Engagement Platform',
 };
 
+const ProfileVisual = (
+  <div className="w-full h-full bg-[#f8fafc] flex items-center justify-center p-8">
+    <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_8px_32px_rgba(13,71,161,0.08)] p-6 w-full max-w-[360px]">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-11 h-11 rounded-full bg-[linear-gradient(135deg,#0D47A1,#1565C0)] flex items-center justify-center text-white text-sm font-extrabold">AK</div>
+        <div><div className="text-sm font-bold text-[#0f172a]">Ama Konadu</div><div className="text-[11px] text-[#64748b]">Customer since Mar 2023</div></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-[#EEF5FD] rounded-xl p-3"><div className="text-lg font-extrabold text-[#0D47A1]">86</div><div className="text-[10px] text-[#64748b]">Lifetime score</div></div>
+        <div className="bg-[#f0fdf4] rounded-xl p-3"><div className="text-lg font-extrabold text-[#16a34a]">Low</div><div className="text-[10px] text-[#64748b]">Churn risk</div></div>
+        <div className="bg-[#fef3c7] rounded-xl p-3"><div className="text-lg font-extrabold text-[#b45309]">14</div><div className="text-[10px] text-[#64748b]">Interactions (90d)</div></div>
+        <div className="bg-[#f3f0ff] rounded-xl p-3"><div className="text-lg font-extrabold text-[#7c3aed]">4</div><div className="text-[10px] text-[#64748b]">Channels used</div></div>
+      </div>
+    </div>
+  </div>
+);
+
 export default function Page() {
   return (
-    <main>
-      <section className="bg-[linear-gradient(135deg,#EEF5FD_0%,#f8fafc_100%)] px-[60px] pt-32 pb-[60px] max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-14">
-        <div className="grid grid-cols-2 gap-12 items-center max-w-[1200px] mx-auto max-[900px]:grid-cols-1">
-          <div>
-            <div className="text-[13px] text-[#64748b] font-medium mb-5">
-              <a href="/platform/" className="text-[#0D47A1]">Platform</a><span className="mx-[6px]">›</span>Customer 360
-            </div>
-            <h1 className="text-[48px] font-extrabold text-[#0D47A1] leading-[1.15] max-w-[720px] mb-5 max-[640px]:text-[32px]">Customer 360</h1>
-            <p className="text-lg text-[#475569] max-w-[600px] leading-[1.7] mb-9">The KronGage Customer 360, a customer data platform (CDP), serves as the intelligence backbone of the entire platform, creating unified, actionable customer profiles from every interaction across all channels and touchpoints. Unlike siloed CRM systems, the CDP provides instantaneous, dynamic customer intelligence that powers personalisation, segmentation, and predictive engagement across the KronGage ecosystem.</p>
-            <div className="flex gap-4 flex-wrap">
-              <a href="/contact/" className="bg-[#0D47A1] text-white px-[30px] py-[14px] rounded-full text-[15px] font-bold transition-colors hover:bg-[#0a3a87]">Contact Us</a>
-            </div>
-          </div>
-          <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_20px_60px_rgba(13,71,161,0.15)] shrink-0 max-[900px]:h-[320px]">
-            <Customer360 />
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-[60px] pt-[72px] pb-20 max-[640px]:px-5 max-[640px]:pb-12">
-        <div className="max-w-[1200px] mx-auto">
-          <h2 className="text-[38px] font-extrabold text-[#0D47A1] mb-10 max-[900px]:text-[28px]">Business Impact</h2>
-          <div className="grid grid-cols-4 gap-5 max-[900px]:grid-cols-2 max-[640px]:grid-cols-1">
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Identity Resolution</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">At the core of the CDP is a sophisticated identity resolution engine that automatically merges customer data across disparate sources.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">360-Degree Customer Profiles</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">Each unified profile contains a comprehensive view of the customer, including demographic information, contact details across all channels, complete interaction history, social media profiles, and engagement data.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Business Intelligence &amp; Analytics</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">KronGage&apos;s analytics suite provides comprehensive business intelligence across all platform modules, powered by a high-performance engine that can aggregate millions of data points in real time.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Custom Report Builder</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">Beyond pre-built dashboards, KronGage provides a powerful custom report builder that enables users to create tailored reports by selecting specific metrics, date ranges, filters, and visualisation types.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+    <FeaturePageTemplate
+      breadcrumbLabel="Customer 360"
+      eyebrow="Customer Data Platform"
+      title="Customer 360"
+      description="The KronGage Customer 360, a customer data platform (CDP), serves as the intelligence backbone of the entire platform, creating unified, actionable customer profiles from every interaction across all channels and touchpoints. Unlike siloed CRM systems, the CDP provides instantaneous, dynamic customer intelligence that powers personalisation, segmentation, and predictive engagement across the KronGage ecosystem."
+      hideHero
+      impactStats={[
+        { title: 'Identity Resolution', description: 'At the core of the CDP is a sophisticated identity resolution engine that automatically merges customer data across disparate sources.' },
+        { title: '360-Degree Customer Profiles', description: 'Each unified profile contains a comprehensive view of the customer, including demographic information, contact details across all channels, complete interaction history, social media profiles, and engagement data.' },
+        { title: 'Business Intelligence & Analytics', description: "KronGage's analytics suite provides comprehensive business intelligence across all platform modules, powered by a high-performance engine that can aggregate millions of data points in real time." },
+        { title: 'Custom Report Builder', description: 'Beyond pre-built dashboards, KronGage provides a powerful custom report builder that enables users to create tailored reports by selecting specific metrics, date ranges, filters, and visualisation types.' },
+      ]}
+      capabilities={[
+        {
+          eyebrow: 'Identity Resolution',
+          headline: 'One Profile',
+          title: 'One Profile, Every Touchpoint',
+          description: 'A sophisticated identity resolution engine automatically merges customer data across disparate sources into a single, unified profile — no manual matching required.',
+          visual: <Customer360 />,
+        },
+        {
+          eyebrow: 'Business Intelligence',
+          headline: 'Built-In Insight',
+          title: 'Insights Built Into Every Profile',
+          description: 'Each unified profile carries more than contact details — it surfaces engagement history, predictive scores, and the context your team needs to act.',
+          visual: ProfileVisual,
+        },
+      ]}
+      supportingFeatures={[
+        { icon: 'ChartLineUp', title: 'Predictive Scoring', description: 'Churn risk, lifetime value, and next-best-action scored for every profile.' },
+        { icon: 'Funnel', title: 'Dynamic Segmentation', description: 'Build live segments from any combination of behaviour, attributes, or events.' },
+        { icon: 'ShieldCheck', title: 'Consent Management', description: 'Track and enforce customer consent preferences across every profile.' },
+        { icon: 'Plugs', title: 'CRM & Data Connectors', description: 'Sync profiles with the CRM and data warehouse tools you already use.' },
+        { icon: 'ArrowsClockwise', title: 'Real-Time Profile Updates', description: 'Every profile updates instantly as new interactions happen, with no batch delays.' },
+        { icon: 'Stack', title: 'Data Enrichment', description: 'Append firmographic and behavioural data to build a richer picture of every customer.' },
+      ]}
+      faqs={[
+        { question: 'How does identity resolution work across channels?', answer: 'KronGage matches customer identifiers — phone numbers, emails, social handles, and more — to automatically merge interactions into one profile, without manual work.' },
+        { question: 'Can I build custom segments for campaigns?', answer: 'Yes. Segments can combine behaviour, attributes, and real-time events, and stay live as customer data updates.' },
+        { question: 'Is customer data siloed from other KronGage modules?', answer: 'No — Customer 360 is the shared intelligence layer behind the Inbox, Campaigns, and Analytics, so every module sees the same unified profile.' },
+        { question: 'How is data privacy handled?', answer: 'Consent management and data residency controls are built in, so profiles respect customer preferences and regional compliance requirements automatically.' },
+      ]}
+    />
   );
 }

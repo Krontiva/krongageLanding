@@ -142,7 +142,7 @@ export default function Nav() {
       <div className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-3 md:px-6 lg:px-8 lg:pt-4 [font-family:Manrope,system-ui,sans-serif]">
         <nav
           className={cn(
-            'pointer-events-auto mx-auto w-full max-w-[1200px] rounded-2xl border transition-all duration-300 ease-in-out',
+            'pointer-events-auto mx-auto w-full max-w-7xl rounded-2xl border transition-all duration-300 ease-in-out',
             scrolled
               ? 'border-[#0D47A1]/12 bg-white/85 shadow-[0_12px_40px_rgba(13,71,161,0.10)] backdrop-blur-xl'
               : 'border-transparent bg-white/70 shadow-none backdrop-blur-md'

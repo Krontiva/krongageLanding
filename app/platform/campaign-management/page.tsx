@@ -1,55 +1,68 @@
 import type { Metadata } from 'next';
-import CampaignManagement from '../../../components/platform/CampaignManagement';
+import FeaturePageTemplate from '@/components/platform/FeaturePageTemplate';
+import CampaignManagement from '@/components/platform/CampaignManagement';
 
 export const metadata: Metadata = {
   title: 'Campaign Management — KronGage',
   description: 'KronGage – Unified Customer Engagement Platform',
 };
 
+const PerformanceVisual = (
+  <div className="w-full h-full bg-[#f8fafc] flex items-center justify-center p-8">
+    <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_8px_32px_rgba(13,71,161,0.08)] p-6 w-full max-w-[360px]">
+      <div className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#94a3b8] mb-4">Campaign Performance</div>
+      <div className="flex items-center justify-between py-2 border-b border-[#f1f5f9]"><span className="text-xs text-[#475569] font-medium">Delivered</span><span className="text-sm font-extrabold text-[#0f172a]">48,204</span></div>
+      <div className="flex items-center justify-between py-2 border-b border-[#f1f5f9]"><span className="text-xs text-[#475569] font-medium">Open rate</span><span className="text-sm font-extrabold text-[#16a34a]">62%</span></div>
+      <div className="flex items-center justify-between py-2 border-b border-[#f1f5f9]"><span className="text-xs text-[#475569] font-medium">Click-through</span><span className="text-sm font-extrabold text-[#0D47A1]">18%</span></div>
+      <div className="flex items-center justify-between py-2"><span className="text-xs text-[#475569] font-medium">Channels active</span><span className="text-sm font-extrabold text-[#7c3aed]">5</span></div>
+    </div>
+  </div>
+);
+
 export default function Page() {
   return (
-    <main>
-      <section className="bg-[linear-gradient(135deg,#EEF5FD_0%,#f8fafc_100%)] px-[60px] pt-32 pb-[60px] max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-14">
-        <div className="grid grid-cols-2 gap-12 items-center max-w-[1200px] mx-auto max-[900px]:grid-cols-1">
-          <div>
-            <div className="text-[13px] text-[#64748b] font-medium mb-5">
-              <a href="/platform/" className="text-[#0D47A1]">Platform</a><span className="mx-[6px]">›</span>Campaign Management
-            </div>
-            <h1 className="text-[48px] font-extrabold text-[#0D47A1] leading-[1.15] max-w-[720px] mb-5 max-[640px]:text-[32px]">Campaign Management</h1>
-            <p className="text-lg text-[#475569] max-w-[600px] leading-[1.7] mb-9">The Campaign Management module enables marketing teams to design, execute, and optimise multi-channel campaigns with sophisticated A/B testing, journey orchestration, and automated performance tracking.</p>
-            <div className="flex gap-4 flex-wrap">
-              <a href="/contact/" className="bg-[#0D47A1] text-white px-[30px] py-[14px] rounded-full text-[15px] font-bold transition-colors hover:bg-[#0a3a87]">Contact Us</a>
-            </div>
-          </div>
-          <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_20px_60px_rgba(13,71,161,0.15)] shrink-0 max-[900px]:h-[320px]">
-            <CampaignManagement />
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-[60px] pt-[72px] pb-20 max-[640px]:px-5 max-[640px]:pb-12">
-        <div className="max-w-[1200px] mx-auto">
-          <h2 className="text-[38px] font-extrabold text-[#0D47A1] mb-10 max-[900px]:text-[28px]">Business Impact</h2>
-          <div className="grid grid-cols-4 gap-5 max-[900px]:grid-cols-2 max-[640px]:grid-cols-1">
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Broadcast Campaigns</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">For announcements, promotions, and one-time communications delivered at scale across SMS, WhatsApp, email, and push notifications.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Multi-channel Campaign Execution</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">Across WhatsApp, SMS, email, push notifications, in-app messages, and social platforms, reach customers on every channel they use.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Event-triggered Campaigns</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">Responding to customer actions such as cart abandonment, sign-up, or inactivity with timely, personalised automated messages.</p>
-            </div>
-            <div className="bg-[#EEF5FD] rounded-2xl p-6 border border-[#dbeafe]">
-              <h3 className="text-[15px] font-extrabold text-[#0f172a] mb-3 leading-[1.35]">Visual Journey Builder</h3>
-              <p className="text-[13px] text-[#475569] leading-[1.65]">With drag-and-drop workflow design for complex, multi-step customer journeys. No engineering resources required.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+    <FeaturePageTemplate
+      breadcrumbLabel="Campaign Management"
+      eyebrow="Marketing Automation"
+      title="Campaign Management"
+      description="The Campaign Management module enables marketing teams to design, execute, and optimise multi-channel campaigns with sophisticated A/B testing, journey orchestration, and automated performance tracking."
+      hideHero
+      impactStats={[
+        { title: 'Broadcast Campaigns', description: 'For announcements, promotions, and one-time communications delivered at scale across SMS, WhatsApp, email, and push notifications.' },
+        { title: 'Multi-channel Campaign Execution', description: 'Across WhatsApp, SMS, email, push notifications, in-app messages, and social platforms, reach customers on every channel they use.' },
+        { title: 'Event-triggered Campaigns', description: 'Responding to customer actions such as cart abandonment, sign-up, or inactivity with timely, personalised automated messages.' },
+        { title: 'Visual Journey Builder', description: 'With drag-and-drop workflow design for complex, multi-step customer journeys. No engineering resources required.' },
+      ]}
+      capabilities={[
+        {
+          eyebrow: 'Journey Orchestration',
+          headline: 'Full Journey',
+          title: 'Design Journeys, Not Just Messages',
+          description: 'Move beyond one-off blasts. Build multi-step customer journeys with a visual, drag-and-drop builder — triggered by real customer behaviour.',
+          visual: <CampaignManagement />,
+        },
+        {
+          eyebrow: 'Every Channel',
+          headline: 'Every Channel',
+          title: 'One Campaign, Every Channel',
+          description: 'Reach customers on WhatsApp, SMS, email, push, and social — from a single campaign, with performance tracked in one place.',
+          visual: PerformanceVisual,
+        },
+      ]}
+      supportingFeatures={[
+        { icon: 'TestTube', title: 'A/B Testing', description: 'Test subject lines, content, and timing to optimise every send.' },
+        { icon: 'FileCsv', title: 'Bulk Scheduling', description: 'Upload and schedule thousands of personalised messages via CSV.' },
+        { icon: 'ChartBar', title: 'Unified Reporting', description: 'Track delivery, opens, clicks, and conversions across every channel in one view.' },
+        { icon: 'Target', title: 'Audience Targeting', description: 'Send to precise segments built from behaviour, attributes, or purchase history.' },
+        { icon: 'ClockCountdown', title: 'Send-Time Optimisation', description: 'Automatically deliver each message when a recipient is most likely to engage.' },
+        { icon: 'ArrowsSplit', title: 'Conditional Branching', description: 'Route contacts down different paths based on how they respond.' },
+      ]}
+      faqs={[
+        { question: 'How many contacts can I message in a single campaign?', answer: 'Bulk scheduling supports large contact lists via CSV upload, with sends managed automatically to respect channel rate limits.' },
+        { question: 'Can I trigger campaigns based on customer behaviour?', answer: 'Yes. Campaigns can trigger on events like cart abandonment, sign-up, or inactivity, in addition to scheduled broadcasts.' },
+        { question: 'Does Campaign Management support A/B testing?', answer: 'Yes — test messaging, timing, and creative variants, with performance tracked automatically to surface the winner.' },
+        { question: 'Which channels can a single campaign use?', answer: 'WhatsApp, SMS, email, push notifications, and in-app messages can all be combined within one campaign journey.' },
+      ]}
+    />
   );
 }
