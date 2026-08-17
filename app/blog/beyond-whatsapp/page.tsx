@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import PhosphorIcon from '@/components/PhosphorIcon';
-import OmnichannelScene from '../../../components/blog/OmnichannelScene';
 
 export const metadata: Metadata = {
   title: 'Beyond WhatsApp: Building a True Omnichannel Experience in 2025 – KronGage Blog',
@@ -11,7 +11,8 @@ export default function Page() {
   return (
     <>
       <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#064e3b_100%)] px-[60px] pt-[140px] pb-20 max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-14">
-        <OmnichannelScene className="absolute inset-0 w-full h-full border-none pointer-events-none opacity-[0.38]" />
+        <Image src="https://images.unsplash.com/photo-1559526324-c1f275fbfa32" alt="" fill sizes="100vw" className="object-cover" priority />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(15,23,42,0.88)_0%,rgba(6,78,59,0.82)_100%)]" />
         <div className="relative z-[1]">
           <div className="text-[13px] text-white/50 font-medium mb-6">
             <a href="/blog/" className="text-[#6ee7b7]">Blog</a><span className="mx-[6px]">›</span>Omnichannel

@@ -1,41 +1,82 @@
 'use client';
-import { useState } from 'react';
-import { ChatCircle, ChartLineUp, Broadcast, Gear } from '@phosphor-icons/react';
+import { useEffect, useState } from 'react';
+import { Broadcast, ChartLineUp, BellRinging, CheckCircle, Sparkle, Checks } from '@phosphor-icons/react';
 
-const FEATURES = [
-  { icon: <ChatCircle size={18} weight="duotone" color="#0D47A1" />, name: 'Personalised Offerings' },
-  { icon: <ChartLineUp size={18} weight="duotone" color="#0D47A1" />, name: 'Predictive Analytics' },
-  { icon: <Broadcast size={18} weight="duotone" color="#0D47A1" />, name: 'Omnichannel Engagement' },
-  { icon: <Gear size={18} weight="duotone" color="#0D47A1" />, name: 'Improved Efficiency' },
+const STEPS = [
+  { icon: ChartLineUp, title: 'Usage Threshold Reached', sub: '80% of monthly data bundle used' },
+  { icon: BellRinging, title: 'Alert Sent', sub: 'Bundle top-up offer via SMS · Delivered', readReceipt: true },
+  { icon: CheckCircle, title: 'Offer Accepted', sub: 'Replied "YES" · Bundle activated instantly' },
+  { icon: Sparkle, title: 'Subscriber Retained', sub: 'Usage restored · Churn risk avoided' },
 ];
 
 export default function HeroTelecom({ className }: { className?: string }) {
-  const [active, setActive] = useState<number | null>(null);
+  const [lit, setLit] = useState(STEPS.map(() => false));
+
+  useEffect(() => {
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+
+    const runTimeline = () => {
+      setLit(STEPS.map(() => false));
+      const delays = [300, 1100, 1900, 2700];
+      delays.forEach((delay, i) => timeouts.push(setTimeout(() => setLit(s => s.map((v, idx) => idx === i ? true : v)), delay)));
+    };
+    runTimeline();
+    const intervalId = setInterval(runTimeline, 9000);
+
+    return () => { clearInterval(intervalId); timeouts.forEach(clearTimeout); };
+  }, []);
 
   return (
     <div className={`w-full h-full bg-[#EEF5FD] overflow-hidden flex items-center justify-center ${className ?? ''}`}>
       <div className="flex items-center justify-center w-full h-full p-8">
-        <div className="w-full max-w-[340px]">
-          <div className="bg-white rounded-[20px] shadow-[0_12px_48px_rgba(13,71,161,0.12),0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
-            <div className="bg-[#f5f8ff] px-3.5 py-4 relative overflow-hidden">
-              <div className="bg-white rounded-2xl px-3.5 py-4 shadow-[0_2px_12px_rgba(13,71,161,0.08)]">
-                <div className="text-[13px] font-extrabold text-[#0D47A1] text-center mb-1.5">KronGage Customer Engagement for Telecom</div>
-                <div className="text-[11px] text-[#64748b] text-center leading-[1.55] mb-3.5">Discover how KronGage helps telecom providers improve customer interaction and satisfaction.</div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  {FEATURES.map((f, i) => (
-                    <div
-                      key={f.name}
-                      className={`flex flex-col items-center justify-center px-2 py-3 rounded-[10px] border-[1.5px] bg-white cursor-pointer transition-all hover:border-[#0D47A1] hover:bg-[#EEF5FD] ${active === i ? 'border-[#0D47A1] bg-[#EEF5FD]' : 'border-[#dbeafe]'}`}
-                      onClick={() => setActive(i)}
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-[#EEF5FD] flex items-center justify-center">{f.icon}</div>
-                      <div className="text-[11px] font-extrabold text-[#0f172a] mt-1.5 text-center leading-[1.3]">{f.name}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+        <div className="w-full max-w-[340px] bg-white rounded-[20px] overflow-hidden">
+          <div className="bg-[linear-gradient(135deg,#0D47A1,#1565C0)] px-5 py-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-[10px] bg-white/[0.18] flex items-center justify-center shrink-0"><Broadcast size={20} weight="duotone" color="#fff" /></div>
+            <div>
+              <div className="text-sm font-extrabold text-white">Subscriber Engagement</div>
+              <div className="text-[11px] text-white/65 mt-0.5">Powered by KronGage</div>
             </div>
+          </div>
+
+          <div className="px-5 py-3 flex items-center gap-2.5 border-b border-[#f1f5f9]">
+            <div className="w-9 h-9 rounded-full shrink-0 bg-[linear-gradient(135deg,#0D47A1,#1976D2)] flex items-center justify-center text-[13px] font-extrabold text-white">KA</div>
+            <div>
+              <div className="text-[13px] font-extrabold text-[#0f172a]">Kwame Asante</div>
+              <div className="text-[11px] text-[#64748b] mt-px">Prepaid · 4GB Data Plan</div>
+            </div>
+            <span className="ml-auto text-[10px] font-bold bg-[#dbeafe] text-[#0D47A1] px-2 py-[3px] rounded-md whitespace-nowrap">Active</span>
+          </div>
+
+          <div className="px-5 pt-4 pb-5 relative">
+            {STEPS.map((s, i) => {
+              const isLit = lit[i];
+              const isLast = i === STEPS.length - 1;
+              return (
+                <div
+                  key={s.title}
+                  className={`flex items-start gap-3.5 relative pb-[22px] last:pb-0 transition-[opacity,transform] duration-[450ms] ease-in-out ${isLit ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2.5'}`}
+                >
+                  {!isLast && (
+                    <div className={`absolute left-[15px] top-[34px] w-0.5 h-[calc(100%-34px)] transition-colors duration-[400ms] ease-in-out ${isLit ? 'bg-[#bbf7d0]' : 'bg-[#e2e8f0]'}`}></div>
+                  )}
+                  <div className={`w-8 h-8 rounded-full shrink-0 border-2 flex items-center justify-center transition-colors duration-[400ms] ease-in-out relative z-[1] ${isLit ? 'bg-[#f0fdf4] border-[#86efac]' : 'bg-[#f1f5f9] border-[#e2e8f0]'}`}>
+                    <s.icon size={16} weight="duotone" color={isLit ? '#16a34a' : '#94a3b8'} />
+                  </div>
+                  <div className="flex-1 pt-1">
+                    <div className="text-[13px] font-extrabold text-[#0f172a] flex items-center gap-1.5">
+                      {s.title}
+                      <div className={`w-[18px] h-[18px] rounded-full bg-[#22c55e] shrink-0 flex items-center justify-center transition-[opacity,transform] duration-300 [transition-delay:150ms] ${isLit ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                        <CheckCircle size={10} weight="duotone" color="#fff" />
+                      </div>
+                    </div>
+                    <div className="text-[11px] text-[#64748b] mt-[3px] leading-[1.5] inline-flex items-center gap-1">
+                      {s.sub}
+                      {'readReceipt' in s && s.readReceipt && <Checks size={12} weight="duotone" />}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

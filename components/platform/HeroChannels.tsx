@@ -2,10 +2,10 @@
 import { useEffect, useRef } from 'react';
 import { Tray, ChatCircle } from '@phosphor-icons/react';
 
-const chipClass = "absolute flex items-center gap-2 bg-white/[0.07] border border-white/[0.13] rounded-full py-[7px] pr-3 pl-[7px] cursor-default whitespace-nowrap transition-colors hover:bg-white/[0.14] hover:border-white/[0.28]";
+const chipClass = "absolute flex items-center gap-2 bg-white border border-[#e2e8f0] rounded-full py-[7px] pr-3 pl-[7px] cursor-default whitespace-nowrap transition-colors hover:border-[#93c5fd]";
 const chipIconClass = "w-7 h-7 rounded-full flex items-center justify-center shrink-0";
-const chipNameClass = "text-[11px] font-bold text-white";
-const chipStatClass = "text-[9px] text-white/40 mt-px";
+const chipNameClass = "text-[11px] font-bold text-[#0f172a]";
+const chipStatClass = "text-[9px] text-[#94a3b8] mt-px";
 const chipBadgeClass = "ml-[6px] bg-[#ef4444] text-white text-[9px] font-extrabold min-w-[17px] h-[17px] rounded-full flex items-center justify-center px-1";
 
 export default function HeroChannels({ className }: { className?: string }) {
@@ -41,7 +41,7 @@ export default function HeroChannels({ className }: { className?: string }) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', String(sx)); line.setAttribute('y1', String(sy));
         line.setAttribute('x2', String(ex)); line.setAttribute('y2', String(ey));
-        line.setAttribute('stroke', 'rgba(96,165,250,.18)');
+        line.setAttribute('stroke', 'rgba(13,71,161,.14)');
         line.setAttribute('stroke-width', '1.2');
         line.setAttribute('stroke-dasharray', '4 5');
         svg!.appendChild(line);
@@ -59,7 +59,7 @@ export default function HeroChannels({ className }: { className?: string }) {
       const dx = cc.x - hc.x, dy = cc.y - hc.y;
       const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       dot.setAttribute('r', '3.5');
-      dot.setAttribute('fill', '#60a5fa');
+      dot.setAttribute('fill', '#0D47A1');
       svg!.appendChild(dot);
       let t = 0;
       function step() {
@@ -88,12 +88,12 @@ export default function HeroChannels({ className }: { className?: string }) {
   }, []);
 
   return (
-    <div className={`w-full h-full bg-[#0a1628] overflow-hidden flex items-center justify-center ${className ?? ''}`}>
+    <div className={`w-full h-full bg-[#EEF5FD] overflow-hidden flex items-center justify-center ${className ?? ''}`}>
       <div className="relative w-[420px] h-[380px] max-w-full" ref={sceneRef}>
         <svg className="absolute inset-0 pointer-events-none z-[5]" ref={svgRef} viewBox="0 0 420 380"></svg>
 
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[linear-gradient(135deg,#0D47A1,#1565C0)] rounded-2xl px-[22px] py-[18px] text-center shadow-[0_12px_48px_rgba(13,71,161,0.55),0_0_0_1px_rgba(255,255,255,0.12)] z-10 w-[138px]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[linear-gradient(135deg,#0D47A1,#1565C0)] rounded-2xl px-[22px] py-[18px] text-center z-10 w-[138px]"
           ref={hubRef}
         >
           <div className="mb-[5px] flex justify-center"><Tray size={24} weight="duotone" color="#fff" /></div>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import RetentionGapChart from '../../../components/blog/RetentionGapChart';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'The Retention Gap: Why Success Teams Struggle – KronGage Blog',
@@ -11,7 +11,8 @@ export default function Page() {
     <>
       {/* Hero */}
       <div className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#0D47A1_100%)] px-[60px] pt-[140px] pb-20 max-[640px]:px-6 max-[640px]:pt-[116px] max-[640px]:pb-[60px]">
-        <RetentionGapChart className="absolute inset-0 w-full h-full border-none pointer-events-none opacity-[0.38]" />
+        <Image src="https://images.unsplash.com/photo-1559523182-a284c3fb7cff" alt="" fill sizes="100vw" className="object-cover" priority />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(15,23,42,0.88)_0%,rgba(13,71,161,0.82)_100%)]" />
         <div className="relative z-[1]">
           <div className="text-[13px] text-white/50 font-medium mb-6">
             <a href="/" className="text-[#93c5fd]">Home</a><span className="mx-[6px]">›</span><a href="/blog/" className="text-[#93c5fd]">Blog</a><span className="mx-[6px]">›</span>The Retention Gap

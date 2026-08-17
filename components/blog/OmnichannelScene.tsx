@@ -119,7 +119,7 @@ export default function OmnichannelScene({ className }: { className?: string }) 
             {pills.map((p, i) => (
               <div
                 key={p.key}
-                className="flex items-center gap-[10px] pl-[9px] pr-[14px] py-2 rounded-full bg-white border border-[#e2e8f0] shadow-[0_2px_8px_rgba(0,0,0,0.06)] text-xs font-bold text-[#374151] whitespace-nowrap relative"
+                className="flex items-center gap-[10px] pl-[9px] pr-[14px] py-2 rounded-full bg-white border border-[#e2e8f0] text-xs font-bold text-[#374151] whitespace-nowrap relative"
                 style={{ animation: `oc-floatPill ${p.dur} ease-in-out infinite ${p.del}` }}
                 ref={el => { if (el) pillRefs.current[i] = el; }}
               >
@@ -139,7 +139,7 @@ export default function OmnichannelScene({ className }: { className?: string }) 
             <div className="text-[8px] font-extrabold text-[#94a3b8] uppercase tracking-[0.8px] text-center">into one</div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_8px_32px_rgba(13,71,161,0.1)] overflow-hidden">
+          <div className="bg-white rounded-2xl border border-[#e2e8f0] overflow-hidden">
             <div className="bg-[#0D47A1] px-[14px] py-[10px] flex items-center gap-2">
               <div className="w-[22px] h-[22px] bg-white/20 rounded-md flex items-center justify-center text-[11px] text-white"><Lightning size={11} weight="duotone" color="#fff" /></div>
               <span className="text-[11px] font-bold text-white">Unified Inbox</span>

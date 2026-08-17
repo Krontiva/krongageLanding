@@ -38,7 +38,7 @@ export default function KnowledgeBase({ className }: { className?: string }) {
             {CARDS.map((c, i) => {
               const offset = CIRC * (1 - c.prog / 100);
               return (
-                <div key={i} className="border border-[#f1f5f9] rounded-[10px] px-3 pt-3 pb-[10px] bg-white cursor-pointer transition-all relative overflow-hidden hover:border-[#93c5fd] hover:shadow-[0_4px_16px_rgba(13,71,161,0.08)] hover:-translate-y-px">
+                <div key={i} className="border border-[#f1f5f9] rounded-[10px] px-3 pt-3 pb-[10px] bg-white cursor-pointer transition-all relative overflow-hidden hover:border-[#93c5fd] hover:-translate-y-px">
                   <div className="flex items-start justify-between mb-2">
                     <div className="w-9 h-9 bg-[#EEF5FD] rounded-lg flex items-center justify-center"><c.icon size={18} weight="duotone" color="#0D47A1" /></div>
                     <div className="relative w-9 h-9">
@@ -61,7 +61,7 @@ export default function KnowledgeBase({ className }: { className?: string }) {
             <div className="text-[11px] font-bold uppercase tracking-[0.5px] text-[#94a3b8] mb-[10px]">Semantic Chunks</div>
             <div className="flex gap-[10px] overflow-x-auto pb-1">
               {CHUNKS.map((c, i) => (
-                <div key={i} className="shrink-0 w-40 border border-[#f1f5f9] rounded-[10px] p-[10px] bg-white cursor-pointer transition-all hover:border-[#93c5fd] hover:shadow-[0_3px_12px_rgba(13,71,161,0.08)]">
+                <div key={i} className="shrink-0 w-40 border border-[#f1f5f9] rounded-[10px] p-[10px] bg-white cursor-pointer transition-all hover:border-[#93c5fd]">
                   <span className={`text-[9px] font-bold px-[7px] py-0.5 rounded inline-block mb-[7px] ${c.badge}`}>{c.badgeText}</span>
                   <div className="text-[11px] font-extrabold text-[#0f172a] mb-[5px] leading-[1.3]">{c.title}</div>
                   <div className="text-[10px] text-[#64748b] leading-[1.45] mb-2">{c.desc}</div>

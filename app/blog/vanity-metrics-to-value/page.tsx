@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import VanityMetricsScene from '../../../components/blog/VanityMetricsScene';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'From Vanity Metrics to Value: What Your Customer Data Is Really Telling You – KronGage Blog',
@@ -33,7 +33,8 @@ export default function Page() {
   return (
     <>
       <section className="relative overflow-hidden bg-[linear-gradient(135deg,#1e1b4b_0%,#312e81_100%)] px-[60px] pt-[140px] pb-20 max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-14">
-        <VanityMetricsScene className="absolute inset-0 w-full h-full border-none pointer-events-none opacity-[0.35]" />
+        <Image src="https://images.unsplash.com/photo-1551288049-bebda4e38f71" alt="" fill sizes="100vw" className="object-cover" priority />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(30,27,75,0.88)_0%,rgba(49,46,129,0.82)_100%)]" />
         <div className="relative z-[1]">
           <div className="text-[13px] text-white/50 font-medium mb-6">
             <a href="/blog/" className="text-[#a5b4fc]">Blog</a><span className="mx-[6px]">›</span>Analytics

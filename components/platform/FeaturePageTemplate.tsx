@@ -112,7 +112,7 @@ export default function FeaturePageTemplate({
                 ))}
               </div>
             </div>
-            <div className="rounded-[20px] overflow-hidden h-[420px] shadow-[0_20px_60px_rgba(0,0,0,0.4)] shrink-0 max-[900px]:h-[320px]">
+            <div className="rounded-[20px] overflow-hidden h-[420px] shrink-0 max-[900px]:h-[320px]">
               {heroVisual}
             </div>
           </div>

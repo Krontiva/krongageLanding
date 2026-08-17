@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bank, Broadcast, ShoppingCart, Heartbeat, Umbrella, Buildings } from '@phosphor-icons/react';
+import { Bank, Broadcast, ShoppingCart, Heartbeat, Umbrella, Buildings, ArrowRight } from '@phosphor-icons/react';
 import HeroBanking from '../solutions/HeroBanking';
 import HeroTelecom from '../solutions/HeroTelecom';
 import HeroFmcg from '../solutions/HeroFmcg';
@@ -12,12 +12,12 @@ import HeroGovernment from '../solutions/HeroGovernment';
 import { revealSection } from './variants';
 
 const INDUSTRIES = [
-  { id: 'banking',    icon: Bank,         label: 'Banking & Finance',  p: "Deliver real-time transaction alerts, fraud notifications, and personalised financial guidance across WhatsApp, SMS, and email, all within a fully compliant, bank-grade platform.", href: '/solutions/banking', cta: 'Explore Banking Solutions →', Comp: HeroBanking },
-  { id: 'telecom',    icon: Broadcast,    label: 'Telecommunications', p: "Reduce churn with proactive usage alerts, data bundle promotions, and AI-powered support. Manage millions of subscribers across every channel from one unified platform.",         href: '/solutions/telecom', cta: 'Explore Telecom Solutions →',  Comp: HeroTelecom },
-  { id: 'fmcg',       icon: ShoppingCart, label: 'FMCG & Retail',      p: "Connect with consumers at the point of purchase, run loyalty campaigns, and gather real-time market intelligence, from urban retail chains to last-mile distribution networks.", href: '/solutions/fmcg',   cta: 'Explore FMCG & Retail →',    Comp: HeroFmcg },
-  { id: 'healthcare', icon: Heartbeat,    label: 'Healthcare',         p: "Reduce no-shows with automated appointment reminders, support medication adherence, and securely deliver health information to patients across SMS, WhatsApp, and web.",       href: '/solutions/healthcare', cta: 'Explore Healthcare →',     Comp: HeroHealthcare },
-  { id: 'insurance',  icon: Umbrella,     label: 'Insurance',          p: "Accelerate policy onboarding, automate renewal reminders, and guide claimants through every step of the process, reducing drop-offs and improving policyholder satisfaction.", href: '/solutions/insurance', cta: 'Explore Insurance →',    Comp: HeroInsurance },
-  { id: 'government', icon: Buildings,    label: 'Government',         p: "Keep citizens informed across SMS, WhatsApp, and web at every step of their service journey, from permit applications to tax deadlines, boosting digital self-service rates.", href: '/solutions/government', cta: 'Explore Government →',  Comp: HeroGovernment },
+  { id: 'banking',    icon: Bank,         label: 'Banking & Finance',  p: "Deliver real-time transaction alerts, fraud notifications, and personalised financial guidance across WhatsApp, SMS, and email, all within a fully compliant, bank-grade platform.", href: '/solutions/banking', cta: 'Explore Banking Solutions', Comp: HeroBanking },
+  { id: 'telecom',    icon: Broadcast,    label: 'Telecommunications', p: "Reduce churn with proactive usage alerts, data bundle promotions, and AI-powered support. Manage millions of subscribers across every channel from one unified platform.",         href: '/solutions/telecom', cta: 'Explore Telecom Solutions',  Comp: HeroTelecom },
+  { id: 'fmcg',       icon: ShoppingCart, label: 'FMCG & Retail',      p: "Connect with consumers at the point of purchase, run loyalty campaigns, and gather real-time market intelligence, from urban retail chains to last-mile distribution networks.", href: '/solutions/fmcg',   cta: 'Explore FMCG & Retail',    Comp: HeroFmcg },
+  { id: 'healthcare', icon: Heartbeat,    label: 'Healthcare',         p: "Reduce no-shows with automated appointment reminders, support medication adherence, and securely deliver health information to patients across SMS, WhatsApp, and web.",       href: '/solutions/healthcare', cta: 'Explore Healthcare',     Comp: HeroHealthcare },
+  { id: 'insurance',  icon: Umbrella,     label: 'Insurance',          p: "Accelerate policy onboarding, automate renewal reminders, and guide claimants through every step of the process, reducing drop-offs and improving policyholder satisfaction.", href: '/solutions/insurance', cta: 'Explore Insurance',    Comp: HeroInsurance },
+  { id: 'government', icon: Buildings,    label: 'Government',         p: "Keep citizens informed across SMS, WhatsApp, and web at every step of their service journey, from permit applications to tax deadlines, boosting digital self-service rates.", href: '/solutions/government', cta: 'Explore Government',  Comp: HeroGovernment },
 ];
 
 export default function IndustriesSection() {
@@ -92,9 +92,9 @@ export default function IndustriesSection() {
                           <Link
                             href={ind.href}
                             onClick={e => e.stopPropagation()}
-                            className="inline-block text-sm font-bold text-[#0D47A1] hover:underline"
+                            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0D47A1] hover:underline"
                           >
-                            {ind.cta}
+                            {ind.cta} <ArrowRight size={14} weight="bold" />
                           </Link>
                         </motion.div>
                       )}

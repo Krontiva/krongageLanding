@@ -34,7 +34,7 @@ const kdNbBase = "w-full h-9 rounded-[9px] flex items-center justify-center curs
 const kdNbActive = "bg-[#EEF5FD] text-[#0D47A1]";
 const kdNbInactive = "text-[#94a3b8] hover:bg-[#f1f5f9] hover:text-[#475569]";
 
-const statCardBase = "bg-white border border-[#f1f5f9] rounded-[10px] px-[9px] py-[11px] transition-[box-shadow,border-color,background,transform] duration-[220ms] hover:shadow-[0_10px_32px_rgba(13,71,161,.14)] hover:border-[#93c5fd] hover:-translate-y-[3px] hover:bg-[#fafcff]";
+const statCardBase = "bg-white border border-[#f1f5f9] rounded-[10px] px-[9px] py-[11px] transition-[box-shadow,border-color,background,transform] duration-[220ms] hover:border-[#93c5fd] hover:-translate-y-[3px] hover:bg-[#fafcff]";
 const statCardFlash = "border-[#93c5fd] bg-[#eff6ff]";
 
 const siTabBase = "px-[9px] py-[3px] rounded-md text-[10px] font-bold border border-[#e2e8f0] bg-white text-[#64748b] cursor-pointer transition-all duration-150";
@@ -358,7 +358,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
             </div>
 
             <div className="grid grid-cols-[1.15fr_1fr_1fr] gap-2">
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.10)] hover:border-[#bfdbfe] hover:-translate-y-0.5">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#bfdbfe] hover:-translate-y-0.5">
                 <div className="text-[9px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mb-2 flex items-center justify-between">AI USAGE <span className="text-[#0D47A1] text-[9px] font-bold normal-case tracking-normal cursor-pointer">View all ↗</span></div>
                 <div className="flex items-center justify-between py-1 border-b border-[#f8fafc] last:border-b-0 text-[11px] text-[#374151]"><span>AI Requests</span><span className="text-[10px] text-[#94a3b8]">3/100.0K</span></div>
                 <div className="flex items-center justify-between py-1 border-b border-[#f8fafc] last:border-b-0 text-[11px] text-[#374151]"><span>AI Token Budget</span><span className="text-[10px] text-[#94a3b8]">0/50.0M</span></div>
@@ -368,7 +368,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                 <div className="flex items-center justify-between py-1 border-b border-[#f8fafc] last:border-b-0 text-[11px] text-[#374151]"><span>Storage (MB)</span><span className="text-[10px] text-[#94a3b8]">0/10.0K</span></div>
               </div>
 
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.10)] hover:border-[#bfdbfe] hover:-translate-y-0.5">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#bfdbfe] hover:-translate-y-0.5">
                 <div className="text-[9px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mb-2 flex items-center justify-between">RECENT ACTIVITY <span className="text-[#0D47A1] text-[9px] font-bold normal-case tracking-normal cursor-pointer">AI Studio ↗</span></div>
                 <div className="flex flex-col items-center justify-center h-[84px] gap-[5px]">
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -377,7 +377,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                 </div>
               </div>
 
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.10)] hover:border-[#bfdbfe] hover:-translate-y-0.5">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#bfdbfe] hover:-translate-y-0.5">
                 <div className="text-[9px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mb-2 flex items-center justify-between">INSIGHTS <span className="text-[#0D47A1] text-[9px] font-bold normal-case tracking-normal cursor-pointer">Customer 360 ↗</span></div>
                 <div className="text-[9px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mt-1.5 mb-[5px]">CUSTOMERS</div>
                 <div className="grid grid-cols-2 gap-[5px]">
@@ -413,7 +413,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
             </div>
 
             <div className="grid grid-cols-[90px_1fr_100px_1fr_140px] gap-[7px] mb-2.5">
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.12)] hover:border-[#93c5fd] hover:-translate-y-0.5 text-center flex flex-col items-center justify-center">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#93c5fd] hover:-translate-y-0.5 text-center flex flex-col items-center justify-center">
                 <div className="flex items-center gap-[5px]">
                   <div className="text-xl font-extrabold">{liveCount}</div>
                   <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] -mt-0.5 animate-[pulse-dot_1.5s_ease-in-out_infinite]" />
@@ -421,7 +421,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                 <div className="text-[8.5px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mt-[5px] mb-0">LIVE THIS HOUR</div>
               </div>
 
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.12)] hover:border-[#93c5fd] hover:-translate-y-0.5">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#93c5fd] hover:-translate-y-0.5">
                 <div className="text-[8.5px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mb-[5px]">24H MENTIONS</div>
                 <div className="text-xl font-extrabold">5.3K</div>
                 <svg width="100%" height="30" className="mt-1">
@@ -435,7 +435,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                 </svg>
               </div>
 
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.12)] hover:border-[#93c5fd] hover:-translate-y-0.5 flex flex-col items-center justify-center">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#93c5fd] hover:-translate-y-0.5 flex flex-col items-center justify-center">
                 <div className="relative w-[72px] h-10">
                   <svg viewBox="0 0 100 56" width="100%" height="100%">
                     <path d="M 12 50 A 38 38 0 0 1 88 50" fill="none" stroke="#e2e8f0" strokeWidth="7" strokeLinecap="round"/>
@@ -450,7 +450,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                 <div className="text-[8.5px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mt-[3px]">Brand Health</div>
               </div>
 
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.12)] hover:border-[#93c5fd] hover:-translate-y-0.5">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#93c5fd] hover:-translate-y-0.5">
                 <div className="text-[8.5px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mb-[5px]">TOP PLATFORM</div>
                 <div className="flex items-center gap-[5px] mt-0.5">
                   <svg width="16" height="16" viewBox="0 0 32 32" fill="#000"><path d="M17.75 14.77L25.3 6h-1.8l-6.57 7.63L11.62 6H6l7.93 11.55L6 26h1.8l6.93-8.05L20.38 26H26l-8.25-11.23zm-2.45 2.85l-.8-1.15-6.38-9.12h2.75l5.16 7.38.8 1.14 6.69 9.57h-2.75l-5.47-7.82z"/></svg>
@@ -464,7 +464,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                 </div>
               </div>
 
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.12)] hover:border-[#93c5fd] hover:-translate-y-0.5">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] px-3 py-2.5 transition-[box-shadow,border-color,transform] duration-[220ms] hover:border-[#93c5fd] hover:-translate-y-0.5">
                 <div className="text-[8.5px] font-extrabold uppercase tracking-[1px] text-[#94a3b8] mb-[7px]">SENTIMENT SPLIT</div>
                 <div className="flex items-center gap-[5px] mb-[3px] text-[10px] font-semibold"><div className="w-1.5 h-1.5 rounded-full shrink-0 bg-[#22c55e]" />Positive<span className="ml-auto text-[#64748b] text-[10px] font-bold">61%</span></div>
                 <div className="flex items-center gap-[5px] mb-[3px] text-[10px] font-semibold"><div className="w-1.5 h-1.5 rounded-full shrink-0 bg-[#94a3b8]" />Neutral<span className="ml-auto text-[#64748b] text-[10px] font-bold">27%</span></div>
@@ -474,7 +474,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
             </div>
 
             <div className="grid grid-cols-[1fr_175px] gap-2 mb-2">
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 overflow-hidden transition-[box-shadow,border-color] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.10)] hover:border-[#bfdbfe]">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 overflow-hidden transition-[box-shadow,border-color] duration-[220ms] hover:border-[#bfdbfe]">
                 <div className="text-[11px] font-extrabold mb-[5px]">Sentiment River</div>
                 <div className="flex gap-2.5 mb-2">
                   <div className="flex items-center gap-1 text-[9px] text-[#64748b]"><div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />Positive</div>
@@ -494,7 +494,7 @@ export default function DashboardDemo({ className }: { className?: string }) {
                 </div>
               </div>
 
-              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color] duration-[220ms] hover:shadow-[0_6px_22px_rgba(13,71,161,.10)] hover:border-[#bfdbfe]">
+              <div className="bg-white border border-[#f1f5f9] rounded-[10px] p-3 transition-[box-shadow,border-color] duration-[220ms] hover:border-[#bfdbfe]">
                 <div className="text-[11px] font-extrabold mb-2.5">Platform Activity</div>
                 <div className="flex items-center gap-1.5 mb-[9px] last:mb-0 rounded-md px-1 transition-colors duration-200 hover:bg-[#f0f7ff]">
                   <div className="w-5 h-5 rounded-[5px] flex items-center justify-center shrink-0 bg-[#000]">
@@ -1301,7 +1301,7 @@ Customer submit their green business funding proposal for the GLF through the Re
           <div
             key={t.id}
             onClick={() => dismissToast(t.id)}
-            className={`absolute bottom-[18px] right-[18px] bg-white border border-[#e2e8f0] border-l-[3px] border-l-[#0D47A1] rounded-[10px] px-3.5 py-2.5 flex items-center gap-2.5 shadow-[0_8px_32px_rgba(13,71,161,.15),0_2px_8px_rgba(0,0,0,.06)] z-[999] min-w-[210px] max-w-[270px] cursor-pointer transition-[transform,opacity] duration-[360ms] ease-[cubic-bezier(.34,1.56,.64,1)] ${t.leaving || !t.shown ? 'translate-x-[calc(100%+24px)] opacity-0' : 'translate-x-0 opacity-100'}`}
+            className={`absolute bottom-[18px] right-[18px] bg-white border border-[#e2e8f0] border-l-[3px] border-l-[#0D47A1] rounded-[10px] px-3.5 py-2.5 flex items-center gap-2.5 z-[999] min-w-[210px] max-w-[270px] cursor-pointer transition-[transform,opacity] duration-[360ms] ease-[cubic-bezier(.34,1.56,.64,1)] ${t.leaving || !t.shown ? 'translate-x-[calc(100%+24px)] opacity-0' : 'translate-x-0 opacity-100'}`}
           >
             <span className="shrink-0 text-[#0D47A1]"><t.icon size={18} weight="duotone" /></span>
             <div className="flex-1">

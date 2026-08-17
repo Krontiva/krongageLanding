@@ -136,7 +136,7 @@ export default function UnifiedHero() {
                     alt=""
                     width={badge.w}
                     height={badge.h}
-                    className="h-full w-full object-contain drop-shadow-[0_4px_10px_rgba(13,71,161,0.18)]"
+                    className="h-full w-full object-contain"
                   />
                 </motion.div>
               );

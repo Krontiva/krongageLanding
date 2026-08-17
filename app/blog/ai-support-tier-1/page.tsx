@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import AiHandoffScene from '../../../components/blog/AiHandoffScene';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'How AI Agents Are Replacing Tier-1 Support — Without Losing the Human Touch – KronGage Blog',
@@ -10,7 +10,8 @@ export default function Page() {
   return (
     <>
       <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#1e3a5f_100%)] px-[60px] pt-[140px] pb-20 max-[640px]:px-5 max-[640px]:pt-[116px] max-[640px]:pb-14">
-        <AiHandoffScene className="absolute inset-0 w-full h-full border-none pointer-events-none opacity-[0.42]" />
+        <Image src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e" alt="" fill sizes="100vw" className="object-cover" priority />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(15,23,42,0.88)_0%,rgba(30,58,95,0.82)_100%)]" />
         <div className="relative z-[1]">
           <div className="text-[13px] text-white/50 font-medium mb-6">
             <a href="/blog/" className="text-[#93c5fd]">Blog</a><span className="mx-[6px]">›</span>AI &amp; Automation

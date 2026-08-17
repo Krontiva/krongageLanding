@@ -16,9 +16,7 @@ import {
   GlobeIcon,
   ChatCircleTextIcon,
   WhatsappLogoIcon,
-  LockSimpleIcon,
   ChartBarIcon,
-  SquaresFourIcon,
 } from '@phosphor-icons/react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -40,10 +38,10 @@ const PLATFORM_CAPABILITIES = [
 ];
 
 const PLATFORM_CHANNELS = [
-  { label: 'Email',      Icon: EnvelopeSimpleIcon,   href: '/platform/channels/email' },
-  { label: 'Web Messaging', Icon: GlobeIcon,          href: '/platform/channels/web' },
-  { label: 'SMS / RCS',  Icon: ChatCircleTextIcon,    href: '/platform/channels/sms' },
-  { label: 'WhatsApp',   Icon: WhatsappLogoIcon,      href: '/platform/channels/whatsapp' },
+  { label: 'Email',      Icon: EnvelopeSimpleIcon },
+  { label: 'Web Messaging', Icon: GlobeIcon },
+  { label: 'SMS / RCS',  Icon: ChatCircleTextIcon },
+  { label: 'WhatsApp',   Icon: WhatsappLogoIcon },
 ];
 
 const SOLUTIONS_INDUSTRIES = [
@@ -62,7 +60,7 @@ const MOBILE_NAV_ITEMS = [
 ];
 
 const megaItemClass = "flex items-start gap-[10px] p-[10px] rounded-[10px] no-underline transition-colors hover:bg-[#f8fafc]";
-const channelItemClass = "flex items-center gap-2 px-[10px] py-[7px] rounded-lg no-underline text-[#334155] text-[13px] font-medium transition-colors hover:bg-[#f8fafc]";
+const channelItemClass = "flex items-center gap-2 px-[10px] py-[7px] text-[#334155] text-[13px] font-medium";
 const solutionsItemClass = "block px-3 py-2 rounded-lg no-underline text-[#334155] text-sm font-medium transition-colors hover:bg-[#f8fafc] hover:text-[#0D47A1]";
 
 const dropdownTransition = { duration: 0.18, ease: 'easeOut' as const };
@@ -88,18 +86,12 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 function MegaTrigger({
   label,
   active,
-  onEnter,
-  onLeave,
 }: {
   label: string;
   active: boolean;
-  onEnter: () => void;
-  onLeave: () => void;
 }) {
   return (
     <button
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
       className="bg-none border-none cursor-pointer [font-family:Manrope,system-ui,sans-serif] text-sm font-semibold text-[#475569] flex items-center gap-1 transition-colors p-0 hover:text-[#0f172a]"
     >
       {label} <CaretDownIcon size={12} weight="bold" className={cn('transition-transform duration-150', active && 'rotate-180')} />
@@ -166,8 +158,6 @@ export default function Nav() {
                 <MegaTrigger
                   label="Platform"
                   active={open === 'platform'}
-                  onEnter={() => setOpen('platform')}
-                  onLeave={() => setOpen(null)}
                 />
                 <AnimatePresence>
                   {open === 'platform' && (
@@ -224,19 +214,13 @@ export default function Nav() {
                           <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#94a3b8] mb-[14px]">Featured Channels</div>
                           <div className="flex flex-col gap-0.5">
                             {PLATFORM_CHANNELS.map(ch => (
-                              <a key={ch.href} href={ch.href} className={channelItemClass}>
+                              <div key={ch.label} className={channelItemClass}>
                                 <ch.Icon size={16} weight="duotone" color="#475569" />
                                 <span>{ch.label}</span>
-                              </a>
+                              </div>
                             ))}
-                            <a href="/platform/channels" className="text-xs font-bold text-[#0D47A1] no-underline pl-[10px] pt-2 flex items-center gap-[6px]">
-                              <SquaresFourIcon size={14} weight="duotone" color="#0D47A1" /> View All Channels
-                            </a>
                           </div>
-                          <div className="mt-[14px] bg-[#EEF5FD] rounded-[10px] p-3 flex items-start gap-[10px]">
-                            <div className="bg-[#0D47A1] rounded-lg w-8 h-8 flex items-center justify-center shrink-0">
-                              <LockSimpleIcon size={16} weight="duotone" color="#fff" />
-                            </div>
+                          <div className="mt-[14px] bg-[#EEF5FD] rounded-[10px] p-3">
                             <div>
                               <div className="text-xs font-bold text-[#0f172a]">How it works?</div>
                               <div className="text-[11px] text-[#64748b] mt-0.5 leading-[1.4]">Understand how our omnichannel inbox works to keep message clutter at bay.</div>
@@ -256,8 +240,6 @@ export default function Nav() {
                 <MegaTrigger
                   label="Solutions"
                   active={open === 'solutions'}
-                  onEnter={() => setOpen('solutions')}
-                  onLeave={() => setOpen(null)}
                 />
                 <AnimatePresence>
                   {open === 'solutions' && (

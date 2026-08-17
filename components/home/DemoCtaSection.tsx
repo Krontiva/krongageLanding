@@ -34,7 +34,7 @@ export default function DemoCtaSection() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="w-full rounded-t-2xl overflow-hidden shadow-[0_16px_60px_rgba(0,0,0,0.35)] h-[610px]"
+          className="w-full rounded-t-2xl overflow-hidden h-[610px]"
         >
           <DashboardDemo />
         </motion.div>

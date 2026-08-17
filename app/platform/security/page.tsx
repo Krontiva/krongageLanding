@@ -12,7 +12,7 @@ const COMPLIANCE_ITEMS = ['GDPR', 'NDPR', 'HIPAA', 'SOC 2-aligned controls'];
 
 const ComplianceVisual = (
   <div className="w-full h-full bg-[#f8fafc] flex items-center justify-center p-8">
-    <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_8px_32px_rgba(13,71,161,0.08)] p-6 w-full max-w-[360px]">
+    <div className="bg-white rounded-2xl border border-[#e2e8f0] p-6 w-full max-w-[360px]">
       <div className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#94a3b8] mb-4">Compliance Checklist</div>
       <div className="flex flex-col gap-3">
         {COMPLIANCE_ITEMS.map(item => (

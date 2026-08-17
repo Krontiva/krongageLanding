@@ -29,7 +29,7 @@ export default function HeroHealthcare({ className }: { className?: string }) {
   return (
     <div className={`w-full h-full bg-[#EEF5FD] overflow-hidden flex items-center justify-center ${className ?? ''}`}>
       <div className="flex items-center justify-center w-full h-full p-8">
-        <div className="w-full max-w-[340px] bg-white rounded-[20px] shadow-[0_12px_40px_rgba(13,71,161,0.1),0_2px_8px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div className="w-full max-w-[340px] bg-white rounded-[20px] overflow-hidden">
           <div className="bg-[linear-gradient(135deg,#0D47A1,#1565C0)] px-5 py-4 flex items-center gap-3">
             <div className="w-9 h-9 rounded-[10px] bg-white/[0.18] flex items-center justify-center shrink-0"><Heartbeat size={20} weight="duotone" color="#fff" /></div>
             <div>

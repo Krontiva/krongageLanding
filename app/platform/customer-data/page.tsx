@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const ProfileVisual = (
   <div className="w-full h-full bg-[#f8fafc] flex items-center justify-center p-8">
-    <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_8px_32px_rgba(13,71,161,0.08)] p-6 w-full max-w-[360px]">
+    <div className="bg-white rounded-2xl border border-[#e2e8f0] p-6 w-full max-w-[360px]">
       <div className="flex items-center gap-3 mb-5">
         <div className="w-11 h-11 rounded-full bg-[linear-gradient(135deg,#0D47A1,#1565C0)] flex items-center justify-center text-white text-sm font-extrabold">AK</div>
         <div><div className="text-sm font-bold text-[#0f172a]">Ama Konadu</div><div className="text-[11px] text-[#64748b]">Customer since Mar 2023</div></div>

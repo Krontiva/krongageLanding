@@ -28,7 +28,7 @@ export default function ChannelCoverageCard({ className }: { className?: string 
         {CHANNELS.map(c => (
           <div
             key={c.label}
-            className="bg-white rounded-2xl border border-[#e2e8f0] p-4 flex flex-col items-center gap-2 text-center shadow-[0_2px_8px_rgba(15,23,42,0.04)]"
+            className="bg-white rounded-2xl border border-[#e2e8f0] p-4 flex flex-col items-center gap-2 text-center"
           >
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: c.color }}>
               <c.Icon size={20} weight="fill" color="#fff" />

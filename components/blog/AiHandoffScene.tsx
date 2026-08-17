@@ -67,7 +67,7 @@ export default function AiHandoffScene({ className }: { className?: string }) {
           <div className="flex flex-col items-center gap-2 relative z-[1]">
             <div className="text-lg text-white/40 animate-[aihs-pulse_1.5s_ease-in-out_infinite]">→</div>
             <div className="w-full h-px bg-[linear-gradient(90deg,rgba(96,165,250,0.3),rgba(251,191,36,0.3))] relative">
-              <div className="w-2 h-2 rounded-full bg-white absolute top-1/2 -translate-y-1/2 shadow-[0_0_10px_#fff] animate-[aihs-travel_2.2s_ease-in-out_infinite]" />
+              <div className="w-2 h-2 rounded-full bg-white absolute top-1/2 -translate-y-1/2 animate-[aihs-travel_2.2s_ease-in-out_infinite]" />
             </div>
             <div className="bg-white/[0.07] border border-white/[0.12] rounded-full px-[10px] py-[5px] text-[8px] font-extrabold text-white/50 uppercase tracking-[0.6px] text-center whitespace-nowrap">Seamless handoff</div>
           </div>

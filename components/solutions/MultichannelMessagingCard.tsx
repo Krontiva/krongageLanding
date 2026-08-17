@@ -9,7 +9,7 @@ const CONTACTS = [
 export default function MultichannelMessagingCard({ className }: { className?: string }) {
   return (
     <div className={`w-full h-full bg-[#f0f4f9] flex items-center justify-center p-8 ${className ?? ''}`}>
-      <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(13,71,161,0.14)] overflow-hidden max-w-[280px] w-full">
+      <div className="bg-white rounded-2xl overflow-hidden max-w-[280px] w-full">
         <div className="bg-[#0D47A1] px-4 py-3 flex items-center gap-[10px]">
           <div className="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center text-white">
             <PhosphorIcon name="Lightning" size={14} weight="duotone" color="#fff" />
