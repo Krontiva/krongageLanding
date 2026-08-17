@@ -37,7 +37,7 @@ Create a `.env.local` file for the API routes that need them:
 
 None of these are required to browse the marketing pages — only the checkout, signup, and contact API routes depend on them.
 
-## Project Structure
+## Project Structuree
 
 See [STRUCTURE.md](./STRUCTURE.md) for the full directory layout, page map, and component inventory.
 
