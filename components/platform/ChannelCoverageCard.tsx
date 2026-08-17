@@ -7,8 +7,8 @@ import {
   FacebookLogo,
   TelegramLogo,
   ChatsCircle,
-  type Icon,
 } from '@phosphor-icons/react/dist/ssr';
+import type { Icon } from '@phosphor-icons/react';
 
 const CHANNELS: { label: string; Icon: Icon; color: string }[] = [
   { label: 'WhatsApp',  Icon: WhatsappLogo,   color: '#25D366' },

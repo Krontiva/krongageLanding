@@ -47,7 +47,7 @@ const ORBIT_RINGS = [
       { spot: 'left-bottom',  iconSrc: '/linkedin.svg',      w: 36, h: 36 },
     ],
   },
-];
+] as const;
 
 const SIDEBAR_ITEMS = [
   { label: 'Inbox',     Icon: ChatsCircleIcon, active: true },
