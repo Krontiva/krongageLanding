@@ -4,6 +4,7 @@ import Script from 'next/script';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import SiteChrome from '@/components/SiteChrome';
 import { cn } from "@/lib/utils";
 
 const manrope = Manrope({
@@ -34,9 +35,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
       </head>
       <body className="[font-family:var(--font-sans),system-ui,sans-serif]">
-        <Nav />
+        <SiteChrome><Nav /></SiteChrome>
         <main>{children}</main>
-        <Footer />
+        <SiteChrome><Footer /></SiteChrome>
       </body>
     </html>
   );
