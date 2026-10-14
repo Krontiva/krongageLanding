@@ -10,6 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: 'Blog – KronGage',
   description: 'Strategies, research, and expert insights on customer engagement, retention, and AI-powered growth.',
+  alternates: { types: { 'application/rss+xml': '/rss.xml' } },
 };
 
 function AuthorRow({ name }: { name: string }) {

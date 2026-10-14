@@ -70,6 +70,7 @@ function canEdit(user: SessionUser, post: Post) {
 
 function refresh(post: { slug: string | null }) {
   revalidatePath('/blog');
+  revalidatePath('/rss.xml');
   if (post.slug) revalidatePath(`/blog/${post.slug}`);
 }
 

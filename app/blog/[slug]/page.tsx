@@ -3,10 +3,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPublishedBySlug } from '@/lib/blog/posts';
 import PostArticle from '@/components/blog/PostArticle';
+import { SITE_URL as SITE } from '@/lib/blog/site';
 
 export const revalidate = 300;
-
-const SITE = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.krongage.io';
 
 async function load(slug: string) {
   try {
