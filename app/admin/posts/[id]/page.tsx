@@ -52,7 +52,7 @@ export default async function Page({
       </div>
 
       {showEditor ? (
-        <PostEditor post={post} isAuthor={isAuthor} />
+        <PostEditor post={post} isAuthor={isAuthor} authorName={post.author_name} />
       ) : (
         <div className="grid grid-cols-[1fr_320px] gap-10 max-[900px]:grid-cols-1">
           <div className="rounded-xl border border-[#e2e8f0] bg-white p-8 max-[640px]:p-5">

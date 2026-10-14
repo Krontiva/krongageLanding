@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { formatDate, type Post } from '@/lib/blog/posts';
-import { readMinutes } from '@/lib/blog/sanitize';
+import type { Post } from '@/lib/blog/posts';
+import { formatDate, readMinutes } from '@/lib/blog/format';
 
 type Props = {
   post: Pick<Post, 'title' | 'category' | 'cover_image' | 'content' | 'author_name' | 'published_at' | 'created_at'>;

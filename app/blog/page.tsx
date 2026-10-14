@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { formatDate, listPublished, type Post } from '@/lib/blog/posts';
-import { readMinutes } from '@/lib/blog/sanitize';
+import { readMinutes } from '@/lib/blog/format';
 
 export const revalidate = 300;
 

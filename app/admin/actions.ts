@@ -174,6 +174,12 @@ export async function deletePost(id: number): Promise<Result> {
   return { ok: true };
 }
 
+/** Returns the post body exactly as it will be published, so the Preview tab is accurate. */
+export async function previewContent(html: string): Promise<string> {
+  await requireUser();
+  return cleanContent(html.slice(0, 300_000));
+}
+
 /* --------------------------------- People --------------------------------- */
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

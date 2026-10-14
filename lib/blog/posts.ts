@@ -96,7 +96,4 @@ export async function listEvents(postId: number): Promise<PostEvent[]> {
   );
 }
 
-export function formatDate(value: string | Date | null): string {
-  if (!value) return '';
-  return new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-}
+export { formatDate } from './format';
