@@ -71,13 +71,24 @@ krongageLanding/
 
 ### Blog
 
-| URL | Article |
-|-----|---------|
-| `/blog` | Listing — featured article + sidebar posts |
-| `/blog/retention-gap` | "The Retention Gap: Why Success Teams Struggle" |
-| `/blog/ai-support-tier-1` | "How AI Agents Are Replacing Tier-1 Support" |
-| `/blog/beyond-whatsapp` | "Beyond WhatsApp: Building a True Omnichannel Experience" |
-| `/blog/vanity-metrics-to-value` | "From Vanity Metrics to Value" |
+| URL | Description |
+|-----|-------------|
+| `/blog` | Listing of published posts (featured + grid; empty state when none) |
+| `/blog/[slug]` | Single published post, with a Share on LinkedIn button |
+
+### Staff area (`/admin`, not indexed)
+
+Posts live in a Neon Postgres database (Vercel Storage) and images in Vercel Blob. Staff sign in with email + password (`lib/blog/auth.ts`, signed cookie using `AUTH_SECRET`).
+
+| URL | Description |
+|-----|-------------|
+| `/admin/login`, `/admin/change-password` | Sign in; first-login password change |
+| `/admin` | Dashboard: my posts; admins also see the review queue and all posts |
+| `/admin/posts/new`, `/admin/posts/[id]` | Rich-text editor, preview, review panel, history |
+| `/admin/people` | Admin only: add people, set roles, reset passwords, deactivate |
+| `POST /api/admin/upload` | Image upload to Vercel Blob (signed-in staff only) |
+
+Workflow: Draft → In review → Published (or Changes requested → back to the writer). Everyone can write; only admins can approve/publish, and nobody can approve their own post. One-off setup (`scripts/blog-setup.mjs`) creates the tables and first accounts during a build, only when `BLOG_SETUP=1` is set (never on normal builds); accounts need `BLOG_SEED_PASSWORD`, and everyone must change it at first sign-in.
 
 ### Billing & Signup
 
@@ -106,15 +117,6 @@ krongageLanding/
 ## Component Library
 
 Every animated widget that used to be a standalone `.html` file embedded via `<iframe>` is now a self-contained React component (own scoped CSS in a `<style>` tag, own `useEffect`-driven animation logic). They accept an optional `className` prop and fill `100%` of their parent's width/height.
-
-### `components/blog/`
-
-| Component | Used In | Description |
-|-----------|---------|-------------|
-| `RetentionGapChart.tsx` | `/blog`, `/blog/retention-gap` | Animated SVG line chart — expected vs actual retention |
-| `AiHandoffScene.tsx` | `/blog`, `/blog/ai-support-tier-1` | AI → human support handoff chat sequence |
-| `OmnichannelScene.tsx` | `/blog`, `/blog/beyond-whatsapp` | Channels funneling into a unified inbox, with animated connector lines |
-| `VanityMetricsScene.tsx` | `/blog`, `/blog/vanity-metrics-to-value` | Vanity metrics vs value metrics comparison, animated sparkline |
 
 ### `components/solutions/`
 
