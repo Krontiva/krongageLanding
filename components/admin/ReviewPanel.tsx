@@ -1,17 +1,18 @@
 'use client';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { approvePost, requestChanges, unpublishPost } from '@/app/admin/actions';
-import { inputClass, Notice, primaryButton, secondaryButton } from './FormBits';
+import { approvePost, deletePost, requestChanges, unpublishPost } from '@/app/admin/actions';
+import { dangerButton, inputClass, Notice, primaryButton, secondaryButton } from './FormBits';
 
 type Props = {
   postId: number;
+  title: string;
   status: 'in_review' | 'published';
   /** Why this person can't review the post, if they can't (for example, they wrote it). */
   blockedReason?: string;
 };
 
-export default function ReviewPanel({ postId, status, blockedReason }: Props) {
+export default function ReviewPanel({ postId, title, status, blockedReason }: Props) {
   const router = useRouter();
   const [note, setNote] = useState('');
   const [asking, setAsking] = useState(false);
@@ -35,12 +36,24 @@ export default function ReviewPanel({ postId, status, blockedReason }: Props) {
     return (
       <div className="rounded-xl border border-[#e2e8f0] bg-white p-5">
         {error && <div className="mb-3"><Notice tone="error">{error}</Notice></div>}
-        <p className="text-sm text-[#475569] mb-3">This post is live on the blog. Unpublishing returns it to draft so it can be edited and reviewed again.</p>
-        <button type="button" className={secondaryButton} disabled={pending} onClick={() => {
-          if (window.confirm('Take this post off the website?')) run(() => unpublishPost(postId));
-        }}>
-          Unpublish
-        </button>
+        <p className="text-sm text-[#475569] mb-3">This post is live on the blog. Unpublish hides it and returns it to draft so it can be edited and reviewed again. Delete removes it for good.</p>
+        <div className="flex flex-wrap gap-3">
+          <button type="button" className={secondaryButton} disabled={pending} onClick={() => {
+            if (window.confirm('Take this post off the website?')) run(() => unpublishPost(postId));
+          }}>
+            Unpublish
+          </button>
+          <button type="button" className={dangerButton} disabled={pending} onClick={() => {
+            const label = title.trim() || 'this post';
+            if (window.confirm(`Permanently delete "${label}"?
+
+It will be removed from the website and cannot be recovered. If you only want to hide it, use Unpublish instead.`)) {
+              run(() => deletePost(postId), () => router.push('/admin'));
+            }
+          }}>
+            Delete permanently
+          </button>
+        </div>
       </div>
     );
   }

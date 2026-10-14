@@ -62,7 +62,7 @@ export default async function Page({
             {!isAdmin && post.status === 'in_review' && <Notice tone="info">Submitted for review. You will be able to edit again if changes are requested.</Notice>}
             {!isAdmin && post.status === 'published' && <Notice tone="success">This post is live on the blog.</Notice>}
             {isAdmin && (post.status === 'in_review' || post.status === 'published') && (
-              <ReviewPanel postId={post.id} status={post.status} blockedReason={post.status === 'in_review' ? reviewBlocked : undefined} />
+              <ReviewPanel postId={post.id} title={post.title} status={post.status} blockedReason={post.status === 'in_review' ? reviewBlocked : undefined} />
             )}
             {canEdit && (
               <Link href={`/admin/posts/${post.id}?edit=1`} className={`${secondaryButton} w-full`}>Edit this post</Link>
