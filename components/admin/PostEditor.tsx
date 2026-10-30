@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import RichTextEditor from './RichTextEditor';
 import PostPreview from './PostPreview';
 import { dangerButton, inputClass, Notice, primaryButton, secondaryButton } from './FormBits';
-import { deletePost, previewContent, savePost, submitForReview } from '@/app/admin/actions';
+import { deletePost, previewContent, publishPost, savePost, submitForReview } from '@/app/admin/actions';
 
 type Props = {
   post?: {
@@ -16,16 +16,19 @@ type Props = {
     content: string;
     status: string;
     review_note: string | null;
+    published_at?: string | null;
   };
   /** True when the signed-in person wrote this post (or is starting a new one). */
   isAuthor: boolean;
   /** Shown as the author in the preview. */
   authorName: string;
+  /** Admins publish directly; writers submit for review. */
+  isAdmin: boolean;
 };
 
 const CATEGORIES = ['Practice', 'AI & Automation', 'Omnichannel', 'Analytics', 'Product', 'Company News'];
 
-export default function PostEditor({ post, isAuthor, authorName }: Props) {
+export default function PostEditor({ post, isAuthor, authorName, isAdmin }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState(post?.title ?? '');
   const [excerpt, setExcerpt] = useState(post?.excerpt ?? '');
@@ -38,18 +41,25 @@ export default function PostEditor({ post, isAuthor, authorName }: Props) {
   const [tab, setTab] = useState<'edit' | 'preview'>('edit');
   const [previewHtml, setPreviewHtml] = useState('');
   const [previewing, setPreviewing] = useState(false);
+  // Once a new post has been saved, remember its id so further saves update it instead of creating another.
+  const [postId, setPostId] = useState<number | undefined>(post?.id);
   const [pending, startTransition] = useTransition();
   const coverRef = useRef<HTMLInputElement>(null);
 
   const published = post?.status === 'published';
+  // Writers send their own posts for review; admins are the reviewers, so they publish directly.
+  const canSubmit = isAuthor && !published && !isAdmin;
+  const canPublish = isAdmin && !published;
 
   async function persist(): Promise<number | null> {
-    const result = await savePost({ id: post?.id, title, excerpt, category, coverImage: cover, content });
+    const result = await savePost({ id: postId, title, excerpt, category, coverImage: cover, content });
     if (!result.ok) {
       setError(result.error);
       return null;
     }
-    return result.id ?? post?.id ?? null;
+    const id = result.id ?? postId ?? null;
+    if (id !== null) setPostId(id);
+    return id;
   }
 
   function onSave() {
@@ -73,10 +83,27 @@ export default function PostEditor({ post, isAuthor, authorName }: Props) {
       const result = await submitForReview(id);
       if (!result.ok) {
         setError(result.error);
-        if (!post) router.replace(`/admin/posts/${id}`);
         return;
       }
       router.push('/admin');
+    });
+  }
+
+  function onPublish() {
+    const label = title.trim() || 'this post';
+    const others = post && !isAuthor ? ` by ${authorName}` : '';
+    if (!window.confirm(`Publish "${label}"${others} to the website now?`)) return;
+    setError('');
+    setSaved('');
+    startTransition(async () => {
+      const id = await persist();
+      if (id === null) return;
+      const result = await publishPost(id);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      router.push(`/admin/posts/${id}`);
     });
   }
 
@@ -207,12 +234,17 @@ export default function PostEditor({ post, isAuthor, authorName }: Props) {
       </div>
 
       <div className="flex flex-wrap items-center gap-3 pt-2">
-        <button type="button" onClick={onSave} disabled={pending} className={isAuthor && !published ? secondaryButton : primaryButton}>
+        <button type="button" onClick={onSave} disabled={pending} className={canSubmit || canPublish ? secondaryButton : primaryButton}>
           {pending ? 'Working…' : published || !isAuthor ? 'Save changes' : 'Save draft'}
         </button>
-        {isAuthor && !published && (
+        {canSubmit && (
           <button type="button" onClick={onSubmit} disabled={pending} className={primaryButton}>
             Submit for review
+          </button>
+        )}
+        {canPublish && (
+          <button type="button" onClick={onPublish} disabled={pending} className={primaryButton}>
+            {pending ? 'Working…' : post?.published_at ? 'Republish' : 'Publish'}
           </button>
         )}
         {post && (

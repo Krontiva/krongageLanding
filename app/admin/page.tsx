@@ -51,7 +51,7 @@ export default async function Page() {
         <div>
           <h1 className="text-[30px] font-normal text-[#0f172a]">Hello, {user.name.split(' ')[0]}</h1>
           <p className="text-[15px] text-[#64748b] mt-1">
-            {isAdmin ? 'Write posts and review what your team submits.' : 'Write a post and submit it for review when it is ready.'}
+            {isAdmin ? 'Publish your own posts directly, and review what your team submits.' : 'Write a post and submit it for review when it is ready.'}
           </p>
         </div>
         <Link href="/admin/posts/new" className={primaryButton}>Write a new post</Link>

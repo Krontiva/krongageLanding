@@ -121,18 +121,26 @@ export async function submitForReview(id: number): Promise<Result> {
   return { ok: true };
 }
 
-export async function approvePost(id: number): Promise<Result> {
+/**
+ * Publishes a post straight away. Admins are the approvers, so they never wait for review:
+ * they can publish their own posts, approve a writer's submission, or republish a post
+ * that was taken down.
+ */
+export async function publishPost(id: number): Promise<Result> {
   const user = await requireAdmin();
   const post = await getPostById(id);
   if (!post) return { ok: false, error: 'That post no longer exists.' };
-  if (post.status !== 'in_review') return { ok: false, error: 'Only posts that are in review can be approved.' };
-  if (post.author_id === user.id) return { ok: false, error: 'You cannot approve your own post. Ask another approver.' };
+  if (post.status === 'published') return { ok: false, error: 'This post is already live.' };
+  if (post.title.trim().length < 3) return { ok: false, error: 'Add a title before publishing.' };
+  if (!post.excerpt.trim()) return { ok: false, error: 'Add a short summary before publishing.' };
+  if (plainText(post.content).length < 50) return { ok: false, error: 'Write the post before publishing.' };
   const slug = post.slug ?? (await uniqueSlug(post.title, post.id));
   await query(
     "update posts set status = 'published', slug = $2, reviewed_by = $3, review_note = null, published_at = coalesce(published_at, now()), updated_at = now() where id = $1",
     [id, slug, user.id],
   );
-  await logEvent(id, user.id, 'approved');
+  const action = post.published_at ? 'republished' : post.status === 'in_review' && post.author_id !== user.id ? 'approved' : 'published';
+  await logEvent(id, user.id, action);
   refresh({ slug });
   revalidatePath('/admin');
   return { ok: true };

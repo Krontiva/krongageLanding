@@ -10,6 +10,8 @@ import { Notice, secondaryButton, StatusBadge } from '@/components/admin/FormBit
 const ACTION_LABEL: Record<string, string> = {
   created: 'created the post',
   submitted: 'submitted it for review',
+  published: 'published it',
+  republished: 'published it again',
   approved: 'approved and published it',
   changes_requested: 'asked for changes',
   unpublished: 'unpublished it',
@@ -41,8 +43,6 @@ export default async function Page({
   const showEditor = canEdit && (authorCanEdit || edit === '1');
   const events = await listEvents(post.id);
 
-  const reviewBlocked = isAuthor ? 'You wrote this post, so another approver needs to review it.' : undefined;
-
   return (
     <>
       <Link href="/admin" className="text-sm font-semibold text-[#0D47A1] hover:underline">← Back to posts</Link>
@@ -52,7 +52,7 @@ export default async function Page({
       </div>
 
       {showEditor ? (
-        <PostEditor post={post} isAuthor={isAuthor} authorName={post.author_name} />
+        <PostEditor post={post} isAuthor={isAuthor} authorName={post.author_name} isAdmin={isAdmin} />
       ) : (
         <div className="grid grid-cols-[1fr_320px] gap-10 max-[900px]:grid-cols-1">
           <div className="rounded-xl border border-[#e2e8f0] bg-white p-8 max-[640px]:p-5">
@@ -61,8 +61,15 @@ export default async function Page({
           <aside className="space-y-5">
             {!isAdmin && post.status === 'in_review' && <Notice tone="info">Submitted for review. You will be able to edit again if changes are requested.</Notice>}
             {!isAdmin && post.status === 'published' && <Notice tone="success">This post is live on the blog.</Notice>}
-            {isAdmin && (post.status === 'in_review' || post.status === 'published') && (
-              <ReviewPanel postId={post.id} title={post.title} status={post.status} blockedReason={post.status === 'in_review' ? reviewBlocked : undefined} />
+            {isAdmin && (
+              <ReviewPanel
+                postId={post.id}
+                title={post.title}
+                status={post.status}
+                isOwn={isAuthor}
+                authorName={post.author_name}
+                wasPublished={post.published_at !== null}
+              />
             )}
             {canEdit && (
               <Link href={`/admin/posts/${post.id}?edit=1`} className={`${secondaryButton} w-full`}>Edit this post</Link>
